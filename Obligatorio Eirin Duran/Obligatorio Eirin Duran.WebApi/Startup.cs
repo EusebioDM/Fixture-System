@@ -40,7 +40,6 @@ namespace Obligatorio_Eirin_Duran.WebApi
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
