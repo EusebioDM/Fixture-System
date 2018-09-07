@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Obligatorio_Eirin_Duran.WebApi.Controllers
+namespace EirinDuran.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

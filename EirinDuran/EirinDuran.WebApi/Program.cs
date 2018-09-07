@@ -7,11 +7,15 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using EirinDuran.Domain;
 
-namespace Obligatorio_Eirin_Duran.WebApi
+namespace EirinDuran.WebApi
 {
     public class Program
     {
+
+        Class1 myclass = new Class1();
+
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();
