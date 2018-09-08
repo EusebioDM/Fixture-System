@@ -14,8 +14,6 @@ namespace EirinDuran.WebApi
     public class Program
     {
 
-        Class1 myclass = new Class1();
-
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();

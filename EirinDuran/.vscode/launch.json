@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/EirinDuran.WebApi/bin/Debug/netcoreapp2.1/Obligatorio Eirin Duran.WebApi.dll",
+            "program": "${workspaceFolder}/EirinDuran.WebApi/bin/Debug/netcoreapp2.1/EirinDuran.WebApi.dll",
             "args": [],
             "cwd": "${workspaceFolder}/EirinDuran.WebApi",
             "stopAtEntry": false,
