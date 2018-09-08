@@ -9,12 +9,14 @@ namespace EirinDuran.Domain.User
         private string surname;
         private string password;
         private string mail;
+        private StringValidator validator;
 
         public User()
         {
         }
 
-        public User (Role role, string userName, string name, string surname, string password, string mail) {
+        public User(Role role, string userName, string name, string surname, string password, string mail)
+        {
             UserName = userName;
             Name = name;
             Surname = surname;
@@ -30,10 +32,13 @@ namespace EirinDuran.Domain.User
             }
 
             protected set {
-                if (Validations.ValidateNotNullOrEmptyString (value)) {
+                if (validator.ValidateNotNullOrEmptyString(value))
+                {
                     userName = value;
-                } else {
-                    throw new EmptyFieldException ();
+                }
+                else
+                {
+                    throw new EmptyFieldException();
                 }
             }
         }
@@ -42,10 +47,13 @@ namespace EirinDuran.Domain.User
             get { return name; }
 
             set {
-                if (Validations.ValidateOnlyLetersString (value)) {
-                    name = value.ToUpper ();
-                } else {
-                    throw new InvalidCharactersFieldExcepion ();
+                if (validator.ValidateOnlyLetersString(value))
+                {
+                    name = value.ToUpper();
+                }
+                else
+                {
+                    throw new InvalidCharactersFieldExcepion();
                 }
             }
         }
@@ -54,10 +62,13 @@ namespace EirinDuran.Domain.User
             get { return surname; }
 
             set {
-                if (Validations.ValidateOnlyLetersString (value)) {
-                    surname = value.ToUpper ();
-                } else {
-                    throw new InvalidCharactersFieldExcepion ();
+                if (validator.ValidateOnlyLetersString(value))
+                {
+                    surname = value.ToUpper();
+                }
+                else
+                {
+                    throw new InvalidCharactersFieldExcepion();
                 }
             }
         }
@@ -66,10 +77,13 @@ namespace EirinDuran.Domain.User
             get { return password; }
 
             set {
-                if (Validations.ValidateNotNullOrEmptyString (value)) {
+                if (validator.ValidateNotNullOrEmptyString(value))
+                {
                     password = value;
-                } else {
-                    throw new EmptyFieldException ();
+                }
+                else
+                {
+                    throw new EmptyFieldException();
                 }
             }
         }
@@ -77,15 +91,19 @@ namespace EirinDuran.Domain.User
         public string Mail {
             get { return mail; }
             set {
-                if (Validations.ValidateMailFormat (value)) {
+                if (validator.ValidateMailFormat(value))
+                {
                     mail = value;
-                } else {
-                    throw new InvalidMailFormatException ();
+                }
+                else
+                {
+                    throw new InvalidMailFormatException();
                 }
             }
         }
 
-        public bool HasRole (Role role) {
+        public bool HasRole(Role role)
+        {
             return (Role == role);
         }
     }
