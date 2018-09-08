@@ -15,17 +15,18 @@ namespace EirinDuran.Test
     {
 
         [TestMethod]
-        public void CreateTeamNameTest()
+        public void CreateTeamTest()
         {
             Team boca = CreateBocaTeam();
             Assert.AreEqual("Boca Juniors", boca.Name);
         }
 
         [TestMethod]
-        public void CreateTeamImageTest()
+        public void TeamEqualsDifferentTeamsTest()
         {
             Team boca = CreateBocaTeam();
-            Assert.AreEqual(GetImage(Resources.Boca), boca.Logo);
+            Team river = CreateTeamThatBelongsInTheB();
+            Assert.IsFalse(boca.Equals(river));
         }
 
         private object GetImage(byte[] boca, object image)
@@ -38,7 +39,13 @@ namespace EirinDuran.Test
             string name = "Boca Juniors";
             Image image = GetImage(Resources.Boca);
             return new Team(name, image);
+        }
 
+        private Team CreateTeamThatBelongsInTheB()
+        {
+            string name = "River Plate";
+            Image image = GetImage(Resources.River);
+            return new Team(name, image);
         }
 
         private Image GetImage(byte[] resource)
