@@ -16,6 +16,16 @@ namespace EirinDuran.Domain.Fixture
             Logo = logo;
         }
 
+        public override bool Equals(object obj)
+        {
+            var team = obj as Team;
+            return team != null &&
+                   Name == team.Name;
+        }
 
+        public override int GetHashCode()
+        {
+            return 539060726 + EqualityComparer<string>.Default.GetHashCode(Name);
+        }
     }
 }
