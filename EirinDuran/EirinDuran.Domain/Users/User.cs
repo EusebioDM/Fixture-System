@@ -13,9 +13,10 @@ namespace EirinDuran.Domain.User
 
         public User()
         {
+            validator = new StringValidator();
         }
 
-        public User(Role role, string userName, string name, string surname, string password, string mail)
+        public User(Role role, string userName, string name, string surname, string password, string mail) : this()
         {
             UserName = userName;
             Name = name;
