@@ -1,11 +1,11 @@
-﻿using EirinDuran.Test.Properties;
+﻿using EirinDuran.Domain.Fixture;
+using EirinDuran.Test.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using static System.Net.Mime.MediaTypeNames;
 using Image = System.Drawing.Image;
 
 namespace EirinDuran.Test
@@ -25,14 +25,20 @@ namespace EirinDuran.Test
         public void CreateTeamImageTest()
         {
             Team boca = CreateBocaTeam();
-            Assert.AreEqual(GetImage(Resources.Boca, boca.Image);
+            Assert.AreEqual(GetImage(Resources.Boca), boca.Logo);
+        }
+
+        private object GetImage(byte[] boca, object image)
+        {
+            throw new NotImplementedException();
         }
 
         private Team CreateBocaTeam()
         {
             string name = "Boca Juniors";
             Image image = GetImage(Resources.Boca);
-            Team boca = new Team(name, image);
+            return new Team(name, image);
+
         }
 
         private Image GetImage(byte[] resource)
