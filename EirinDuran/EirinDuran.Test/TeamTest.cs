@@ -29,6 +29,14 @@ namespace EirinDuran.Test
             Assert.IsFalse(boca.Equals(river));
         }
 
+        [TestMethod]
+        public void TeamEqualsSameTeamsTest()
+        {
+            Team boca = CreateBocaTeam();
+            Team anotherBoca = new Team("Boca Juniors", GetImage(Resources.River));
+            Assert.IsTrue(boca.Equals(anotherBoca));
+        }
+
         private object GetImage(byte[] boca, object image)
         {
             throw new NotImplementedException();
