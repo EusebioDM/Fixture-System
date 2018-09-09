@@ -50,6 +50,14 @@ namespace EirinDuran.Test
             Encounter encounter = new Encounter(futbol, teams, new DateTime(1900,1,1));
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(InvalidTeamException))]
+        public void InvalidTeamSportTest()
+        {
+            Encounter encounter = new Encounter(new Sport("Rugby"), teams, fechaMenor);
+
+        }
+
         [TestInitialize]
         public void TestInit()
         {
