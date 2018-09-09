@@ -41,5 +41,17 @@ namespace EirinDuran.Domain.Fixture
         {
             teams.Remove(boca);
         }
+
+        public override bool Equals(object obj)
+        {
+            var sport = obj as Sport;
+            return sport != null &&
+                   Name == sport.Name;
+        }
+
+        public override int GetHashCode()
+        {
+            return 539060726 + EqualityComparer<string>.Default.GetHashCode(Name);
+        }
     }
 }
