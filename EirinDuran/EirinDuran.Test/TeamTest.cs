@@ -13,7 +13,6 @@ namespace EirinDuran.Test
     [TestClass]
     public class TeamTest
     {
-
         [TestMethod]
         public void CreateTeamTest()
         {
