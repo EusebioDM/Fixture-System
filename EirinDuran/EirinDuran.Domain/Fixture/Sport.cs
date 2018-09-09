@@ -36,5 +36,10 @@ namespace EirinDuran.Domain.Fixture
         {
             teams.Add(team);
         }
+
+        public void RemoveTeam(Team boca)
+        {
+            teams.Remove(boca);
+        }
     }
 }
