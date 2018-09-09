@@ -9,7 +9,8 @@ namespace EirinDuran.Domain.Fixture
     {
         private Team[] teams;
         private DateTime dateTime;
-        public DateTime DateTime { get => dateTime; set => dateTime = value; }
+        public DateTime DateTime { get => dateTime; set => SetDateIfValid(value); }
+
         public Sport Sport { get; set; }
 
         public Encounter(Sport sport, IEnumerable<Team> teams, DateTime dateTime)
@@ -17,7 +18,7 @@ namespace EirinDuran.Domain.Fixture
             ValidateNumberOfTeams(teams);
             Sport = sport;
             this.teams = GetTeamsArray(teams);
-            this.dateTime = dateTime;
+            DateTime = dateTime;
         }
 
         private void ValidateNumberOfTeams(IEnumerable<Team> teams)
@@ -37,6 +38,14 @@ namespace EirinDuran.Domain.Fixture
                 array[i++] = team;
             }
             return array;
+        }
+
+        private void SetDateIfValid(DateTime date)
+        {
+            if (date < DateTime.Now)
+                throw new InvalidDateException();
+            else
+                dateTime = date;
         }
     }
 }

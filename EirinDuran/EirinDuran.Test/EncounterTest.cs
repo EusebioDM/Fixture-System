@@ -44,10 +44,10 @@ namespace EirinDuran.Test
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidDateException()))]
+        [ExpectedException(typeof(InvalidDateException))]
         public void InvalidDateException()
         {
-            Encounter encounter = new Encounter(futbol, teams, DateTime.UnixEpoch);
+            Encounter encounter = new Encounter(futbol, teams, new DateTime(1900,1,1));
         }
 
         [TestInitialize]
