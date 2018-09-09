@@ -10,10 +10,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\EirinDuran.Domain\EirinDuran.Domain.csproj" />
+    <ProjectReference Include="..\EirinDuran.DataAccess\EirinDuran.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>
