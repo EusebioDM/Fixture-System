@@ -35,6 +35,14 @@ namespace EirinDuran.Test
             Encounter encounter = new Encounter(futbol, teams, fechaMenor);
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(InvalidNumberOfTeamsException))]
+        public void LowerNumberOfTeamsTest()
+        {
+            teams.Remove(river);
+            Encounter encounter = new Encounter(futbol, teams, fechaMenor);
+        }
+
         [TestInitialize]
         public void TestInit()
         {
