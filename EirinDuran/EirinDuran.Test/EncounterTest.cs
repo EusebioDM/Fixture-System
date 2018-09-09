@@ -27,6 +27,14 @@ namespace EirinDuran.Test
             Assert.IsTrue(encounter.DateTime.Equals(fechaMenor) && encounter.Sport.Equals(futbol));
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(InvalidNumberOfTeamsException))]
+        public void HigherNumberOfTeamsTest()
+        {
+            teams.Add(new Team("Godoy Cruz Antonio Tomba",null));
+            Encounter encounter = new Encounter(futbol, teams, fechaMenor);
+        }
+
         [TestInitialize]
         public void TestInit()
         {
