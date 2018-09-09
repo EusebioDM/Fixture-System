@@ -32,6 +32,9 @@ namespace EirinDuran.Test
             Sport sport = new Sport("Futbol");
             Team boca = new Team("Boca", null);
             Team river = new Team("River", null);
+            sport.AddTeam(boca);
+            sport.AddTeam(river);
+
             IEnumerable<Team> actual = sport.Teams;
             Assert.IsTrue(actual.Contains(boca) && actual.Contains(river));
         }

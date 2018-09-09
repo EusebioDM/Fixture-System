@@ -7,12 +7,15 @@ namespace EirinDuran.Domain.Fixture
     public class Sport
     {
         private string name;
+        private HashSet<Team> teams;
         private StringValidator validator;
         public string Name { get => name; set => SetNameIfValid(value); }
+        public IEnumerable<Team> Teams { get => teams; }
 
         public Sport(string name)
         {
             validator = new StringValidator();
+            teams = new HashSet<Team>();
             Name = name;
         }
 
@@ -27,6 +30,11 @@ namespace EirinDuran.Domain.Fixture
             {
                 name = value;
             }
+        }
+
+        public void AddTeam(Team team)
+        {
+            teams.Add(team);
         }
     }
 }
