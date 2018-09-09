@@ -70,6 +70,8 @@ namespace EirinDuran.Test
                 boca, river
             };
             futbol = new Sport("Futbol");
+            futbol.AddTeam(boca);
+            futbol.AddTeam(river);
         }
 
         private Team CreateBocaTeam()

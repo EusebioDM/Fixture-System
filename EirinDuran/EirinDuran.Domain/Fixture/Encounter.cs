@@ -35,9 +35,16 @@ namespace EirinDuran.Domain.Fixture
             int i = 0;
             foreach (Team team in teams)
             {
+                ValidateTeamIsValid(team);
                 array[i++] = team;
             }
             return array;
+        }
+
+        private void ValidateTeamIsValid(Team team)
+        {
+            if (!Sport.Teams.Contains(team))
+                throw new InvalidTeamException();
         }
 
         private void SetDateIfValid(DateTime date)
