@@ -38,5 +38,16 @@ namespace EirinDuran.Test
             IEnumerable<Team> actual = sport.Teams;
             Assert.IsTrue(actual.Contains(boca) && actual.Contains(river));
         }
+
+        [TestMethod]
+        public void RemoveTeamTest()
+        {
+            Sport sport = new Sport("Futbol");
+            Team boca = new Team("Boca", null);
+            sport.RemoveTeam(boca);
+
+            IEnumerable<Team> actual = sport.Teams;
+            Assert.IsFalse(actual.Contains(boca));
+        }
     }
 }
