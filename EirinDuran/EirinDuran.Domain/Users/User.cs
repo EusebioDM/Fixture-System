@@ -4,6 +4,7 @@ namespace EirinDuran.Domain.User
 {
     public class User
     {
+        public Role Role { get; private set; }
         private string userName;
         private string name;
         private string surname;
@@ -26,7 +27,6 @@ namespace EirinDuran.Domain.User
             Role = role;
         }
 
-        private Role Role { get; set; }
         public string UserName {
             get {
                 return userName;
@@ -101,11 +101,6 @@ namespace EirinDuran.Domain.User
                     throw new InvalidMailFormatException();
                 }
             }
-        }
-
-        public bool HasRole(Role role)
-        {
-            return (Role == role);
         }
     }
 }

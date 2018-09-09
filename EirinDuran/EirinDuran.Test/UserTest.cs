@@ -103,8 +103,8 @@ namespace EirinDuran.Test
         [TestMethod]
         public void RoleVerificationTest()
         {
-            bool result = user.HasRole(Role.Administrator);
-            Assert.AreEqual(true, result);
+            bool result = user.Role == Role.Administrator;
+            Assert.IsTrue(result);
         }
     }
 }

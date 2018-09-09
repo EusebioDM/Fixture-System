@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.Services", "Eiri
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.Test", "EirinDuran.Test\EirinDuran.Test.csproj", "{C2B84AAE-122D-41F4-A9CC-4201C73738F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{36119659-F618-46C8-AD17-7EE6CF8A27B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{C2B84AAE-122D-41F4-A9CC-4201C73738F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2B84AAE-122D-41F4-A9CC-4201C73738F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2B84AAE-122D-41F4-A9CC-4201C73738F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36119659-F618-46C8-AD17-7EE6CF8A27B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36119659-F618-46C8-AD17-7EE6CF8A27B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36119659-F618-46C8-AD17-7EE6CF8A27B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36119659-F618-46C8-AD17-7EE6CF8A27B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
