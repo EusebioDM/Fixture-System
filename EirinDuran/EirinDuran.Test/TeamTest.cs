@@ -39,7 +39,7 @@ namespace EirinDuran.Test
 
         [TestMethod]
         [ExpectedException(typeof(EmptyFieldException))]
-        public void nullTeamNameTest()
+        public void NullTeamNameTest()
         {
             Team team = new Team(null, null);
         }
