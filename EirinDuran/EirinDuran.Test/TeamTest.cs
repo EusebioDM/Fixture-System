@@ -1,4 +1,5 @@
-﻿using EirinDuran.Domain.Fixture;
+﻿using EirinDuran.Domain;
+using EirinDuran.Domain.Fixture;
 using EirinDuran.Test.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -34,6 +35,13 @@ namespace EirinDuran.Test
             Team boca = CreateBocaTeam();
             Team anotherBoca = new Team("Boca Juniors", GetImage(Resources.River));
             Assert.IsTrue(boca.Equals(anotherBoca));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(EmptyFieldException))]
+        public void EmptyTeamNameTest()
+        {
+            Team team = new Team(null, null);
         }
 
         private object GetImage(byte[] boca, object image)
