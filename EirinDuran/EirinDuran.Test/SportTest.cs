@@ -16,5 +16,12 @@ namespace EirinDuran.Test
 
             Assert.AreEqual("Futbol", sport.Name);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(EmptyFieldException))]
+        public void CreateTeamEmptyNameTest()
+        {
+            Sport sport = new Sport("    ");
+        }
     }
 }
