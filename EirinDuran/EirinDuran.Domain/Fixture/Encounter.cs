@@ -7,17 +7,15 @@ namespace EirinDuran.Domain.Fixture
 {
     public class Encounter
     {
-        private Sport sport;
         private Team[] teams;
         private DateTime dateTime;
-
         public DateTime DateTime { get => dateTime; set => dateTime = value; }
-        public Sport Sport { get => sport; set => sport = value; }
+        public Sport Sport { get; set; }
 
         public Encounter(Sport sport, IEnumerable<Team> teams, DateTime dateTime)
         {
             ValidateNumberOfTeams(teams);
-            this.sport = sport;
+            Sport = sport;
             this.teams = GetTeamsArray(teams);
             this.dateTime = dateTime;
         }

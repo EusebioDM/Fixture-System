@@ -43,6 +43,13 @@ namespace EirinDuran.Test
             Encounter encounter = new Encounter(futbol, teams, fechaMenor);
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(InvalidDateException()))]
+        public void InvalidDateException()
+        {
+            Encounter encounter = new Encounter(futbol, teams, DateTime.UnixEpoch);
+        }
+
         [TestInitialize]
         public void TestInit()
         {
