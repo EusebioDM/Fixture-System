@@ -4,7 +4,6 @@ namespace EirinDuran.Domain
 {
     public class StringValidator
     {
-
         public bool ValidateNotNullOrEmptyString(string aString)
         {
             return !string.IsNullOrWhiteSpace(aString);
