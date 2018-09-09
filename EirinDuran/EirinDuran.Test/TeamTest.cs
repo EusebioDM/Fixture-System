@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using Image = System.Drawing.Image;
 
 namespace EirinDuran.Test
 {
