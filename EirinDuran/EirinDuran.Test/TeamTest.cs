@@ -39,9 +39,16 @@ namespace EirinDuran.Test
 
         [TestMethod]
         [ExpectedException(typeof(EmptyFieldException))]
-        public void EmptyTeamNameTest()
+        public void nullTeamNameTest()
         {
             Team team = new Team(null, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(EmptyFieldException))]
+        public void EmptyTeamNameTest()
+        {
+            Team team = new Team("                  ", null);
         }
 
         private object GetImage(byte[] boca, object image)
