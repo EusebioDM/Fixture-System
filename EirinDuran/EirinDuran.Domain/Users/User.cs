@@ -4,7 +4,7 @@ namespace EirinDuran.Domain.User
 {
     public class User
     {
-        public Role Role { get; private set; }
+        public Role Role { get; set; }
         private string userName;
         private string name;
         private string surname;
@@ -32,7 +32,7 @@ namespace EirinDuran.Domain.User
                 return userName;
             }
 
-            protected set {
+            set {
                 if (validator.ValidateNotNullOrEmptyString(value))
                 {
                     userName = value;
