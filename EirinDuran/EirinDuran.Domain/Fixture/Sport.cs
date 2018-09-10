@@ -19,6 +19,12 @@ namespace EirinDuran.Domain.Fixture
             Name = name;
         }
 
+        public Sport(string name, IEnumerable<Team> teams) : this(name)
+        {
+            foreach (Team team in teams)
+                AddTeam(team);
+        }
+
         private void SetNameIfValid(string value)
         {
             bool valid = validator.ValidateNotNullOrEmptyString(value);

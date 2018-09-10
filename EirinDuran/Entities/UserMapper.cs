@@ -1,11 +1,15 @@
-﻿using EirinDuran.Domain.User;
+﻿using EirinDuran.Domain.Fixture;
+using EirinDuran.Domain.User;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Text;
 
 namespace EirinDuran.Entities
 {
-    public class EntityMapper
+    public class UserMapper
     {
         public UserEntity Map(User user)
         {

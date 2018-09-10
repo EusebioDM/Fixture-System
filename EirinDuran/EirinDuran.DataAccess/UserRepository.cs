@@ -9,7 +9,7 @@ using EirinDuran.Entities;
 namespace EirinDuran.DataAccess {
     public class UserRepository : IRepository<User> 
     {
-        private EntityMapper entityMapper;
+        private UserMapper entityMapper;
         private readonly Context context;
         public UserRepository(Context aContext)
         {
