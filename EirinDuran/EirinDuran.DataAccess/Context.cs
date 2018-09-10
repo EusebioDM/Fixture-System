@@ -10,7 +10,10 @@ namespace EirinDuran.DataAccess
         public Context(DbContextOptions<Context> options): base(options)
         {
         }
-        
+         protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
         public DbSet<UserEntity> UserEntities { get; set; }  
     }
 }
