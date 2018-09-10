@@ -10,8 +10,8 @@ namespace EirinDuran.DataAccess {
     public class UserRepository : IRepository<User> 
     {
         private EntityMapper entityMapper;
-        private readonly Context context;
-        public UserRepository(Context aContext)
+        private readonly IContext context;
+        public UserRepository(IContext aContext)
         {
             context = aContext;
         }

@@ -22,7 +22,6 @@ namespace EirinDuran.Test
             var result = controller.Create(item) as CreatedAtRouteNegotiatedContentResult<User>;
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(result.UserName, "IAmAnUserTest");
         }
 
         User GetDemoUser()

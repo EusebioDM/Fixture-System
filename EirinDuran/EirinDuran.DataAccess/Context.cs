@@ -1,11 +1,10 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using Entities;
 
 namespace EirinDuran.DataAccess
 {
-        public class Context: DbContext 
+        public class Context: DbContext, IContext 
     {
         public Context(DbContextOptions<Context> options): base(options)
         {
