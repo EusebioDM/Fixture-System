@@ -9,7 +9,7 @@ using EirinDuran.Entities;
 namespace EirinDuran.DataAccess {
     public class UserRepository : IRepository<User> 
     {
-        private UserMapper entityMapper;
+        private UserMapper UserMapper;
         private readonly Context context;
         public UserRepository(Context aContext)
         {
@@ -18,8 +18,8 @@ namespace EirinDuran.DataAccess {
 
         public void Add (User user) 
         {
-            entityMapper = new EntityMapper();
-            UserEntity userEntity = entityMapper.Map(user);
+            UserMapper = new UserMapper();
+            UserEntity userEntity = UserMapper.Map(user);
 
             context.UserEntities.Add(userEntity);
             context.SaveChanges();
@@ -32,20 +32,20 @@ namespace EirinDuran.DataAccess {
 
         public User Get (int id) 
         {
-            entityMapper = new EntityMapper();
+            UserMapper = new UserMapper();
             UserEntity userEntity = context.UserEntities.Find(id);
 
-            return entityMapper.Map(userEntity);
+            return UserMapper.Map(userEntity);
         }
 
         public IEnumerable<User> GetAll () 
         {
-            entityMapper = new EntityMapper();
+            UserMapper = new UserMapper();
             List<User> userList = new List<User>();
 
             foreach(var user in context.UserEntities.ToList())
             {
-                userList.Add(entityMapper.Map(user));
+                userList.Add(UserMapper.Map(user));
             }
 
             return userList;
