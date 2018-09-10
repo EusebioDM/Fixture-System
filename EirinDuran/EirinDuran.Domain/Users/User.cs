@@ -9,6 +9,7 @@ namespace EirinDuran.Domain.User
         private string surname;
         private string password;
         private string mail;
+        private Role Role { get; set; }
         private StringValidator validator;
 
         public User()
@@ -26,7 +27,7 @@ namespace EirinDuran.Domain.User
             Role = role;
         }
 
-        private Role Role { get; set; }
+        
         public string UserName {
             get {
                 return userName;
