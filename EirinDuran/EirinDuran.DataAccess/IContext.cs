@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Entities;
+using EirinDuran.Entities;
 using System;
 
 namespace EirinDuran.DataAccess

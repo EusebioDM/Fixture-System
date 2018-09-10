@@ -4,7 +4,7 @@ using System.Linq;
 using EirinDuran.Domain;
 using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
-using Entities;
+using EirinDuran.Entities;
 
 namespace EirinDuran.DataAccess {
     public class UserRepository : IRepository<User> 

@@ -1,18 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using EirinDuran.Entities;
 using System;
-using Entities;
 
 namespace EirinDuran.DataAccess
 {
-        public class Context: DbContext, IContext 
+    public class Context: DbContext, IContext 
     {
-        public Context(DbContextOptions<Context> options): base(options)
+        public Context(DbContextOptions<Context> options) : base(options)
         {
         }
-         protected override void OnModelCreating(ModelBuilder builder)
+
+        protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
         }
-        public DbSet<UserEntity> UserEntities { get; set; }  
+
+        public int SaveChanges()
+        {
+            return 0;
+        }
+
+        public DbSet<UserEntity> UserEntities { get; set; }
     }
 }
