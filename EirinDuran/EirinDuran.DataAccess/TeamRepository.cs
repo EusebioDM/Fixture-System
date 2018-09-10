@@ -102,7 +102,9 @@ namespace EirinDuran.DataAccess
         {
             using (Context context = new Context())
             {
-
+                TeamEntity toUpdate = context.Teams.Single(t => t.Name.Equals(team.Name));
+                toUpdate.UpdateWith(team);
+                context.SaveChanges();
             }
         }
     }

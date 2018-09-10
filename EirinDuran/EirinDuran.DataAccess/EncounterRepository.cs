@@ -9,13 +9,13 @@ using System.Text;
 
 namespace EirinDuran.DataAccess
 {
-    public class SportRepository : IRepository<Sport>
+    public class EncounterRepository : IRepository<Encounter>
     {
-        public void Add(Sport sport)
+        public void Add(Encounter encounter)
         {
             try
             {
-                TryToAdd(sport);
+                TryToAdd(encounter);
             }
             catch (DbUpdateException)
             {
@@ -23,20 +23,20 @@ namespace EirinDuran.DataAccess
             }
         }
 
-        private void TryToAdd(Sport sport)
+        private void TryToAdd(Encounter encounter)
         {
             using (Context context = new Context())
             {
-                context.Sports.Add(new SportEntity(sport));
+                context.Encounters.Add(new EncounterEntity(encounter));
                 context.SaveChanges();
             }
         }
 
-        public void Delete(Sport sport)
+        public void Delete(Encounter encounter)
         {
             try
             {
-                TryToDelete(sport);
+                TryToDelete(encounter);
             }
             catch (InvalidOperationException)
             {
@@ -44,17 +44,17 @@ namespace EirinDuran.DataAccess
             }
         }
 
-        private void TryToDelete(Sport sport)
+        private void TryToDelete(Encounter encounter)
         {
             using (Context context = new Context())
             {
-                SportEntity toDelete = context.Sports.Single(s => s.Name.Equals(sport.Name));
-                context.Sports.Remove(toDelete);
+                EncounterEntity toDelete = context.Encounters.Single(e => e.Id.Equals(encounter.Id));
+                context.Encounters.Remove(toDelete);
                 context.SaveChanges();
             }
         }
 
-        public Sport Get(int id)
+        public Encounter Get(int id)
         {
             try
             {
@@ -66,29 +66,29 @@ namespace EirinDuran.DataAccess
             }
         }
 
-        private Sport TryToGet(int id)
+        private Encounter TryToGet(int id)
         {
             using (Context context = new Context())
             {
-                SportEntity toReturn = context.Sports.Single(t => t.Name.Equals(id));
+                EncounterEntity toReturn = context.Encounters.Single(e => e.Id.Equals(id));
                 return toReturn.ToModel();
             }
         }
 
-        public IEnumerable<Sport> GetAll()
+        public IEnumerable<Encounter> GetAll()
         {
             using (Context context = new Context())
             {
-                Func<SportEntity, Sport> mapEntity = s => { return s.ToModel(); };
-                return context.Sports.Select(mapEntity);
+                Func<EncounterEntity, Encounter> mapEntity = e => { return e.ToModel(); };
+                return context.Encounters.Select(mapEntity);
             }
         }
 
-        public void Update(Sport sport)
+        public void Update(Encounter encounter)
         {
             try
             {
-                TryToUpdate(sport);
+                TryToUpdate(encounter);
             }
             catch (InvalidOperationException)
             {
@@ -96,12 +96,12 @@ namespace EirinDuran.DataAccess
             }
         }
 
-        private void TryToUpdate(Sport sport)
+        private void TryToUpdate(Encounter encounter)
         {
             using (Context context = new Context())
             {
-                SportEntity toUpdate = context.Sports.Single(s => s.Name.Equals(sport.Name));
-                toUpdate.UpdateWith(sport);
+                EncounterEntity toUpdate = context.Encounters.Single(e => e.Id.Equals(encounter.Id));
+                toUpdate.UpdateWith(encounter);
                 context.SaveChanges();
             }
         }

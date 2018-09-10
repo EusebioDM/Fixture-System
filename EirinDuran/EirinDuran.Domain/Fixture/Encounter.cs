@@ -7,6 +7,7 @@ namespace EirinDuran.Domain.Fixture
 {
     public class Encounter
     {
+        public Guid Id { get; set; }
         private Team[] teams;
         private DateTime dateTime;
         public DateTime DateTime { get => dateTime; set => SetDateIfValid(value); }
@@ -16,6 +17,16 @@ namespace EirinDuran.Domain.Fixture
 
         public Encounter(Sport sport, IEnumerable<Team> teams, DateTime dateTime)
         {
+            Id = Guid.NewGuid();
+            ValidateNumberOfTeams(teams);
+            Sport = sport;
+            this.teams = GetTeamsArray(teams);
+            DateTime = dateTime;
+        }
+
+        public Encounter(Guid id, Sport sport, IEnumerable<Team> teams, DateTime dateTime)
+        {
+            Id = id;
             ValidateNumberOfTeams(teams);
             Sport = sport;
             this.teams = GetTeamsArray(teams);

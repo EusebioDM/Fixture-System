@@ -9,6 +9,7 @@ namespace EirinDuran.Entities
 {
     public class EncounterEntity
     {
+        public Guid Id { get; set; }
         public DateTime DateTime { get; set; }
         public SportEntity Sport { get; set; }
         public IEnumerable<TeamEntity> Teams { get; set; }

@@ -18,7 +18,8 @@ namespace EirinDuran.Entities.Mappers
             {
                 DateTime = encounter.DateTime,
                 Sport = sportMapper.Map(encounter.Sport),
-                Teams = teams
+                Teams = teams,
+                Id = encounter.Id
             };
         }
 
@@ -27,14 +28,15 @@ namespace EirinDuran.Entities.Mappers
             IEnumerable<Team> teams = entity.Teams.Select(t => teamMapper.Map(t));
             Sport sport = sportMapper.Map(entity.Sport);
 
-            return new Encounter(sport, teams, entity.DateTime);
+            return new Encounter(entity.Id, sport, teams, entity.DateTime);
         }
 
-        public void Update(Encounter sourcem, EncounterEntity destination)
+        public void Update(Encounter source, EncounterEntity destination)
         {
-            destination.DateTime = sourcem.DateTime;
-            destination.Sport = new SportEntity(sourcem.Sport);
-            destination.Teams = sourcem.Teams.Select(sourcemTeam => new TeamEntity(sourcemTeam));
+            destination.DateTime = source.DateTime;
+            destination.Sport = new SportEntity(source.Sport);
+            destination.Teams = source.Teams.Select(sourcemTeam => new TeamEntity(sourcemTeam));
+            destination.Id = source.Id;
         }
     }
 }

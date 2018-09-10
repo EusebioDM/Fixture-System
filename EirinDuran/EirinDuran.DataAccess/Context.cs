@@ -11,6 +11,7 @@ namespace EirinDuran.DataAccess
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<TeamEntity> Teams { get; set; }
         public DbSet<SportEntity> Sports { get; set; }
+        public DbSet<EncounterEntity> Encounters { get; set; }
 
         public Context()
         {
@@ -23,6 +24,6 @@ namespace EirinDuran.DataAccess
         {
             base.OnModelCreating(builder);
         }
-        
+
     }
 }
