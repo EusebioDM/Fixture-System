@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EirinDuran.Domain.User;
+using EirinDuran.Domain;
 
 namespace EirinDuran.Test
 {
