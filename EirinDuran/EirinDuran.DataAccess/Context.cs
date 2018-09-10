@@ -7,6 +7,13 @@ namespace EirinDuran.DataAccess
 {
     public class Context : DbContext
     {
+        public DbSet<UserEntity> Users { get; set; }
+        public DbSet<TeamEntity> Teams { get; set; }
+
+        public Context()
+        {
+        }
+
         public Context(DbContextOptions<Context> options) : base(options)
         {
         }
@@ -14,6 +21,6 @@ namespace EirinDuran.DataAccess
         {
             base.OnModelCreating(builder);
         }
-        public DbSet<UserEntity> UserEntities { get; set; }
+        
     }
 }
