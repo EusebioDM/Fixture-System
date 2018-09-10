@@ -6,9 +6,9 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 
-namespace EirinDuran.Entities
+namespace EirinDuran.Entities.Mappers
 {
-    public class TeamMapper
+    internal class TeamMapper 
     {
         public TeamEntity Map(Team team)
         {
@@ -22,6 +22,12 @@ namespace EirinDuran.Entities
         public Team Map(TeamEntity entity)
         {
             return new Team(name: entity.Name, logo: ByteArrayToImage(entity.Logo));
+        }
+
+        public void Update(Team source, TeamEntity desination)
+        {
+            desination.Name = source.Name;
+            desination.Logo = ImageToByteArray(source.Logo);
         }
 
         private byte[] ImageToByteArray(Image imageIn)

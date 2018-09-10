@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace EirinDuran.Entities
+namespace EirinDuran.Entities.Mappers
 {
-    public class EncounterMapper
+    internal class EncounterMapper
     {
         private readonly SportMapper sportMapper = new SportMapper();
         private readonly TeamMapper teamMapper = new TeamMapper();
@@ -28,6 +28,13 @@ namespace EirinDuran.Entities
             Sport sport = sportMapper.Map(entity.Sport);
 
             return new Encounter(sport, teams, entity.DateTime);
+        }
+
+        public void Update(Encounter sourcem, EncounterEntity destination)
+        {
+            destination.DateTime = sourcem.DateTime;
+            destination.Sport = new SportEntity(sourcem.Sport);
+            destination.Teams = sourcem.Teams.Select(sourcemTeam => new TeamEntity(sourcemTeam));
         }
     }
 }

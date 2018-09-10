@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace EirinDuran.Entities
+namespace EirinDuran.Entities.Mappers
 {
-    public class SportMapper
+    internal class SportMapper
     {
         private TeamMapper teamMapper = new TeamMapper();
 
@@ -23,6 +23,12 @@ namespace EirinDuran.Entities
         {
             IEnumerable<Team> teams = entity.Teams.Select(t => teamMapper.Map(t));
             return new Sport(name: entity.Name, teams: teams);
+        }
+
+        public void Update(Sport source, SportEntity destination)
+        {
+            destination.Name = source.Name;
+            destination.Teams = source.Teams.Select(sourceTeam => new TeamEntity(sourceTeam));
         }
     }
 }

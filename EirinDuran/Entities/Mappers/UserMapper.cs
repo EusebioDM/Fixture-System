@@ -7,7 +7,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 
-namespace EirinDuran.Entities
+namespace EirinDuran.Entities.Mappers
 {
     public class UserMapper
     {
