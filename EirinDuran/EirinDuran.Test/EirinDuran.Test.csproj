@@ -10,10 +10,14 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
     <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\EirinDuran.Domain\EirinDuran.Domain.csproj" />
+    <ProjectReference Include="..\EirinDuran.WebApi\EirinDuran.WebApi.csproj" />
+    <ProjectReference Include="..\EirinDuran.IDataAccess\EirinDuran.IDataAccess.csproj" />
+    <ProjectReference Include="..\EirinDuran.DataAccess\EirinDuran.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>
