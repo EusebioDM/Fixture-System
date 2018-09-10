@@ -1,4 +1,5 @@
 ﻿
+using EirinDuran.Domain.Fixture;
 using EirinDuran.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,6 +10,7 @@ namespace EirinDuran.DataAccess
     {
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<TeamEntity> Teams { get; set; }
+        public DbSet<SportEntity> Sports { get; set; }
 
         public Context()
         {
