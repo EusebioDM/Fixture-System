@@ -22,7 +22,7 @@ namespace EirinDuran.Entities
 
         public EncounterEntity(Encounter encounter) : this()
         {
-            mapper.Update(encounter, this);
+            UpdateWith(encounter);
         }
 
         public void UpdateWith(Encounter encounter)
@@ -33,6 +33,18 @@ namespace EirinDuran.Entities
         public Encounter ToModel()
         {
             return mapper.Map(this);
+        }
+
+        public override bool Equals(object obj)
+        {
+            var entity = obj as EncounterEntity;
+            return entity != null &&
+                   Id.Equals(entity.Id);
+        }
+
+        public override int GetHashCode()
+        {
+            return 2108858624 + EqualityComparer<Guid>.Default.GetHashCode(Id);
         }
     }
 }

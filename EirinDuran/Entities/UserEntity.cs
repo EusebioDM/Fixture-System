@@ -24,10 +24,10 @@ namespace EirinDuran.Entities
 
         public UserEntity(User user) : this()
         {
-            mapper.Update(user, this);
+            UpdateWith(user);
         }
 
-        public void Update(User user)
+        public void UpdateWith(User user)
         {
             mapper.Update(user, this);
         }

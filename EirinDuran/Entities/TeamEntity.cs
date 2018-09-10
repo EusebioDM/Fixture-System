@@ -19,7 +19,7 @@ namespace EirinDuran.Entities
 
         public TeamEntity(Team team) : this()
         {
-            mapper.Update(team, this);
+            UpdateWith(team);
         }
 
         public void UpdateWith(Team team)

@@ -19,7 +19,7 @@ namespace EirinDuran.Entities
 
         public SportEntity(Sport sport) : this()
         {
-            mapper.Update(sport, this);
+            UpdateWith(sport);
         }
 
         public void UpdateWith(Sport sport)
