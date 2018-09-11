@@ -6,9 +6,10 @@ using System.Text;
 
 namespace EirinDuran.Entities
 {
-    public class UserEntity
+    public class UserEntity : IEntity<User>
     {
         public int Id { get; set; }
+        public string EntityId => Id.ToString();
         public string UserName { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }

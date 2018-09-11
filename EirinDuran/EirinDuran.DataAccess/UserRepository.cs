@@ -12,91 +12,27 @@ namespace EirinDuran.DataAccess
 {
     public class UserRepository : IRepository<User>
     {
-        private Context context;
+        private EntityRepository<User, UserEntity> repo;
 
         public UserRepository(Context context)
         {
-            this.context = context;
+            EntityFactory<UserEntity> factory = CreateEntityFactory();
+            Func<Context, DbSet<UserEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
+            repo = new EntityRepository<User, UserEntity>(factory, dbSet, context);
         }
 
-        public void Add(User user)
-        {
-            try
-            {
-                TryToAdd(user);
-            }
-            catch (DbUpdateException)
-            {
-                throw new ObjectAlreadyExistsInDataBaseException();
-            }
-        }
+        private EntityFactory<UserEntity> CreateEntityFactory() => new EntityFactory<UserEntity>(() => new UserEntity());
 
-        private void TryToAdd(User user)
-        {
-            context.Users.Add(new UserEntity(user));
-            context.SaveChanges();
-        }
+        private Func<Context, DbSet<UserEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Users;
 
-        public void Delete(User user)
-        {
-            try
-            {
-                TryToDelete(user);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new ObjectDoesntExistsInDataBaseException();
-            }
-        }
+        public void Add(User model) => repo.Add(model);
 
-        private void TryToDelete(User user)
-        {
-            UserEntity toDelete = context.Users.Single(u => u.Name.Equals(user.Name));
-            context.Users.Remove(toDelete);
-            context.SaveChanges();
-        }
+        public void Delete(User model) => repo.Delete(model);
 
-        public User Get(int id)
-        {
-            try
-            {
-                return TryToGet(id);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new ObjectDoesntExistsInDataBaseException();
-            }
-        }
+        public User Get(string id) => repo.Get(id);
 
-        private User TryToGet(int id)
-        {
-            UserEntity toReturn = context.Users.Single(t => t.Id.Equals(id));
-            return toReturn.ToModel();
-        }
+        public IEnumerable<User> GetAll() => repo.GetAll();
 
-        public IEnumerable<User> GetAll()
-        {
-            Func<UserEntity, User> mapEntity = u => { return u.ToModel(); };
-            return context.Users.Select(mapEntity);
-        }
-
-        public void Update(User user)
-        {
-            try
-            {
-                TryToUpdate(user);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new ObjectDoesntExistsInDataBaseException();
-            }
-        }
-
-        private void TryToUpdate(User user)
-        {
-            UserEntity toUpdate = context.Users.Single(u => u.Name.Equals(user.Name));
-            toUpdate.UpdateWith(user);
-            context.SaveChanges();
-        }
+        public void Update(User model) => repo.Update(model);
     }
 }

@@ -12,99 +12,27 @@ namespace EirinDuran.DataAccess
 {
     public class TeamRepository : IRepository<Team>
     {
-        private Context context;
+        private EntityRepository<Team, TeamEntity> repo;
 
         public TeamRepository(Context context)
         {
-            this.context = context;
+            EntityFactory<TeamEntity> factory = CreateEntityFactory();
+            Func<Context, DbSet<TeamEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
+            repo = new EntityRepository<Team, TeamEntity>(factory, dbSet, context);
         }
 
-        public void Add(Team team)
-        {
-            try
-            {
-                TryToAdd(team);
-            }
-            catch (DbUpdateException)
-            {
-                throw new ObjectAlreadyExistsInDataBaseException();
-            }
-        }
+        private EntityFactory<TeamEntity> CreateEntityFactory() => new EntityFactory<TeamEntity>(() => new TeamEntity());
 
-        private void TryToAdd(Team team)
-        {
-            context.Teams.Add(new TeamEntity(team));
-            context.SaveChanges();
-        }
+        private Func<Context, DbSet<TeamEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Teams;
 
-        public void Delete(Team team)
-        {
-            try
-            {
-                TryToDelete(team);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new ObjectDoesntExistsInDataBaseException();
-            }
-        }
+        public void Add(Team model) => repo.Add(model);
 
-        private void TryToDelete(Team team)
-        {
+        public void Delete(Team model) => repo.Delete(model);
 
-            TeamEntity toDelete = context.Teams.Single(t => t.Equals(team));
-            context.Teams.Remove(toDelete);
-            context.SaveChanges();
+        public Team Get(string id) => repo.Get(id);
 
-        }
+        public IEnumerable<Team> GetAll() => repo.GetAll();
 
-        public Team Get(int id)
-        {
-            try
-            {
-                return TryToGet(id);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new ObjectDoesntExistsInDataBaseException();
-            }
-        }
-
-        private Team TryToGet(int id)
-        {
-
-            TeamEntity toReturn = context.Teams.Single(t => t.Name.Equals(id));
-            return toReturn.ToModel();
-
-        }
-
-        public IEnumerable<Team> GetAll()
-        {
-
-            Func<TeamEntity, Team> mapEntity = t => { return t.ToModel(); };
-            return context.Teams.Select(mapEntity);
-
-        }
-
-        public void Update(Team team)
-        {
-            try
-            {
-                TryToUpdate(team);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new ObjectDoesntExistsInDataBaseException();
-            }
-        }
-
-        private void TryToUpdate(Team team)
-        {
-
-            TeamEntity toUpdate = context.Teams.Single(t => t.Name.Equals(team.Name));
-            toUpdate.UpdateWith(team);
-            context.SaveChanges();
-
-        }
+        public void Update(Team model) => repo.Update(model);
     }
 }

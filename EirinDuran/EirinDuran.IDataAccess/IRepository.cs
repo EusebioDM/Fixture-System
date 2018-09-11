@@ -5,7 +5,7 @@ namespace EirinDuran.IDataAccess
 {
     public interface IRepository<T>
     {
-        T Get(int id);
+        T Get(string id);
 
         IEnumerable<T> GetAll();
 

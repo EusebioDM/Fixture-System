@@ -7,10 +7,11 @@ using System.Text;
 
 namespace EirinDuran.Entities
 {
-    public class SportEntity
+    public class SportEntity : IEntity<Sport>
     {
         [Key]
         public string Name { get; set; }
+        public string EntityId => Name;
         public IEnumerable<TeamEntity> Teams { get; set; }
         private SportMapper mapper;
 

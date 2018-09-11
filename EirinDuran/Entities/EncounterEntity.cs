@@ -8,10 +8,11 @@ using System.Text;
 
 namespace EirinDuran.Entities
 {
-    public class EncounterEntity
+    public class EncounterEntity : IEntity<Encounter>
     {
         [Key]
         public Guid Id { get; set; }
+        public string EntityId => Id.ToString();
         public DateTime DateTime { get; set; }
         public SportEntity Sport { get; set; }
         public IEnumerable<TeamEntity> Teams { get; set; }

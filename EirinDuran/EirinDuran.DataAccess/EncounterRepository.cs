@@ -11,100 +11,27 @@ namespace EirinDuran.DataAccess
 {
     public class EncounterRepository : IRepository<Encounter>
     {
-        private Context context;
+        private EntityRepository<Encounter, EncounterEntity> repo;
 
         public EncounterRepository(Context context)
         {
-            this.context = context;
+            EntityFactory<EncounterEntity> factory = CreateEntityFactory();
+            Func<Context, DbSet<EncounterEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
+            repo = new EntityRepository<Encounter, EncounterEntity>(factory, dbSet, context);
         }
 
-        public void Add(Encounter encounter)
-        {
-            try
-            {
-                TryToAdd(encounter);
-            }
-            catch (DbUpdateException)
-            {
-                throw new ObjectAlreadyExistsInDataBaseException();
-            }
-        }
+        private EntityFactory<EncounterEntity> CreateEntityFactory() => new EntityFactory<EncounterEntity>(() => new EncounterEntity());
 
-        private void TryToAdd(Encounter encounter)
-        {
+        private Func<Context, DbSet<EncounterEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Encounters;
 
-            context.Encounters.Add(new EncounterEntity(encounter));
-            context.SaveChanges();
-        }
+        public void Add(Encounter model) => repo.Add(model);
 
-        public void Delete(Encounter encounter)
-        {
-            try
-            {
-                TryToDelete(encounter);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new ObjectDoesntExistsInDataBaseException();
-            }
-        }
+        public void Delete(Encounter model) => repo.Delete(model);
 
-        private void TryToDelete(Encounter encounter)
-        {
+        public Encounter Get(string id) => repo.Get(id);
 
-            EncounterEntity toDelete = context.Encounters.Single(e => e.Id.Equals(encounter.Id));
-            context.Encounters.Remove(toDelete);
-            context.SaveChanges();
+        public IEnumerable<Encounter> GetAll() => repo.GetAll();
 
-        }
-
-        public Encounter Get(int id)
-        {
-            try
-            {
-                return TryToGet(id);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new ObjectDoesntExistsInDataBaseException();
-            }
-        }
-
-        private Encounter TryToGet(int id)
-        {
-
-            EncounterEntity toReturn = context.Encounters.Single(e => e.Id.Equals(id));
-            return toReturn.ToModel();
-
-        }
-
-        public IEnumerable<Encounter> GetAll()
-        {
-
-            Func<EncounterEntity, Encounter> mapEntity = e => { return e.ToModel(); };
-            return context.Encounters.Select(mapEntity);
-
-        }
-
-        public void Update(Encounter encounter)
-        {
-            try
-            {
-                TryToUpdate(encounter);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new ObjectDoesntExistsInDataBaseException();
-            }
-        }
-
-        private void TryToUpdate(Encounter encounter)
-        {
-
-            EncounterEntity toUpdate = context.Encounters.Single(e => e.Id.Equals(encounter.Id));
-            toUpdate.UpdateWith(encounter);
-            context.SaveChanges();
-
-        }
+        public void Update(Encounter model) => repo.Update(model);
     }
 }

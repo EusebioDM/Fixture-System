@@ -11,96 +11,27 @@ namespace EirinDuran.DataAccess
 {
     public class SportRepository : IRepository<Sport>
     {
-        private Context context;
+        private EntityRepository<Sport, SportEntity> repo;
 
         public SportRepository(Context context)
         {
-            this.context = context;
+            EntityFactory<SportEntity> factory = CreateEntityFactory();
+            Func<Context, DbSet<SportEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
+            repo = new EntityRepository<Sport, SportEntity>(factory, dbSet, context);
         }
 
-        public void Add(Sport sport)
-        {
-            try
-            {
-                TryToAdd(sport);
-            }
-            catch (DbUpdateException)
-            {
-                throw new ObjectAlreadyExistsInDataBaseException();
-            }
-        }
+        private EntityFactory<SportEntity> CreateEntityFactory() => new EntityFactory<SportEntity>(() => new SportEntity());
 
-        private void TryToAdd(Sport sport)
-        {
+        private Func<Context, DbSet<SportEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Sports;
 
-            context.Sports.Add(new SportEntity(sport));
-            context.SaveChanges();
-        }
+        public void Add(Sport model) => repo.Add(model);
 
-        public void Delete(Sport sport)
-        {
-            try
-            {
-                TryToDelete(sport);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new ObjectDoesntExistsInDataBaseException();
-            }
-        }
+        public void Delete(Sport model) => repo.Delete(model);
 
-        private void TryToDelete(Sport sport)
-        {
+        public Sport Get(string id) => repo.Get(id);
 
-            SportEntity toDelete = context.Sports.Single(s => s.Name.Equals(sport.Name));
-            context.Sports.Remove(toDelete);
-            context.SaveChanges();
-        }
+        public IEnumerable<Sport> GetAll() => repo.GetAll();
 
-        public Sport Get(int id)
-        {
-            try
-            {
-                return TryToGet(id);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new ObjectDoesntExistsInDataBaseException();
-            }
-        }
-
-        private Sport TryToGet(int id)
-        {
-
-            SportEntity toReturn = context.Sports.Single(t => t.Name.Equals(id));
-            return toReturn.ToModel();
-
-        }
-
-        public IEnumerable<Sport> GetAll()
-        {
-            Func<SportEntity, Sport> mapEntity = s => { return s.ToModel(); };
-            return context.Sports.Select(mapEntity);
-        }
-
-        public void Update(Sport sport)
-        {
-            try
-            {
-                TryToUpdate(sport);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new ObjectDoesntExistsInDataBaseException();
-            }
-        }
-
-        private void TryToUpdate(Sport sport)
-        {
-
-            SportEntity toUpdate = context.Sports.Single(s => s.Name.Equals(sport.Name));
-            toUpdate.UpdateWith(sport);
-            context.SaveChanges();
-        }
+        public void Update(Sport model) => repo.Update(model);
     }
 }

@@ -25,7 +25,7 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet("{id}", Name = "GetTodo")]
-        public ActionResult<User> GetById(int id)
+        public ActionResult<User> GetById(string id)
         {
             User user = userRepository.Get(id);
             if(user == null)
