@@ -79,11 +79,8 @@ namespace EirinDuran.DataAccess
 
         public IEnumerable<Sport> GetAll()
         {
-            using (Context context = new Context())
-            {
-                Func<SportEntity, Sport> mapEntity = s => { return s.ToModel(); };
-                return context.Sports.Select(mapEntity);
-            }
+            Func<SportEntity, Sport> mapEntity = s => { return s.ToModel(); };
+            return context.Sports.Select(mapEntity);
         }
 
         public void Update(Sport sport)
