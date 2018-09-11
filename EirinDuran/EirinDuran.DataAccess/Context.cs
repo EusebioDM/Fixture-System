@@ -13,14 +13,11 @@ namespace EirinDuran.DataAccess
         public DbSet<SportEntity> Sports { get; set; }
         public DbSet<EncounterEntity> Encounters { get; set; }
 
-        public Context()
-        {
-        }
-
         public Context(DbContextOptions<Context> options) : base(options)
         {
             
         }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

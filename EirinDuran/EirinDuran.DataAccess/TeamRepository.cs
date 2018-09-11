@@ -12,6 +12,12 @@ namespace EirinDuran.DataAccess
 {
     public class TeamRepository : IRepository<Team>
     {
+        private Context context;
+
+        public TeamRepository(Context context)
+        {
+            this.context = context;
+        }
 
         public void Add(Team team)
         {
@@ -27,11 +33,8 @@ namespace EirinDuran.DataAccess
 
         private void TryToAdd(Team team)
         {
-            using (Context context = new Context())
-            {
-                context.Teams.Add(new TeamEntity(team));
-                context.SaveChanges();
-            }
+            context.Teams.Add(new TeamEntity(team));
+            context.SaveChanges();
         }
 
         public void Delete(Team team)
@@ -48,12 +51,11 @@ namespace EirinDuran.DataAccess
 
         private void TryToDelete(Team team)
         {
-            using (Context context = new Context())
-            {
-                TeamEntity toDelete = context.Teams.Single(t => t.Equals(team));
-                context.Teams.Remove(toDelete);
-                context.SaveChanges();
-            }
+
+            TeamEntity toDelete = context.Teams.Single(t => t.Equals(team));
+            context.Teams.Remove(toDelete);
+            context.SaveChanges();
+
         }
 
         public Team Get(int id)
@@ -70,20 +72,18 @@ namespace EirinDuran.DataAccess
 
         private Team TryToGet(int id)
         {
-            using (Context context = new Context())
-            {
-                TeamEntity toReturn = context.Teams.Single(t => t.Name.Equals(id));
-                return toReturn.ToModel();
-            }
+
+            TeamEntity toReturn = context.Teams.Single(t => t.Name.Equals(id));
+            return toReturn.ToModel();
+
         }
 
         public IEnumerable<Team> GetAll()
         {
-            using (Context context = new Context())
-            {
-                Func<TeamEntity, Team> mapEntity = t => { return t.ToModel(); };
-                return context.Teams.Select(mapEntity);
-            }
+
+            Func<TeamEntity, Team> mapEntity = t => { return t.ToModel(); };
+            return context.Teams.Select(mapEntity);
+
         }
 
         public void Update(Team team)
@@ -100,12 +100,11 @@ namespace EirinDuran.DataAccess
 
         private void TryToUpdate(Team team)
         {
-            using (Context context = new Context())
-            {
-                TeamEntity toUpdate = context.Teams.Single(t => t.Name.Equals(team.Name));
-                toUpdate.UpdateWith(team);
-                context.SaveChanges();
-            }
+
+            TeamEntity toUpdate = context.Teams.Single(t => t.Name.Equals(team.Name));
+            toUpdate.UpdateWith(team);
+            context.SaveChanges();
+
         }
     }
 }

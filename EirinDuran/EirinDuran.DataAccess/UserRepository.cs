@@ -12,6 +12,13 @@ namespace EirinDuran.DataAccess
 {
     public class UserRepository : IRepository<User>
     {
+        private Context context;
+
+        public UserRepository(Context context)
+        {
+            this.context = context;
+        }
+
         public void Add(User user)
         {
             try
@@ -26,11 +33,8 @@ namespace EirinDuran.DataAccess
 
         private void TryToAdd(User user)
         {
-            using (Context context = new Context())
-            {
-                context.Users.Add(new UserEntity(user));
-                context.SaveChanges();
-            }
+            context.Users.Add(new UserEntity(user));
+            context.SaveChanges();
         }
 
         public void Delete(User user)
@@ -47,12 +51,9 @@ namespace EirinDuran.DataAccess
 
         private void TryToDelete(User user)
         {
-            using (Context context = new Context())
-            {
-                UserEntity toDelete = context.Users.Single(u => u.Name.Equals(user.Name));
-                context.Users.Remove(toDelete);
-                context.SaveChanges();
-            }
+            UserEntity toDelete = context.Users.Single(u => u.Name.Equals(user.Name));
+            context.Users.Remove(toDelete);
+            context.SaveChanges();
         }
 
         public User Get(int id)
@@ -69,20 +70,14 @@ namespace EirinDuran.DataAccess
 
         private User TryToGet(int id)
         {
-            using (Context context = new Context())
-            {
-                UserEntity toReturn = context.Users.Single(t => t.Id.Equals(id));
-                return toReturn.ToModel();
-            }
+            UserEntity toReturn = context.Users.Single(t => t.Id.Equals(id));
+            return toReturn.ToModel();
         }
 
         public IEnumerable<User> GetAll()
         {
-            using (Context context = new Context())
-            {
-                Func<UserEntity, User> mapEntity = u => { return u.ToModel(); };
-                return context.Users.Select(mapEntity);
-            }
+            Func<UserEntity, User> mapEntity = u => { return u.ToModel(); };
+            return context.Users.Select(mapEntity);
         }
 
         public void Update(User user)
@@ -99,12 +94,9 @@ namespace EirinDuran.DataAccess
 
         private void TryToUpdate(User user)
         {
-            using (Context context = new Context())
-            {
-                UserEntity toUpdate = context.Users.Single(u => u.Name.Equals(user.Name));
-                toUpdate.UpdateWith(user);
-                context.SaveChanges();
-            }
+            UserEntity toUpdate = context.Users.Single(u => u.Name.Equals(user.Name));
+            toUpdate.UpdateWith(user);
+            context.SaveChanges();
         }
     }
 }

@@ -11,6 +11,13 @@ namespace EirinDuran.DataAccess
 {
     public class SportRepository : IRepository<Sport>
     {
+        private Context context;
+
+        public SportRepository(Context context)
+        {
+            this.context = context;
+        }
+
         public void Add(Sport sport)
         {
             try
@@ -25,11 +32,9 @@ namespace EirinDuran.DataAccess
 
         private void TryToAdd(Sport sport)
         {
-            using (Context context = new Context())
-            {
-                context.Sports.Add(new SportEntity(sport));
-                context.SaveChanges();
-            }
+
+            context.Sports.Add(new SportEntity(sport));
+            context.SaveChanges();
         }
 
         public void Delete(Sport sport)
@@ -46,12 +51,10 @@ namespace EirinDuran.DataAccess
 
         private void TryToDelete(Sport sport)
         {
-            using (Context context = new Context())
-            {
-                SportEntity toDelete = context.Sports.Single(s => s.Name.Equals(sport.Name));
-                context.Sports.Remove(toDelete);
-                context.SaveChanges();
-            }
+
+            SportEntity toDelete = context.Sports.Single(s => s.Name.Equals(sport.Name));
+            context.Sports.Remove(toDelete);
+            context.SaveChanges();
         }
 
         public Sport Get(int id)
@@ -68,11 +71,10 @@ namespace EirinDuran.DataAccess
 
         private Sport TryToGet(int id)
         {
-            using (Context context = new Context())
-            {
-                SportEntity toReturn = context.Sports.Single(t => t.Name.Equals(id));
-                return toReturn.ToModel();
-            }
+
+            SportEntity toReturn = context.Sports.Single(t => t.Name.Equals(id));
+            return toReturn.ToModel();
+
         }
 
         public IEnumerable<Sport> GetAll()
@@ -98,12 +100,10 @@ namespace EirinDuran.DataAccess
 
         private void TryToUpdate(Sport sport)
         {
-            using (Context context = new Context())
-            {
-                SportEntity toUpdate = context.Sports.Single(s => s.Name.Equals(sport.Name));
-                toUpdate.UpdateWith(sport);
-                context.SaveChanges();
-            }
+
+            SportEntity toUpdate = context.Sports.Single(s => s.Name.Equals(sport.Name));
+            toUpdate.UpdateWith(sport);
+            context.SaveChanges();
         }
     }
 }
