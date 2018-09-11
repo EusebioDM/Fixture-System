@@ -15,7 +15,7 @@ namespace EirinDuran.DataAccess
 
         public Context(DbContextOptions<Context> options) : base(options)
         {
-            
+            this.Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

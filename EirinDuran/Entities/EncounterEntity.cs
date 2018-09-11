@@ -2,6 +2,7 @@
 using EirinDuran.Entities.Mappers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
@@ -9,6 +10,7 @@ namespace EirinDuran.Entities
 {
     public class EncounterEntity
     {
+        [Key]
         public Guid Id { get; set; }
         public DateTime DateTime { get; set; }
         public SportEntity Sport { get; set; }
