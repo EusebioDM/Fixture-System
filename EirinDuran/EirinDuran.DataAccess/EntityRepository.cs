@@ -12,10 +12,10 @@ namespace EirinDuran.DataAccess
     internal class EntityRepository<Model, Entity> : IRepository<Model> where Entity : class, IEntity<Model>
     {
         private EntityFactory<Entity> factory;
-        private Func<Context, DbSet<Entity>> getDBSetFunc;
-        private Context context;
+        private Func<IContext, DbSet<Entity>> getDBSetFunc;
+        private IContext context;
 
-        public EntityRepository(EntityFactory<Entity> factory, Func<Context, DbSet<Entity>> getDBSetFunc, Context context)
+        public EntityRepository(EntityFactory<Entity> factory, Func<IContext, DbSet<Entity>> getDBSetFunc, IContext context)
         {
             this.factory = factory;
             this.getDBSetFunc = getDBSetFunc;

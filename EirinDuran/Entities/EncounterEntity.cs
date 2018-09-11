@@ -2,15 +2,13 @@
 using EirinDuran.Entities.Mappers;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace EirinDuran.Entities
 {
     public class EncounterEntity : IEntity<Encounter>
     {
-        [Key]
+        
         public Guid Id { get; set; }
         public string EntityId => Id.ToString();
         public DateTime DateTime { get; set; }

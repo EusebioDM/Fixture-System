@@ -13,17 +13,18 @@ namespace EirinDuran.DataAccess
     public class TeamRepository : IRepository<Team>
     {
         private EntityRepository<Team, TeamEntity> repo;
+        private IContext context;
 
-        public TeamRepository(Context context)
+        public TeamRepository(IContext context)
         {
             EntityFactory<TeamEntity> factory = CreateEntityFactory();
-            Func<Context, DbSet<TeamEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
+            Func<IContext, DbSet<TeamEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
             repo = new EntityRepository<Team, TeamEntity>(factory, dbSet, context);
         }
 
         private EntityFactory<TeamEntity> CreateEntityFactory() => new EntityFactory<TeamEntity>(() => new TeamEntity());
 
-        private Func<Context, DbSet<TeamEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Teams;
+        private Func<IContext, DbSet<TeamEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Teams;
 
         public void Add(Team model) => repo.Add(model);
 

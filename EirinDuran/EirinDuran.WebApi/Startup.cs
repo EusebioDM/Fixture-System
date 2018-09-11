@@ -31,6 +31,7 @@ namespace EirinDuran.WebApi
         {   
             services.AddScoped<IRepository<User>, UserRepository>();
             services.AddDbContext<Context>(options => options.UseSqlServer(Configuration.GetConnectionString("EirinDuranDB"), b => b.MigrationsAssembly("EirinDuran.WebApi")));
+            services.AddScoped<IContext>(provider => provider.GetService<Context>());
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
