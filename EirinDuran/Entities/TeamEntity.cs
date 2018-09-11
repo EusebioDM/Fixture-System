@@ -2,14 +2,12 @@
 using EirinDuran.Entities.Mappers;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace EirinDuran.Entities
 {
     public class TeamEntity
     {
-        [Key]
         public string Name { get; set; }
         public byte[] Logo { get; set; }
         private TeamMapper mapper;
