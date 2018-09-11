@@ -11,9 +11,9 @@ namespace EirinDuran.DataAccess
 {
     public class SportRepository : IRepository<Sport>
     {
-        private Context context;
+        private IContext context;
 
-        public SportRepository(Context context)
+        public SportRepository(IContext context)
         {
             this.context = context;
         }

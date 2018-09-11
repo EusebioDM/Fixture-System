@@ -11,9 +11,9 @@ namespace EirinDuran.DataAccess
 {
     public class EncounterRepository : IRepository<Encounter>
     {
-        private Context context;
+        private IContext context;
 
-        public EncounterRepository(Context context)
+        public EncounterRepository(IContext context)
         {
             this.context = context;
         }

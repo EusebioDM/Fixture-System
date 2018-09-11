@@ -12,9 +12,9 @@ namespace EirinDuran.DataAccess
 {
     public class TeamRepository : IRepository<Team>
     {
-        private Context context;
+        private IContext context;
 
-        public TeamRepository(Context context)
+        public TeamRepository(IContext context)
         {
             this.context = context;
         }

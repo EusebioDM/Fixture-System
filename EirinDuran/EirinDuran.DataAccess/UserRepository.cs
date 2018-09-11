@@ -12,9 +12,9 @@ namespace EirinDuran.DataAccess
 {
     public class UserRepository : IRepository<User>
     {
-        private Context context;
+        private IContext context;
 
-        public UserRepository(Context context)
+        public UserRepository(IContext context)
         {
             this.context = context;
         }
