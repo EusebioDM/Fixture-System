@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace EirinDuran.Test
 {
@@ -60,6 +59,10 @@ namespace EirinDuran.Test
             football.AddTeam(river);
 
             List<Team> teams = new List<Team>();
+
+            teams.Add(boca);
+            teams.Add(cerro);
+            teams.Add(river);
 
             DateTime date = new DateTime(2018, 10, 07, 18, 30, 00);
 

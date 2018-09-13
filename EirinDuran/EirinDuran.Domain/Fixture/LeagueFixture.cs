@@ -50,6 +50,10 @@ namespace EirinDuran.Domain.Fixture
                     }
                 }
             }
+            else
+            {
+                throw new InvalidNumberOfTeamsException();
+            }
             
             return encounters;
         }
