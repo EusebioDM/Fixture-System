@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace EirinDuran.Test
@@ -24,18 +25,21 @@ namespace EirinDuran.Test
 
             Sport football = new Sport("football");
 
+            football.AddTeam(boca);
+            football.AddTeam(cerro);
+
             List<Team> teams = new List<Team>();
 
             teams.Add(boca);
             teams.Add(cerro);
 
-            DateTime date = new DateTime(2018, 09, 13, 16, 45, 0); 
+            DateTime date = new DateTime(2018, 10, 07, 18, 30, 00); 
 
-            Encounter expected = new Encounter(football, teams, DateTime.Now);
+            Encounter expected = new Encounter(football, teams, date);
 
-            IFixtureGenerator fixtureLeague = new LeagueFixture();
+            IFixtureGenerator leagueFixture = new LeagueFixture();
 
-            List<Encounter> result = fixtureLeague.GenerateFixture(teams, date);
+            List<Encounter> result = leagueFixture.GenerateFixture(teams, date).ToList();
 
             Assert.AreEqual(expected, result);
         }
