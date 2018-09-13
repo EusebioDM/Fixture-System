@@ -8,6 +8,7 @@ namespace EirinDuran.Domain.Fixture
     public class Encounter
     {
         private Team[] teams;
+
         private DateTime dateTime;
         public DateTime DateTime { get => dateTime; set => SetDateIfValid(value); }
 

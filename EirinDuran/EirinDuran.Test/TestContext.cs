@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using EirinDuran.DataAccess;
-using Entities;
+using EirinDuran.Entities;
 
 namespace EirinDuran.Test
 {
