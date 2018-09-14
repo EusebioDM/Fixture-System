@@ -11,11 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.Domain", "EirinD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.Services", "EirinDuran.Services\EirinDuran.Services.csproj", "{36546A25-358E-4526-83FB-E2A7FF1BC6AE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.Test", "EirinDuran.Test\EirinDuran.Test.csproj", "{C2B84AAE-122D-41F4-A9CC-4201C73738F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.DomainTest", "EirinDuran.Test\EirinDuran.DomainTest.csproj", "{C2B84AAE-122D-41F4-A9CC-4201C73738F0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.Entities", "Entities\EirinDuran.Entities.csproj", "{36119659-F618-46C8-AD17-7EE6CF8A27B0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.IDataAccess", "EirinDuran.IDataAccess\EirinDuran.IDataAccess.csproj", "{1E6716DF-12A8-47DC-A70F-BA067BAC98B9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.DataAccessTest", "EirinDuran.DataAccessTest\EirinDuran.DataAccessTest.csproj", "{61BF650C-C376-47D9-893B-B4F150359CC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{1E6716DF-12A8-47DC-A70F-BA067BAC98B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E6716DF-12A8-47DC-A70F-BA067BAC98B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E6716DF-12A8-47DC-A70F-BA067BAC98B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61BF650C-C376-47D9-893B-B4F150359CC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61BF650C-C376-47D9-893B-B4F150359CC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61BF650C-C376-47D9-893B-B4F150359CC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61BF650C-C376-47D9-893B-B4F150359CC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

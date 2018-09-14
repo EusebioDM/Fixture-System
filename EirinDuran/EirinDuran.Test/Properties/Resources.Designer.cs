@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EirinDuran.Test.Properties {
+namespace EirinDuran.DomainTest.Properties {
     using System;
     
     

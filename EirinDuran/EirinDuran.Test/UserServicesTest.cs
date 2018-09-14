@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace EirinDuran.Test
+namespace EirinDuran.DomainTest
 {
     
     [TestClass]

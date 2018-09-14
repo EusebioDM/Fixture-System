@@ -1,6 +1,6 @@
 ﻿using EirinDuran.Domain;
 using EirinDuran.Domain.Fixture;
-using EirinDuran.Test.Properties;
+using EirinDuran.DomainTest.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 
-namespace EirinDuran.Test
+namespace EirinDuran.DomainTest
 {
     [TestClass]
     public class TeamTest
