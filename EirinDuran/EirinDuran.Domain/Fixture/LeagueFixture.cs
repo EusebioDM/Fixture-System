@@ -18,20 +18,29 @@ namespace EirinDuran.Domain.Fixture
 
         public ICollection<Encounter> GenerateFixture(IEnumerable<Team> teams, DateTime start, DateTime end)
         {
+            ControlValidParams(teams, start, end);
+
             List<Encounter> encounters = new List<Encounter>();
             List<Team> teamList = teams.ToList();
-            int amountTeams = teamList.Count;
 
-            if (amountTeams % 2 == 0)
-            {
-                GenerateLeagueFixture(encounters, teamList, start, end);
-            }
-            else
+            GenerateLeagueFixture(encounters, teamList, start, end);
+
+
+            return encounters;
+        }
+
+        private void ControlValidParams(IEnumerable<Team> teams, DateTime start, DateTime end)
+        {
+            int amountTeams = teams.ToList().Count;
+
+            if (amountTeams % 2 != 0)
             {
                 throw new InvalidNumberOfTeamsException();
             }
-            
-            return encounters;
+            else if(start > end)
+            {
+                throw new OutdatedDatesException();
+            }
         }
 
         private void GenerateLeagueFixture(List<Encounter> encounters, List<Team> teamList, DateTime start, DateTime end)
@@ -59,7 +68,7 @@ namespace EirinDuran.Domain.Fixture
                         encounters.Add(encounter);
                     }
                 }
-            } 
+            }
         }
 
         private Team[] ConvertCollectionOfTeamToVector(IEnumerable<Team> teams)

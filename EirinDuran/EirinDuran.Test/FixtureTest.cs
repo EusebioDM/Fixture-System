@@ -27,7 +27,7 @@ namespace EirinDuran.Test
 
         private void InitializeTeams()
         {
-            felix = new Team("Félix", image);
+            felix = new Team("Fï¿½lix", image);
             liverpool = new Team("Liverpool", image);
             river = new Team("River Plate", image);
             cerro = new Team("Cerro", image);
@@ -93,13 +93,13 @@ namespace EirinDuran.Test
             List<Encounter> result = leagueFixture.GenerateFixture(teams, start, end).ToList();
         }
 
-        [TestMethod]
+        /*[TestMethod]
         [ExpectedException(typeof(InsufficientRangeOfDatesToGenerateFeatureException))]
         public void InsufficientRangeOfDatesToGenerateFeature()
         {
 
         }
-
+        */
 
         private Image GetImage(byte[] resource)
         {
