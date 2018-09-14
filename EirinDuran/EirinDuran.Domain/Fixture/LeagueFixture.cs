@@ -25,7 +25,6 @@ namespace EirinDuran.Domain.Fixture
 
             GenerateLeagueFixture(encounters, teamList, start, end);
 
-
             return encounters;
         }
 

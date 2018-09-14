@@ -17,6 +17,11 @@ namespace EirinDuran.Test
         private Team liverpool;
         private Team river;
         private Team cerro;
+        private Team torque;
+        private Team danubio;
+        private Team penhiarol;
+        private Team atenas;
+        private Team wanderers;
 
         [TestInitialize]
         public void SetUp()
@@ -27,11 +32,15 @@ namespace EirinDuran.Test
 
         private void InitializeTeams()
         {
-            felix = new Team("F�lix", image);
+            felix = new Team("Felix", image);
             liverpool = new Team("Liverpool", image);
             river = new Team("River Plate", image);
             cerro = new Team("Cerro", image);
-
+            torque = new Team("Torque", image);
+            danubio = new Team("Danubio", image);
+            penhiarol = new Team("Peñarol", image);
+            atenas = new Team("Atenas", image);
+            wanderers = new Team("Wanderes", image);
         }
 
         [TestMethod]
@@ -42,11 +51,11 @@ namespace EirinDuran.Test
             football.AddTeam(felix);
             football.AddTeam(liverpool);
 
-            List<Team> teams = new List<Team>(){ felix, liverpool };
+            List<Team> teams = new List<Team>() { felix, liverpool };
 
             DateTime start = new DateTime(2018, 10, 07);
             DateTime end = new DateTime(2018, 10, 17);
-      
+
             IFixtureGenerator leagueFixture = new LeagueFixture(football);
 
             List<Encounter> result = leagueFixture.GenerateFixture(teams, start, end).ToList();
@@ -93,13 +102,25 @@ namespace EirinDuran.Test
             List<Encounter> result = leagueFixture.GenerateFixture(teams, start, end).ToList();
         }
 
-        /*[TestMethod]
+        [TestMethod]
         [ExpectedException(typeof(InsufficientRangeOfDatesToGenerateFeatureException))]
         public void InsufficientRangeOfDatesToGenerateFeature()
         {
+            Sport football = new Sport("football");
 
+            football.AddTeam(felix);
+            football.AddTeam(liverpool);
+
+            List<Team> teams = new List<Team>() { felix, liverpool, danubio, torque };
+
+            DateTime start = new DateTime(2018, 10, 07);
+            DateTime end = new DateTime(2018, 10, 08);
+
+            IFixtureGenerator leagueFixture = new LeagueFixture(football);
+
+            List<Encounter> result = leagueFixture.GenerateFixture(teams, start, end).ToList();
         }
-        */
+
 
         private Image GetImage(byte[] resource)
         {
