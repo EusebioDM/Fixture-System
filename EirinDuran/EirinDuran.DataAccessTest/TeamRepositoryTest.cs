@@ -41,6 +41,19 @@ namespace EirinDuran.DataAccessTest
                 repo.Add(boca);
             }
 
+            [TestMethod]
+            public void RemoveTeamTest()
+            {
+                repo.Add(boca);
+                repo.Add(river);
+                repo.Delete(river);
+
+                IEnumerable<Team> actual = repo.GetAll();
+                IEnumerable<Team> expected = new List<Team>() { boca };
+
+                Assert.IsTrue(Helper.CollectionsHaveSameElements(actual, expected));
+            }
+
             [TestInitialize]
             public void TestInit()
             {
