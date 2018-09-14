@@ -55,6 +55,7 @@ namespace EirinDuran.DataAccessTest
         {
             context = GetTestContext();
             repo = new UserRepository(context);
+            CleanUpRepo();
             alvaro = GetUserAlvaro();
             macri = GetUserMacri();
         }
@@ -75,8 +76,7 @@ namespace EirinDuran.DataAccessTest
             return new Context(options);
         }
 
-        [TestCleanup]
-        public void CleanUp()
+        private void CleanUpRepo()
         {
             foreach (User user in repo.GetAll())
                 repo.Delete(user);

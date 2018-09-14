@@ -28,7 +28,7 @@ namespace EirinDuran.DataAccess
             {
                 TryToAdd(model);
             }
-            catch (ArgumentException)
+            catch (InvalidOperationException)
             {
                 throw new ObjectAlreadyExistsInDataBaseException();
             }
