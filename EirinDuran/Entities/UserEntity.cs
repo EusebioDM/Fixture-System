@@ -8,8 +8,6 @@ namespace EirinDuran.Entities
 {
     public class UserEntity : IEntity<User>
     {
-        public int Id { get; set; }
-        public string EntityId => Id.ToString();
         public string UserName { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
@@ -38,16 +36,21 @@ namespace EirinDuran.Entities
             return mapper.Map(this);
         }
 
+        public string GetId()
+        {
+            return UserName;
+        }
+
         public override bool Equals(object obj)
         {
             var entity = obj as UserEntity;
             return entity != null &&
-                   Id == entity.Id;
+                   UserName == entity.UserName;
         }
 
         public override int GetHashCode()
         {
-            return 2108858624 + Id.GetHashCode();
+            return 404878561 + EqualityComparer<string>.Default.GetHashCode(UserName);
         }
     }
 }

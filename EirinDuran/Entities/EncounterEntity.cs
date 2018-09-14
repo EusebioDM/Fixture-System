@@ -10,7 +10,6 @@ namespace EirinDuran.Entities
     {
         
         public Guid Id { get; set; }
-        public string EntityId => Id.ToString();
         public DateTime DateTime { get; set; }
         public SportEntity Sport { get; set; }
         public IEnumerable<TeamEntity> Teams { get; set; }
@@ -34,6 +33,11 @@ namespace EirinDuran.Entities
         public Encounter ToModel()
         {
             return mapper.Map(this);
+        }
+
+        public string GetId()
+        {
+            return Id.ToString();
         }
 
         public override bool Equals(object obj)

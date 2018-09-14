@@ -64,7 +64,7 @@ namespace EirinDuran.DataAccess
         private void TryToDelete(Model model)
         {
             Entity entity = CreateEntity(model);
-            Entity toDelete = Set.Single(e => e.EntityId.Equals(entity.EntityId));
+            Entity toDelete = Set.Single(e => e.Equals(entity));
             Set.Remove(toDelete);
             context.SaveChanges();
         }
@@ -87,7 +87,7 @@ namespace EirinDuran.DataAccess
 
         private Model TryToGet(string id)
         {
-            Entity toReturn = Set.Single(e => e.EntityId.Equals(id));
+            Entity toReturn = Set.Single(e => e.GetId().Equals(id));
             return toReturn.ToModel();
         }
 
@@ -116,7 +116,7 @@ namespace EirinDuran.DataAccess
         private void TryToUpdate(Model model)
         {
             Entity entity = CreateEntity(model);
-            Entity toUpdate = Set.Single(e => e.EntityId.Equals(entity.EntityId));
+            Entity toUpdate = Set.Single(e => e.Equals(entity));
             toUpdate.UpdateWith(model);
             context.SaveChanges();
         }

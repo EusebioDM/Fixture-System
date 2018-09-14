@@ -9,7 +9,6 @@ namespace EirinDuran.Entities
     public class SportEntity : IEntity<Sport>
     {
         public string Name { get; set; }
-        public string EntityId => Name;
         public IEnumerable<TeamEntity> Teams { get; set; }
         private SportMapper mapper;
 
@@ -31,6 +30,11 @@ namespace EirinDuran.Entities
         public Sport ToModel()
         {
             return mapper.Map(this);
+        }
+
+        public string GetId()
+        {
+            return Name;
         }
 
         public override bool Equals(object obj)

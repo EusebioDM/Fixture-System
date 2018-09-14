@@ -9,7 +9,6 @@ namespace EirinDuran.Entities
     public class TeamEntity : IEntity<Team>
     {
         public string Name { get; set; }
-        public string EntityId => Name;
         public byte[] Logo { get; set; }
         private TeamMapper mapper;
 
@@ -32,6 +31,11 @@ namespace EirinDuran.Entities
         public Team ToModel()
         {
             return mapper.Map(this);
+        }
+
+        public string GetId()
+        {
+            return Name;
         }
 
         public override bool Equals(object obj)

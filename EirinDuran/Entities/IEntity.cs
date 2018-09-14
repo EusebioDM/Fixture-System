@@ -10,6 +10,6 @@ namespace EirinDuran.Entities
 
         Model ToModel();
 
-        string EntityId { get; }
+        string GetId();
     }
 }
