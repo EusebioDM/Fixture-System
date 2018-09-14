@@ -27,6 +27,19 @@ namespace EirinDuran.DataAccessTest
             Assert.IsTrue(Helper.CollectionsHaveSameElements(actual, expected));
         }
 
+        [TestMethod]
+        public void RemoveUserTest()
+        {
+            repo.Add(macri);
+            repo.Add(alvaro);
+            repo.Delete(macri);
+
+            IEnumerable<User> actual = repo.GetAll();
+            IEnumerable<User> expected = new List<User> { alvaro };
+
+            Assert.IsTrue(Helper.CollectionsHaveSameElements(actual, expected));
+        }
+
         [TestInitialize]
         public void TestInit()
         {
