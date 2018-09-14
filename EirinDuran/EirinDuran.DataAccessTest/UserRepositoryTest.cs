@@ -83,7 +83,14 @@ namespace EirinDuran.DataAccessTest
             User fromRepo = repo.Get(macri.UserName);
 
             Assert.AreEqual(Role.Follower, fromRepo.Role);
-            Assert.AreEqual("Rodriges", fromRepo.Surname);
+            Assert.AreEqual(macri.Surname, fromRepo.Surname);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
+        public void UpdateNonExistantUserTest()
+        {
+            repo.Update(macri);
         }
 
         [TestInitialize]
