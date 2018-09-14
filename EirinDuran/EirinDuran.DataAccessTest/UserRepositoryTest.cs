@@ -13,6 +13,7 @@ namespace EirinDuran.DataAccessTest
     public class UserEntityRepositoryTest
     {
         UserRepository repo;
+        IContext context;
         private User alvaro;
         private User macri;
 
@@ -43,7 +44,8 @@ namespace EirinDuran.DataAccessTest
         [TestInitialize]
         public void TestInit()
         {
-            repo = new UserRepository(GetTestContext());
+            context = GetTestContext();
+            repo = new UserRepository(context);
             alvaro = GetUserAlvaro();
             macri = GetUserMacri();
         }
@@ -63,5 +65,14 @@ namespace EirinDuran.DataAccessTest
             DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase("In Memory Test DB").Options;
             return new Context(options);
         }
+
+        [TestCleanup]
+        public void CleanUp()
+        {
+            foreach (User user in repo.GetAll())
+                repo.Delete(user);
+        }
+
+
     }
 }

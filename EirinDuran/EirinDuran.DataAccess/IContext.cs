@@ -17,5 +17,7 @@ namespace EirinDuran.DataAccess
         DbSet<EncounterEntity> Encounters { get; set; }
 
         int SaveChanges();
+
+        void Dispose();
     }
 }

@@ -26,7 +26,5 @@ namespace EirinDuran.DataAccess
             builder.Entity<EncounterEntity>().HasKey(e => e.Id);
         }
 
-        
-
     }
 }
