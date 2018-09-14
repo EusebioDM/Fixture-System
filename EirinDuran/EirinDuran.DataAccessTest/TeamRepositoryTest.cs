@@ -33,12 +33,21 @@ namespace EirinDuran.DataAccessTest
                 Assert.IsTrue(Helper.CollectionsHaveSameElements(actual, expected));
             }
 
+            [TestMethod]
+            [ExpectedException(typeof(ObjectAlreadyExistsInDataBaseException))]
+            public void AddExistingTeamTest()
+            {
+                repo.Add(boca);
+                repo.Add(boca);
+            }
+
             [TestInitialize]
             public void TestInit()
             {
                 repo = new TeamRepository(GetTestContext());
                 boca = CreateBocaTeam();
                 river = CreateTeamThatBelongsInTheB();
+                CleanUpRepo();
             }
 
             private IContext GetTestContext()
@@ -60,6 +69,12 @@ namespace EirinDuran.DataAccessTest
                 string name = "River Plate";
                 Image image = Image.FromFile("..\\..\\..\\Resources\\River.jpg");
                 return new Team(name, image);
+            }
+
+            private void CleanUpRepo()
+            {
+                foreach (Team team in repo.GetAll())
+                    repo.Delete(team);
             }
         }
     }
