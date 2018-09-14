@@ -57,6 +57,14 @@ namespace EirinDuran.DataAccessTest
             repo.Delete(macri);
         }
 
+        [TestMethod]
+        public void GetUserTest()
+        {
+            repo.Add(macri);
+            User fromRepo = repo.Get(macri.UserName);
+            Assert.AreEqual(macri, fromRepo);
+        }
+
         [TestInitialize]
         public void TestInit()
         {
