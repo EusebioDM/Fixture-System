@@ -1,5 +1,6 @@
 using EirinDuran.DataAccess;
 using EirinDuran.Domain.User;
+using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -26,6 +27,14 @@ namespace EirinDuran.DataAccessTest
             IEnumerable<User> expected = new List<User> { macri };
 
             Assert.IsTrue(Helper.CollectionsHaveSameElements(actual, expected));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ObjectAlreadyExistsInDataBaseException))]
+        public void AddExistingUserTest()
+        {
+            repo.Add(macri);
+            repo.Add(macri);
         }
 
         [TestMethod]
