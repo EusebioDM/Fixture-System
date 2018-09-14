@@ -10,6 +10,7 @@ namespace EirinDuran.Domain.Fixture
         private Team[] teams;
 
         private DateTime dateTime;
+
         public DateTime DateTime { get => dateTime; set => SetDateIfValid(value); }
 
         public Sport Sport { get; set; }

@@ -12,15 +12,23 @@ namespace EirinDuran.Test
     [TestClass]
     public class FixtureTest
     {
+        private Image image;
+        private Team boca;
+        private Team cerro;
+        private Team river;
+
+        [TestInitialize]
+        public void SetUp()
+        {
+            image = GetImage(Resources.River);
+            boca = new Team("boca", image);
+            cerro = new Team("cerro", image);
+            river = new Team("River Plate", image);
+        }
 
         [TestMethod]
         public void SampleAutoFixtureLeagueTest()
         {
-            Image image = GetImage(Resources.River);
-
-            Team boca = new Team("boca", image);
-            Team cerro = new Team("cerro", image);
-
             Sport football = new Sport("football");
 
             football.AddTeam(boca);
@@ -32,26 +40,23 @@ namespace EirinDuran.Test
             teams.Add(cerro);
 
             DateTime date = new DateTime(2018, 10, 07, 18, 30, 00);
-
+            /*
             Encounter expected = new Encounter(football, teams, date);
 
-            IFixtureGenerator leagueFixture = new LeagueFixture();
+            List<Encounter> expectResult = new List<Encounter>();
+            expectResult.Add(expected); */
+
+            IFixtureGenerator leagueFixture = new LeagueFixture(football);
 
             List<Encounter> result = leagueFixture.GenerateFixture(teams, date).ToList();
 
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(1, result.ToList().Count);
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidNumberOfTeamsException))]
         public void OddNumberOfTeamsInFixture()
         {
-            Image image = GetImage(Resources.River);
-
-            Team boca = new Team("boca", image);
-            Team cerro = new Team("cerro", image);
-            Team river = new Team("River Plate", image);
-
             Sport football = new Sport("football");
 
             football.AddTeam(boca);
@@ -66,10 +71,12 @@ namespace EirinDuran.Test
 
             DateTime date = new DateTime(2018, 10, 07, 18, 30, 00);
 
-            IFixtureGenerator leagueFixture = new LeagueFixture();
+            IFixtureGenerator leagueFixture = new LeagueFixture(football);
 
             List<Encounter> result = leagueFixture.GenerateFixture(teams, date).ToList();
         }
+
+
 
 
         private Image GetImage(byte[] resource)

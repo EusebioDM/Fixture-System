@@ -7,17 +7,23 @@ namespace EirinDuran.Domain.Fixture
 {
     public class LeagueFixture : IFixtureGenerator
     {
+        private Sport sport;
+        public LeagueFixture(Sport sport)
+        {
+            this.sport = sport;
+        }
+
         public string Description => throw new NotImplementedException();
 
         public ICollection<Encounter> GenerateFixture(IEnumerable<Team> teams, DateTime start)
         {
-            ICollection<Encounter> encounters = new List<Encounter>();
+            List<Encounter> encounters = new List<Encounter>();
             List<Team> teamList = teams.ToList();
             int amountTeams = teamList.Count;
 
             if (amountTeams % 2 == 0)
             {
-                encounters = GenerateLeagueFixture(encounters, teamList, amountTeams);
+                GenerateLeagueFixture(encounters, teamList, amountTeams, start);
             }
             else
             {
@@ -27,12 +33,11 @@ namespace EirinDuran.Domain.Fixture
             return encounters;
         }
 
-        private ICollection<Encounter> GenerateLeagueFixture(IEnumerable<Encounter> encounters, List<Team> teamList, int amountTeams)
+        private void GenerateLeagueFixture(List<Encounter> encounters, List<Team> teamList, int amountTeams, DateTime start)
         {
             Team[] teamsVector = ConvertCollectionOfTeamToVector(teamList);
 
             Encounter encounter;
-            Sport sport = new Sport("football");
 
             for (int i = 0; i < amountTeams; i++)
             {
@@ -49,13 +54,11 @@ namespace EirinDuran.Domain.Fixture
                         sport.AddTeam(second);
                         teamsInEncount.Add(second);
 
-                        encounter = new Encounter(sport, teamsInEncount, new DateTime(2018, 10, 07, 18, 30, 00));
-                        encounters.ToList().Add(encounter);
+                        encounter = new Encounter(sport, teamsInEncount, start);
+                        encounters.Add(encounter);
                     }
                 }
             } 
-
-            return encounters.ToList();
         }
 
         private Team[] ConvertCollectionOfTeamToVector(IEnumerable<Team> teams)
