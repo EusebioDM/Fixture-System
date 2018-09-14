@@ -102,26 +102,6 @@ namespace EirinDuran.Test
             List<Encounter> result = leagueFixture.GenerateFixture(teams, start, end).ToList();
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(InsufficientRangeOfDatesToGenerateFeatureException))]
-        public void InsufficientRangeOfDatesToGenerateFeature()
-        {
-            Sport football = new Sport("football");
-
-            football.AddTeam(felix);
-            football.AddTeam(liverpool);
-
-            List<Team> teams = new List<Team>() { felix, liverpool, danubio, torque };
-
-            DateTime start = new DateTime(2018, 10, 07);
-            DateTime end = new DateTime(2018, 10, 08);
-
-            IFixtureGenerator leagueFixture = new LeagueFixture(football);
-
-            List<Encounter> result = leagueFixture.GenerateFixture(teams, start, end).ToList();
-        }
-
-
         private Image GetImage(byte[] resource)
         {
             return new Bitmap(new MemoryStream(resource));
