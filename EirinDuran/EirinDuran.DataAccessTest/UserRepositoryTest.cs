@@ -65,6 +65,13 @@ namespace EirinDuran.DataAccessTest
             Assert.AreEqual(macri, fromRepo);
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
+        public void GetNonExistantUserTest()
+        {
+            repo.Get("Cristina");
+        }
+
         [TestInitialize]
         public void TestInit()
         {
