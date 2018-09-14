@@ -72,6 +72,20 @@ namespace EirinDuran.DataAccessTest
             repo.Get("Cristina");
         }
 
+        [TestMethod]
+        public void UpdateUserTest()
+        {
+            repo.Add(macri);
+            macri.Role = Role.Follower;
+            macri.Surname = "Rodriges";
+
+            repo.Update(macri);
+            User fromRepo = repo.Get(macri.UserName);
+
+            Assert.AreEqual(Role.Follower, fromRepo.Role);
+            Assert.AreEqual("Rodriges", fromRepo.Surname);
+        }
+
         [TestInitialize]
         public void TestInit()
         {
