@@ -13,17 +13,25 @@ namespace EirinDuran.Test
     public class FixtureTest
     {
         private Image image;
-        private Team boca;
-        private Team cerro;
+        private Team felix;
+        private Team liverpool;
         private Team river;
+        private Team cerro;
 
         [TestInitialize]
         public void SetUp()
         {
             image = GetImage(Resources.River);
-            boca = new Team("boca", image);
-            cerro = new Team("cerro", image);
+            InitializeTeams();
+        }
+
+        private void InitializeTeams()
+        {
+            felix = new Team("Félix", image);
+            liverpool = new Team("Liverpool", image);
             river = new Team("River Plate", image);
+            cerro = new Team("Cerro", image);
+
         }
 
         [TestMethod]
@@ -31,26 +39,19 @@ namespace EirinDuran.Test
         {
             Sport football = new Sport("football");
 
-            football.AddTeam(boca);
-            football.AddTeam(cerro);
+            football.AddTeam(felix);
+            football.AddTeam(liverpool);
 
-            List<Team> teams = new List<Team>();
+            List<Team> teams = new List<Team>(){ felix, liverpool };
 
-            teams.Add(boca);
-            teams.Add(cerro);
-
-            DateTime date = new DateTime(2018, 10, 07, 18, 30, 00);
-            /*
-            Encounter expected = new Encounter(football, teams, date);
-
-            List<Encounter> expectResult = new List<Encounter>();
-            expectResult.Add(expected); */
-
+            DateTime start = new DateTime(2018, 10, 07);
+            DateTime end = new DateTime(2018, 10, 17);
+      
             IFixtureGenerator leagueFixture = new LeagueFixture(football);
 
-            List<Encounter> result = leagueFixture.GenerateFixture(teams, date).ToList();
+            List<Encounter> result = leagueFixture.GenerateFixture(teams, start, end).ToList();
 
-            Assert.AreEqual(1, result.ToList().Count);
+            Assert.AreEqual(1, result.Count);
         }
 
         [TestMethod]
@@ -59,24 +60,45 @@ namespace EirinDuran.Test
         {
             Sport football = new Sport("football");
 
-            football.AddTeam(boca);
-            football.AddTeam(cerro);
+            football.AddTeam(felix);
+            football.AddTeam(liverpool);
             football.AddTeam(river);
 
-            List<Team> teams = new List<Team>();
+            List<Team> teams = new List<Team>() { felix, liverpool, river };
 
-            teams.Add(boca);
-            teams.Add(cerro);
-            teams.Add(river);
-
-            DateTime date = new DateTime(2018, 10, 07, 18, 30, 00);
+            DateTime start = new DateTime(2018, 10, 07);
+            DateTime end = new DateTime(2018, 10, 17);
 
             IFixtureGenerator leagueFixture = new LeagueFixture(football);
 
-            List<Encounter> result = leagueFixture.GenerateFixture(teams, date).ToList();
+            List<Encounter> result = leagueFixture.GenerateFixture(teams, start, end).ToList();
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(OutdatedDatesException))]
+        public void CreateFeatureWithOutdatedDates()
+        {
+            Sport football = new Sport("football");
 
+            football.AddTeam(felix);
+            football.AddTeam(liverpool);
+
+            List<Team> teams = new List<Team>() { felix, liverpool };
+
+            DateTime start = new DateTime(2018, 10, 07);
+            DateTime end = new DateTime(2018, 09, 17);
+
+            IFixtureGenerator leagueFixture = new LeagueFixture(football);
+
+            List<Encounter> result = leagueFixture.GenerateFixture(teams, start, end).ToList();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InsufficientRangeOfDatesToGenerateFeatureException))]
+        public void InsufficientRangeOfDatesToGenerateFeature()
+        {
+
+        }
 
 
         private Image GetImage(byte[] resource)

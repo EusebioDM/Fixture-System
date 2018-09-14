@@ -8,6 +8,7 @@ namespace EirinDuran.Domain.Fixture
     public class LeagueFixture : IFixtureGenerator
     {
         private Sport sport;
+
         public LeagueFixture(Sport sport)
         {
             this.sport = sport;
@@ -15,7 +16,7 @@ namespace EirinDuran.Domain.Fixture
 
         public string Description => throw new NotImplementedException();
 
-        public ICollection<Encounter> GenerateFixture(IEnumerable<Team> teams, DateTime start)
+        public ICollection<Encounter> GenerateFixture(IEnumerable<Team> teams, DateTime start, DateTime end)
         {
             List<Encounter> encounters = new List<Encounter>();
             List<Team> teamList = teams.ToList();
@@ -23,7 +24,7 @@ namespace EirinDuran.Domain.Fixture
 
             if (amountTeams % 2 == 0)
             {
-                GenerateLeagueFixture(encounters, teamList, amountTeams, start);
+                GenerateLeagueFixture(encounters, teamList, start, end);
             }
             else
             {
@@ -33,10 +34,10 @@ namespace EirinDuran.Domain.Fixture
             return encounters;
         }
 
-        private void GenerateLeagueFixture(List<Encounter> encounters, List<Team> teamList, int amountTeams, DateTime start)
+        private void GenerateLeagueFixture(List<Encounter> encounters, List<Team> teamList, DateTime start, DateTime end)
         {
             Team[] teamsVector = ConvertCollectionOfTeamToVector(teamList);
-
+            int amountTeams = teamsVector.Length;
             Encounter encounter;
 
             for (int i = 0; i < amountTeams; i++)

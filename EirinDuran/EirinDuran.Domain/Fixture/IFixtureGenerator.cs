@@ -6,7 +6,7 @@ namespace EirinDuran.Domain.Fixture
 {
     public interface IFixtureGenerator
     {
-        ICollection<Encounter> GenerateFixture(IEnumerable<Team> teams, DateTime start);
+        ICollection<Encounter> GenerateFixture(IEnumerable<Team> teams, DateTime start, DateTime end);
 
         string Description { get; }
     }
