@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace EirinDuran.DataAccessTest
 {
+    using Helper = HelperFunctions<User>;
     [TestClass]
     public class UserEntityRepositoryTest
     {
@@ -23,7 +24,7 @@ namespace EirinDuran.DataAccessTest
             IEnumerable<User> actual = repo.GetAll();
             IEnumerable<User> expected = new List<User> { macri };
 
-            Assert.IsTrue(HelperFunctions<User>.CollectionsHaveSameElements(actual, second));
+            Assert.IsTrue(Helper.CollectionsHaveSameElements(actual, expected));
         }
 
         [TestInitialize]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace EirinDuran.Domain.User
 {
@@ -101,6 +102,18 @@ namespace EirinDuran.Domain.User
                     throw new InvalidMailFormatException();
                 }
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            var user = obj as User;
+            return user != null &&
+                   userName == user.userName;
+        }
+
+        public override int GetHashCode()
+        {
+            return -1424944255 + EqualityComparer<string>.Default.GetHashCode(userName);
         }
     }
 }
