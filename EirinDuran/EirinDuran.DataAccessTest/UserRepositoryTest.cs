@@ -50,6 +50,13 @@ namespace EirinDuran.DataAccessTest
             Assert.IsTrue(Helper.CollectionsHaveSameElements(actual, expected));
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
+        public void RemoveNonExistingUserTest()
+        {
+            repo.Delete(macri);
+        }
+
         [TestInitialize]
         public void TestInit()
         {
