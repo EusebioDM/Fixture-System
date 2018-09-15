@@ -62,7 +62,10 @@ namespace EirinDuran.DataAccessTest
         {
             repo.Add(macri);
             User fromRepo = repo.Get(macri.UserName);
-            Assert.AreEqual(macri, fromRepo);
+            Assert.AreEqual(macri.Name, fromRepo.Name);
+            Assert.AreEqual(macri.Password, fromRepo.Password);
+            Assert.AreEqual(macri.Surname, fromRepo.Surname);
+            Assert.AreEqual(macri.Role, fromRepo.Role);
         }
 
         [TestMethod]

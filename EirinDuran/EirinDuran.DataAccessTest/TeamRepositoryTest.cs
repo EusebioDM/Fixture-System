@@ -61,6 +61,16 @@ namespace EirinDuran.DataAccessTest
                 repo.Delete(boca);
             }
 
+            [TestMethod]
+            public void GetTeamTest()
+            {
+                repo.Add(boca);
+                Team fromRepo = repo.Get(boca.Name);
+
+                Assert.AreEqual(boca.Name, fromRepo.Name);
+                Assert.AreEqual(boca.Logo.Size, fromRepo.Logo.Size);
+            }
+
             [TestInitialize]
             public void TestInit()
             {
