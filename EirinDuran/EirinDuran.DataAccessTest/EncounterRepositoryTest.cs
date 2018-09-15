@@ -9,6 +9,7 @@ using System.Text;
 
 namespace EirinDuran.DataAccessTest
 {
+    using Helper = HelperFunctions<Encounter>;
     [TestClass]
     public class EncounterRepositoryTest
     {
@@ -35,6 +36,15 @@ namespace EirinDuran.DataAccessTest
             tombaRiver = CreateTombaRiverEncounter();
             repo.Add(bocaRiver);
             repo.Add(tombaRiver);
+        }
+
+        [TestMethod]
+        public void AddEncounterTest()
+        {
+            IEnumerable<Encounter> actual = repo.GetAll();
+            IEnumerable<Encounter> expected = new List<Encounter> { bocaRiver, tombaRiver };
+
+            Assert.IsTrue(Helper.CollectionsHaveSameElements(actual, expected));
         }
 
         private IContextFactory GetContextFactory()
