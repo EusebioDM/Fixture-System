@@ -44,7 +44,7 @@ namespace EirinDuran.Test
         }
 
         [TestMethod]
-        public void SampleAutoFixtureLeagueTest()
+        public void SampleAutoFixtureLeagueTest1()
         {
             Sport football = new Sport("football");
 
@@ -61,6 +61,30 @@ namespace EirinDuran.Test
             List<Encounter> result = leagueFixture.GenerateFixture(teams, start, end).ToList();
 
             Assert.AreEqual(1, result.Count);
+        }
+
+        [TestMethod]
+        public void SampleAutoFixtureLeagueTest2()
+        {
+            Sport football = new Sport("football");
+
+            football.AddTeam(felix);
+            football.AddTeam(liverpool);
+            football.AddTeam(river);
+            football.AddTeam(cerro);
+            football.AddTeam(penhiarol);
+            football.AddTeam(torque);
+
+            List<Team> teams = new List<Team>() { felix, liverpool, river, cerro, penhiarol, torque };
+
+            DateTime start = new DateTime(2018, 10, 07);
+            DateTime end = new DateTime(2018, 10, 17);
+
+            IFixtureGenerator leagueFixture = new LeagueFixture(football);
+
+            List<Encounter> result = leagueFixture.GenerateFixture(teams, start, end).ToList();
+
+            Assert.AreEqual(15, result.Count);
         }
 
         [TestMethod]

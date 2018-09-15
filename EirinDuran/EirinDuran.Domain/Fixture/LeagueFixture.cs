@@ -50,15 +50,15 @@ namespace EirinDuran.Domain.Fixture
 
             for (int i = 0; i < amountTeams; i++)
             {
-                List<Team> teamsInEncount = new List<Team>();
-                Team first = teamsVector[i];
-                sport.AddTeam(first);
-                teamsInEncount.Add(first);
-
                 for (int j = i; j < amountTeams; j++)
                 {
                     if (i != j)
                     {
+                        List<Team> teamsInEncount = new List<Team>();
+                        Team first = teamsVector[i];
+                        sport.AddTeam(first);
+                        teamsInEncount.Add(first);
+
                         Team second = teamsVector[j];
                         sport.AddTeam(second);
                         teamsInEncount.Add(second);

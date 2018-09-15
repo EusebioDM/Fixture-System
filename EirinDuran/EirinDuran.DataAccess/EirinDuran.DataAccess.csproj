@@ -11,7 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EirinDuran.Domain\EirinDuran.Domain.csproj" />
     <ProjectReference Include="..\EirinDuran.IDataAccess\EirinDuran.IDataAccess.csproj" />
-    <ProjectReference Include="..\Entities\EirinDuran.Entities.csproj" />
+    <ProjectReference Include="..\EirinDuran.Entities\EirinDuran.Entities.csproj" />
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
