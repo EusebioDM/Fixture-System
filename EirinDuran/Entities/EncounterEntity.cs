@@ -18,6 +18,7 @@ namespace EirinDuran.Entities
         public EncounterEntity()
         {
             mapper = new EncounterMapper();
+            Teams = new List<TeamEntity>();
         }
 
         public EncounterEntity(Encounter encounter) : this()

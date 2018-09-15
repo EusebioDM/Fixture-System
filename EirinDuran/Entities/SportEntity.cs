@@ -15,6 +15,7 @@ namespace EirinDuran.Entities
         public SportEntity()
         {
             mapper = new SportMapper();
+            Teams = new List<TeamEntity>();
         }
 
         public SportEntity(Sport sport) : this()
