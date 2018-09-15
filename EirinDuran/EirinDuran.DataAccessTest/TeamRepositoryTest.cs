@@ -85,15 +85,10 @@ namespace EirinDuran.DataAccessTest
                 repo.Add(boca);
                 boca.Logo = river.Logo;
                 repo.Update(boca);
+                boca = CreateBocaTeam();
 
                 Team fromRepo = repo.Get(boca.Name);
                 Assert.IsFalse(ImagesAreTheSame(boca.Logo, fromRepo.Logo));
-            }
-
-            [TestMethod]
-            public void test()
-            {
-                Assert.IsFalse(ImagesAreTheSame(boca.Logo, river.Logo));
             }
 
             private bool ImagesAreTheSame(Image first, Image second)
