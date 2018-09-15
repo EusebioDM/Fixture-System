@@ -31,11 +31,7 @@ namespace EirinDuran.Domain.Fixture
         {
             int amountTeams = teams.ToList().Count;
 
-            if(amountTeams == 0)
-            {
-                throw new InvalidNumberOfTeamsException();
-            }
-            else if (amountTeams % 2 != 0)
+            if((amountTeams == 0) || (amountTeams % 2 != 0))
             {
                 throw new InvalidNumberOfTeamsException();
             }
