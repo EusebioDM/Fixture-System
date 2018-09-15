@@ -13,13 +13,12 @@ namespace EirinDuran.DataAccess
     public class TeamRepository : IRepository<Team>
     {
         private EntityRepository<Team, TeamEntity> repo;
-        private IContext context;
 
-        public TeamRepository(IContext context)
+        public TeamRepository(IContextFactory contextFactory)
         {
-            EntityFactory<TeamEntity> factory = CreateEntityFactory();
+            EntityFactory<TeamEntity> Entityfactory = CreateEntityFactory();
             Func<IContext, DbSet<TeamEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
-            repo = new EntityRepository<Team, TeamEntity>(factory, dbSet, context);
+            repo = new EntityRepository<Team, TeamEntity>(Entityfactory, dbSet, contextFactory);
         }
 
         private EntityFactory<TeamEntity> CreateEntityFactory() => new EntityFactory<TeamEntity>(() => new TeamEntity());
@@ -30,7 +29,7 @@ namespace EirinDuran.DataAccess
 
         public void Delete(Team model) => repo.Delete(model);
 
-        public Team Get(string id) => repo.Get(id);
+        public Team Get(Team team) => repo.Get(team);
 
         public IEnumerable<Team> GetAll() => repo.GetAll();
 

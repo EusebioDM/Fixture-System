@@ -15,19 +15,21 @@ namespace EirinDuran.Entities.Mappers
             return new TeamEntity()
             {
                 Name = team.Name,
-                Logo = ImageToByteArray(team.Logo)
+                Logo = ImageToByteArray(team.Logo),
+                Id = team.Id
             };
         }
 
         public Team Map(TeamEntity entity)
         {
-            return new Team(name: entity.Name, logo: ByteArrayToImage(entity.Logo));
+            return new Team(id: entity.Id, name: entity.Name, logo: ByteArrayToImage(entity.Logo));
         }
 
         public void Update(Team source, TeamEntity desination)
         {
             desination.Name = source.Name;
             desination.Logo = ImageToByteArray(source.Logo);
+            desination.Id = source.Id;
         }
 
         private byte[] ImageToByteArray(Image imageIn)

@@ -1,10 +1,11 @@
-﻿ using EirinDuran.Entities;
+﻿using EirinDuran.Entities;
 using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace EirinDuran.DataAccess
@@ -13,13 +14,13 @@ namespace EirinDuran.DataAccess
     {
         private EntityFactory<Entity> factory;
         private Func<IContext, DbSet<Entity>> getDBSetFunc;
-        private IContext context;
+        private IContextFactory contextFactory;
 
-        public EntityRepository(EntityFactory<Entity> factory, Func<IContext, DbSet<Entity>> getDBSetFunc, IContext context)
+        public EntityRepository(EntityFactory<Entity> factory, Func<IContext, DbSet<Entity>> getDBSetFunc, IContextFactory contextFactory)
         {
             this.factory = factory;
             this.getDBSetFunc = getDBSetFunc;
-            this.context = context;
+            this.contextFactory = contextFactory;
         }
 
         public void Add(Model model)
@@ -28,7 +29,7 @@ namespace EirinDuran.DataAccess
             {
                 TryToAdd(model);
             }
-            catch (InvalidOperationException)
+            catch (ArgumentException)
             {
                 throw new ObjectAlreadyExistsInDataBaseException();
             }
@@ -41,8 +42,12 @@ namespace EirinDuran.DataAccess
         private void TryToAdd(Model model)
         {
             Entity entity = CreateEntity(model);
-            Set.Add(entity);
-            context.SaveChanges();
+            using (Context context = contextFactory.GetNewContext())
+            {
+                ValidateAlternateKey(context, entity);
+                Set(context).Add(entity);
+                context.SaveChanges();
+            }
         }
 
         public void Delete(Model model)
@@ -63,17 +68,19 @@ namespace EirinDuran.DataAccess
 
         private void TryToDelete(Model model)
         {
-            Entity entity = CreateEntity(model);
-            Entity toDelete = Set.Single(e => e.Equals(entity));
-            Set.Remove(toDelete);
-            context.SaveChanges();
+            using (Context context = contextFactory.GetNewContext())
+            {
+                Entity toDelete = GetLoadedEntity(context, model);
+                Set(context).Remove(toDelete);
+                context.SaveChanges();
+            }
         }
 
-        public Model Get(string id)
+        public Model Get(Model model)
         {
             try
             {
-                return TryToGet(id);
+                return TryToGet(model);
             }
             catch (InvalidOperationException)
             {
@@ -85,16 +92,32 @@ namespace EirinDuran.DataAccess
             }
         }
 
-        private Model TryToGet(string id)
+        private Model TryToGet(Model model)
         {
-            Entity toReturn = Set.Single(e => e.GetId().Equals(id));
-            return toReturn.ToModel();
+            using (Context context = contextFactory.GetNewContext())
+            {
+                Entity toReturn = GetLoadedEntity(context, model);
+                return toReturn.ToModel();
+            }
         }
 
         public IEnumerable<Model> GetAll()
         {
             Func<Entity, Model> mapEntity = t => { return t.ToModel(); };
-            return Set.Select(mapEntity);
+            Entity entity = factory.CreateEmptyEntity();
+            List<Model> models;
+            using (Context context = contextFactory.GetNewContext())
+            {
+                if (entity.NavegablePropeties.Equals(""))
+                {
+                    models = Set(context).Select(mapEntity).ToList();
+                }
+                else
+                {
+                    models = Set(context).Include(entity.NavegablePropeties).Select(mapEntity).ToList();
+                }
+            }
+            return models;
         }
 
         public void Update(Model model)
@@ -103,7 +126,7 @@ namespace EirinDuran.DataAccess
             {
                 TryToUpdate(model);
             }
-            catch (InvalidOperationException ex)
+            catch (DbUpdateConcurrencyException ex)
             {
                 throw new ObjectDoesntExistsInDataBaseException();
             }
@@ -116,18 +139,59 @@ namespace EirinDuran.DataAccess
         private void TryToUpdate(Model model)
         {
             Entity entity = CreateEntity(model);
-            Entity toUpdate = Set.Single(e => e.Equals(entity));
-            toUpdate.UpdateWith(model);
-            context.SaveChanges();
+            using (Context context = contextFactory.GetNewContext())
+            {
+                context.Update(entity);
+                context.SaveChanges();
+            }
         }
 
-        private DbSet<Entity> Set => getDBSetFunc.Invoke(context);
+        private DbSet<Entity> Set(Context context) => getDBSetFunc.Invoke(context);
 
         private Entity CreateEntity(Model model)
         {
             Entity entity = factory.CreateEmptyEntity();
             entity.UpdateWith(model);
+            AssignIDIfMissing(entity);
             return entity;
+        }
+
+        private void AssignIDIfMissing(Entity entity)
+        {
+            using (Context context = contextFactory.GetNewContext())
+            {
+                Entity fromDb = Set(context).FirstOrDefault(e => entity.GetAlternateKey().Equals(e.GetAlternateKey()));
+                if (fromDb != null)
+                {
+                    entity.Id = fromDb.Id;
+                }
+            }
+        }
+
+        private Entity GetLoadedEntity(Context context, Model model)
+        {
+            Entity entity = CreateEntity(model);
+            ICollection<Entity> allEntities = Set(context).ToList();
+
+            if (entity.NavegablePropeties.Equals(""))
+            {
+                entity = Set(context).Single(e => e.GetAlternateKey().Equals(entity.GetAlternateKey()));
+            }
+            else
+            {
+                entity = Set(context).Include(entity.NavegablePropeties).Single(e => e.GetAlternateKey().Equals(entity.GetAlternateKey()));
+            }
+            return entity;
+        }
+
+        private void ValidateAlternateKey(Context context, Entity entity)
+        {
+            bool alternateKeyAlreadyInDB = Set(context).Any(e => e.GetAlternateKey().Equals(entity.GetAlternateKey()));
+
+            if (alternateKeyAlreadyInDB)
+            {
+                throw new ObjectAlreadyExistsInDataBaseException();
+            }
         }
     }
 }

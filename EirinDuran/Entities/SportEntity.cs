@@ -8,8 +8,9 @@ namespace EirinDuran.Entities
 {
     public class SportEntity : IEntity<Sport>
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
-        public ICollection<TeamEntity> Teams { get; set; }
+        public virtual ICollection<TeamEntity> Teams { get; set; }
         private SportMapper mapper;
 
         public SportEntity()
@@ -37,6 +38,10 @@ namespace EirinDuran.Entities
         {
             return Name;
         }
+
+        public string NavegablePropeties => "Teams";
+
+        public string GetAlternateKey() => Name;
 
         public override bool Equals(object obj)
         {

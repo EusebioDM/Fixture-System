@@ -10,6 +10,10 @@ namespace EirinDuran.Entities
 
         Model ToModel();
 
-        string GetId();
+        Guid Id { get; set; }
+
+        string GetAlternateKey();
+
+        string NavegablePropeties { get; }
     }
 }

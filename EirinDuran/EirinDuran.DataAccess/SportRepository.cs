@@ -12,13 +12,12 @@ namespace EirinDuran.DataAccess
     public class SportRepository : IRepository<Sport>
     {
         private EntityRepository<Sport, SportEntity> repo;
-        private IContext context;
 
-        public SportRepository(IContext context)
+        public SportRepository(IContextFactory contextFactory)
         {
             EntityFactory<SportEntity> factory = CreateEntityFactory();
             Func<IContext, DbSet<SportEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
-            repo = new EntityRepository<Sport, SportEntity>(factory, dbSet, context);
+            repo = new EntityRepository<Sport, SportEntity>(factory, dbSet, contextFactory);
         }
 
         private EntityFactory<SportEntity> CreateEntityFactory() => new EntityFactory<SportEntity>(() => new SportEntity());
@@ -29,7 +28,7 @@ namespace EirinDuran.DataAccess
 
         public void Delete(Sport model) => repo.Delete(model);
 
-        public Sport Get(string id) => repo.Get(id);
+        public Sport Get(Sport sport) => repo.Get(sport);
 
         public IEnumerable<Sport> GetAll() => repo.GetAll();
 

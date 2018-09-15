@@ -21,6 +21,9 @@
     <None Update="Resources\Boca.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\GodoyCruz.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\River.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

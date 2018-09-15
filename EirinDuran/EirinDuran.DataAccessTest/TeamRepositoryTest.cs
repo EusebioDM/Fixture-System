@@ -18,18 +18,17 @@ namespace EirinDuran.DataAccessTest
         [TestClass]
         public class TeamEntityRepositoryTest
         {
+            private const string bocaImagePath = "..\\..\\..\\Resources\\Boca.jpg";
+            private const string riverImagePath = "..\\..\\..\\Resources\\River.jpg";
+            private const string tombaImagePath = "..\\..\\..\\Resources\\GodoyCruz.jpg";
+
             private TeamRepository repo;
-            private Team boca;
-            private Team river;
 
             [TestMethod]
             public void AddTeamTest()
             {
-                repo.Add(boca);
-                repo.Add(river);
-
                 IEnumerable<Team> actual = repo.GetAll();
-                IEnumerable<Team> expected = new List<Team>() { boca, river };
+                IEnumerable<Team> expected = new List<Team>() { CreateBocaTeam(), CreateTeamThatBelongsInTheB() };
 
                 Assert.IsTrue(Helper.CollectionsHaveSameElements(actual, expected));
             }
@@ -38,19 +37,16 @@ namespace EirinDuran.DataAccessTest
             [ExpectedException(typeof(ObjectAlreadyExistsInDataBaseException))]
             public void AddExistingTeamTest()
             {
-                repo.Add(boca);
-                repo.Add(boca);
+                repo.Add(GetBocaTeam());
             }
 
             [TestMethod]
             public void RemoveTeamTest()
             {
-                repo.Add(boca);
-                repo.Add(river);
-                repo.Delete(river);
+                repo.Delete(GetRiverTeam());
 
                 IEnumerable<Team> actual = repo.GetAll();
-                IEnumerable<Team> expected = new List<Team>() { boca };
+                IEnumerable<Team> expected = new List<Team>() { CreateBocaTeam() };
 
                 Assert.IsTrue(Helper.CollectionsHaveSameElements(actual, expected));
             }
@@ -59,43 +55,45 @@ namespace EirinDuran.DataAccessTest
             [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
             public void RemoveNonExistingTeamTest()
             {
-                repo.Delete(boca);
+                repo.Delete(CreateBocaTeam());
+                repo.Delete(CreateBocaTeam());
             }
 
             [TestMethod]
             public void GetTeamTest()
             {
-                repo.Add(boca);
-                Team fromRepo = repo.Get(boca.Name);
+                Team fromRepo = repo.Get(new Team("Boca Juniors"));
 
-                Assert.AreEqual(boca.Name, fromRepo.Name);
-                Assert.IsTrue(ImagesAreTheSame(boca.Logo, fromRepo.Logo));
+                Assert.AreEqual("Boca Juniors", fromRepo.Name);
+                Assert.IsTrue(ImagesAreTheSame(Image.FromFile(bocaImagePath), fromRepo.Logo));
             }
 
             [TestMethod]
             [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
             public void GetNonExistantTeamTest()
             {
-                repo.Get("Godoy Cruz");
+                repo.Get(new Team("Godoy Cruz"));
             }
 
             [TestMethod]
             public void UpdateTeamTest()
             {
-                repo.Add(boca);
-                boca.Logo = river.Logo;
+                Team boca = GetBocaTeam();
+                boca.Logo = GetRiverTeam().Logo;
                 repo.Update(boca);
-                boca = CreateBocaTeam();
 
-                Team fromRepo = repo.Get(boca.Name);
-                Assert.IsFalse(ImagesAreTheSame(boca.Logo, fromRepo.Logo));
+                Team fromRepo = repo.Get(boca);
+                Assert.IsFalse(ImagesAreTheSame(Image.FromFile(bocaImagePath), fromRepo.Logo));
             }
 
             [TestMethod]
-            [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
             public void UpdateNonExistantTeamTest()
             {
-                repo.Update(boca);
+                Team godoyCruz = new Team("Godoy Cruz", Image.FromFile(tombaImagePath));
+                repo.Update(godoyCruz);
+                Team fromRepo = repo.Get(new Team("Godoy Cruz"));
+
+                Assert.IsTrue(ImagesAreTheSame(Image.FromFile(tombaImagePath), fromRepo.Logo));
             }
 
             private bool ImagesAreTheSame(Image first, Image second)
@@ -117,29 +115,27 @@ namespace EirinDuran.DataAccessTest
             public void TestInit()
             {
                 repo = new TeamRepository(GetTestContext());
-                boca = CreateBocaTeam();
-                river = CreateTeamThatBelongsInTheB();
-                CleanUpRepo();
+                repo.Add(CreateBocaTeam());
+                repo.Add(CreateTeamThatBelongsInTheB());
             }
 
-            private IContext GetTestContext()
+            private IContextFactory GetTestContext()
             {
-                DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase("In Memory Test DB").Options;
-                return new Context(options);
+                DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
+                return new ContextFactory(options);
             }
 
             private Team CreateBocaTeam()
             {
                 string name = "Boca Juniors";
-                Image image = Image.FromFile("..\\..\\..\\Resources\\Boca.jpg");
+                Image image = Image.FromFile(bocaImagePath);
                 return new Team(name, image);
-
             }
 
             private Team CreateTeamThatBelongsInTheB()
             {
                 string name = "River Plate";
-                Image image = Image.FromFile("..\\..\\..\\Resources\\River.jpg");
+                Image image = Image.FromFile(riverImagePath);
                 return new Team(name, image);
             }
 
@@ -148,6 +144,9 @@ namespace EirinDuran.DataAccessTest
                 foreach (Team team in repo.GetAll())
                     repo.Delete(team);
             }
+
+            private Team GetBocaTeam() => repo.Get(new Team("Boca Juniors"));
+            private Team GetRiverTeam() => repo.Get(new Team("River Plate"));
         }
     }
 }

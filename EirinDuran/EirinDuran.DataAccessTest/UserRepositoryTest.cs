@@ -13,18 +13,15 @@ namespace EirinDuran.DataAccessTest
     [TestClass]
     public class UserEntityRepositoryTest
     {
-        UserRepository repo;
-        IContext context;
-        private User alvaro;
+        private UserRepository repo;
         private User macri;
+        private User alvaro;
 
         [TestMethod]
         public void AddUserTest()
         {
-            repo.Add(macri);
-
             IEnumerable<User> actual = repo.GetAll();
-            IEnumerable<User> expected = new List<User> { macri };
+            IEnumerable<User> expected = new List<User> { alvaro, macri };
 
             Assert.IsTrue(Helper.CollectionsHaveSameElements(actual, expected));
         }
@@ -33,16 +30,13 @@ namespace EirinDuran.DataAccessTest
         [ExpectedException(typeof(ObjectAlreadyExistsInDataBaseException))]
         public void AddExistingUserTest()
         {
-            repo.Add(macri);
-            repo.Add(macri);
+            repo.Add(CreateUserMacri());
         }
 
         [TestMethod]
         public void RemoveUserTest()
         {
-            repo.Add(macri);
-            repo.Add(alvaro);
-            repo.Delete(macri);
+            repo.Delete(CreateUserMacri());
 
             IEnumerable<User> actual = repo.GetAll();
             IEnumerable<User> expected = new List<User> { alvaro };
@@ -54,14 +48,14 @@ namespace EirinDuran.DataAccessTest
         [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void RemoveNonExistingUserTest()
         {
-            repo.Delete(macri);
+            repo.Delete(new User("Cristina"));
         }
 
         [TestMethod]
         public void GetUserTest()
         {
-            repo.Add(macri);
-            User fromRepo = repo.Get(macri.UserName);
+            User fromRepo = repo.Get(new User( "Gato"));
+
             Assert.AreEqual(macri.Name, fromRepo.Name);
             Assert.AreEqual(macri.Password, fromRepo.Password);
             Assert.AreEqual(macri.Surname, fromRepo.Surname);
@@ -72,54 +66,59 @@ namespace EirinDuran.DataAccessTest
         [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void GetNonExistantUserTest()
         {
-            repo.Get("Cristina");
+            repo.Get(new User("Cristina"));
         }
 
         [TestMethod]
         public void UpdateUserTest()
         {
-            repo.Add(macri);
+            macri = repo.Get(new User("Gato"));
             macri.Role = Role.Follower;
             macri.Surname = "Rodriges";
 
             repo.Update(macri);
-            User fromRepo = repo.Get(macri.UserName);
+            User fromRepo = repo.Get(macri);
 
             Assert.AreEqual(Role.Follower, fromRepo.Role);
             Assert.AreEqual(macri.Surname, fromRepo.Surname);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void UpdateNonExistantUserTest()
         {
-            repo.Update(macri);
+            User cristina = new User(Role.Follower, "Cristina", "Cristina", "kirchner", "mecaPeron", "cristi123@cri.com");
+            repo.Update(cristina);
+            User fromRepo = repo.Get(new User("Cristina"));
+            Assert.AreEqual(cristina.Name, fromRepo.Name);
+            Assert.AreEqual(cristina.Password, fromRepo.Password);
+            Assert.AreEqual(cristina.Mail, fromRepo.Mail);
+            Assert.AreEqual(cristina.Surname, fromRepo.Surname);
         }
 
         [TestInitialize]
         public void TestInit()
         {
-            context = GetTestContext();
-            repo = new UserRepository(context);
-            CleanUpRepo();
-            alvaro = GetUserAlvaro();
-            macri = GetUserMacri();
+            repo = new UserRepository(GetContextFactory());
+            macri = CreateUserMacri();
+            alvaro = CreateUserAlvaro();
+            repo.Add(CreateUserAlvaro());
+            repo.Add(CreateUserMacri());
         }
 
-        private User GetUserAlvaro()
+        private User CreateUserAlvaro()
         {
-            return new User(Role.Administrator, "A.Gómez", "Álvaro", "Gómez", "pass1234", "gomez@gomez.uy");
+            return new User(Role.Administrator, "alvaro", "Álvaro", "Gómez", "pass1234", "gomez@gomez.uy");
         }
 
-        private User GetUserMacri()
+        private User CreateUserMacri()
         {
             return new User(Role.Administrator, "Gato", "Mauricio", "Macri", "gato123", "macri@gmail.com");
         }
 
-        private IContext GetTestContext()
+        private IContextFactory GetContextFactory()
         {
-            DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase("In Memory Test DB").Options;
-            return new Context(options);
+            DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
+            return new ContextFactory(options);
         }
 
         private void CleanUpRepo()
@@ -128,6 +127,7 @@ namespace EirinDuran.DataAccessTest
                 repo.Delete(user);
         }
 
-
+        private User GetAlvaro() => repo.Get(new User("alvaro"));
+        private User GetMacri() => repo.Get(new User("Gato"));
     }
 }

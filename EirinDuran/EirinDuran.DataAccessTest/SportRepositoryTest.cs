@@ -15,8 +15,8 @@ namespace EirinDuran.DataAccessTest
     [TestClass]
     public class SportRepositoryTest
     {
-        SportRepository repo;
-        IContext context;
+        private SportRepository repo;
+        private IContextFactory contextFactory;
         private Sport futbol;
         private Sport rugby;
         private Team boca;
@@ -25,10 +25,8 @@ namespace EirinDuran.DataAccessTest
         [TestMethod]
         public void AddSportTest()
         {
-            repo.Add(rugby);
-
             IEnumerable<Sport> actual = repo.GetAll();
-            IEnumerable<Sport> expected = new List<Sport> { rugby };
+            IEnumerable<Sport> expected = new List<Sport> { rugby, futbol };
 
             Assert.IsTrue(Helper.CollectionsHaveSameElements(actual, expected));
         }
@@ -38,14 +36,11 @@ namespace EirinDuran.DataAccessTest
         public void AddExistingSportTest()
         {
             repo.Add(rugby);
-            repo.Add(rugby);
         }
 
         [TestMethod]
         public void RemoveSportTest()
         {
-            repo.Add(rugby);
-            repo.Add(futbol);
             repo.Delete(rugby);
 
             IEnumerable<Sport> actual = repo.GetAll();
@@ -58,14 +53,13 @@ namespace EirinDuran.DataAccessTest
         [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void RemoveNonExistingSportTest()
         {
-            repo.Delete(rugby);
+            repo.Delete(new Sport("hockey"));
         }
 
         [TestMethod]
         public void GetSportTest()
         {
-            repo.Add(rugby);
-            Sport fromRepo = repo.Get(rugby.Name);
+            Sport fromRepo = repo.Get(rugby);
             Assert.AreEqual(rugby.Name, fromRepo.Name);
             Assert.IsTrue(HelperFunctions<Team>.CollectionsHaveSameElements(rugby.Teams, fromRepo.Teams));
         }
@@ -74,63 +68,67 @@ namespace EirinDuran.DataAccessTest
         [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void GetNonExistantSportTest()
         {
-            repo.Get("hockey");
+            repo.Get(new Sport("tennis"));
         }
 
         [TestMethod]
         public void UpdateSportTest()
         {
-            repo.Add(rugby);
             rugby.AddTeam(boca);
-
             repo.Update(rugby);
-            Sport fromRepo = repo.Get(rugby.Name);
+            Sport fromRepo = repo.Get(rugby);
 
             Assert.IsTrue(fromRepo.Teams.Contains(boca));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void UpdateNonExistantSportTest()
         {
-            repo.Update(rugby);
+            Sport lasLeonas = new Sport("Hockey", new List<Team>() { new Team("Las Leonas") });
+            repo.Update(lasLeonas);
+            Sport fromRepo = repo.Get(new Sport("Hockey"));
+
+            Assert.IsTrue(HelperFunctions<Team>.CollectionsHaveSameElements(lasLeonas.Teams, fromRepo.Teams));
         }
 
         [TestInitialize]
         public void TestInit()
         {
-            context = GetTestContext();
-            repo = new SportRepository(context);
-            CleanUpRepo();
+            contextFactory = GetContextFactory();
+            repo = new SportRepository(contextFactory);
             boca = CreateBocaTeam();
             river = CreateTeamThatBelongsInTheB();
-            futbol = GetFutbolSport();
-            rugby = GetSportRugby();
+            futbol = CreateFutbolTeam();
+            rugby = CreateRugbyTeam();
+            repo.Add(futbol);
+            repo.Add(rugby);
         }
 
-        private Sport GetFutbolSport()
+        private Sport CreateFutbolTeam()
         {
-            Sport futbol =  new Sport("Futbol");
+            Sport futbol = new Sport("Futbol");
             futbol.AddTeam(boca);
             futbol.AddTeam(river);
             return futbol;
         }
 
-        private Sport GetSportRugby()
+        private Sport CreateRugbyTeam()
         {
             return new Sport("Rugby");
         }
 
-        private IContext GetTestContext()
+        private IContextFactory GetContextFactory()
         {
-            DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase("In Memory Test DB").Options;
-            return new Context(options);
+            DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase(Guid.NewGuid().ToString()).EnableSensitiveDataLogging().Options;
+            return new ContextFactory(options);
         }
 
         private void CleanUpRepo()
         {
             foreach (Sport sport in repo.GetAll())
+            {
                 repo.Delete(sport);
+            }
         }
 
         private Team CreateBocaTeam()

@@ -14,11 +14,11 @@ namespace EirinDuran.DataAccess
     {
         private EntityRepository<User, UserEntity> repo;
 
-        public UserRepository(IContext context)
+        public UserRepository(IContextFactory contextFactory)
         {
             EntityFactory<UserEntity> factory = CreateEntityFactory();
             Func<IContext, DbSet<UserEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
-            repo = new EntityRepository<User, UserEntity>(factory, dbSet, context);
+            repo = new EntityRepository<User, UserEntity>(factory, dbSet, contextFactory);
         }
 
         private EntityFactory<UserEntity> CreateEntityFactory() => new EntityFactory<UserEntity>(() => new UserEntity());
@@ -29,7 +29,7 @@ namespace EirinDuran.DataAccess
 
         public void Delete(User model) => repo.Delete(model);
 
-        public User Get(string id) => repo.Get(id);
+        public User Get(User user) => repo.Get(user);
 
         public IEnumerable<User> GetAll() => repo.GetAll();
 

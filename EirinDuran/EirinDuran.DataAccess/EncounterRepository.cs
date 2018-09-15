@@ -12,13 +12,12 @@ namespace EirinDuran.DataAccess
     public class EncounterRepository : IRepository<Encounter>
     {
         private EntityRepository<Encounter, EncounterEntity> repo;
-        private IContext context;
 
-        public EncounterRepository(IContext context)
+        public EncounterRepository(IContextFactory contextFactory)
         {
             EntityFactory<EncounterEntity> factory = CreateEntityFactory();
             Func<IContext, DbSet<EncounterEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
-            repo = new EntityRepository<Encounter, EncounterEntity>(factory, dbSet, context);
+            repo = new EntityRepository<Encounter, EncounterEntity>(factory, dbSet, contextFactory);
         }
 
         private EntityFactory<EncounterEntity> CreateEntityFactory() => new EntityFactory<EncounterEntity>(() => new EncounterEntity());
@@ -29,7 +28,7 @@ namespace EirinDuran.DataAccess
 
         public void Delete(Encounter model) => repo.Delete(model);
 
-        public Encounter Get(string id) => repo.Get(id);
+        public Encounter Get(Encounter encounter) => repo.Get(encounter);
 
         public IEnumerable<Encounter> GetAll() => repo.GetAll();
 

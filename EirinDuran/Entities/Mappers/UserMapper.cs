@@ -20,13 +20,14 @@ namespace EirinDuran.Entities.Mappers
                 Surname = user.Surname,
                 Password = user.Password,
                 Mail = user.Mail,
-                Role = user.Role
+                Role = user.Role,
+                Id = user.Id
             };
         }
 
         public User Map(UserEntity entity)
         {
-            return new User(role: entity.Role, userName: entity.UserName, name: entity.Name, surname: entity.Surname, password: entity.Password, mail: entity.Mail);
+            return new User(id: entity.Id, role: entity.Role, userName: entity.UserName, name: entity.Name, surname: entity.Surname, password: entity.Password, mail: entity.Mail);
         }
 
         public void Update(User source, UserEntity destination)
@@ -37,6 +38,7 @@ namespace EirinDuran.Entities.Mappers
             destination.Password = source.Password;
             destination.Mail = source.Mail;
             destination.Role = source.Role;
+            destination.Id = source.Id;
         }
     }
 }

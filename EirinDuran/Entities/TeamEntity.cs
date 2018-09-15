@@ -8,6 +8,7 @@ namespace EirinDuran.Entities
 {
     public class TeamEntity : IEntity<Team>
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public byte[] Logo { get; set; }
         private TeamMapper mapper;
@@ -33,10 +34,9 @@ namespace EirinDuran.Entities
             return mapper.Map(this);
         }
 
-        public string GetId()
-        {
-            return Name;
-        }
+        public string NavegablePropeties => "";
+
+        public string GetAlternateKey() => Name;
 
         public override bool Equals(object obj)
         {
@@ -49,5 +49,7 @@ namespace EirinDuran.Entities
         {
             return 539060726 + EqualityComparer<string>.Default.GetHashCode(Name);
         }
+
+
     }
 }
