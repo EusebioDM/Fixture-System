@@ -54,11 +54,10 @@ namespace EirinDuran.Test
             List<Team> teams = new List<Team>() { felix, liverpool };
 
             DateTime start = new DateTime(2018, 10, 07);
-            DateTime end = new DateTime(2018, 10, 17);
-
+            
             IFixtureGenerator leagueFixture = new LeagueFixture(football);
 
-            List<Encounter> result = leagueFixture.GenerateFixture(teams, start, end).ToList();
+            List<Encounter> result = leagueFixture.GenerateFixture(teams, start).ToList();
 
             Assert.AreEqual(1, result.Count);
         }
@@ -82,7 +81,7 @@ namespace EirinDuran.Test
 
             IFixtureGenerator leagueFixture = new LeagueFixture(football);
 
-            List<Encounter> result = leagueFixture.GenerateFixture(teams, start, end).ToList();
+            List<Encounter> result = leagueFixture.GenerateFixture(teams, start).ToList();
 
             Assert.AreEqual(15, result.Count);
         }
@@ -100,30 +99,10 @@ namespace EirinDuran.Test
             List<Team> teams = new List<Team>() { felix, liverpool, river };
 
             DateTime start = new DateTime(2018, 10, 07);
-            DateTime end = new DateTime(2018, 10, 17);
 
             IFixtureGenerator leagueFixture = new LeagueFixture(football);
 
-            List<Encounter> result = leagueFixture.GenerateFixture(teams, start, end).ToList();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(OutdatedDatesException))]
-        public void CreateFeatureWithOutdatedDates()
-        {
-            Sport football = new Sport("football");
-
-            football.AddTeam(felix);
-            football.AddTeam(liverpool);
-
-            List<Team> teams = new List<Team>() { felix, liverpool };
-
-            DateTime start = new DateTime(2018, 10, 07);
-            DateTime end = new DateTime(2018, 09, 17);
-
-            IFixtureGenerator leagueFixture = new LeagueFixture(football);
-
-            List<Encounter> result = leagueFixture.GenerateFixture(teams, start, end).ToList();
+            List<Encounter> result = leagueFixture.GenerateFixture(teams, start).ToList();
         }
 
         private Image GetImage(byte[] resource)
