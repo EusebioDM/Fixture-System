@@ -31,7 +31,11 @@ namespace EirinDuran.Domain.Fixture
         {
             int amountTeams = teams.ToList().Count;
 
-            if (amountTeams % 2 != 0)
+            if(amountTeams == 0)
+            {
+                throw new InvalidNumberOfTeamsException();
+            }
+            else if (amountTeams % 2 != 0)
             {
                 throw new InvalidNumberOfTeamsException();
             }
@@ -47,12 +51,12 @@ namespace EirinDuran.Domain.Fixture
 
             Encounter enconter;
 
-            Team[] local = ConvertCollectionOfTeamToVector(teamList, 0, amountTeams / 2);
-            Team[] visitant = ConvertCollectionOfTeamToVector(teamList, amountTeams / 2, amountTeams);
+            Team[] local = ConvertCollectionOfTeamToVector(teamList, 0, (amountTeams / 2));
+            Team[] visitant = ConvertCollectionOfTeamToVector(teamList, (amountTeams / 2), amountTeams);
 
             for (int i = 0; i < necessaryRounds; i++)
             {
-                for (int j = 0; j < amountTeams / 2; j++)
+                for (int j = 0; j < (amountTeams / 2); j++)
                 {
                     IEnumerable<Team> teamsIn = new List<Team>() { local[j], visitant[j] };
                     enconter = new Encounter(sport, teamsIn, start);

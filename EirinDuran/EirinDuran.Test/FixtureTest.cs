@@ -44,6 +44,20 @@ namespace EirinDuran.Test
         }
 
         [TestMethod]
+        [ExpectedException(typeof(InvalidNumberOfTeamsException))]
+        public void SampleAutoFixtureLeagueWithEmptyTeams()
+        {
+            Sport football = new Sport("football");
+            List<Team> teams = new List<Team>() {  };
+
+            DateTime start = new DateTime(2018, 10, 07);
+
+            IFixtureGenerator leagueFixture = new LeagueFixture(football);
+
+            List<Encounter> result = leagueFixture.GenerateFixture(teams, start).ToList();
+        }
+
+        [TestMethod]
         public void SampleAutoFixtureLeagueTest1()
         {
             Sport football = new Sport("football");
