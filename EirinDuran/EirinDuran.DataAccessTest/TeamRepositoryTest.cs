@@ -72,6 +72,30 @@ namespace EirinDuran.DataAccessTest
                 Assert.IsTrue(ImagesAreTheSame(boca.Logo, fromRepo.Logo));
             }
 
+            [TestMethod]
+            [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
+            public void GetNonExistantTeamTest()
+            {
+                repo.Get("Godoy Cruz");
+            }
+
+            [TestMethod]
+            public void UpdateTeamTest()
+            {
+                repo.Add(boca);
+                boca.Logo = river.Logo;
+                repo.Update(boca);
+
+                Team fromRepo = repo.Get(boca.Name);
+                Assert.IsFalse(ImagesAreTheSame(boca.Logo, fromRepo.Logo));
+            }
+
+            [TestMethod]
+            public void test()
+            {
+                Assert.IsFalse(ImagesAreTheSame(boca.Logo, river.Logo));
+            }
+
             private bool ImagesAreTheSame(Image first, Image second)
             {
                 byte[] firstImageBytes = GetImageBytes(first);
@@ -86,21 +110,6 @@ namespace EirinDuran.DataAccessTest
                 image.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
                 return stream.ToArray();
             }
-
-            [TestMethod]
-            [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
-            public void GetNonExistantTeamTest()
-            {
-                repo.Get("Godoy Cruz");
-            }
-
-            [TestMethod]
-            public void UpdateTeamTest()
-            {
-                repo.Add(boca);
-                
-            }
-
 
             [TestInitialize]
             public void TestInit()
