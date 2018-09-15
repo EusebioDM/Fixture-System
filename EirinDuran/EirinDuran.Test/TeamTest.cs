@@ -50,11 +50,6 @@ namespace EirinDuran.DomainTest
             Team team = new Team("                  ", null);
         }
 
-        private object GetImage(byte[] boca, object image)
-        {
-            throw new NotImplementedException();
-        }
-
         private Team CreateBocaTeam()
         {
             string name = "Boca Juniors";

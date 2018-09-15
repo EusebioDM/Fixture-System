@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace EirinDuran.DataAccessTest
@@ -68,15 +69,38 @@ namespace EirinDuran.DataAccessTest
                 Team fromRepo = repo.Get(boca.Name);
 
                 Assert.AreEqual(boca.Name, fromRepo.Name);
-                Assert.AreEqual(boca.Logo.Size, fromRepo.Logo.Size);
+                Assert.IsTrue(ImagesAreTheSame(boca.Logo, fromRepo.Logo));
+            }
+
+            private bool ImagesAreTheSame(Image first, Image second)
+            {
+                byte[] firstImageBytes = GetImageBytes(first);
+                byte[] secondImageBytes = GetImageBytes(second);
+
+                return Enumerable.SequenceEqual(firstImageBytes, secondImageBytes);
+            }
+
+            private byte[] GetImageBytes(Image image)
+            {
+                MemoryStream stream = new MemoryStream();
+                image.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                return stream.ToArray();
             }
 
             [TestMethod]
             [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
             public void GetNonExistantTeamTest()
             {
-                repo.Get("Godoy Cruz Antonio Tomba");
+                repo.Get("Godoy Cruz");
             }
+
+            [TestMethod]
+            public void UpdateTeamTest()
+            {
+                repo.Add(boca);
+                
+            }
+
 
             [TestInitialize]
             public void TestInit()
