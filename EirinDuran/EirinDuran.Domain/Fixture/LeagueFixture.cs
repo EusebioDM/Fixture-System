@@ -36,7 +36,7 @@ namespace EirinDuran.Domain.Fixture
             {
                 throw new InvalidNumberOfTeamsException();
             }
-            else if(start > end)
+            else if (start > end)
             {
                 throw new OutdatedDatesException();
             }
@@ -44,42 +44,71 @@ namespace EirinDuran.Domain.Fixture
 
         private void GenerateLeagueFixture(List<Encounter> encounters, List<Team> teamList, DateTime start, DateTime end)
         {
-            Team[] teamsVector = ConvertCollectionOfTeamToVector(teamList);
-            int amountTeams = teamsVector.Length;
-            Encounter encounter;
 
-            for (int i = 0; i < amountTeams; i++)
+            int amountTeams = teamList.Count;
+            Encounter enconter;
+
+            int necessaryEncounters = amountTeams * (amountTeams - 1) / 2;
+            int maxEncountersPerDay = amountTeams / 2;
+            int necessaryRounds = necessaryEncounters / maxEncountersPerDay;
+
+            Team[] local = ConvertCollectionOfTeamToVector(teamList, 0, amountTeams / 2);
+            Team[] visitant = ConvertCollectionOfTeamToVector(teamList, amountTeams / 2, amountTeams);
+
+            for (int i = 0; i < necessaryRounds; i++)
             {
-                for (int j = i; j < amountTeams; j++)
+                for (int j = 0; j < amountTeams / 2; j++)
                 {
-                    if (i != j)
-                    {
-                        List<Team> teamsInEncount = new List<Team>();
-                        Team first = teamsVector[i];
-                        sport.AddTeam(first);
-                        teamsInEncount.Add(first);
-
-                        Team second = teamsVector[j];
-                        sport.AddTeam(second);
-                        teamsInEncount.Add(second);
-
-                        encounter = new Encounter(sport, teamsInEncount, start);
-                        encounters.Add(encounter);
-                    }
+                    IEnumerable<Team> teamsIn = new List<Team>() { local[j], visitant[j] };
+                    enconter = new Encounter(sport, teamsIn, start);
+                    encounters.Add(enconter);
                 }
+
+                //incrementar el día
+                start = start.AddDays(1);
+
+                //for (int k = 0; k < (amountTeams / 2) - 1; k++)
+                //{
+                    //me guardo la ultima posicion del local
+                    Team lastOfLocal = local[(amountTeams / 2) - 1];
+
+                    //correr un lugar al local desde la posición 1 a la derecha 
+                    for (int l = 1; l < (amountTeams / 2) - 1; l++)
+                    {
+                        local[l + 1] = local[l];
+                    }
+
+                    //coloco el 0 del visitante en la posición 1 del local
+                    if ((amountTeams / 2) - 1 > 0)
+                    {
+                        local[1] = visitant[0];
+                    }
+
+                    //corro un lugar a la izquierda el visitante 
+                    for (int g = 0; g < (amountTeams / 2) - 1; g++)
+                    {
+                        visitant[g] = visitant[g + 1]; 
+                    }
+
+                    //pongo en la ultima posición del visitante el local que me había guardado
+                    if ((amountTeams / 2) - 1 > 0)
+                    {
+                        visitant[(amountTeams / 2) - 1] = lastOfLocal;
+                    }
+                //}
             }
+
+
         }
 
-        private Team[] ConvertCollectionOfTeamToVector(IEnumerable<Team> teams)
+        private Team[] ConvertCollectionOfTeamToVector(IEnumerable<Team> teams, int since, int until)
         {
-            int amountTeams = teams.ToList().Count;
-            Team[] teamsVector = new Team[amountTeams];
+            List<Team> teamsList = teams.ToList();
+            Team[] teamsVector = new Team[until - since];
 
-            int i = 0;
-            foreach (Team team in teams)
+            for (int i = since; i < until; i++)
             {
-                teamsVector[i] = team;
-                i++;
+                teamsVector[i - since] = teamsList[i];
             }
 
             return teamsVector;
