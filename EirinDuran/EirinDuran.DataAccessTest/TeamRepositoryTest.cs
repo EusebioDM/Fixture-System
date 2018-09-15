@@ -71,6 +71,13 @@ namespace EirinDuran.DataAccessTest
                 Assert.AreEqual(boca.Logo.Size, fromRepo.Logo.Size);
             }
 
+            [TestMethod]
+            [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
+            public void GetNonExistantTeamTest()
+            {
+                repo.Get("Godoy Cruz Antonio Tomba");
+            }
+
             [TestInitialize]
             public void TestInit()
             {
