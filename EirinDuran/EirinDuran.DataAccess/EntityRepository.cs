@@ -103,7 +103,7 @@ namespace EirinDuran.DataAccess
             {
                 TryToUpdate(model);
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ex)
             {
                 throw new ObjectDoesntExistsInDataBaseException();
             }

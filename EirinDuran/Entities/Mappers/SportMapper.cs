@@ -28,7 +28,7 @@ namespace EirinDuran.Entities.Mappers
         public void Update(Sport source, SportEntity destination)
         {
             destination.Name = source.Name;
-            destination.Teams = source.Teams.Select(sourceTeam => new TeamEntity(sourceTeam));
+            destination.Teams = source.Teams.Select(sourceTeam => new TeamEntity(sourceTeam)).ToList();
         }
     }
 }

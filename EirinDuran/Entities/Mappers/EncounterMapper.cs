@@ -18,7 +18,7 @@ namespace EirinDuran.Entities.Mappers
             {
                 DateTime = encounter.DateTime,
                 Sport = sportMapper.Map(encounter.Sport),
-                Teams = teams,
+                Teams = teams.ToList(),
                 Id = encounter.Id
             };
         }
@@ -35,7 +35,7 @@ namespace EirinDuran.Entities.Mappers
         {
             destination.DateTime = source.DateTime;
             destination.Sport = new SportEntity(source.Sport);
-            destination.Teams = source.Teams.Select(sourcemTeam => new TeamEntity(sourcemTeam));
+            destination.Teams = source.Teams.Select(sourcemTeam => new TeamEntity(sourcemTeam)).ToList();
             destination.Id = source.Id;
         }
     }

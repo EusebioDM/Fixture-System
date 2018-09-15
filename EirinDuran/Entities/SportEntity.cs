@@ -9,7 +9,7 @@ namespace EirinDuran.Entities
     public class SportEntity : IEntity<Sport>
     {
         public string Name { get; set; }
-        public IEnumerable<TeamEntity> Teams { get; set; }
+        public ICollection<TeamEntity> Teams { get; set; }
         private SportMapper mapper;
 
         public SportEntity()

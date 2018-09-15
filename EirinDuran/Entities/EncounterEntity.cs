@@ -12,7 +12,7 @@ namespace EirinDuran.Entities
         public Guid Id { get; set; }
         public DateTime DateTime { get; set; }
         public SportEntity Sport { get; set; }
-        public IEnumerable<TeamEntity> Teams { get; set; }
+        public ICollection<TeamEntity> Teams { get; set; }
         private EncounterMapper mapper;
 
         public EncounterEntity()
