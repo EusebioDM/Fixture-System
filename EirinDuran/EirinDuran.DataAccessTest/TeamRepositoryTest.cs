@@ -91,6 +91,13 @@ namespace EirinDuran.DataAccessTest
                 Assert.IsFalse(ImagesAreTheSame(boca.Logo, fromRepo.Logo));
             }
 
+            [TestMethod]
+            [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
+            public void UpdateNonExistantTeamTest()
+            {
+                repo.Update(boca);
+            }
+
             private bool ImagesAreTheSame(Image first, Image second)
             {
                 byte[] firstImageBytes = GetImageBytes(first);
