@@ -9,6 +9,7 @@ namespace EirinDuran.DataAccess
 {
     internal class EntityUpdater<Entity> where Entity : class
     {
+
         public void UpdateEntityWithItsChildren(Context context, Entity entity)
         {
             EntityEntry<Entity> entry = context.Entry<Entity>(entity);

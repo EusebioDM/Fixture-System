@@ -34,6 +34,13 @@ namespace EirinDuran.DataAccessTest
             Assert.AreEqual(2, actual.Count());
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(ObjectAlreadyExistsInDataBaseException))]
+        public void AddExistingEncounterTest()
+        {
+            repo.Add(bocaRiver);
+        }
+
         [TestInitialize]
         public void TestInit()
         {
