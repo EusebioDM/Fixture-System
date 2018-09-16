@@ -200,28 +200,25 @@ namespace EirinDuran.DataAccess
 
         private void UpdateEntityRec(Context context, EntityEntry entry)
         {
-            foreach (var p in entry.Navigations)
+            foreach (NavigationEntry property in entry.Navigations)
             {
+                // The current value of a propety is returned as an object by EF so casting is needed to determine whether 
+                // the propety is a single navigatable propety or a collection on navigatables
                 try
-                {
-                    List<object> list = (p.CurrentValue as IEnumerable<object>).Cast<object>().ToList();
-                    foreach (object obj in list)
-                    {
-                        EntityEntry childEntry = context.Entry(obj);
-                        UpdateEntityRec(context, childEntry);
-                    }
+                {   
+                    List<object> entries = TryToCastPropetyToCollectionOfEntries(context, property);
+                    UpdateEntityCollection(context, entries);
                 }
-                catch (ArgumentException)
+                catch (ArgumentException) // Casting failed since property is a single navigatable propety
                 {
-                    EntityEntry childEntry = context.Entry(p.CurrentValue);
-                    UpdateEntityRec(context, childEntry);
+                    UpdateSingleEntry(context, property);
                 }
             }
             try
             {
                 context.Update(entry.Entity);
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException) // Update failed since another instance of this entity is already present in context
             {
                 if (!entry.IsKeySet)
                 {
@@ -230,5 +227,25 @@ namespace EirinDuran.DataAccess
             }
         }
 
+        private List<object> TryToCastPropetyToCollectionOfEntries(Context context, NavigationEntry property)
+        {
+            List<object> entries = (property.CurrentValue as IEnumerable<object>).Cast<object>().ToList();
+            return entries;
+        }
+
+        private void UpdateEntityCollection(Context context, List<object> entries)
+        {
+            foreach (object obj in entries)
+            {
+                EntityEntry childEntry = context.Entry(obj);
+                UpdateEntityRec(context, childEntry);
+            }
+        }
+
+        private void UpdateSingleEntry(Context context, NavigationEntry property)
+        {
+            EntityEntry childEntry = context.Entry(property.CurrentValue);
+            UpdateEntityRec(context, childEntry);
+        }
     }
 }
