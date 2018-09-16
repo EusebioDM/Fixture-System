@@ -1,5 +1,6 @@
 ﻿using EirinDuran.DataAccess;
 using EirinDuran.Domain.Fixture;
+using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -32,13 +33,6 @@ namespace EirinDuran.DataAccessTest
             Assert.IsTrue(actual.Any(e => e.Teams.Contains(boca) && e.Teams.Contains(river) && e.Sport.Equals(futbol)));
             Assert.IsTrue(actual.Any(e => e.Teams.Contains(tomba) && e.Teams.Contains(river) && e.Sport.Equals(futbol)));
             Assert.AreEqual(2, actual.Count());
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ObjectAlreadyExistsInDataBaseException))]
-        public void AddExistingEncounterTest()
-        {
-            repo.Add(bocaRiver);
         }
 
         [TestInitialize]
