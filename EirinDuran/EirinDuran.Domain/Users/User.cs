@@ -14,9 +14,13 @@ namespace EirinDuran.Domain.User
         private string mail;
         private StringValidator validator;
 
-        public User(string userName)
+        public User()
         {
             validator = new StringValidator();
+        }
+
+        public User(string userName) : this()
+        {
             UserName = userName;
         }
 

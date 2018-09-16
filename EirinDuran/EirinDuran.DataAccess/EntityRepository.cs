@@ -36,9 +36,9 @@ namespace EirinDuran.DataAccess
             {
                 throw new ObjectAlreadyExistsInDataBaseException();
             }
-            catch (SqlException)
+            catch (SqlException ex)
             {
-                throw new ConnectionToDataAccessFailedException();
+                throw new ConnectionToDataAccessFailedException("Conection to DataBase failed",ex);
             }
         }
 
@@ -107,6 +107,18 @@ namespace EirinDuran.DataAccess
         }
 
         public IEnumerable<Model> GetAll()
+        {
+            try
+            {
+                return TryToGetAll();
+            }
+            catch (SqlException)
+            {
+                throw new ConnectionToDataAccessFailedException();
+            }
+        }
+
+        private IEnumerable<Model> TryToGetAll()
         {
             Func<Entity, Model> mapEntity = t => { return t.ToModel(); };
             Entity entity = factory.CreateEmptyEntity();
