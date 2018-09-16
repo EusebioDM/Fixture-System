@@ -109,7 +109,6 @@ namespace EirinDuran.DataAccess
             List<Model> models;
             using (Context context = contextFactory.GetNewContext())
             {
-                //.Select(e => LoadAllEntity(context,e))
                 models = Set(context).Select(mapEntity).ToList();
             }
             return models;
@@ -231,35 +230,5 @@ namespace EirinDuran.DataAccess
             }
         }
 
-        private Entity LoadAllEntity(Context context, Entity entity)
-        {
-            EntityEntry<Entity> entry = context.Attach(entity);
-            //entry.State = EntityState.Unchanged;
-            LoadAllEntityRec(context, entry);
-            return entity;
-        }
-
-        private void LoadAllEntityRec(Context context, EntityEntry entry)
-        {
-            foreach (var p in entry.Navigations)
-            {
-                p.Load();
-                try
-                {
-                    List<object> list = (p.CurrentValue as IEnumerable<object>).Cast<object>().ToList();
-                    foreach (object obj in list)
-                    {
-                        EntityEntry childEntry = context.Entry(obj);
-                        LoadAllEntityRec(context, entry);
-                    }
-                }
-                catch (ArgumentException)
-                {
-                    EntityEntry childEntry = context.Entry(p.CurrentValue);
-                    LoadAllEntityRec(context, entry);
-                }
-            }
-            object aux = entry.Entity;
-        }
     }
 }
