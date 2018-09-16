@@ -1,8 +1,11 @@
 ﻿using EirinDuran.Domain.Fixture;
 using EirinDuran.Entities;
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace EirinDuran.DataAccess
 {

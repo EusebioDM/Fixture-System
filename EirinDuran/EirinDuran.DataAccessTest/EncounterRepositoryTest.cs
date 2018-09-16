@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 
 namespace EirinDuran.DataAccessTest
@@ -22,6 +23,16 @@ namespace EirinDuran.DataAccessTest
         private Encounter bocaRiver;
         private Encounter tombaRiver;
 
+        [TestMethod]
+        public void AddEncounterTest()
+        {
+            IEnumerable<Encounter> actual = repo.GetAll();
+
+
+            Assert.IsTrue(actual.Any(e => e.Teams.Contains(boca) && e.Teams.Contains(river) && e.Sport.Equals(futbol)));
+            Assert.IsTrue(actual.Any(e => e.Teams.Contains(tomba) && e.Teams.Contains(river) && e.Sport.Equals(futbol)));
+            Assert.AreEqual(2, actual.Count());
+        }
 
         [TestInitialize]
         public void TestInit()
@@ -38,18 +49,9 @@ namespace EirinDuran.DataAccessTest
             repo.Add(tombaRiver);
         }
 
-        [TestMethod]
-        public void AddEncounterTest()
-        {
-            IEnumerable<Encounter> actual = repo.GetAll();
-            IEnumerable<Encounter> expected = new List<Encounter> { bocaRiver, tombaRiver };
-
-            Assert.IsTrue(Helper.CollectionsHaveSameElements(actual, expected));
-        }
-
         private IContextFactory GetContextFactory()
         {
-            DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase(Guid.NewGuid().ToString()).EnableSensitiveDataLogging().Options;
+            DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase(Guid.NewGuid().ToString()).EnableSensitiveDataLogging().UseLazyLoadingProxies().Options;
             return new ContextFactory(options);
         }
 
@@ -58,6 +60,7 @@ namespace EirinDuran.DataAccessTest
             Sport futbol = new Sport("Futbol");
             futbol.AddTeam(boca);
             futbol.AddTeam(river);
+            futbol.AddTeam(tomba);
             return futbol;
         }
 
@@ -83,17 +86,17 @@ namespace EirinDuran.DataAccessTest
 
         private Team CreateGodoyCruzTeam()
         {
-            string name = "River Plate";
+            string name = "Godoy Cruz";
             Image image = Image.FromFile("..\\..\\..\\Resources\\GodoyCruz.jpg");
             return new Team(name, image);
         }
 
-        private Encounter CreateTombaRiverEncounter()
+        private Encounter CreateBocaRiverEncounter()
         {
             return new Encounter(futbol, new List<Team>() { boca, river }, new DateTime(3001, 10, 10));
         }
 
-        private Encounter CreateBocaRiverEncounter()
+        private Encounter CreateTombaRiverEncounter()
         {
             return new Encounter(futbol, new List<Team>() { tomba, river }, new DateTime(3001, 10, 11));
         }

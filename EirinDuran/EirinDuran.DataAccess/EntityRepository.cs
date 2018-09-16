@@ -1,6 +1,7 @@
 ﻿using EirinDuran.Entities;
 using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -13,10 +14,10 @@ namespace EirinDuran.DataAccess
     internal class EntityRepository<Model, Entity> : IRepository<Model> where Entity : class, IEntity<Model>
     {
         private EntityFactory<Entity> factory;
-        private Func<IContext, DbSet<Entity>> getDBSetFunc;
+        private Func<IContext, Microsoft.EntityFrameworkCore.DbSet<Entity>> getDBSetFunc;
         private IContextFactory contextFactory;
 
-        public EntityRepository(EntityFactory<Entity> factory, Func<IContext, DbSet<Entity>> getDBSetFunc, IContextFactory contextFactory)
+        public EntityRepository(EntityFactory<Entity> factory, Func<IContext, Microsoft.EntityFrameworkCore.DbSet<Entity>> getDBSetFunc, IContextFactory contextFactory)
         {
             this.factory = factory;
             this.getDBSetFunc = getDBSetFunc;
@@ -29,7 +30,7 @@ namespace EirinDuran.DataAccess
             {
                 TryToAdd(model);
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
                 throw new ObjectAlreadyExistsInDataBaseException();
             }
@@ -45,7 +46,7 @@ namespace EirinDuran.DataAccess
             using (Context context = contextFactory.GetNewContext())
             {
                 ValidateAlternateKey(context, entity);
-                Set(context).Add(entity);
+                UpdateEntity(context, entity);
                 context.SaveChanges();
             }
         }
@@ -108,14 +109,8 @@ namespace EirinDuran.DataAccess
             List<Model> models;
             using (Context context = contextFactory.GetNewContext())
             {
-                if (entity.NavegablePropeties.Equals(""))
-                {
-                    models = Set(context).Select(mapEntity).ToList();
-                }
-                else
-                {
-                    models = Set(context).Include(entity.NavegablePropeties).Select(mapEntity).ToList();
-                }
+                //.Select(e => LoadAllEntity(context,e))
+                models = Set(context).Select(mapEntity).ToList();
             }
             return models;
         }
@@ -141,12 +136,12 @@ namespace EirinDuran.DataAccess
             Entity entity = CreateEntity(model);
             using (Context context = contextFactory.GetNewContext())
             {
-                context.Update(entity);
+                UpdateEntity(context, entity);
                 context.SaveChanges();
             }
         }
 
-        private DbSet<Entity> Set(Context context) => getDBSetFunc.Invoke(context);
+        private Microsoft.EntityFrameworkCore.DbSet<Entity> Set(Context context) => getDBSetFunc.Invoke(context);
 
         private Entity CreateEntity(Model model)
         {
@@ -164,6 +159,10 @@ namespace EirinDuran.DataAccess
                 if (fromDb != null)
                 {
                     entity.Id = fromDb.Id;
+                }
+                else
+                {
+                    ValidateAlternateKey(context, entity);
                 }
             }
         }
@@ -192,6 +191,75 @@ namespace EirinDuran.DataAccess
             {
                 throw new ObjectAlreadyExistsInDataBaseException();
             }
+        }
+
+        private void UpdateEntity(Context context, Entity entity)
+        {
+            EntityEntry<Entity> entry = context.Entry<Entity>(entity);
+            UpdateEntityRec(context, entry);
+        }
+
+        private void UpdateEntityRec(Context context, EntityEntry entry)
+        {
+            foreach (var p in entry.Navigations)
+            {
+                try
+                {
+                    List<object> list = (p.CurrentValue as IEnumerable<object>).Cast<object>().ToList();
+                    foreach (object obj in list)
+                    {
+                        EntityEntry childEntry = context.Entry(obj);
+                        UpdateEntityRec(context, childEntry);
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    EntityEntry childEntry = context.Entry(p.CurrentValue);
+                    UpdateEntityRec(context, childEntry);
+                }
+            }
+            try
+            {
+                context.Update(entry.Entity);
+            }
+            catch (InvalidOperationException)
+            {
+                if (!entry.IsKeySet)
+                {
+                    entry.State = EntityState.Unchanged;
+                }
+            }
+        }
+
+        private Entity LoadAllEntity(Context context, Entity entity)
+        {
+            EntityEntry<Entity> entry = context.Attach(entity);
+            //entry.State = EntityState.Unchanged;
+            LoadAllEntityRec(context, entry);
+            return entity;
+        }
+
+        private void LoadAllEntityRec(Context context, EntityEntry entry)
+        {
+            foreach (var p in entry.Navigations)
+            {
+                p.Load();
+                try
+                {
+                    List<object> list = (p.CurrentValue as IEnumerable<object>).Cast<object>().ToList();
+                    foreach (object obj in list)
+                    {
+                        EntityEntry childEntry = context.Entry(obj);
+                        LoadAllEntityRec(context, entry);
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    EntityEntry childEntry = context.Entry(p.CurrentValue);
+                    LoadAllEntityRec(context, entry);
+                }
+            }
+            object aux = entry.Entity;
         }
     }
 }
