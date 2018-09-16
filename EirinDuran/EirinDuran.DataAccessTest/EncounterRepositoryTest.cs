@@ -35,6 +35,25 @@ namespace EirinDuran.DataAccessTest
             Assert.AreEqual(2, actual.Count());
         }
 
+        [TestMethod]
+        public void RemoveEncounterTest()
+        {
+            repo.Delete(bocaRiver);
+
+            IEnumerable<Encounter> actual = repo.GetAll();
+
+            Assert.AreEqual(1, actual.Count());
+        }
+
+        [TestMethod]
+        public void UpdateNonExistantEncounterTest()
+        {
+            Encounter tombaBoca = new Encounter(futbol, new List<Team> { boca, river }, new DateTime(3001, 10, 1));
+            repo.Update(tombaBoca);
+
+            Assert.AreEqual(3, repo.GetAll().Count());
+        }
+
         [TestInitialize]
         public void TestInit()
         {
