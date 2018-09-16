@@ -57,7 +57,7 @@ namespace EirinDuran.DataAccess
             {
                 TryToDelete(model);
             }
-            catch (InvalidOperationException)
+            catch (DbUpdateConcurrencyException)
             {
                 throw new ObjectDoesntExistsInDataBaseException();
             }
@@ -71,7 +71,7 @@ namespace EirinDuran.DataAccess
         {
             using (Context context = contextFactory.GetNewContext())
             {
-                Entity toDelete = GetLoadedEntity(context, model);
+                Entity toDelete = CreateEntity(model);
                 Set(context).Remove(toDelete);
                 context.SaveChanges();
             }
@@ -95,11 +95,13 @@ namespace EirinDuran.DataAccess
 
         private Model TryToGet(Model model)
         {
+            Model toReturn;
             using (Context context = contextFactory.GetNewContext())
             {
-                Entity toReturn = GetLoadedEntity(context, model);
-                return toReturn.ToModel();
+                Entity entity = CreateEntity(model);
+                toReturn = Set(context).Single(e => e.GetAlternateKey().Equals(entity.GetAlternateKey())).ToModel();
             }
+            return toReturn;
         }
 
         public IEnumerable<Model> GetAll()
@@ -164,22 +166,6 @@ namespace EirinDuran.DataAccess
                     ValidateAlternateKey(context, entity);
                 }
             }
-        }
-
-        private Entity GetLoadedEntity(Context context, Model model)
-        {
-            Entity entity = CreateEntity(model);
-            ICollection<Entity> allEntities = Set(context).ToList();
-
-            if (entity.NavegablePropeties.Equals(""))
-            {
-                entity = Set(context).Single(e => e.GetAlternateKey().Equals(entity.GetAlternateKey()));
-            }
-            else
-            {
-                entity = Set(context).Include(entity.NavegablePropeties).Single(e => e.GetAlternateKey().Equals(entity.GetAlternateKey()));
-            }
-            return entity;
         }
 
         private void ValidateAlternateKey(Context context, Entity entity)
