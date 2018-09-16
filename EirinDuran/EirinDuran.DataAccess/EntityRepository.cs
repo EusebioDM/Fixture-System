@@ -16,12 +16,14 @@ namespace EirinDuran.DataAccess
         private EntityFactory<Entity> factory;
         private Func<IContext, Microsoft.EntityFrameworkCore.DbSet<Entity>> getDBSetFunc;
         private IContextFactory contextFactory;
+        private EntityUpdater<Entity> entityUpdater;
 
         public EntityRepository(EntityFactory<Entity> factory, Func<IContext, Microsoft.EntityFrameworkCore.DbSet<Entity>> getDBSetFunc, IContextFactory contextFactory)
         {
             this.factory = factory;
             this.getDBSetFunc = getDBSetFunc;
             this.contextFactory = contextFactory;
+            entityUpdater = new EntityUpdater<Entity>();
         }
 
         public void Add(Model model)
@@ -46,7 +48,7 @@ namespace EirinDuran.DataAccess
             using (Context context = contextFactory.GetNewContext())
             {
                 ValidateAlternateKey(context, entity);
-                UpdateEntity(context, entity);
+                entityUpdater.UpdateEntityWithItsChildren(context, entity);
                 context.SaveChanges();
             }
         }
@@ -122,7 +124,7 @@ namespace EirinDuran.DataAccess
             {
                 TryToUpdate(model);
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (DbUpdateConcurrencyException)
             {
                 throw new ObjectDoesntExistsInDataBaseException();
             }
@@ -137,7 +139,7 @@ namespace EirinDuran.DataAccess
             Entity entity = CreateEntity(model);
             using (Context context = contextFactory.GetNewContext())
             {
-                UpdateEntity(context, entity);
+                entityUpdater.UpdateEntityWithItsChildren(context, entity);
                 context.SaveChanges();
             }
         }
@@ -148,11 +150,11 @@ namespace EirinDuran.DataAccess
         {
             Entity entity = factory.CreateEmptyEntity();
             entity.UpdateWith(model);
-            AssignIDIfMissing(entity);
+            AssignIdIfMissing(entity);
             return entity;
         }
 
-        private void AssignIDIfMissing(Entity entity)
+        private void AssignIdIfMissing(Entity entity)
         {
             using (Context context = contextFactory.GetNewContext())
             {
@@ -176,62 +178,6 @@ namespace EirinDuran.DataAccess
             {
                 throw new ObjectAlreadyExistsInDataBaseException();
             }
-        }
-
-        private void UpdateEntity(Context context, Entity entity)
-        {
-            EntityEntry<Entity> entry = context.Entry<Entity>(entity);
-            UpdateEntityRec(context, entry);
-        }
-
-        private void UpdateEntityRec(Context context, EntityEntry entry)
-        {
-            foreach (NavigationEntry property in entry.Navigations)
-            {
-                // The current value of a propety is returned as an object by EF so casting is needed to determine whether 
-                // the propety is a single navigatable propety or a collection on navigatables
-                try
-                {   
-                    List<object> entries = TryToCastPropetyToCollectionOfEntries(context, property);
-                    UpdateEntityCollection(context, entries);
-                }
-                catch (ArgumentException) // Casting failed since property is a single navigatable propety
-                {
-                    UpdateSingleEntry(context, property);
-                }
-            }
-            try
-            {
-                context.Update(entry.Entity);
-            }
-            catch (InvalidOperationException) // Update failed since another instance of this entity is already present in context
-            {
-                if (!entry.IsKeySet)
-                {
-                    entry.State = EntityState.Unchanged;
-                }
-            }
-        }
-
-        private List<object> TryToCastPropetyToCollectionOfEntries(Context context, NavigationEntry property)
-        {
-            List<object> entries = (property.CurrentValue as IEnumerable<object>).Cast<object>().ToList();
-            return entries;
-        }
-
-        private void UpdateEntityCollection(Context context, List<object> entries)
-        {
-            foreach (object obj in entries)
-            {
-                EntityEntry childEntry = context.Entry(obj);
-                UpdateEntityRec(context, childEntry);
-            }
-        }
-
-        private void UpdateSingleEntry(Context context, NavigationEntry property)
-        {
-            EntityEntry childEntry = context.Entry(property.CurrentValue);
-            UpdateEntityRec(context, childEntry);
         }
     }
 }
