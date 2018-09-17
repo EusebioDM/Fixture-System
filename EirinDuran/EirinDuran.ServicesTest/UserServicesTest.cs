@@ -81,5 +81,20 @@ namespace EirinDuran.ServicesTest
             services.DeleteUser("pepeAvila");
             User result = repo.Get(new User("pepeAvila"));
         }
+
+        [TestMethod]
+        public void ModifyUserOk()
+        {
+            LoginServices login = new LoginServices(repo);
+            UserServices services = new UserServices(repo, login);
+
+            login.CreateSession("martinFowler", "user");
+            services.Modify(new User(Role.Administrator, "pepeAvila", "Angel", "Ávila", "user", "pepeavila@mymail.com"));
+
+            User result = repo.Get(new User("pepeAvila"));
+
+            Assert.AreEqual("Angel", result.Name);
+        }
+
     }
 }
