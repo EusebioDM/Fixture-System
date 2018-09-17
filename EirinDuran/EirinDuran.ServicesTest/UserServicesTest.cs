@@ -88,12 +88,27 @@ namespace EirinDuran.ServicesTest
             LoginServices login = new LoginServices(repo);
             UserServices services = new UserServices(repo, login);
 
+            login.CreateSession("sSanchez", "user");
+            services.Modify(new User(Role.Administrator, "pepeAvila", "Angel", "Ávila", "user", "pepeavila@mymail.com"));
+
+            User result = repo.Get(new User("pepeAvila"));
+
+            Assert.AreEqual("ANGEL", result.Name);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
+        public void ModifyUserwithoutSufficientPermissions()
+        {
+            LoginServices login = new LoginServices(repo);
+            UserServices services = new UserServices(repo, login);
+
             login.CreateSession("martinFowler", "user");
             services.Modify(new User(Role.Administrator, "pepeAvila", "Angel", "Ávila", "user", "pepeavila@mymail.com"));
 
             User result = repo.Get(new User("pepeAvila"));
 
-            Assert.AreEqual("Angel", result.Name);
+            Assert.AreEqual("ANGEL", result.Name);
         }
 
     }

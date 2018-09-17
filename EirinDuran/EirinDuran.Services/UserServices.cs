@@ -39,5 +39,17 @@ namespace EirinDuran.Services
                 throw new InsufficientPermissionToPerformThisActionException();
             }
         }
+
+        public void Modify(User userToModify)
+        {
+            if (login.LoggedUser.Role == Role.Administrator)
+            {
+                userRepository.Update(userToModify);
+            }
+            else
+            {
+                throw new InsufficientPermissionToPerformThisActionException();
+            }
+        }
     }
 }
