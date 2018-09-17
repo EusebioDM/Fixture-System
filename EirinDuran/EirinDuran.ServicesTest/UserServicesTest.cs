@@ -6,6 +6,7 @@ using EirinDuran.DataAccess;
 using EirinDuran.Domain.User;
 using EirinDuran.DataAccessTest;
 using EirinDuran.Services;
+using EirinDuran.IDataAccess;
 
 namespace EirinDuran.ServicesTest
 {
@@ -54,6 +55,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void DeleteUserSimpleOk()
         {
             LoginServices login = new LoginServices(repo);
@@ -66,6 +68,18 @@ namespace EirinDuran.ServicesTest
             User result = repo.Get(new User("pepeAvila"));
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
+        public void DeleteUserWithoutSufficientPermissions()
+        {
+            LoginServices login = new LoginServices(repo);
+            UserServices services = new UserServices(repo, login);
 
+            login.CreateSession("martinFowler", "user");
+            repo.Add(new User(Role.Administrator, "pepeAvila", "Pepe", "Ávila", "user", "pepeavila@mymail.com"));
+
+            services.DeleteUser("pepeAvila");
+            User result = repo.Get(new User("pepeAvila"));
+        }
     }
 }

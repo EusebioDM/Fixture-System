@@ -27,5 +27,17 @@ namespace EirinDuran.Services
                 throw new InsufficientPermissionToPerformThisActionException();
             }
         }
+
+        public void DeleteUser(string userName)
+        {
+            if (login.LoggedUser.Role == Role.Administrator)
+            {
+                userRepository.Delete(new User(userName));
+            }
+            else
+            {
+                throw new InsufficientPermissionToPerformThisActionException();
+            }
+        }
     }
 }
