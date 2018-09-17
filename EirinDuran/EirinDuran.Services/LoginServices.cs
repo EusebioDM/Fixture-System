@@ -31,7 +31,7 @@ namespace EirinDuran.Services
             }
             catch (ObjectDoesntExistsInDataBaseException)
             {
-                throw new UserTryToLogginDoesNotExistsException();
+                throw new UserTryToLoginDoesNotExistsException();
             }
         }
 

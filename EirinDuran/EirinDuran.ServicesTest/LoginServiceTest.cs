@@ -27,24 +27,24 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void SampleLoginOk()
         {
-            LoginServices login = new LoginServices();
+            LoginServices login = new LoginServices(repo);
             login.CreateSession("sSanchez", "user");
             Assert.AreEqual("sSanchez", login.LoggedUser.UserName);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UserTryToLogginDoesNotExistsException))]
+        [ExpectedException(typeof(UserTryToLoginDoesNotExistsException))]
         public void UserTryToLogginDoesNotExists()
         {
-            LoginServices login = new LoginServices();
+            LoginServices login = new LoginServices(repo);
             login.CreateSession("pAntonio", "user");
         }
 
         [TestMethod]
         [ExpectedException(typeof(IncorrectPasswordException))]
-        public void TryToLogginUserWithIncorrectPassword()
+        public void TryToLoginUserWithIncorrectPassword()
         {
-            LoginServices login = new LoginServices();
+            LoginServices login = new LoginServices(repo);
             login.CreateSession("juanAndres", "pass");
         }
     }

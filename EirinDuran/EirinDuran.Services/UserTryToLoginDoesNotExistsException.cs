@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace EirinDuran.Services
 {
-    public class UserTryToLogginDoesNotExistsException : Exception
+    public class UserTryToLoginDoesNotExistsException : Exception
     {
         public override string Message
         {
