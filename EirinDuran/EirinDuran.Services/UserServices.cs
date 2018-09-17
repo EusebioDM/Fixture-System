@@ -18,7 +18,14 @@ namespace EirinDuran.Services
 
         public void AddUser(User user)
         {
-
+            if (login.LoggedUser.Role == Role.Administrator)
+            {
+                userRepository.Add(user);
+            }
+            else
+            {
+                throw new InsufficientPermissionToPerformThisActionException();
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ namespace EirinDuran.ServicesTest
         {
             repo = new UserRepository(GetContextFactory());
             repo.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
-            repo.Add(new User(Role.Follower, "martinFowler", "Martín", "Fowler", "user", "fowler@fowler.com"))
+            repo.Add(new User(Role.Follower, "martinFowler", "Martín", "Fowler", "user", "fowler@fowler.com"));
         }
 
         private IDesignTimeDbContextFactory<Context> GetContextFactory()
@@ -37,6 +37,20 @@ namespace EirinDuran.ServicesTest
 
             login.CreateSession("martinFowler", "user");
             services.AddUser(new User(Role.Administrator, "pepeAvila", "Pepe", "Ávila", "user", "pepeavila@mymail.com"));
+        }
+
+        [TestMethod]
+        public void AddUserSimpleOk()
+        {
+            LoginServices login = new LoginServices(repo);
+            UserServices services = new UserServices(repo, login);
+
+            login.CreateSession("sSanchez", "user");
+            services.AddUser(new User(Role.Administrator, "pepeAvila", "Pepe", "Ávila", "user", "pepeavila@mymail.com"));
+
+            User result = repo.Get(new User("pepeAvila"));
+
+            Assert.AreEqual("pepeAvila", result.UserName);
         }
     }
 }
