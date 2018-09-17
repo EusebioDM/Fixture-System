@@ -1,16 +1,15 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using EirinDuran.Services;
-using EirinDuran.DataAccess;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore;
 using System;
-using EirinDuran.DataAccessTest;
+using EirinDuran.DataAccess;
 using EirinDuran.Domain.User;
+using EirinDuran.DataAccessTest;
 
 namespace EirinDuran.ServicesTest
 {
     [TestClass]
-    public class LoginServiceTest
+    public class UserServicesTest
     {
         private UserRepository repo;
 
@@ -28,27 +27,13 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        public void SampleLoginOk()
+        public void AdminAddUserOk()
         {
             LoginServices login = new LoginServices(repo);
-            login.CreateSession("sSanchez", "user");
-            Assert.AreEqual("sSanchez", login.LoggedUser.UserName);
-        }
+            UserServices services = new UserServices(repo, login);
 
-        [TestMethod]
-        [ExpectedException(typeof(UserTryToLoginDoesNotExistsException))]
-        public void UserTryToLogginDoesNotExists()
-        {
-            LoginServices login = new LoginServices(repo);
-            login.CreateSession("pAntonio", "user");
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(IncorrectPasswordException))]
-        public void TryToLoginUserWithIncorrectPassword()
-        {
-            LoginServices login = new LoginServices(repo);
-            login.CreateSession("sSanchez", "pass");
+            services.AddUser(new User(Role.Follower, "UserFollower", "User", "User", "user", "user@mail.com"));
+            Assert.AreEqual("UserFollower", repo.Get(new User("UserFollower")).UserName);
         }
     }
 }
