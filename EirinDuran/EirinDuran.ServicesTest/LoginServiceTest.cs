@@ -4,6 +4,8 @@ using EirinDuran.DataAccess;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore;
 using System;
+using EirinDuran.DataAccessTest;
+using EirinDuran.Domain.User;
 
 namespace EirinDuran.ServicesTest
 {
@@ -16,6 +18,7 @@ namespace EirinDuran.ServicesTest
         public void TestInit()
         {
             repo = new UserRepository(GetContextFactory());
+            repo.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
         }
 
         private IDesignTimeDbContextFactory<Context> GetContextFactory()
@@ -45,7 +48,7 @@ namespace EirinDuran.ServicesTest
         public void TryToLoginUserWithIncorrectPassword()
         {
             LoginServices login = new LoginServices(repo);
-            login.CreateSession("juanAndres", "pass");
+            login.CreateSession("sSanchez", "pass");
         }
     }
 }

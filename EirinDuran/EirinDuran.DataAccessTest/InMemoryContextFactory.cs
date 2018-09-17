@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace EirinDuran.DataAccessTest
 {
-    internal class InMemoryContextFactory : IDesignTimeDbContextFactory<Context>
+    public class InMemoryContextFactory : IDesignTimeDbContextFactory<Context>
     {
         private DbContextOptions<Context> options;
 

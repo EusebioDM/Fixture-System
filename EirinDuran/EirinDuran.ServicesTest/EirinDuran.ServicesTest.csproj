@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EirinDuran.DataAccessTest\EirinDuran.DataAccessTest.csproj" />
     <ProjectReference Include="..\EirinDuran.DataAccess\EirinDuran.DataAccess.csproj" />
     <ProjectReference Include="..\EirinDuran.Services\EirinDuran.Services.csproj" />
   </ItemGroup>
