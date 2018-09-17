@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\EirinDuran.DataAccess\EirinDuran.DataAccess.csproj" />
     <ProjectReference Include="..\EirinDuran.Domain\EirinDuran.Domain.csproj" />
   </ItemGroup>
 

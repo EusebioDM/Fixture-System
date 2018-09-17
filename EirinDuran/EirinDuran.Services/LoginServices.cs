@@ -1,14 +1,38 @@
 ﻿using System;
 using EirinDuran.Domain.User;
+using EirinDuran.DataAccess;
+using EirinDuran.IDataAccess;
 
 namespace EirinDuran.Services
 {
     public class LoginServices
     {
+        private UserRepository userRepository;
+
+        public LoginServices(UserRepository userRepository)
+        {
+            this.userRepository = userRepository;
+        }
+
         public void CreateSession(string userName, string password)
         {
-            LoggedUser = new User();
-            LoggedUser.UserName = userName;
+            try
+            {
+                User recovered = userRepository.Get(new User(userName));
+
+                if(recovered.Password == password)
+                {
+                    LoggedUser = recovered;
+                }
+                else
+                {
+                    throw new IncorrectPasswordException();
+                }
+            }
+            catch (ObjectDoesntExistsInDataBaseException)
+            {
+                throw new UserTryToLogginDoesNotExistsException();
+            }
         }
 
         public User LoggedUser { get; private set; }
