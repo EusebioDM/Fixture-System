@@ -2,6 +2,7 @@ using EirinDuran.DataAccess;
 using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -115,10 +116,10 @@ namespace EirinDuran.DataAccessTest
             return new User(Role.Administrator, "Gato", "Mauricio", "Macri", "gato123", "macri@gmail.com");
         }
 
-        private IContextFactory GetContextFactory()
+        private IDesignTimeDbContextFactory<Context> GetContextFactory()
         {
             DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
-            return new ContextFactory(options);
+            return new InMemoryContextFactory(options);
         }
 
         private void CleanUpRepo()

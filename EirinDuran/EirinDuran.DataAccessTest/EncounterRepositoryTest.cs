@@ -2,6 +2,7 @@
 using EirinDuran.Domain.Fixture;
 using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -59,10 +60,10 @@ namespace EirinDuran.DataAccessTest
             repo.Add(tombaRiver);
         }
 
-        private IContextFactory GetContextFactory()
+        private IDesignTimeDbContextFactory<Context> GetContextFactory()
         {
             DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase(Guid.NewGuid().ToString()).EnableSensitiveDataLogging().UseLazyLoadingProxies().Options;
-            return new ContextFactory(options);
+            return new InMemoryContextFactory(options);
         }
 
         private Sport CreateFutbolTeam()

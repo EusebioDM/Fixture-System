@@ -2,6 +2,7 @@
 using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -15,10 +16,10 @@ namespace EirinDuran.DataAccess
     {
         private EntityFactory<Entity> factory;
         private Func<IContext, Microsoft.EntityFrameworkCore.DbSet<Entity>> getDBSetFunc;
-        private IContextFactory contextFactory;
+        private IDesignTimeDbContextFactory<Context> contextFactory;
         private EntityUpdater<Entity> entityUpdater;
 
-        public EntityRepository(EntityFactory<Entity> factory, Func<IContext, Microsoft.EntityFrameworkCore.DbSet<Entity>> getDBSetFunc, IContextFactory contextFactory)
+        public EntityRepository(EntityFactory<Entity> factory, Func<IContext, Microsoft.EntityFrameworkCore.DbSet<Entity>> getDBSetFunc, IDesignTimeDbContextFactory<Context> contextFactory)
         {
             this.factory = factory;
             this.getDBSetFunc = getDBSetFunc;
@@ -32,7 +33,7 @@ namespace EirinDuran.DataAccess
             {
                 TryToAdd(model);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 throw new ObjectAlreadyExistsInDataBaseException();
             }
@@ -45,7 +46,7 @@ namespace EirinDuran.DataAccess
         private void TryToAdd(Model model)
         {
             Entity entity = CreateEntity(model);
-            using (Context context = contextFactory.GetNewContext())
+            using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
                 ValidateAlternateKey(context, entity);
                 entityUpdater.UpdateEntityWithItsChildren(context, entity);
@@ -71,7 +72,7 @@ namespace EirinDuran.DataAccess
 
         private void TryToDelete(Model model)
         {
-            using (Context context = contextFactory.GetNewContext())
+            using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
                 Entity toDelete = CreateEntity(model);
                 Set(context).Remove(toDelete);
@@ -98,7 +99,7 @@ namespace EirinDuran.DataAccess
         private Model TryToGet(Model model)
         {
             Model toReturn;
-            using (Context context = contextFactory.GetNewContext())
+            using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
                 Entity entity = CreateEntity(model);
                 toReturn = Set(context).Single(e => e.GetAlternateKey().Equals(entity.GetAlternateKey())).ToModel();
@@ -123,7 +124,7 @@ namespace EirinDuran.DataAccess
             Func<Entity, Model> mapEntity = t => { return t.ToModel(); };
             Entity entity = factory.CreateEmptyEntity();
             List<Model> models;
-            using (Context context = contextFactory.GetNewContext())
+            using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
                 models = Set(context).Select(mapEntity).ToList();
             }
@@ -149,7 +150,7 @@ namespace EirinDuran.DataAccess
         private void TryToUpdate(Model model)
         {
             Entity entity = CreateEntity(model);
-            using (Context context = contextFactory.GetNewContext())
+            using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
                 entityUpdater.UpdateEntityWithItsChildren(context, entity);
                 context.SaveChanges();
@@ -168,7 +169,7 @@ namespace EirinDuran.DataAccess
 
         private void AssignIdIfMissing(Entity entity)
         {
-            using (Context context = contextFactory.GetNewContext())
+            using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
                 Entity fromDb = Set(context).FirstOrDefault(e => entity.GetAlternateKey().Equals(e.GetAlternateKey()));
                 if (fromDb != null)

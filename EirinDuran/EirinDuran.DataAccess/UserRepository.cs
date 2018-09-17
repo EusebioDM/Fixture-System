@@ -4,6 +4,7 @@ using EirinDuran.Entities;
 using EirinDuran.Entities.Mappers;
 using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace EirinDuran.DataAccess
     {
         private EntityRepository<User, UserEntity> repo;
 
-        public UserRepository(IContextFactory contextFactory)
+        public UserRepository(IDesignTimeDbContextFactory<Context> contextFactory)
         {
             EntityFactory<UserEntity> factory = CreateEntityFactory();
             Func<IContext, DbSet<UserEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();

@@ -2,6 +2,7 @@
 using EirinDuran.Entities;
 using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace EirinDuran.DataAccess
     {
         private EntityRepository<Encounter, EncounterEntity> repo;
 
-        public EncounterRepository(IContextFactory contextFactory)
+        public EncounterRepository(IDesignTimeDbContextFactory<Context> contextFactory)
         {
             EntityFactory<EncounterEntity> factory = CreateEntityFactory();
             Func<IContext, DbSet<EncounterEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();

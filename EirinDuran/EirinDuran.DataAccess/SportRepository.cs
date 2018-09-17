@@ -2,6 +2,7 @@
 using EirinDuran.Entities;
 using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace EirinDuran.DataAccess
     {
         private EntityRepository<Sport, SportEntity> repo;
 
-        public SportRepository(IContextFactory contextFactory)
+        public SportRepository(IDesignTimeDbContextFactory<Context> contextFactory)
         {
             EntityFactory<SportEntity> factory = CreateEntityFactory();
             Func<IContext, DbSet<SportEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
