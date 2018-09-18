@@ -16,25 +16,25 @@ namespace EirinDuran.Services
         {
             this.userRepository = userRepository;
             this.login = loginServices;
-            adminValidator = new PermissionValidator(Role.Administrator);
+            adminValidator = new PermissionValidator(Role.Administrator, login);
         }
 
         public void AddUser(User user)
         {
-            adminValidator.ValidatePermissions(login.LoggedUser);
+            adminValidator.ValidatePermissions();
             userRepository.Add(user);
 
         }
 
         public void DeleteUser(string userName)
         {
-            adminValidator.ValidatePermissions(login.LoggedUser);
+            adminValidator.ValidatePermissions();
             userRepository.Delete(new User(userName));
         }
 
         public void Modify(User userToModify)
         {
-            adminValidator.ValidatePermissions(login.LoggedUser);
+            adminValidator.ValidatePermissions();
             userRepository.Update(userToModify);
         }
     }

@@ -15,14 +15,14 @@ namespace EirinDuran.Services
 
         public SportServices(ILoginServices loginService, IRepository<Sport> repository)
         {
-            validator = new PermissionValidator(Domain.User.Role.Administrator);
+            validator = new PermissionValidator(Domain.User.Role.Administrator, loginService);
             this.loginService = loginService;
             this.repository = repository;
         }
 
         public void Create(Sport sport)
         {
-            validator.ValidatePermissions(loginService.LoggedUser);
+            validator.ValidatePermissions();
             repository.Add(sport);
         }
     }
