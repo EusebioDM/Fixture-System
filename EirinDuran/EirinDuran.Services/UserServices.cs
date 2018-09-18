@@ -18,35 +18,25 @@ namespace EirinDuran.Services
 
         public void AddUser(User user)
         {
-            if (login.LoggedUser.Role == Role.Administrator)
-            {
-                userRepository.Add(user);
-            }
-            else
-            {
-                throw new InsufficientPermissionToPerformThisActionException();
-            }
+            RoleValidator(Role.Administrator);
+            userRepository.Add(user);
         }
 
         public void DeleteUser(string userName)
         {
-            if (login.LoggedUser.Role == Role.Administrator)
-            {
-                userRepository.Delete(new User(userName));
-            }
-            else
-            {
-                throw new InsufficientPermissionToPerformThisActionException();
-            }
+            RoleValidator(Role.Administrator);
+            userRepository.Delete(new User(userName));
         }
 
         public void Modify(User userToModify)
         {
-            if (login.LoggedUser.Role == Role.Administrator)
-            {
-                userRepository.Update(userToModify);
-            }
-            else
+            RoleValidator(Role.Administrator);
+            userRepository.Update(userToModify);
+        }
+
+        private void RoleValidator(Role required)
+        {
+            if(login.LoggedUser.Role != required)
             {
                 throw new InsufficientPermissionToPerformThisActionException();
             }
