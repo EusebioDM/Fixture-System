@@ -122,8 +122,7 @@ namespace EirinDuran.DataAccessTest
 
             private IDesignTimeDbContextFactory<Context> GetTestContext()
             {
-                DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
-                return new InMemoryContextFactory(options);
+                return new InMemoryContextFactory();
             }
 
             private Team CreateBocaTeam()

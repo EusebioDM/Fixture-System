@@ -25,8 +25,7 @@ namespace EirinDuran.ServicesTest
 
         private IDesignTimeDbContextFactory<Context> GetContextFactory()
         {
-            DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
-            return new InMemoryContextFactory(options);
+            return new InMemoryContextFactory();
         }
 
         [TestMethod]

@@ -128,8 +128,7 @@ namespace EirinDuran.DataAccessTest
 
         private IDesignTimeDbContextFactory<Context> GetContextFactory()
         {
-            DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase(Guid.NewGuid().ToString()).UseLazyLoadingProxies().Options;
-            return new InMemoryContextFactory(options);
+            return new InMemoryContextFactory();
         }
 
         private void CleanUpRepo()
