@@ -127,6 +127,7 @@ namespace EirinDuran.Domain.User
         public void RemoveFollowedTeam(Team team)
         {
             followedTeams.Remove(team);
+
         }
 
         public IEnumerable<Team> FollowedTeams => followedTeams;
