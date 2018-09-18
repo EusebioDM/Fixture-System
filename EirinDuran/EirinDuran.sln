@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.Services", "Eiri
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.DomainTest", "EirinDuran.Test\EirinDuran.DomainTest.csproj", "{C2B84AAE-122D-41F4-A9CC-4201C73738F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.Entities", "Entities\EirinDuran.Entities.csproj", "{36119659-F618-46C8-AD17-7EE6CF8A27B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.Entities", "EirinDuran.Entities\EirinDuran.Entities.csproj", "{36119659-F618-46C8-AD17-7EE6CF8A27B0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.IDataAccess", "EirinDuran.IDataAccess\EirinDuran.IDataAccess.csproj", "{1E6716DF-12A8-47DC-A70F-BA067BAC98B9}"
 EndProject

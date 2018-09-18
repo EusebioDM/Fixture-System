@@ -9,7 +9,9 @@ namespace EirinDuran.Domain.Fixture
     {
         public Guid Id { get; private set; }
         private Team[] teams;
+
         private DateTime dateTime;
+
         public DateTime DateTime { get => dateTime; set => SetDateIfValid(value); }
         public IEnumerable<Team> Teams => teams;
 
