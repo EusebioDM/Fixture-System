@@ -35,6 +35,8 @@ namespace EirinDuran.DataAccess
             builder.Entity<SportEntity>().HasAlternateKey(s => s.Name);
             builder.Entity<EncounterEntity>().HasKey(e => e.Id);
             builder.Entity<EncounterEntity>().Property(u => u.Id).ValueGeneratedOnAdd();
+            builder.Entity<CommentEntity>().HasKey(e => e.Id);
+            builder.Entity<CommentEntity>().Property(e => e.Id).ValueGeneratedOnAdd();
         }
 
     }

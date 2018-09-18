@@ -12,12 +12,14 @@ namespace EirinDuran.Domain.Fixture
         private DateTime dateTime;
         public DateTime DateTime { get => dateTime; set => SetDateIfValid(value); }
         public IEnumerable<Team> Teams => teams;
+        public IEnumerable<Comment> Comments => comments;
+        private ICollection<Comment> comments;
 
         public Sport Sport { get; set; }
 
         public Encounter(Sport sport, IEnumerable<Team> teams, DateTime dateTime)
         {
-            Id = Guid.NewGuid();
+            comments = new List<Comment>();
             ValidateNumberOfTeams(teams);
             Sport = sport;
             this.teams = GetTeamsArray(teams);
@@ -25,13 +27,19 @@ namespace EirinDuran.Domain.Fixture
             Id = Guid.Empty;
         }
 
-        public Encounter(Guid id, Sport sport, IEnumerable<Team> teams, DateTime dateTime)
+        public Encounter(Guid id, Sport sport, IEnumerable<Team> teams, DateTime dateTime, ICollection<Comment> comments)
         {
             Id = id;
             ValidateNumberOfTeams(teams);
             Sport = sport;
             this.teams = GetTeamsArray(teams);
+            this.comments = comments;
             DateTime = dateTime;
+        }
+
+        public void AddComment(User.User user, string message)
+        {
+            comments.Add(new Comment(user, message));
         }
 
         private void ValidateNumberOfTeams(IEnumerable<Team> teams)

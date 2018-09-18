@@ -13,7 +13,5 @@ namespace EirinDuran.Entities
         Guid Id { get; set; }
 
         string GetAlternateKey();
-
-        string NavegablePropeties { get; }
     }
 }
