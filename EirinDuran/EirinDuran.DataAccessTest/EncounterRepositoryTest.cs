@@ -1,5 +1,6 @@
 ﻿using EirinDuran.DataAccess;
 using EirinDuran.Domain.Fixture;
+using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -24,14 +25,15 @@ namespace EirinDuran.DataAccessTest
         private Team tomba;
         private Encounter bocaRiver;
         private Encounter tombaRiver;
+        private User macri;
 
         [TestMethod]
         public void AddEncounterTest()
         {
             IEnumerable<Encounter> actual = repo.GetAll();
 
-
             Assert.IsTrue(actual.Any(e => e.Teams.Contains(boca) && e.Teams.Contains(river) && e.Sport.Equals(futbol)));
+            Assert.IsTrue(actual.Any(e => e.Comments.Any(m => m.Message.Equals("Meow"))));
             Assert.IsTrue(actual.Any(e => e.Teams.Contains(tomba) && e.Teams.Contains(river) && e.Sport.Equals(futbol)));
             Assert.AreEqual(2, actual.Count());
         }
@@ -45,10 +47,22 @@ namespace EirinDuran.DataAccessTest
             Assert.AreEqual(3, repo.GetAll().Count());
         }
 
+        [TestMethod]
+        public void UpdateEncounterTest()
+        {
+            Encounter encounter = repo.GetAll().First(e => e.Teams.Contains(boca));
+            encounter.AddComment(macri, "msj");
+            repo.Update(encounter);
+
+            Encounter updated = repo.GetAll().First(e => e.Teams.Contains(boca));
+            Assert.IsTrue(updated.Comments.Any(c => c.Message.Equals("msj")));
+        }
+
         [TestInitialize]
         public void TestInit()
         {
             repo = new EncounterRepository(GetContextFactory());
+            macri = CreateMacriUser();
             boca = CreateBocaTeam();
             river = CreateTeamThatBelongsInTheB();
             tomba = CreateGodoyCruzTeam();
@@ -104,12 +118,23 @@ namespace EirinDuran.DataAccessTest
 
         private Encounter CreateBocaRiverEncounter()
         {
-            return new Encounter(futbol, new List<Team>() { boca, river }, new DateTime(3001, 10, 10));
+            Encounter encounter = new Encounter(futbol, new List<Team>() { boca, river }, new DateTime(3001, 10, 10));
+            encounter.AddComment(macri, "Meow");
+            return encounter;
         }
 
         private Encounter CreateTombaRiverEncounter()
         {
-            return new Encounter(futbol, new List<Team>() { tomba, river }, new DateTime(3001, 10, 11));
+            Encounter encounter = new Encounter(futbol, new List<Team>() { tomba, river }, new DateTime(3001, 10, 11));
+            encounter.AddComment(macri, "Meow");
+            return encounter;
+        }
+
+        private User CreateMacriUser()
+        {
+            User user = new User(Role.Administrator, "Gato", "Mauricio", "Macri", "gato123", "macri@gmail.com");
+            user.AddFollowedTeam(new Team("River"));
+            return user;
         }
     }
 }

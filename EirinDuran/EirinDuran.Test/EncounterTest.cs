@@ -1,10 +1,12 @@
 ﻿using EirinDuran.Domain.Fixture;
+using EirinDuran.Domain.User;
 using EirinDuran.DomainTest.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace EirinDuran.DomainTest
@@ -56,6 +58,19 @@ namespace EirinDuran.DomainTest
         {
             Encounter encounter = new Encounter(new Sport("Rugby"), teams, fechaMenor);
 
+        }
+
+        [TestMethod]
+        public void AddMessageTest()
+        {
+            User user = new User("User");
+            Encounter encounter = new Encounter(futbol, teams, fechaMenor);
+            encounter.AddComment(user, "msj");
+
+            Comment comment = encounter.Comments.Single();
+            Assert.AreEqual(user, comment.User);
+            Assert.AreEqual("msj", comment.Message);
+            Assert.AreEqual(DateTime.Now.Hour, comment.TimeStamp.Hour);
         }
 
         [TestInitialize]
