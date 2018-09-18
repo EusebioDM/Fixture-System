@@ -1,5 +1,6 @@
 ﻿using EirinDuran.DataAccess;
 using EirinDuran.Domain.Fixture;
+using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -22,6 +23,7 @@ namespace EirinDuran.DataAccessTest
         private Sport rugby;
         private Team boca;
         private Team river;
+        private User macri;
 
         [TestMethod]
         public void AddSportTest()
@@ -144,6 +146,13 @@ namespace EirinDuran.DataAccessTest
             string name = "River Plate";
             Image image = Image.FromFile("..\\..\\..\\Resources\\River.jpg");
             return new Team(name, image);
+        }
+
+        private User CreateUserMacri()
+        {
+            User user = new User(Role.Administrator, "Gato", "Mauricio", "Macri", "gato123", "macri@gmail.com");
+            user.AddFollowedTeam(new Team("River"));
+            return user;
         }
     }
 }

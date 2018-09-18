@@ -2,6 +2,7 @@ using System;
 using EirinDuran.Domain.User;
 using EirinDuran.DataAccess;
 using EirinDuran.IDataAccess;
+using EirinDuran.IServices;
 
 namespace EirinDuran.Services
 {
@@ -9,9 +10,9 @@ namespace EirinDuran.Services
     {
         private UserRepository userRepository;
         private PermissionValidator adminValidator;
-        private LoginServices login;
+        private ILoginServices login;
 
-        public UserServices(UserRepository userRepository, LoginServices loginServices)
+        public UserServices(UserRepository userRepository, ILoginServices loginServices)
         {
             this.userRepository = userRepository;
             this.login = loginServices;

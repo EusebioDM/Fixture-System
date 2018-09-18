@@ -4,6 +4,7 @@
     <ProjectReference Include="..\EirinDuran.DataAccess\EirinDuran.DataAccess.csproj" />
     <ProjectReference Include="..\EirinDuran.Domain\EirinDuran.Domain.csproj" />
     <ProjectReference Include="..\EirinDuran.IDataAccess\EirinDuran.IDataAccess.csproj" />
+    <ProjectReference Include="..\EirinDuran.IServices\EirinDuran.IServices.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
