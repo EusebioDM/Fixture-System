@@ -44,7 +44,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        public void ModifySportTest()
+        public void ModifyNonExistingSportTest()
         {
             SportServices service = new SportServices(login, repo);
             rugby.AddTeam(boca);

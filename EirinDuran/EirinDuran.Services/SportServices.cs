@@ -32,5 +32,11 @@ namespace EirinDuran.Services
                 throw new ObjectAlreadyExistsException(sport);
             }
         }
+
+        public void Modify(Sport sport)
+        {
+            validator.ValidatePermissions();
+            repository.Update(sport);
+        }
     }
 }
