@@ -8,38 +8,33 @@ namespace EirinDuran.Services
     public class UserServices
     {
         private UserRepository userRepository;
+        private PermissionValidator adminValidator;
         private LoginServices login;
 
         public UserServices(UserRepository userRepository, LoginServices loginServices)
         {
             this.userRepository = userRepository;
             this.login = loginServices;
+            adminValidator = new PermissionValidator(Role.Administrator);
         }
 
         public void AddUser(User user)
         {
-            RoleValidator(Role.Administrator);
+            adminValidator.ValidatePermissions(login.LoggedUser);
             userRepository.Add(user);
+
         }
 
         public void DeleteUser(string userName)
         {
-            RoleValidator(Role.Administrator);
+            adminValidator.ValidatePermissions(login.LoggedUser);
             userRepository.Delete(new User(userName));
         }
 
         public void Modify(User userToModify)
         {
-            RoleValidator(Role.Administrator);
+            adminValidator.ValidatePermissions(login.LoggedUser);
             userRepository.Update(userToModify);
-        }
-
-        private void RoleValidator(Role required)
-        {
-            if(login.LoggedUser.Role != required)
-            {
-                throw new InsufficientPermissionToPerformThisActionException();
-            }
         }
     }
 }
