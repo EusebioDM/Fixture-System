@@ -44,6 +44,16 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
+        public void ModifyExistingSportTest()
+        {
+            SportServices service = new SportServices(login, repo);
+            futbol.RemoveTeam(boca);
+            service.Modify(rugby);
+
+            Assert.IsFalse(repo.Get(futbol).Teams.Contains(boca));
+        }
+
+        [TestMethod]
         public void ModifyNonExistingSportTest()
         {
             SportServices service = new SportServices(login, repo);
