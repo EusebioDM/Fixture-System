@@ -1,4 +1,5 @@
 using EirinDuran.DataAccess;
+using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
@@ -61,6 +62,8 @@ namespace EirinDuran.DataAccessTest
             Assert.AreEqual(macri.Password, fromRepo.Password);
             Assert.AreEqual(macri.Surname, fromRepo.Surname);
             Assert.AreEqual(macri.Role, fromRepo.Role);
+            Assert.IsTrue(fromRepo.FollowedTeams.Contains(new Team("River")));
+            Assert.IsTrue(fromRepo.FollowedTeams.Count() == 1);
         }
 
         [TestMethod]
@@ -76,12 +79,14 @@ namespace EirinDuran.DataAccessTest
             macri = repo.Get(new User("Gato"));
             macri.Role = Role.Follower;
             macri.Surname = "Rodriges";
+            macri.AddFollowedTeam(new Team("Boca"));
 
             repo.Update(macri);
             User fromRepo = repo.Get(macri);
 
             Assert.AreEqual(Role.Follower, fromRepo.Role);
             Assert.AreEqual(macri.Surname, fromRepo.Surname);
+            Assert.IsTrue(macri.FollowedTeams.Contains(new Team("Boca")));
         }
 
         [TestMethod]
@@ -108,17 +113,22 @@ namespace EirinDuran.DataAccessTest
 
         private User CreateUserAlvaro()
         {
-            return new User(Role.Administrator, "alvaro", "Álvaro", "Gómez", "pass1234", "gomez@gomez.uy");
+            User user = new User(Role.Administrator, "alvaro", "Álvaro", "Gómez", "pass1234", "gomez@gomez.uy");
+            user.AddFollowedTeam(new Team("Boca"));
+            user.AddFollowedTeam(new Team("River"));
+            return user;
         }
 
         private User CreateUserMacri()
         {
-            return new User(Role.Administrator, "Gato", "Mauricio", "Macri", "gato123", "macri@gmail.com");
+            User user = new User(Role.Administrator, "Gato", "Mauricio", "Macri", "gato123", "macri@gmail.com");
+            user.AddFollowedTeam(new Team("River"));
+            return user;
         }
 
         private IDesignTimeDbContextFactory<Context> GetContextFactory()
         {
-            DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
+            DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase(Guid.NewGuid().ToString()).UseLazyLoadingProxies().Options;
             return new InMemoryContextFactory(options);
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EirinDuran.Domain.Fixture;
+using System;
 using System.Collections.Generic;
 
 namespace EirinDuran.Domain.User
@@ -12,11 +13,13 @@ namespace EirinDuran.Domain.User
         private string surname;
         private string password;
         private string mail;
+        private ICollection<Team> followedTeams;
         private StringValidator validator;
 
         public User()
         {
             validator = new StringValidator();
+            followedTeams = new List<Team>();
         }
 
         public User(string userName) : this()
@@ -34,9 +37,10 @@ namespace EirinDuran.Domain.User
             Id = Guid.Empty;
         }
 
-        public User(Role role, Guid id, string userName, string name, string surname, string password, string mail) : this(role,userName, name, surname, password,mail)
+        public User(Role role, Guid id, string userName, string name, string surname, string password, string mail, ICollection<Team> followedTeams) : this(role, userName, name, surname, password, mail)
         {
             Id = id;
+            this.followedTeams = followedTeams;
         }
 
         public string UserName {
@@ -114,6 +118,19 @@ namespace EirinDuran.Domain.User
                 }
             }
         }
+
+        public void AddFollowedTeam(Team team)
+        {
+            followedTeams.Add(team);
+        }
+
+        public void RemoveFollowedTeam(Team team)
+        {
+            followedTeams.Remove(team);
+
+        }
+
+        public IEnumerable<Team> FollowedTeams => followedTeams;
 
         public override bool Equals(object obj)
         {
