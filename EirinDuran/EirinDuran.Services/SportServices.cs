@@ -23,7 +23,14 @@ namespace EirinDuran.Services
         public void Create(Sport sport)
         {
             validator.ValidatePermissions();
-            repository.Add(sport);
+            try
+            {
+                repository.Add(sport);
+            }
+            catch (ObjectAlreadyExistsInDataBaseException)
+            {
+                throw new ObjectAlreadyExistsException(sport);
+            }
         }
     }
 }
