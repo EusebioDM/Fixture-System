@@ -43,6 +43,16 @@ namespace EirinDuran.ServicesTest
             service.Create(futbol);
         }
 
+        [TestMethod]
+        public void ModifySportTest()
+        {
+            SportServices service = new SportServices(login, repo);
+            rugby.AddTeam(boca);
+            service.Modify(rugby);
+
+            Assert.IsTrue(repo.Get(rugby).Teams.Contains(boca));
+        }
+
         [TestInitialize]
         public void TestInit()
         {
