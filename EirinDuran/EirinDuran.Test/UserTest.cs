@@ -127,5 +127,23 @@ namespace EirinDuran.DomainTest
             Assert.IsTrue(actual.Contains(river));
             Assert.AreEqual(expected.Count(), actual.Count());
         }
+
+        [TestMethod]
+        public void RemoveFollowedTeamsTest()
+        {
+            Team boca = new Team("Boca");
+            Team river = new Team("River");
+            IEnumerable<Team> expected = new List<Team>() { boca };
+
+            user.AddFollowedTeam(boca);
+            user.AddFollowedTeam(river);
+            user.RemoveFollowedTeam(river);
+
+            IEnumerable<Team> actual = user.FollowedTeams;
+
+            Assert.IsTrue(actual.Contains(boca));
+            Assert.IsFalse(actual.Contains(river));
+            Assert.AreEqual(expected.Count(), actual.Count());
+        }
     }
 }

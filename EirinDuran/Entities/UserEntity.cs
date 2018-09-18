@@ -15,6 +15,7 @@ namespace EirinDuran.Entities
         public string Password { get; set; }
         public string Mail { get; set; }
         public Role Role { get; set; }
+        public ICollection<TeamEntity> FollowedTeams { get; set; }
 
         private UserMapper mapper;
 
