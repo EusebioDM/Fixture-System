@@ -35,6 +35,14 @@ namespace EirinDuran.ServicesTest
             Assert.IsTrue(repo.GetAll().Contains(rugby));
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(ObjectAlreadyExistsException))]
+        public void CreateAlreadyExistingSport()
+        {
+            SportServices service = new SportServices(login, repo);
+            service.Create(futbol);
+        }
+
         [TestInitialize]
         public void TestInit()
         {
