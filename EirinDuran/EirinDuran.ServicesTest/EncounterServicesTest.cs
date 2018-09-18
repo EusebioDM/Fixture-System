@@ -89,7 +89,7 @@ namespace EirinDuran.ServicesTest
 
         [TestMethod]
         [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
-        public void CreateFeatureWithoutPermissions()
+        public void CreateFixtureWithoutPermissions()
         {
             login.CreateSession("martinFowler", "user");
 
@@ -105,5 +105,30 @@ namespace EirinDuran.ServicesTest
             Encounter encounter = new Encounter(basketball, teams, date);
             encounterServices.CreateEncounter(encounter);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(EncounterWithOverlappingDatesException))]
+        public void CreateFixtureWithOverlappingDates()
+        {
+            login.CreateSession("martinFowler", "user");
+
+            EncounterServices encounterServices = new EncounterServices(encounterRepository, login);
+
+            IEnumerable<Team> teamsFirstEncounter = new List<Team> { felix, river };
+            IEnumerable<Team> teamsSecondEncounter = new List<Team> { felix, penhiarol };
+
+            DateTime date = new DateTime(2018, 10, 07);
+
+            Sport football = new Sport("Football");
+
+            football.AddTeam(river);
+            football.AddTeam(felix);
+            football.AddTeam(penhiarol);
+
+            Encounter encounter = new Encounter(football, teamsFirstEncounter, date);
+            Encounter encounterOverlappingDates = new Encounter(football, teamsSecondEncounter, date);
+            encounterServices.CreateEncounter(encounter);
+        }
+
     }
 }
