@@ -2,10 +2,11 @@
 using EirinDuran.Domain.User;
 using EirinDuran.DataAccess;
 using EirinDuran.IDataAccess;
+using EirinDuran.IServices;
 
 namespace EirinDuran.Services
 {
-    public class LoginServices
+    public class LoginServices : ILoginServices
     {
         private UserRepository userRepository;
 
