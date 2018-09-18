@@ -29,7 +29,7 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void CreatedSportTest()
         {
-            SportServices service = new SportServices(login, IRepository <Sport> repo);
+            SportServices service = new SportServices(login, repo);
             service.Create(rugby);
 
             Assert.IsTrue(repo.GetAll().Contains(rugby));
