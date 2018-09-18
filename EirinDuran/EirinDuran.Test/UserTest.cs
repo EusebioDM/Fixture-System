@@ -1,6 +1,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EirinDuran.Domain.User;
 using EirinDuran.Domain;
+using System.Collections.Generic;
+using EirinDuran.Domain.Fixture;
+using System.Linq;
 
 namespace EirinDuran.DomainTest
 {
@@ -106,6 +109,23 @@ namespace EirinDuran.DomainTest
         {
             bool result = user.Role == Role.Administrator;
             Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void AddFollowedTeamsTest()
+        {
+            Team boca = new Team("Boca");
+            Team river = new Team("River");
+            IEnumerable<Team> expected = new List<Team>() { boca, river };
+
+            foreach (Team team in expected)
+                user.AddFollowedTeam(team);
+
+            IEnumerable<Team> actual = user.FollowedTeams;
+
+            Assert.IsTrue(actual.Contains(boca));
+            Assert.IsTrue(actual.Contains(river));
+            Assert.AreEqual(expected.Count(), actual.Count());
         }
     }
 }
