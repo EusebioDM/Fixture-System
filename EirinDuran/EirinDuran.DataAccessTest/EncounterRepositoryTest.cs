@@ -47,6 +47,17 @@ namespace EirinDuran.DataAccessTest
             Assert.AreEqual(3, repo.GetAll().Count());
         }
 
+        [TestMethod]
+        public void UpdateEncounterTest()
+        {
+            Encounter encounter = repo.GetAll().First(e => e.Teams.Contains(boca));
+            encounter.AddComment(macri, "msj");
+            repo.Update(encounter);
+
+            Encounter updated = repo.GetAll().First(e => e.Teams.Contains(boca));
+            Assert.IsTrue(updated.Comments.Any(c => c.Message.Equals("msj")));
+        }
+
         [TestInitialize]
         public void TestInit()
         {
