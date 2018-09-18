@@ -48,9 +48,10 @@ namespace EirinDuran.ServicesTest
         {
             SportServices service = new SportServices(login, repo);
             futbol.RemoveTeam(boca);
-            service.Modify(rugby);
+            service.Modify(futbol);
 
-            Assert.IsFalse(repo.Get(futbol).Teams.Contains(boca));
+            Sport fromRepo = repo.Get(futbol);
+            Assert.IsFalse(fromRepo.Teams.Contains(boca));
         }
 
         [TestMethod]

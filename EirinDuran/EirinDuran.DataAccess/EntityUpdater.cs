@@ -30,6 +30,7 @@ namespace EirinDuran.DataAccess
                 catch (ArgumentException) // Casting failed since property is a single navigatable propety
                 {
                     UpdateSingleEntry(context, property);
+                    
                 }
             }
             try
