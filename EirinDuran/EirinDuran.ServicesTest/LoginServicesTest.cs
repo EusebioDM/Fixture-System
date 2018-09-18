@@ -28,7 +28,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        public void SampleLoginOk()
+        public void SimpleLoginOk()
         {
             LoginServices login = new LoginServices(repo);
             login.CreateSession("sSanchez", "user");
