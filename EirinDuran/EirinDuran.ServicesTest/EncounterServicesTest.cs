@@ -153,7 +153,7 @@ namespace EirinDuran.ServicesTest
             IFixtureGenerator fixture = new LeagueFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
-            encounterServices.CreateMultipleEncounters(encounters);
+            encounterServices.CreateEncounter(encounters);
 
             List<Encounter> recovered = (List<Encounter>)encounterRepository.GetAll();
 

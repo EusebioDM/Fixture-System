@@ -27,6 +27,13 @@ namespace EirinDuran.Services
             encounterRepository.Add(encounter);
         }
 
+        public void CreateEncounter(IEnumerable<Encounter> encounters)
+        {
+            adminValidator.ValidatePermissions(loginServices.LoggedUser);
+            encounters.ToList().ForEach(e => ValidateNonOverlappingOfDates(e));
+            encounters.ToList().ForEach(e => encounterRepository.Add(e));
+        }
+
         private void ValidateNonOverlappingOfDates(Encounter encounter)
         {
             Team firstTeamToAdd = encounter.Teams.ElementAt(0);
@@ -39,9 +46,6 @@ namespace EirinDuran.Services
                 Team firstTeamInDataBase = aEncounter.Teams.ElementAt(0);
                 Team secondTeamInDataBase = aEncounter.Teams.ElementAt(1);
                 DateTime encounterDateInDataBase = aEncounter.DateTime;
-
-                bool firstAreEqual = firstTeamInDataBase.Equals(firstTeamToAdd);
-                bool datesAreEqual = encounterDateInDataBase == encounterDateToAdd;
 
                 if ((firstTeamInDataBase.Equals(firstTeamToAdd)
                    || firstTeamInDataBase.Equals(secondTeamToAdd)
