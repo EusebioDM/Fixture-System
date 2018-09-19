@@ -80,7 +80,6 @@ namespace EirinDuran.ServicesTest
             encounterServices.CreateEncounter(expected);
 
             List<Encounter> recovered = (List<Encounter>)encounterRepository.GetAll();
-            encounterServices.CreateEncounter(expected);
 
             bool result = recovered.Contains(expected);
 
@@ -110,7 +109,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(EncounterWithOverlappingDatesException))]
         public void CreateFixtureWithOverlappingDates()
         {
-            login.CreateSession("martinFowler", "user");
+            login.CreateSession("sSanchez", "user");
 
             EncounterServices encounterServices = new EncounterServices(encounterRepository, login);
 
@@ -128,6 +127,7 @@ namespace EirinDuran.ServicesTest
             Encounter encounter = new Encounter(football, teamsFirstEncounter, date);
             Encounter encounterOverlappingDates = new Encounter(football, teamsSecondEncounter, date);
             encounterServices.CreateEncounter(encounter);
+            encounterServices.CreateEncounter(encounterOverlappingDates);
         }
 
     }
