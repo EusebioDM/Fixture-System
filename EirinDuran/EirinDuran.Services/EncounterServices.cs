@@ -63,5 +63,10 @@ namespace EirinDuran.Services
             encounterToComment.AddComment(loginServices.LoggedUser, comment);
             encounterRepository.Update(encounterToComment);
         }
+
+        public IEnumerable<Encounter> GetAllEncounters()
+        {
+            return encounterRepository.GetAll();
+        }
     }
 }
