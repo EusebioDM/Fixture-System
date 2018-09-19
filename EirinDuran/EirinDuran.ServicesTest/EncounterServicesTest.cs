@@ -264,5 +264,30 @@ namespace EirinDuran.ServicesTest
 
             Assert.IsTrue(areAllPresent);
         }
+
+        [TestMethod]
+        public void DeleteEncounter()
+        {
+            login.CreateSession("sSanchez", "user");
+            EncounterServices encounterServices = new EncounterServices(encounterRepository, login);
+
+            IEnumerable<Team> teams = new List<Team> { felix, river };
+
+            Sport football = new Sport("Football");
+            football.AddTeam(felix);
+            football.AddTeam(river);
+
+            DateTime date = new DateTime(2018, 10, 12);
+
+            IFixtureGenerator fixture = new LeagueFixture(football);
+            IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
+
+            encounterServices.CreateEncounter(encounters);
+            IEnumerable<Encounter> allEncounters = encounterServices.GetAllEncounters();
+
+            encounterServices.DeleteEncounter(allEncounters.First());
+
+            Assert.IsTrue(encounterServices.GetAllEncounters().ToList().Count == 0);
+        }
     }
 }
