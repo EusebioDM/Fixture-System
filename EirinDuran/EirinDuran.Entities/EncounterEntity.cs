@@ -8,17 +8,19 @@ namespace EirinDuran.Entities
 {
     public class EncounterEntity : IEntity<Encounter>
     {
-        
+
         public Guid Id { get; set; }
         public DateTime DateTime { get; set; }
         public virtual SportEntity Sport { get; set; }
         public virtual ICollection<TeamEntity> Teams { get; set; }
+        public virtual ICollection<CommentEntity> Comments { get; set; }
         private EncounterMapper mapper;
 
         public EncounterEntity()
         {
             mapper = new EncounterMapper();
             Teams = new List<TeamEntity>();
+            Comments = new List<CommentEntity>();
         }
 
         public EncounterEntity(Encounter encounter) : this()

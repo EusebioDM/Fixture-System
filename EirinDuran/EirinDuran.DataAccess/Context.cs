@@ -36,6 +36,8 @@ namespace EirinDuran.DataAccess
             builder.Entity<EncounterEntity>().HasKey(e => e.Id);
             builder.Entity<EncounterEntity>().Property(u => u.Id).ValueGeneratedOnAdd();
             builder.Entity<EncounterEntity>().Property(e => e.DateTime).HasColumnType("datetime2");
+            builder.Entity<CommentEntity>().HasKey(e => e.Id);
+            builder.Entity<CommentEntity>().Property(e => e.Id).ValueGeneratedOnAdd();
         }
 
     }
