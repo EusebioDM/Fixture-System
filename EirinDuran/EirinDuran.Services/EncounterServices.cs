@@ -57,5 +57,11 @@ namespace EirinDuran.Services
                 }
             }
         }
+
+        public void AddComment(Encounter encounterToComment, string comment)
+        {
+            encounterToComment.AddComment(loginServices.LoggedUser, comment);
+            encounterRepository.Update(encounterToComment);
+        }
     }
 }
