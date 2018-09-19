@@ -18,7 +18,8 @@ namespace EirinDuran.Entities.Mappers
             {
                 DateTime = encounter.DateTime,
                 Sport = sportMapper.Map(encounter.Sport),
-                Teams = teams.ToList(),
+                HomeTeam = new TeamEntity(encounter.Teams.First()),
+                AwayTeam = new TeamEntity(encounter.Teams.Last()),
                 Id = encounter.Id,
                 Comments = encounter.Comments.Select(c => new CommentEntity(c)).ToList()
             };
@@ -26,7 +27,7 @@ namespace EirinDuran.Entities.Mappers
 
         public Encounter Map(EncounterEntity entity)
         {
-            IEnumerable<Team> teams = entity.Teams.Select(t => teamMapper.Map(t));
+            IEnumerable<Team> teams = new List<Team>() { entity.HomeTeam.ToModel(), entity.AwayTeam.ToModel() };
             ICollection<Comment> comments = entity.Comments.Select(t => t.ToModel()).ToList();
             Sport sport = sportMapper.Map(entity.Sport);
 
@@ -35,9 +36,11 @@ namespace EirinDuran.Entities.Mappers
 
         public void Update(Encounter source, EncounterEntity destination)
         {
+            List<TeamEntity> teams = source.Teams.Select(sourcemTeam => new TeamEntity(sourcemTeam)).ToList(); 
             destination.DateTime = source.DateTime;
             destination.Sport = new SportEntity(source.Sport);
-            destination.Teams = source.Teams.Select(sourcemTeam => new TeamEntity(sourcemTeam)).ToList();
+            destination.HomeTeam = teams.First();
+            destination.AwayTeam = teams.Last();
             destination.Id = source.Id;
             destination.Comments = source.Comments.Select(c => new CommentEntity(c)).ToList();
         }

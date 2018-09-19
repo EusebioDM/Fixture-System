@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,61 +10,85 @@ namespace EirinDuran.DataAccess
 {
     internal class EntityUpdater<Entity> where Entity : class
     {
-
-        public void UpdateEntityWithItsChildren(Context context, Entity entity)
+        public void UpdateGraph(IDesignTimeDbContextFactory<Context> contextFactory, Entity entity)
         {
-            EntityEntry<Entity> entry = context.Entry<Entity>(entity);
-            UpdateEntityRec(context, entry);
+            Queue<object> entitiesLeftToUpdate = new Queue<object>();
+            entitiesLeftToUpdate.Enqueue(entity);
+
+            while (entitiesLeftToUpdate.Count() > 0)
+            {
+                object next = entitiesLeftToUpdate.Peek();
+                using (Context context = contextFactory.CreateDbContext(new string[0]))
+                {
+                    context.ChangeTracker.TrackGraph(next, n => UpdateNode(context, entitiesLeftToUpdate, n));
+                    context.SaveChanges();
+                }
+                entitiesLeftToUpdate.Dequeue();
+            }
         }
 
-        private void UpdateEntityRec(Context context, EntityEntry entry)
+        private void UpdateNode(Context context, Queue<object> leftToUpdate, EntityEntryGraphNode n)
         {
-            foreach (NavigationEntry property in entry.Navigations)
+            var entry = n.Entry;
+            var sEntry = n.SourceEntry;
+            if (!EntryExistsInChangeTracker(context, entry))
             {
-                // The current value of a propety is returned as an object by EF so casting is needed to determine whether 
-                // the propety is a single navigatable propety or a collection on navigatables
-                try
+                if (EntryExistsInDb(context, entry))
                 {
-                    List<object> entries = TryToCastPropetyToCollectionOfEntries(context, property);
-                    UpdateEntityCollection(context, entries);
+                    entry.State = EntityState.Modified;
                 }
-                catch (ArgumentException) // Casting failed since property is a single navigatable propety
+                else
                 {
-                    UpdateSingleEntry(context, property);
-                }
-            }
-            try
-            {
-                context.Update(entry.Entity);
-            }
-            catch (InvalidOperationException) // Update failed since another instance of this entity is already present in context
-            {
-                if (!entry.IsKeySet)
-                {
-                    entry.State = EntityState.Unchanged;
+                    entry.State = EntityState.Added;
                 }
             }
-        }
-
-        private List<object> TryToCastPropetyToCollectionOfEntries(Context context, NavigationEntry property)
-        {
-            List<object> entries = (property.CurrentValue as IEnumerable<object>).Cast<object>().ToList();
-            return entries;
-        }
-
-        private void UpdateEntityCollection(Context context, List<object> entries)
-        {
-            foreach (object obj in entries)
+            else
             {
-                EntityEntry childEntry = context.Entry(obj);
-                UpdateEntityRec(context, childEntry);
+                if (!leftToUpdate.Contains(sEntry.Entity))
+                    leftToUpdate.Enqueue(sEntry.Entity);
             }
         }
 
-        private void UpdateSingleEntry(Context context, NavigationEntry property)
+        private bool EntryExistsInDb(Context context, EntityEntry entry)
         {
-            EntityEntry childEntry = context.Entry(property.CurrentValue);
-            UpdateEntityRec(context, childEntry);
+            bool exists = entry.GetDatabaseValues() != null;
+            return exists;
+        }
+
+        private bool EntryExistsInChangeTracker(Context context, EntityEntry entry)
+        {
+            IEnumerable<EntityEntry> entriesInChangeTracker = context.ChangeTracker.Entries();
+            bool exists = entriesInChangeTracker.Any(e => EntriesAreEqual(e, entry));
+            return exists;
+        }
+
+        public bool EntriesAreEqual(Context context, Entity first, Entity second)
+        {
+            EntityEntry firstEntry = context.Entry(first);
+            EntityEntry secondEntry = context.Entry(second);
+
+            return EntriesAreEqual(firstEntry, secondEntry);
+        }
+
+        private bool EntriesAreEqual(EntityEntry first, EntityEntry second)
+        {
+            var firstKey = GetKey(first);
+            var secondKey = GetKey(second);
+
+            return firstKey.Equals(secondKey);
+        }
+
+        private object GetKey(EntityEntry entry)
+        {
+            object keyValue = null;
+            foreach (var propety in entry.Properties)
+            {
+                if (propety.Metadata.IsPrimaryKey())
+                {
+                    return propety.CurrentValue;
+                }
+            }
+            return keyValue;
         }
     }
 }

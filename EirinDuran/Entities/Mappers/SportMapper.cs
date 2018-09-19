@@ -15,22 +15,20 @@ namespace EirinDuran.Entities.Mappers
             return new SportEntity()
             {
                 Name = sport.Name,
-                Teams = sport.Teams.Select(sportTeam => teamMapper.Map(sportTeam)).ToList(),
-                Id = sport.Id
+                Teams = sport.Teams.Select(sportTeam => teamMapper.Map(sportTeam)).ToList()
             };
         }
 
         public Sport Map(SportEntity entity)
         {
             IEnumerable<Team> teams = entity.Teams.Select(t => teamMapper.Map(t));
-            return new Sport(id: entity.Id, name: entity.Name, teams: teams);
+            return new Sport( name: entity.Name, teams: teams);
         }
 
         public void Update(Sport source, SportEntity destination)
         {
             destination.Name = source.Name;
             destination.Teams = source.Teams.Select(sourceTeam => new TeamEntity(sourceTeam)).ToList();
-            destination.Id = source.Id;
         }
     }
 }

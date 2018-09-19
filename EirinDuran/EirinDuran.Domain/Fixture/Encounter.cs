@@ -24,7 +24,7 @@ namespace EirinDuran.Domain.Fixture
             Sport = sport;
             this.teams = GetTeamsArray(teams);
             DateTime = dateTime;
-            Id = Guid.Empty;
+            Id = Guid.NewGuid();
         }
 
         public Encounter(Guid id, Sport sport, IEnumerable<Team> teams, DateTime dateTime, ICollection<Comment> comments)

@@ -19,7 +19,7 @@ namespace EirinDuran.Entities.Mappers
 
         public Comment Map(CommentEntity entity)
         {
-            return new Comment(entity.User.ToModel(), entity.TimeStamp, entity.Message);
+            return new Comment(entity.User.ToModel(), entity.TimeStamp, entity.Message, entity.Id);
         }
 
         public void Update(Comment source, CommentEntity destination)

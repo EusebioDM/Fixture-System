@@ -25,11 +25,6 @@ namespace EirinDuran.Entities
             UpdateWith(model);
         }
 
-        public string GetAlternateKey()
-        {
-            return Id.ToString();
-        }
-
         public Comment ToModel()
         {
             return mapper.Map(this);

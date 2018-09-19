@@ -12,14 +12,14 @@ namespace EirinDuran.Entities
         public Guid Id { get; set; }
         public DateTime DateTime { get; set; }
         public virtual SportEntity Sport { get; set; }
-        public virtual ICollection<TeamEntity> Teams { get; set; }
+        public virtual TeamEntity HomeTeam { get; set; }
+        public virtual TeamEntity AwayTeam { get; set; }
         public virtual ICollection<CommentEntity> Comments { get; set; }
         private EncounterMapper mapper;
 
         public EncounterEntity()
         {
             mapper = new EncounterMapper();
-            Teams = new List<TeamEntity>();
             Comments = new List<CommentEntity>();
         }
 
@@ -37,9 +37,6 @@ namespace EirinDuran.Entities
         {
             return mapper.Map(this);
         }
-        public string GetAlternateKey() => Id.ToString();
-
-        public string NavegablePropeties => "Teams";
 
         public override bool Equals(object obj)
         {
