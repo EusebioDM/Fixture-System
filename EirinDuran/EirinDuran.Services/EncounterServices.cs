@@ -68,5 +68,11 @@ namespace EirinDuran.Services
         {
             return encounterRepository.GetAll();
         }
+
+        public void DeleteEncounter(Encounter encounter)
+        {
+            adminValidator.ValidatePermissions(loginServices.LoggedUser);
+            encounterRepository.Delete(encounter);
+        }
     }
 }
