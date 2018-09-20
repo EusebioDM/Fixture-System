@@ -7,20 +7,10 @@ namespace EirinDuran.IDataAccess
 {
     public class ConnectionToDataAccessFailedException : Exception
     {
-        public ConnectionToDataAccessFailedException()
+
+        public ConnectionToDataAccessFailedException(Exception innerException) : base("Conection to DataBase failed", innerException)
         {
         }
 
-        public ConnectionToDataAccessFailedException(string message) : base(message)
-        {
-        }
-
-        public ConnectionToDataAccessFailedException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
-
-        protected ConnectionToDataAccessFailedException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 }

@@ -35,11 +35,11 @@ namespace EirinDuran.DataAccess
             }
             catch (ArgumentException)
             {
-                throw new ObjectAlreadyExistsInDataBaseException();
+                throw new ObjectAlreadyExistsInDataBaseException(model);
             }
             catch (SqlException ex)
             {
-                throw new ConnectionToDataAccessFailedException("Conection to DataBase failed", ex);
+                throw new ConnectionToDataAccessFailedException(ex);
             }
         }
 
@@ -57,7 +57,7 @@ namespace EirinDuran.DataAccess
                 Entity fromRepo = GetEntityFromRepo(context, entity);
                 if (fromRepo != null)
                 {
-                    throw new ObjectAlreadyExistsInDataBaseException();
+                    throw new ObjectAlreadyExistsInDataBaseException(entity);
                 }
             }
         }
@@ -68,13 +68,13 @@ namespace EirinDuran.DataAccess
             {
                 TryToDelete(model);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
-                throw new ObjectDoesntExistsInDataBaseException();
+                throw new ObjectDoesntExistsInDataBaseException(model);
             }
-            catch (SqlException)
+            catch (SqlException ex)
             {
-                throw new ConnectionToDataAccessFailedException();
+                throw new ConnectionToDataAccessFailedException(ex);
             }
         }
 
@@ -96,11 +96,11 @@ namespace EirinDuran.DataAccess
             }
             catch (InvalidOperationException)
             {
-                throw new ObjectDoesntExistsInDataBaseException();
+                throw new ObjectDoesntExistsInDataBaseException(model);
             }
-            catch (SqlException)
+            catch (SqlException ex)
             {
-                throw new ConnectionToDataAccessFailedException();
+                throw new ConnectionToDataAccessFailedException(ex);
             }
         }
 
@@ -112,7 +112,7 @@ namespace EirinDuran.DataAccess
                 Entity toReturn = GetEntityFromRepo(context, modelTranslation);
                 if (toReturn == null)
                 {
-                    throw new ObjectDoesntExistsInDataBaseException();
+                    throw new ObjectDoesntExistsInDataBaseException(model);
                 }
                 return toReturn.ToModel();
             }
@@ -124,9 +124,9 @@ namespace EirinDuran.DataAccess
             {
                 return TryToGetAll();
             }
-            catch (SqlException)
+            catch (SqlException ex)
             {
-                throw new ConnectionToDataAccessFailedException();
+                throw new ConnectionToDataAccessFailedException(ex);
             }
         }
 
@@ -148,11 +148,11 @@ namespace EirinDuran.DataAccess
             }
             catch (DbUpdateConcurrencyException)
             {
-                throw new ObjectDoesntExistsInDataBaseException();
+                throw new ObjectDoesntExistsInDataBaseException(model);
             }
-            catch (SqlException)
+            catch (SqlException ex)
             {
-                throw new ConnectionToDataAccessFailedException();
+                throw new ConnectionToDataAccessFailedException(ex);
             }
         }
 
