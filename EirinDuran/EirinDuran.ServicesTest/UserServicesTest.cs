@@ -7,6 +7,9 @@ using EirinDuran.Domain.User;
 using EirinDuran.DataAccessTest;
 using EirinDuran.Services;
 using EirinDuran.IDataAccess;
+using EirinDuran.Domain.Fixture;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EirinDuran.ServicesTest
 {
@@ -108,6 +111,27 @@ namespace EirinDuran.ServicesTest
             User result = repo.Get(new User("pepeAvila"));
 
             Assert.AreEqual("ANGEL", result.Name);
+        }
+
+        [TestMethod]
+        public void FollowTeam()
+        {
+            LoginServices login = new LoginServices(repo);
+            UserServices services = new UserServices(repo, login);
+
+            login.CreateSession("martinFowler", "user");
+
+            Team cavaliers = new Team("Cavaliers");
+            Sport basketball = new Sport("Baskteball");
+
+            basketball.AddTeam(cavaliers);
+
+            login.LoggedUser.AddFollowedTeam(cavaliers);
+            services.Modify(login.LoggedUser);
+
+            User recovered = repo.Get(new User("martinFowler"));
+            List<Team> followedTeams = recovered.FollowedTeams.ToList();
+            Assert.IsTrue(followedTeams[0].Name == "Cavaliers");
         }
 
     }
