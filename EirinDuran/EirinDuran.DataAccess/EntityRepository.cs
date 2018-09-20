@@ -52,12 +52,13 @@ namespace EirinDuran.DataAccess
 
         private void ValidateEntityDoesntExistInDataBase(Entity entity)
         {
-            using(Context context = contextFactory.CreateDbContext(new string[0]))
+            using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
-                object key = entityUpdater.GetKey(context.Entry(entity));
-                Entity fromRepo = context.Find<Entity>(key);
+                Entity fromRepo = GetEntityFromRepo(context, entity);
                 if (fromRepo != null)
+                {
                     throw new ObjectAlreadyExistsInDataBaseException();
+                }
             }
         }
 
@@ -105,14 +106,14 @@ namespace EirinDuran.DataAccess
 
         private Model TryToGet(Model model)
         {
-            Entity toReturn;
             using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
                 Entity modelTranslation = CreateEntity(model);
-                object key = entityUpdater.GetKey(context.Entry(modelTranslation));
-                toReturn = context.Find<Entity>(key);
-                if(toReturn == null)
+                Entity toReturn = GetEntityFromRepo(context, modelTranslation);
+                if (toReturn == null)
+                {
                     throw new ObjectDoesntExistsInDataBaseException();
+                }
                 return toReturn.ToModel();
             }
         }
@@ -170,6 +171,13 @@ namespace EirinDuran.DataAccess
             Entity entity = factory.CreateEmptyEntity();
             entity.UpdateWith(model);
             return entity;
+        }
+
+        private Entity GetEntityFromRepo(Context context, Entity localEntity)
+        {
+            EntityEntry entry = context.Entry(localEntity);
+            object key = HelperFunctions<Entity>.GetKey(entry);
+            return context.Find<Entity>(key);
         }
 
     }

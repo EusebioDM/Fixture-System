@@ -58,37 +58,8 @@ namespace EirinDuran.DataAccess
         private bool EntryExistsInChangeTracker(Context context, EntityEntry entry)
         {
             IEnumerable<EntityEntry> entriesInChangeTracker = context.ChangeTracker.Entries();
-            bool exists = entriesInChangeTracker.Any(e => EntriesAreEqual(e, entry));
+            bool exists = entriesInChangeTracker.Any(e => HelperFunctions<Entity>.EntriesAreEqual(e, entry));
             return exists;
-        }
-
-        public bool EntriesAreEqual(Context context, Entity first, Entity second)
-        {
-            EntityEntry firstEntry = context.Entry(first);
-            EntityEntry secondEntry = context.Entry(second);
-
-            return EntriesAreEqual(firstEntry, secondEntry);
-        }
-
-        private bool EntriesAreEqual(EntityEntry first, EntityEntry second)
-        {
-            var firstKey = GetKey(first);
-            var secondKey = GetKey(second);
-
-            return firstKey.Equals(secondKey);
-        }
-
-        public object GetKey(EntityEntry entry)
-        {
-            object keyValue = null;
-            foreach (var propety in entry.Properties)
-            {
-                if (propety.Metadata.IsPrimaryKey())
-                {
-                    return propety.CurrentValue;
-                }
-            }
-            return keyValue;
         }
     }
 }
