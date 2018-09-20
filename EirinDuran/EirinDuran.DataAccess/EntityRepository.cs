@@ -15,11 +15,11 @@ namespace EirinDuran.DataAccess
     internal class EntityRepository<Model, Entity> : IRepository<Model> where Entity : class, IEntity<Model>
     {
         private EntityFactory<Entity> factory;
-        private Func<IContext, DbSet<Entity>> getDBSetFunc;
+        private Func<Context, DbSet<Entity>> getDBSetFunc;
         private IDesignTimeDbContextFactory<Context> contextFactory;
         private EntityUpdater<Entity> entityUpdater;
 
-        public EntityRepository(EntityFactory<Entity> factory, Func<IContext, DbSet<Entity>> getDBSetFunc, IDesignTimeDbContextFactory<Context> contextFactory)
+        public EntityRepository(EntityFactory<Entity> factory, Func<Context, DbSet<Entity>> getDBSetFunc, IDesignTimeDbContextFactory<Context> contextFactory)
         {
             this.factory = factory;
             this.getDBSetFunc = getDBSetFunc;
@@ -94,7 +94,7 @@ namespace EirinDuran.DataAccess
             {
                 return TryToGet(model);
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
                 throw new ObjectDoesntExistsInDataBaseException();
             }

@@ -18,13 +18,13 @@ namespace EirinDuran.DataAccess
         public UserRepository(IDesignTimeDbContextFactory<Context> contextFactory)
         {
             EntityFactory<UserEntity> factory = CreateEntityFactory();
-            Func<IContext, DbSet<UserEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
+            Func<Context, DbSet<UserEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
             repo = new EntityRepository<User, UserEntity>(factory, dbSet, contextFactory);
         }
 
         private EntityFactory<UserEntity> CreateEntityFactory() => new EntityFactory<UserEntity>(() => new UserEntity());
 
-        private Func<IContext, DbSet<UserEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Users;
+        private Func<Context, DbSet<UserEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Users;
 
         public void Add(User model) => repo.Add(model);
 

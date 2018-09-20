@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace EirinDuran.DataAccess
 {
-    public class Context : DbContext, IContext
+    public class Context : DbContext
     {
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<TeamEntity> Teams { get; set; }
