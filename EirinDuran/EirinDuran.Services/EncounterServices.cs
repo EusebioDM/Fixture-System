@@ -69,6 +69,22 @@ namespace EirinDuran.Services
             return encounterRepository.GetAll();
         }
 
+        public IEnumerable<Encounter> GetAllEncounters(Team team)
+        {
+            IEnumerable<Encounter> allEncounters = encounterRepository.GetAll();
+            List<Encounter> encountersWhereTeamIs = new List<Encounter>();
+
+            foreach (var encounter in allEncounters)
+            {
+                if (encounter.Teams.Contains(team))
+                {
+                    encountersWhereTeamIs.Add(encounter);
+                }
+            }
+
+            return encountersWhereTeamIs;
+        }
+
         public void DeleteEncounter(Encounter encounter)
         {
             adminValidator.ValidatePermissions();
