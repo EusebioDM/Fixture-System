@@ -4,6 +4,7 @@ using EirinDuran.DataAccess;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices;
 using EirinDuran.Domain.Fixture;
+using System.Collections.Generic;
 
 namespace EirinDuran.Services
 {
@@ -43,6 +44,12 @@ namespace EirinDuran.Services
         {
             login.LoggedUser.AddFollowedTeam(team);
             userRepository.Update(login.LoggedUser);
+        }
+
+        public IEnumerable<Team> GetAllFollowedTeams()
+        {
+            User recovered = userRepository.Get(login.LoggedUser);
+            return recovered.FollowedTeams;
         }
     }
 }
