@@ -3,6 +3,7 @@ using EirinDuran.Domain.User;
 using EirinDuran.DataAccess;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices;
+using EirinDuran.Domain.Fixture;
 
 namespace EirinDuran.Services
 {
@@ -36,6 +37,12 @@ namespace EirinDuran.Services
         {
             adminValidator.ValidatePermissions();
             userRepository.Update(userToModify);
+        }
+
+        public void AddFollowedTeam(Team team)
+        {
+            login.LoggedUser.AddFollowedTeam(team);
+            userRepository.Update(login.LoggedUser);
         }
     }
 }

@@ -126,8 +126,7 @@ namespace EirinDuran.ServicesTest
 
             basketball.AddTeam(cavaliers);
 
-            login.LoggedUser.AddFollowedTeam(cavaliers);
-            services.Modify(login.LoggedUser);
+            services.AddFollowedTeam(cavaliers);
 
             User recovered = repo.Get(new User("martinFowler"));
             List<Team> followedTeams = recovered.FollowedTeams.ToList();
