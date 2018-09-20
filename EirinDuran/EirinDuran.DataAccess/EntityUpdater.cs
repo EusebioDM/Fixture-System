@@ -34,21 +34,23 @@ namespace EirinDuran.DataAccess
 
         private void TraverseEntityGraphUpdatingWhenPossible(Queue<object> entitiesLeftToUpdate, object rootEntityToUpdate, Context context)
         {
-            context.ChangeTracker.TrackGraph(rootEntityToUpdate, n => UpdateNodeRecursively(context, entitiesLeftToUpdate, n));
+            Action<EntityEntryGraphNode> updateNodeRecursivelyAction = n => UpdateNodeRecursively(context, entitiesLeftToUpdate, n);
+
+            context.ChangeTracker.TrackGraph(rootEntityToUpdate, updateNodeRecursivelyAction);
         }
 
         private void UpdateNodeRecursively(Context context, Queue<object> toUpdateQueue, EntityEntryGraphNode node)
         {
-            EntityEntry entry = node.Entry;
+            EntityEntry current = node.Entry;
             EntityEntry fatherNode = node.SourceEntry;
 
-            if (EntryExistsInChangeTracker(context, entry)) // Entity is already being tracked in a different node so the current context cant track it
+            if (EntryExistsInChangeTracker(context, current)) // Entity is already being tracked in a different node so the current context cant track it
             {
-                EnqueueFatherNode(toUpdateQueue, fatherNode);
+                EnqueueFatherNodeToLeftToUpdateQueue(toUpdateQueue, fatherNode);
             }
             else
             {
-                SetEntityAsModifiedOrAdded(context, entry);
+                SetEntityAsModifiedOrAdded(context, current);
             }
         }
 
@@ -64,12 +66,12 @@ namespace EirinDuran.DataAccess
             }
         }
 
-        private void EnqueueFatherNode(Queue<object> leftToUpdate, EntityEntry fatherNode)
+        private void EnqueueFatherNodeToLeftToUpdateQueue(Queue<object> toUpdateQueue, EntityEntry fatherNode)
         {
-            bool canEnqueueWithoutGettingStuckInLoop = !leftToUpdate.Contains(fatherNode.Entity);
+            bool canEnqueueWithoutGettingStuckInLoop = !toUpdateQueue.Contains(fatherNode.Entity);
             if (canEnqueueWithoutGettingStuckInLoop)
             {
-                leftToUpdate.Enqueue(fatherNode.Entity); // Entity is added to the queue so it can be added in a different context
+                toUpdateQueue.Enqueue(fatherNode.Entity); // Entity is added to the queue so it can be added in a different context
             }
         }
 
