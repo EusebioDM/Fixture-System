@@ -235,7 +235,7 @@ namespace EirinDuran.ServicesTest
             Encounter firstEncounter = allEncounters.First();
 
             encounterServices.AddComment(firstEncounter, "I told you, Felix will win");
-            Assert.AreEqual("I told you, Felix will win", encounterRepository.GetAll().First().Comments.First());
+            Assert.AreEqual("I told you, Felix will win", encounterRepository.GetAll().First().Comments.First().ToString());
         }
 
         [TestMethod]

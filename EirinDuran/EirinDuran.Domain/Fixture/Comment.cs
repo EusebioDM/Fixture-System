@@ -27,5 +27,22 @@ namespace EirinDuran.Domain.Fixture
             TimeStamp = timeStamp;
             Message = message;
         }
+
+        public override bool Equals(object obj)
+        {
+            var comment = obj as Comment;
+            return comment != null &&
+                   Id.Equals(comment.Id);
+        }
+
+        public override int GetHashCode()
+        {
+            return 2108858624 + EqualityComparer<Guid>.Default.GetHashCode(Id);
+        }
+
+        public override string ToString()
+        {
+            return Message;
+        }
     }
 }
