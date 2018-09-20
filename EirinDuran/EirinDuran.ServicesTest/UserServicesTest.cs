@@ -133,5 +133,24 @@ namespace EirinDuran.ServicesTest
             Assert.IsTrue(followedTeams[0].Name == "Cavaliers");
         }
 
+        [TestMethod]
+        public void RecoverAllFollowedTeams()
+        {
+            LoginServices login = new LoginServices(repo);
+            UserServices services = new UserServices(repo, login);
+
+            login.CreateSession("martinFowler", "user");
+
+            Team cavaliers = new Team("Cavaliers");
+            Sport basketball = new Sport("Baskteball");
+
+            basketball.AddTeam(cavaliers);
+
+            services.AddFollowedTeam(cavaliers);
+
+            List<Team> followedTeams = services.GetAllFollowedTeams().ToList();
+            Assert.AreEqual(cavaliers, followedTeams[0]);
+        }
+
     }
 }
