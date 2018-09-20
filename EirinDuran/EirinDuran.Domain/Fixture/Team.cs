@@ -9,7 +9,6 @@ namespace EirinDuran.Domain.Fixture
     public class Team
     {
         public string Name { get => name; set => SetNameIfValid(value); }
-        public Guid Id { get; private set; }
         private string name;
         public Image Logo { get; set; }
         private StringValidator validator;
@@ -18,7 +17,6 @@ namespace EirinDuran.Domain.Fixture
         {
             validator = new StringValidator();
             Name = name;
-            Id = Guid.Empty;
             Logo = GetDefaultImage();
         }
 
@@ -31,11 +29,6 @@ namespace EirinDuran.Domain.Fixture
         public Team(string name, Image logo) : this(name)
         {
             Logo = logo;
-        }
-
-        public Team(string name, Guid id, Image logo) : this(name,logo)
-        {
-            Id = id;
         }
 
         private void SetNameIfValid(string value)

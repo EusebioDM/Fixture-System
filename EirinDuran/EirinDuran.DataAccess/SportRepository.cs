@@ -17,13 +17,13 @@ namespace EirinDuran.DataAccess
         public SportRepository(IDesignTimeDbContextFactory<Context> contextFactory)
         {
             EntityFactory<SportEntity> factory = CreateEntityFactory();
-            Func<IContext, DbSet<SportEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
+            Func<Context, DbSet<SportEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
             repo = new EntityRepository<Sport, SportEntity>(factory, dbSet, contextFactory);
         }
 
         private EntityFactory<SportEntity> CreateEntityFactory() => new EntityFactory<SportEntity>(() => new SportEntity());
 
-        private Func<IContext, DbSet<SportEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Sports;
+        private Func<Context, DbSet<SportEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Sports;
 
         public void Add(Sport model) => repo.Add(model);
 

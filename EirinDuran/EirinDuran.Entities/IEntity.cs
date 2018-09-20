@@ -9,11 +9,5 @@ namespace EirinDuran.Entities
         void UpdateWith(Model model);
 
         Model ToModel();
-
-        Guid Id { get; set; }
-
-        string GetAlternateKey();
-
-        string NavegablePropeties { get; }
     }
 }

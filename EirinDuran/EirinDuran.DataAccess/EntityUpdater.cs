@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,61 +10,80 @@ namespace EirinDuran.DataAccess
 {
     internal class EntityUpdater<Entity> where Entity : class
     {
-
-        public void UpdateEntityWithItsChildren(Context context, Entity entity)
+        public void UpdateGraph(IDesignTimeDbContextFactory<Context> contextFactory, Entity entity)
         {
-            EntityEntry<Entity> entry = context.Entry<Entity>(entity);
-            UpdateEntityRec(context, entry);
-        }
+            Queue<object> entitiesLeftToUpdate = new Queue<object>();
+            entitiesLeftToUpdate.Enqueue(entity);
 
-        private void UpdateEntityRec(Context context, EntityEntry entry)
-        {
-            foreach (NavigationEntry property in entry.Navigations)
+            while (entitiesLeftToUpdate.Count() > 0)
             {
-                // The current value of a propety is returned as an object by EF so casting is needed to determine whether 
-                // the propety is a single navigatable propety or a collection on navigatables
-                try
-                {
-                    List<object> entries = TryToCastPropetyToCollectionOfEntries(context, property);
-                    UpdateEntityCollection(context, entries);
-                }
-                catch (ArgumentException) // Casting failed since property is a single navigatable propety
-                {
-                    UpdateSingleEntry(context, property);
-                }
-            }
-            try
-            {
-                context.Update(entry.Entity);
-            }
-            catch (InvalidOperationException) // Update failed since another instance of this entity is already present in context
-            {
-                if (!entry.IsKeySet)
-                {
-                    entry.State = EntityState.Unchanged;
-                }
+                UpdateRootEntityAndItsChildrenIfPossible(contextFactory, entitiesLeftToUpdate);
             }
         }
 
-        private List<object> TryToCastPropetyToCollectionOfEntries(Context context, NavigationEntry property)
+        private void UpdateRootEntityAndItsChildrenIfPossible(IDesignTimeDbContextFactory<Context> contextFactory, Queue<object> entitiesLeftToUpdate)
         {
-            List<object> entries = (property.CurrentValue as IEnumerable<object>).Cast<object>().ToList();
-            return entries;
+            object rootEntityToUpdate = entitiesLeftToUpdate.Peek();
+            using (Context context = contextFactory.CreateDbContext(new string[0]))
+            {
+                TraverseEntityGraphUpdatingWhenPossible(entitiesLeftToUpdate, rootEntityToUpdate, context);
+                context.SaveChanges();
+            }
+            entitiesLeftToUpdate.Dequeue();
         }
 
-        private void UpdateEntityCollection(Context context, List<object> entries)
+        private void TraverseEntityGraphUpdatingWhenPossible(Queue<object> entitiesLeftToUpdate, object rootEntityToUpdate, Context context)
         {
-            foreach (object obj in entries)
+            context.ChangeTracker.TrackGraph(rootEntityToUpdate, n => UpdateNodeRecursively(context, entitiesLeftToUpdate, n));
+        }
+
+        private void UpdateNodeRecursively(Context context, Queue<object> toUpdateQueue, EntityEntryGraphNode node)
+        {
+            EntityEntry entry = node.Entry;
+            EntityEntry fatherNode = node.SourceEntry;
+
+            if (EntryExistsInChangeTracker(context, entry)) // Entity is already being tracked in a different node so the current context cant track it
             {
-                EntityEntry childEntry = context.Entry(obj);
-                UpdateEntityRec(context, childEntry);
+                EnqueueFatherNode(toUpdateQueue, fatherNode);
+            }
+            else
+            {
+                SetEntityAsModifiedOrAdded(context, entry);
             }
         }
 
-        private void UpdateSingleEntry(Context context, NavigationEntry property)
+        private void SetEntityAsModifiedOrAdded(Context context, EntityEntry entry)
         {
-            EntityEntry childEntry = context.Entry(property.CurrentValue);
-            UpdateEntityRec(context, childEntry);
+            if (EntryExistsInDb(context, entry))
+            {
+                entry.State = EntityState.Modified;
+            }
+            else
+            {
+                entry.State = EntityState.Added;
+            }
+        }
+
+        private void EnqueueFatherNode(Queue<object> leftToUpdate, EntityEntry fatherNode)
+        {
+            bool canEnqueueWithoutGettingStuckInLoop = !leftToUpdate.Contains(fatherNode.Entity);
+            if (canEnqueueWithoutGettingStuckInLoop)
+            {
+                leftToUpdate.Enqueue(fatherNode.Entity); // Entity is added to the queue so it can be added in a different context
+            }
+        }
+
+        private bool EntryExistsInDb(Context context, EntityEntry entry)
+        {
+            bool exists = entry.GetDatabaseValues() != null;
+            return exists;
+        }
+
+        private bool EntryExistsInChangeTracker(Context context, EntityEntry entry)
+        {
+            IEnumerable<EntityEntry> entriesInChangeTracker = context.ChangeTracker.Entries();
+            bool exists = entriesInChangeTracker.Any(e => HelperFunctions<Entity>.EntriesAreEqual(e, entry));
+            return exists;
         }
     }
 }

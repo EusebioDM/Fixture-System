@@ -15,11 +15,11 @@ namespace EirinDuran.DataAccess
     internal class EntityRepository<Model, Entity> : IRepository<Model> where Entity : class, IEntity<Model>
     {
         private EntityFactory<Entity> factory;
-        private Func<IContext, Microsoft.EntityFrameworkCore.DbSet<Entity>> getDBSetFunc;
+        private Func<Context, DbSet<Entity>> getDBSetFunc;
         private IDesignTimeDbContextFactory<Context> contextFactory;
         private EntityUpdater<Entity> entityUpdater;
 
-        public EntityRepository(EntityFactory<Entity> factory, Func<IContext, Microsoft.EntityFrameworkCore.DbSet<Entity>> getDBSetFunc, IDesignTimeDbContextFactory<Context> contextFactory)
+        public EntityRepository(EntityFactory<Entity> factory, Func<Context, DbSet<Entity>> getDBSetFunc, IDesignTimeDbContextFactory<Context> contextFactory)
         {
             this.factory = factory;
             this.getDBSetFunc = getDBSetFunc;
@@ -35,22 +35,30 @@ namespace EirinDuran.DataAccess
             }
             catch (ArgumentException)
             {
-                throw new ObjectAlreadyExistsInDataBaseException();
+                throw new ObjectAlreadyExistsInDataBaseException(model);
             }
             catch (SqlException ex)
             {
-                throw new ConnectionToDataAccessFailedException("Conection to DataBase failed",ex);
+                throw new ConnectionToDataAccessFailedException(ex);
             }
         }
 
         private void TryToAdd(Model model)
         {
             Entity entity = CreateEntity(model);
+            ValidateEntityDoesntExistInDataBase(entity);
+            entityUpdater.UpdateGraph(contextFactory, entity);
+        }
+
+        private void ValidateEntityDoesntExistInDataBase(Entity entity)
+        {
             using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
-                ValidateAlternateKey(context, entity);
-                entityUpdater.UpdateEntityWithItsChildren(context, entity);
-                context.SaveChanges();
+                Entity fromRepo = GetEntityFromRepo(context, entity);
+                if (fromRepo != null)
+                {
+                    throw new ObjectAlreadyExistsInDataBaseException(entity);
+                }
             }
         }
 
@@ -60,13 +68,13 @@ namespace EirinDuran.DataAccess
             {
                 TryToDelete(model);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
-                throw new ObjectDoesntExistsInDataBaseException();
+                throw new ObjectDoesntExistsInDataBaseException(model);
             }
-            catch (SqlException)
+            catch (SqlException ex)
             {
-                throw new ConnectionToDataAccessFailedException();
+                throw new ConnectionToDataAccessFailedException(ex);
             }
         }
 
@@ -88,23 +96,26 @@ namespace EirinDuran.DataAccess
             }
             catch (InvalidOperationException)
             {
-                throw new ObjectDoesntExistsInDataBaseException();
+                throw new ObjectDoesntExistsInDataBaseException(model);
             }
-            catch (SqlException)
+            catch (SqlException ex)
             {
-                throw new ConnectionToDataAccessFailedException();
+                throw new ConnectionToDataAccessFailedException(ex);
             }
         }
 
         private Model TryToGet(Model model)
         {
-            Model toReturn;
             using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
-                Entity entity = CreateEntity(model);
-                toReturn = Set(context).Single(e => e.GetAlternateKey().Equals(entity.GetAlternateKey())).ToModel();
+                Entity modelTranslation = CreateEntity(model);
+                Entity toReturn = GetEntityFromRepo(context, modelTranslation);
+                if (toReturn == null)
+                {
+                    throw new ObjectDoesntExistsInDataBaseException(model);
+                }
+                return toReturn.ToModel();
             }
-            return toReturn;
         }
 
         public IEnumerable<Model> GetAll()
@@ -113,9 +124,9 @@ namespace EirinDuran.DataAccess
             {
                 return TryToGetAll();
             }
-            catch (SqlException)
+            catch (SqlException ex)
             {
-                throw new ConnectionToDataAccessFailedException();
+                throw new ConnectionToDataAccessFailedException(ex);
             }
         }
 
@@ -123,12 +134,10 @@ namespace EirinDuran.DataAccess
         {
             Func<Entity, Model> mapEntity = t => { return t.ToModel(); };
             Entity entity = factory.CreateEmptyEntity();
-            List<Model> models;
             using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
-                models = Set(context).Select(mapEntity).ToList();
+                return Set(context).Select(mapEntity).ToList();
             }
-            return models;
         }
 
         public void Update(Model model)
@@ -139,58 +148,35 @@ namespace EirinDuran.DataAccess
             }
             catch (DbUpdateConcurrencyException)
             {
-                throw new ObjectDoesntExistsInDataBaseException();
+                throw new ObjectDoesntExistsInDataBaseException(model);
             }
-            catch (SqlException)
+            catch (SqlException ex)
             {
-                throw new ConnectionToDataAccessFailedException();
+                throw new ConnectionToDataAccessFailedException(ex);
             }
         }
 
         private void TryToUpdate(Model model)
         {
             Entity entity = CreateEntity(model);
-            using (Context context = contextFactory.CreateDbContext(new string[0]))
-            {
-                entityUpdater.UpdateEntityWithItsChildren(context, entity);
-                context.SaveChanges();
-            }
+            entityUpdater.UpdateGraph(contextFactory, entity);
         }
-
-        private Microsoft.EntityFrameworkCore.DbSet<Entity> Set(Context context) => getDBSetFunc.Invoke(context);
 
         private Entity CreateEntity(Model model)
         {
             Entity entity = factory.CreateEmptyEntity();
             entity.UpdateWith(model);
-            AssignIdIfMissing(entity);
             return entity;
         }
 
-        private void AssignIdIfMissing(Entity entity)
+        private Entity GetEntityFromRepo(Context context, Entity localEntity)
         {
-            using (Context context = contextFactory.CreateDbContext(new string[0]))
-            {
-                Entity fromDb = Set(context).FirstOrDefault(e => entity.GetAlternateKey().Equals(e.GetAlternateKey()));
-                if (fromDb != null)
-                {
-                    entity.Id = fromDb.Id;
-                }
-                else
-                {
-                    ValidateAlternateKey(context, entity);
-                }
-            }
+            EntityEntry entry = context.Entry(localEntity);
+            object key = HelperFunctions<Entity>.GetKey(entry);
+            return context.Find<Entity>(key);
         }
 
-        private void ValidateAlternateKey(Context context, Entity entity)
-        {
-            bool alternateKeyAlreadyInDB = Set(context).Any(e => e.GetAlternateKey().Equals(entity.GetAlternateKey()));
+        private DbSet<Entity> Set(Context context) => getDBSetFunc.Invoke(context);
 
-            if (alternateKeyAlreadyInDB)
-            {
-                throw new ObjectAlreadyExistsInDataBaseException();
-            }
-        }
     }
 }

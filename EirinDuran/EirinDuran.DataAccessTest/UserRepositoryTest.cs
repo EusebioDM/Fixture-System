@@ -56,7 +56,7 @@ namespace EirinDuran.DataAccessTest
         [TestMethod]
         public void GetUserTest()
         {
-            User fromRepo = repo.Get(new User( "Gato"));
+            User fromRepo = repo.Get(new User("Gato"));
 
             Assert.AreEqual(macri.Name, fromRepo.Name);
             Assert.AreEqual(macri.Password, fromRepo.Password);
