@@ -78,7 +78,7 @@ namespace EirinDuran.DataAccess
             return firstKey.Equals(secondKey);
         }
 
-        private object GetKey(EntityEntry entry)
+        public object GetKey(EntityEntry entry)
         {
             object keyValue = null;
             foreach (var propety in entry.Properties)

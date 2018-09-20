@@ -46,7 +46,19 @@ namespace EirinDuran.DataAccess
         private void TryToAdd(Model model)
         {
             Entity entity = CreateEntity(model);
+            ValidateEntityDoesntExistInDataBase(entity);
             entityUpdater.UpdateGraph(contextFactory, entity);
+        }
+
+        private void ValidateEntityDoesntExistInDataBase(Entity entity)
+        {
+            using(Context context = contextFactory.CreateDbContext(new string[0]))
+            {
+                object key = entityUpdater.GetKey(context.Entry(entity));
+                Entity fromRepo = context.Find<Entity>(key);
+                if (fromRepo != null)
+                    throw new ObjectAlreadyExistsInDataBaseException();
+            }
         }
 
         public void Delete(Model model)
@@ -93,15 +105,16 @@ namespace EirinDuran.DataAccess
 
         private Model TryToGet(Model model)
         {
-            Model toReturn;
+            Entity toReturn;
             using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
                 Entity modelTranslation = CreateEntity(model);
-                Entity entity = Set(context).Single(e => entityUpdater.EntriesAreEqual(context, modelTranslation, e));
-                context.Attach(entity);
-                toReturn = entity.ToModel();
+                object key = entityUpdater.GetKey(context.Entry(modelTranslation));
+                toReturn = context.Find<Entity>(key);
+                if(toReturn == null)
+                    throw new ObjectDoesntExistsInDataBaseException();
+                return toReturn.ToModel();
             }
-            return toReturn;
         }
 
         public IEnumerable<Model> GetAll()
