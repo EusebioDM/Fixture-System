@@ -315,5 +315,34 @@ namespace EirinDuran.ServicesTest
 
             Assert.IsTrue(encounterServices.GetAllEncounters().ToList().Count == 0);
         }
+
+        [TestMethod]
+        public void ListEncountersForATeam()
+        {
+            login.CreateSession("sSanchez", "user");
+            EncounterServices encounterServices = new EncounterServices(encounterRepository, login);
+            
+            Sport football = new Sport("Football");
+            football.AddTeam(felix);
+            football.AddTeam(river);
+            football.AddTeam(penhiarol);
+            football.AddTeam(atenas);
+            football.AddTeam(torque);
+            football.AddTeam(wanderers);
+            football.AddTeam(liverpool);
+
+            Encounter encounter1 = new Encounter(football, new List<Team> { felix, river }, new DateTime(2018, 10, 05));
+            Encounter encounter2 = new Encounter(football, new List<Team> { atenas, wanderers }, new DateTime(2018, 10, 07));
+            Encounter encounter3 = new Encounter(football, new List<Team> { penhiarol, torque }, new DateTime(2018, 10, 09));
+            Encounter encounter4 = new Encounter(football, new List<Team> { river, liverpool }, new DateTime(2018, 10, 11));
+
+            encounterServices.CreateEncounter(encounter1);
+            encounterServices.CreateEncounter(encounter2);
+            encounterServices.CreateEncounter(encounter3);
+            encounterServices.CreateEncounter(encounter4);
+
+            IEnumerable<Encounter> encountersRiver = encounterServices.GetAllEncounters(river);
+            Assert.IsTrue(encountersRiver.ToList().Count == 2);
+        }
     }
 }
