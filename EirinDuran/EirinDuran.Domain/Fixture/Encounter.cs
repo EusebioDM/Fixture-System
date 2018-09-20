@@ -77,5 +77,21 @@ namespace EirinDuran.Domain.Fixture
             else
                 dateTime = date;
         }
+
+        public override bool Equals(object obj)
+        {
+            Encounter other = (Encounter)obj;
+            return this.Teams.SequenceEqual(other.Teams) &&
+                   this.DateTime == other.DateTime;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = -1161983822;
+            hashCode = hashCode * -1521134295 + DateTime.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<IEnumerable<Team>>.Default.GetHashCode(Teams);
+            hashCode = hashCode * -1521134295 + EqualityComparer<Sport>.Default.GetHashCode(Sport);
+            return hashCode;
+        }
     }
 }
