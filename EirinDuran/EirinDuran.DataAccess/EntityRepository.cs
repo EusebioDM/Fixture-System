@@ -15,11 +15,11 @@ namespace EirinDuran.DataAccess
     internal class EntityRepository<Model, Entity> : IRepository<Model> where Entity : class, IEntity<Model>
     {
         private EntityFactory<Entity> factory;
-        private Func<IContext, Microsoft.EntityFrameworkCore.DbSet<Entity>> getDBSetFunc;
+        private Func<IContext, DbSet<Entity>> getDBSetFunc;
         private IDesignTimeDbContextFactory<Context> contextFactory;
         private EntityUpdater<Entity> entityUpdater;
 
-        public EntityRepository(EntityFactory<Entity> factory, Func<IContext, Microsoft.EntityFrameworkCore.DbSet<Entity>> getDBSetFunc, IDesignTimeDbContextFactory<Context> contextFactory)
+        public EntityRepository(EntityFactory<Entity> factory, Func<IContext, DbSet<Entity>> getDBSetFunc, IDesignTimeDbContextFactory<Context> contextFactory)
         {
             this.factory = factory;
             this.getDBSetFunc = getDBSetFunc;
@@ -134,12 +134,10 @@ namespace EirinDuran.DataAccess
         {
             Func<Entity, Model> mapEntity = t => { return t.ToModel(); };
             Entity entity = factory.CreateEmptyEntity();
-            List<Model> models;
             using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
-                models = Set(context).Select(mapEntity).ToList();
+                return Set(context).Select(mapEntity).ToList();
             }
-            return models;
         }
 
         public void Update(Model model)
@@ -164,8 +162,6 @@ namespace EirinDuran.DataAccess
             entityUpdater.UpdateGraph(contextFactory, entity);
         }
 
-        private Microsoft.EntityFrameworkCore.DbSet<Entity> Set(Context context) => getDBSetFunc.Invoke(context);
-
         private Entity CreateEntity(Model model)
         {
             Entity entity = factory.CreateEmptyEntity();
@@ -179,6 +175,8 @@ namespace EirinDuran.DataAccess
             object key = HelperFunctions<Entity>.GetKey(entry);
             return context.Find<Entity>(key);
         }
+
+        private DbSet<Entity> Set(Context context) => getDBSetFunc.Invoke(context);
 
     }
 }
