@@ -7,7 +7,6 @@ namespace EirinDuran.Domain.User
     public class User
     {
         public Role Role { get; set; }
-        public Guid Id { get; private set; }
         private string userName;
         private string name;
         private string surname;
@@ -34,12 +33,10 @@ namespace EirinDuran.Domain.User
             Password = password;
             Mail = mail;
             Role = role;
-            Id = Guid.Empty;
         }
 
-        public User(Role role, Guid id, string userName, string name, string surname, string password, string mail, ICollection<Team> followedTeams) : this(role, userName, name, surname, password, mail)
+        public User(Role role, string userName, string name, string surname, string password, string mail, ICollection<Team> followedTeams) : this(role, userName, name, surname, password, mail)
         {
-            Id = id;
             this.followedTeams = followedTeams;
         }
 

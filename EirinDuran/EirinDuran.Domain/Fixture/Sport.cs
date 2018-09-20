@@ -6,7 +6,6 @@ namespace EirinDuran.Domain.Fixture
 {
     public class Sport
     {
-        public Guid Id { get; private set; }
         private string name;
         private HashSet<Team> teams;
         private StringValidator validator;
@@ -18,18 +17,12 @@ namespace EirinDuran.Domain.Fixture
             validator = new StringValidator();
             teams = new HashSet<Team>();
             Name = name;
-            Id = Guid.Empty;
         }
 
         public Sport(string name, IEnumerable<Team> teams) : this(name)
         {
             foreach (Team team in teams)
                 AddTeam(team);
-        }
-
-        public Sport(Guid id, string name, IEnumerable<Team> teams) : this(name, teams)
-        {
-            Id = id;
         }
 
         private void SetNameIfValid(string value)

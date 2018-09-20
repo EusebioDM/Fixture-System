@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace EirinDuran.DataAccess
 {
-    public class Context : DbContext, IContext
+    public class Context : DbContext
     {
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<TeamEntity> Teams { get; set; }
@@ -24,20 +24,11 @@ namespace EirinDuran.DataAccess
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<UserEntity>().HasKey(u => u.Id);
-            builder.Entity<UserEntity>().Property(u => u.Id).ValueGeneratedOnAdd();
-            builder.Entity<UserEntity>().HasAlternateKey(u => u.UserName);
-            builder.Entity<TeamEntity>().HasKey(t => t.Id);
-            builder.Entity<TeamEntity>().Property(u => u.Id).ValueGeneratedOnAdd();
-            builder.Entity<TeamEntity>().HasAlternateKey(t => t.Name);
-            builder.Entity<SportEntity>().HasKey(s => s.Id);
-            builder.Entity<SportEntity>().Property(u => u.Id).ValueGeneratedOnAdd();
-            builder.Entity<SportEntity>().HasAlternateKey(s => s.Name);
+            builder.Entity<UserEntity>().HasKey(u => u.UserName);
+            builder.Entity<TeamEntity>().HasKey(t => t.Name);
+            builder.Entity<SportEntity>().HasKey(s => s.Name);
             builder.Entity<EncounterEntity>().HasKey(e => e.Id);
-            builder.Entity<EncounterEntity>().Property(u => u.Id).ValueGeneratedOnAdd();
-            builder.Entity<EncounterEntity>().Property(e => e.DateTime).HasColumnType("datetime2");
             builder.Entity<CommentEntity>().HasKey(e => e.Id);
-            builder.Entity<CommentEntity>().Property(e => e.Id).ValueGeneratedOnAdd();
         }
 
     }
