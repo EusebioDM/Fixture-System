@@ -30,13 +30,13 @@ namespace EirinDuran.WebApi.Migrations
 
                     b.Property<DateTime>("TimeStamp");
 
-                    b.Property<Guid?>("UserId");
+                    b.Property<string>("UserName");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EncounterEntityId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserName");
 
                     b.ToTable("CommentEntity");
                 });
@@ -46,65 +46,58 @@ namespace EirinDuran.WebApi.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("AwayTeamName");
 
-                    b.Property<Guid?>("SportId");
+                    b.Property<DateTime>("DateTime");
+
+                    b.Property<string>("HomeTeamName");
+
+                    b.Property<string>("SportName");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SportId");
+                    b.HasIndex("AwayTeamName");
+
+                    b.HasIndex("HomeTeamName");
+
+                    b.HasIndex("SportName");
 
                     b.ToTable("Encounters");
                 });
 
             modelBuilder.Entity("EirinDuran.Entities.SportEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Name")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.HasAlternateKey("Name");
+                    b.HasKey("Name");
 
                     b.ToTable("Sports");
                 });
 
             modelBuilder.Entity("EirinDuran.Entities.TeamEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Name")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<Guid?>("EncounterEntityId");
 
                     b.Property<byte[]>("Logo");
 
-                    b.Property<string>("Name")
-                        .IsRequired();
+                    b.Property<string>("SportEntityName");
 
-                    b.Property<Guid?>("SportEntityId");
+                    b.Property<string>("UserEntityUserName");
 
-                    b.Property<Guid?>("UserEntityId");
+                    b.HasKey("Name");
 
-                    b.HasKey("Id");
+                    b.HasIndex("SportEntityName");
 
-                    b.HasAlternateKey("Name");
-
-                    b.HasIndex("EncounterEntityId");
-
-                    b.HasIndex("SportEntityId");
-
-                    b.HasIndex("UserEntityId");
+                    b.HasIndex("UserEntityUserName");
 
                     b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("EirinDuran.Entities.UserEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("UserName")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Mail");
@@ -117,12 +110,7 @@ namespace EirinDuran.WebApi.Migrations
 
                     b.Property<string>("Surname");
 
-                    b.Property<string>("UserName")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.HasAlternateKey("UserName");
+                    b.HasKey("UserName");
 
                     b.ToTable("Users");
                 });
@@ -135,29 +123,33 @@ namespace EirinDuran.WebApi.Migrations
 
                     b.HasOne("EirinDuran.Entities.UserEntity", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserName");
                 });
 
             modelBuilder.Entity("EirinDuran.Entities.EncounterEntity", b =>
                 {
+                    b.HasOne("EirinDuran.Entities.TeamEntity", "AwayTeam")
+                        .WithMany()
+                        .HasForeignKey("AwayTeamName");
+
+                    b.HasOne("EirinDuran.Entities.TeamEntity", "HomeTeam")
+                        .WithMany()
+                        .HasForeignKey("HomeTeamName");
+
                     b.HasOne("EirinDuran.Entities.SportEntity", "Sport")
                         .WithMany()
-                        .HasForeignKey("SportId");
+                        .HasForeignKey("SportName");
                 });
 
             modelBuilder.Entity("EirinDuran.Entities.TeamEntity", b =>
                 {
-                    b.HasOne("EirinDuran.Entities.EncounterEntity")
-                        .WithMany("Teams")
-                        .HasForeignKey("EncounterEntityId");
-
                     b.HasOne("EirinDuran.Entities.SportEntity")
                         .WithMany("Teams")
-                        .HasForeignKey("SportEntityId");
+                        .HasForeignKey("SportEntityName");
 
                     b.HasOne("EirinDuran.Entities.UserEntity")
                         .WithMany("FollowedTeams")
-                        .HasForeignKey("UserEntityId");
+                        .HasForeignKey("UserEntityUserName");
                 });
 #pragma warning restore 612, 618
         }
