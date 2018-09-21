@@ -19,9 +19,9 @@ namespace EirinDuran.DataAccessTest
         [TestClass]
         public class TeamEntityRepositoryTest
         {
-            private const string bocaImagePath = "..\\..\\..\\Resources\\Boca.jpg";
-            private const string riverImagePath = "..\\..\\..\\Resources\\River.jpg";
-            private const string tombaImagePath = "..\\..\\..\\Resources\\GodoyCruz.jpg";
+            private string bocaImagePath;
+            private string riverImagePath;
+            private string tombaImagePath;
 
             private TeamRepository repo;
 
@@ -30,7 +30,6 @@ namespace EirinDuran.DataAccessTest
             {
                 IEnumerable<Team> actual = repo.GetAll();
                 IEnumerable<Team> expected = new List<Team>() { CreateBocaTeam(), CreateTeamThatBelongsInTheB() };
-
                 Assert.IsTrue(Helper.CollectionsHaveSameElements(actual, expected));
             }
 
@@ -115,6 +114,9 @@ namespace EirinDuran.DataAccessTest
             [TestInitialize]
             public void TestInit()
             {
+                bocaImagePath = GetResourcePath("GodoyCruz.jpg");
+                riverImagePath = GetResourcePath("GodoyCruz.jpg");
+                tombaImagePath = GetResourcePath("GodoyCruz.jpg");
                 repo = new TeamRepository(GetTestContext());
                 repo.Add(CreateBocaTeam());
                 repo.Add(CreateTeamThatBelongsInTheB());
@@ -148,6 +150,13 @@ namespace EirinDuran.DataAccessTest
 
             private Team GetBocaTeam() => repo.Get(new Team("Boca Juniors"));
             private Team GetRiverTeam() => repo.Get(new Team("River Plate"));
+
+            private string GetResourcePath(string resourceName)
+            {
+                string current = Directory.GetCurrentDirectory();
+                string resourcesFolder = Directory.EnumerateDirectories(current).First(d => d.EndsWith("Resources"));
+                return Directory.EnumerateFiles(resourcesFolder).First(f => f.EndsWith(resourceName));
+            }
         }
     }
 }
