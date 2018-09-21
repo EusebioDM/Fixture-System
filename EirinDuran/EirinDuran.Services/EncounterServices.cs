@@ -69,10 +69,43 @@ namespace EirinDuran.Services
             return encounterRepository.GetAll();
         }
 
+        public IEnumerable<Encounter> GetAllEncounters(Team team)
+        {
+            IEnumerable<Encounter> allEncounters = encounterRepository.GetAll();
+            List<Encounter> encountersWhereTeamIs = new List<Encounter>();
+
+            foreach (var encounter in allEncounters)
+            {
+                if (encounter.Teams.Contains(team))
+                {
+                    encountersWhereTeamIs.Add(encounter);
+                }
+            }
+
+            return encountersWhereTeamIs;
+        }
+
         public void DeleteEncounter(Encounter encounter)
         {
             adminValidator.ValidatePermissions();
             encounterRepository.Delete(encounter);
+        }
+
+        public IEnumerable<Encounter> GetAllEncountersWithFollowedTeams()
+        {
+            List<Encounter> encountersWithComment = new List<Encounter>();
+            IEnumerable<Encounter> allEncounters = encounterRepository.GetAll();
+            foreach (var encounter in allEncounters)
+            {
+                bool intersect = encounter.Teams.Intersect(loginServices.LoggedUser.FollowedTeams).Any();
+                bool hasComments = (encounter.Comments.Count() > 0);
+
+                if (intersect && hasComments)
+                {
+                    encountersWithComment.Add(encounter);
+                }    
+            }
+            return encountersWithComment;
         }
     }
 }

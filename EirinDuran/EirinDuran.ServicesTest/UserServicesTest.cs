@@ -151,6 +151,5 @@ namespace EirinDuran.ServicesTest
             List<Team> followedTeams = services.GetAllFollowedTeams().ToList();
             Assert.AreEqual(cavaliers, followedTeams[0]);
         }
-
     }
 }

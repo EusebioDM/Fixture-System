@@ -315,5 +315,81 @@ namespace EirinDuran.ServicesTest
 
             Assert.IsTrue(encounterServices.GetAllEncounters().ToList().Count == 0);
         }
+
+        [TestMethod]
+        public void ListEncountersForATeam()
+        {
+            login.CreateSession("sSanchez", "user");
+            EncounterServices encounterServices = new EncounterServices(encounterRepository, login);
+            
+            Sport football = new Sport("Football");
+            football.AddTeam(felix);
+            football.AddTeam(river);
+            football.AddTeam(penhiarol);
+            football.AddTeam(atenas);
+            football.AddTeam(torque);
+            football.AddTeam(wanderers);
+            football.AddTeam(liverpool);
+
+            Encounter encounter1 = new Encounter(football, new List<Team> { felix, river }, new DateTime(2018, 10, 05));
+            Encounter encounter2 = new Encounter(football, new List<Team> { atenas, wanderers }, new DateTime(2018, 10, 07));
+            Encounter encounter3 = new Encounter(football, new List<Team> { penhiarol, torque }, new DateTime(2018, 10, 09));
+            Encounter encounter4 = new Encounter(football, new List<Team> { river, liverpool }, new DateTime(2018, 10, 11));
+
+            encounterServices.CreateEncounter(encounter1);
+            encounterServices.CreateEncounter(encounter2);
+            encounterServices.CreateEncounter(encounter3);
+            encounterServices.CreateEncounter(encounter4);
+
+            IEnumerable<Encounter> encountersRiver = encounterServices.GetAllEncounters(river);
+            Assert.IsTrue(encountersRiver.ToList().Count == 2);
+        }
+
+        [TestMethod]
+        public void ListCommentsWithFollowedTeams()
+        {
+            Sport basketball = new Sport("Baskteball");
+
+            login.CreateSession("sSanchez", "user");
+
+            Team cavaliers = new Team("Cavaliers");
+            Team celtics = new Team("Celtics");
+
+            Team pistons = new Team("Pistons");
+            Team raptors = new Team("Raptors");
+
+            List<Team> teamList1 = new List<Team>();
+            List<Team> teamList2 = new List<Team>();
+
+            basketball.AddTeam(cavaliers);
+            basketball.AddTeam(celtics);
+            basketball.AddTeam(pistons);
+            basketball.AddTeam(raptors);
+
+            teamList1.Add(cavaliers);
+            teamList1.Add(celtics);
+
+            teamList2.Add(pistons);
+            teamList2.Add(raptors);
+
+            Encounter encounter1 = new Encounter(basketball, teamList1, new DateTime(2018, 10, 09));
+            Encounter encounter2 = new Encounter(basketball, teamList1, new DateTime(2018, 10, 10));
+
+            EncounterServices encounterServices = new EncounterServices(new EncounterRepository(GetContextFactory()), login);
+
+            encounterServices.CreateEncounter(encounter1);
+            encounterServices.CreateEncounter(encounter2);
+
+            login.CreateSession("martinFowler", "user");
+            encounter1.AddComment(login.LoggedUser, "Yes, we can!");
+            encounterServices.AddComment(encounter1, "Yes, we can!");
+         
+            UserServices userServices = new UserServices(userRepository, login);
+
+            userServices.AddFollowedTeam(cavaliers);
+            IEnumerable<Encounter> followedTeamsInEncounter = encounterServices.GetAllEncountersWithFollowedTeams();
+
+            Assert.IsTrue(followedTeamsInEncounter.ToList().Count == 1);
+        }
     }
 }
