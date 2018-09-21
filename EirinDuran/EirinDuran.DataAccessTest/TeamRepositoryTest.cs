@@ -100,8 +100,12 @@ namespace EirinDuran.DataAccessTest
             {
                 byte[] firstImageBytes = GetImageBytes(first);
                 byte[] secondImageBytes = GetImageBytes(second);
-
-                return Enumerable.SequenceEqual(firstImageBytes, secondImageBytes);
+                bool areTheSame = firstImageBytes.Length == secondImageBytes.Length;
+                for (int i = 0; i < firstImageBytes.Length && areTheSame; i++)
+                {
+                    areTheSame &= firstImageBytes[i] == secondImageBytes[i];
+                }
+                return areTheSame;
             }
 
             private byte[] GetImageBytes(Image image)
@@ -114,8 +118,8 @@ namespace EirinDuran.DataAccessTest
             [TestInitialize]
             public void TestInit()
             {
-                bocaImagePath = GetResourcePath("GodoyCruz.jpg");
-                riverImagePath = GetResourcePath("GodoyCruz.jpg");
+                bocaImagePath = GetResourcePath("Boca.jpg");
+                riverImagePath = GetResourcePath("River.jpg");
                 tombaImagePath = GetResourcePath("GodoyCruz.jpg");
                 repo = new TeamRepository(GetTestContext());
                 repo.Add(CreateBocaTeam());
