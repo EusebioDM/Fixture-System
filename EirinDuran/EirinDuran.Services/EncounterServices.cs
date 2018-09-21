@@ -90,5 +90,22 @@ namespace EirinDuran.Services
             adminValidator.ValidatePermissions();
             encounterRepository.Delete(encounter);
         }
+
+        public IEnumerable<Encounter> GetAllEncountersWithFollowedTeams()
+        {
+            List<Encounter> encountersWithComment = new List<Encounter>();
+            IEnumerable<Encounter> allEncounters = encounterRepository.GetAll();
+            foreach (var encounter in allEncounters)
+            {
+                bool intersect = encounter.Teams.Intersect(loginServices.LoggedUser.FollowedTeams).Any();
+                bool hasComments = (encounter.Comments.Count() > 0);
+
+                if (intersect && hasComments)
+                {
+                    encountersWithComment.Add(encounter);
+                }    
+            }
+            return encountersWithComment;
+        }
     }
 }

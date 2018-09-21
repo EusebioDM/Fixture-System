@@ -151,51 +151,5 @@ namespace EirinDuran.ServicesTest
             List<Team> followedTeams = services.GetAllFollowedTeams().ToList();
             Assert.AreEqual(cavaliers, followedTeams[0]);
         }
-
-        [TestMethod]
-        public void ListCommentsWithFollowedTeams()
-        {
-            LoginServices login = new LoginServices(repo);
-            UserServices services = new UserServices(repo, login);
-
-            Sport basketball = new Sport("Baskteball");
-
-            login.CreateSession("martinFowler", "user");
-
-            Team cavaliers = new Team("Cavaliers");
-            Team celtics = new Team("Celtics");
-
-            Team pistons = new Team("Pistons");
-            Team raptors = new Team("Raptors");
-
-            List<Team> teamList1 = new List<Team>();
-            List<Team> teamList2 = new List<Team>();
-
-            basketball.AddTeam(cavaliers);
-            basketball.AddTeam(celtics);
-            basketball.AddTeam(pistons);
-            basketball.AddTeam(raptors);
-
-            teamList1.Add(cavaliers);
-            teamList1.Add(celtics);
-
-            teamList2.Add(pistons);
-            teamList2.Add(raptors);
-
-            Encounter encounter1 = new Encounter(basketball, teamList1, new DateTime(2018, 10, 09));
-            Encounter encounter2 = new Encounter(basketball, teamList1, new DateTime(2018, 10, 09));
-
-            EncounterServices encounterServices = new EncounterServices(new EncounterRepository(GetContextFactory()), login);
-            encounterServices.CreateEncounter(encounter1);
-            encounterServices.CreateEncounter(encounter2);
-
-            encounter1.AddComment(login.LoggedUser, "Yes, we can!");
-
-            services.AddFollowedTeam(cavaliers);
-            IEnumerable<Encounter> followedTeamsInEncounter = services.GetAllEncountersWithFollowedTeams();
-
-            Assert.IsTrue(followedTeamsInEncounter.ToList().Count == 1);
-        }
-
     }
 }
