@@ -74,25 +74,20 @@ namespace EirinDuran.WebApiTest
             Assert.AreEqual(modelIn.UserName, modelOut.UserName);
         }
 
-        /*
         [TestMethod]
-        public void CreateFailedUserTest()
+        public void CreateFailedUserController()
         {
-            //Arrange
             var modelIn = new UserModelIn();
-            var userService = new Mock<IUserService>();
+            var userService = new Mock<IUserServices>();
             var controller = new UsersController(userService.Object);
-            //We need to force the error in de ModelState
-            controller.ModelState.AddModelError("", "Error");
-            var result = controller.Post(modelIn);
 
-            //Act
+            controller.ModelState.AddModelError("", "Error");
+            var result = controller.Create(modelIn);
+
             var createdResult = result as BadRequestObjectResult;
 
-            //Assert
             Assert.IsNotNull(createdResult);
             Assert.AreEqual(400, createdResult.StatusCode);
         }
-        */
     }
 }
