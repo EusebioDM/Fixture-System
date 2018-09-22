@@ -6,6 +6,7 @@ using Moq;
 using EirinDuran.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using EirinDuran.WebApi.Models;
 
 namespace EirinDuran.WebApiTest
 {
@@ -38,21 +39,60 @@ namespace EirinDuran.WebApiTest
         [TestMethod]
         public void GetUserOkController()
         {
-            //Arrange: Construimos el mock y seteamos las expectativas
             var expectedUser = new User(Role.Administrator, "juanandres", "Juan", "Perez", "user", "juan@perez.org");
             var mockUserService = new Mock<IUserServices>();
             mockUserService.Setup(bl => bl.GetUser(expectedUser)).Returns(expectedUser);
 
             var controller = new UsersController(mockUserService.Object);
 
-            //Act
             var obtainedResult = controller.GetById(expectedUser.UserName) as ActionResult<User>;
 
-            //Assert
             mockUserService.Verify(m => m.GetUser(expectedUser), Times.AtMostOnce());
             Assert.IsNotNull(obtainedResult);
             Assert.IsNotNull(obtainedResult.Value);
             Assert.AreEqual(obtainedResult.Value, expectedUser);
         }
+
+        [TestMethod]
+        public void CreateValidUserController()
+        {
+            var modelIn = new UserModelIn() { UserName = "Alberto", Name = "Alberto", Surname = "Lacaze", Mail = "albertito@mail.com", Password = "pass", Role = Role.Follower };
+            var fakeUser = new User(Role.Administrator, "pepeAvila", "Pepe", "Ávila", "user", "pepeavila@mymail.com");
+
+            var userServiceMock = new Mock<IUserServices>();
+           
+            userServiceMock.Setup(userService => userService.AddUser(fakeUser));
+            var controller = new UsersController(userServiceMock.Object);
+
+            var result = controller.Create(modelIn);
+            var createdResult = result as CreatedAtRouteResult;
+            var modelOut = createdResult.Value as UserModelOut;
+
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual("GetUserName", createdResult.RouteName);
+            Assert.AreEqual(201, createdResult.StatusCode);
+            Assert.AreEqual(modelIn.UserName, modelOut.UserName);
+        }
+
+        /*
+        [TestMethod]
+        public void CreateFailedUserTest()
+        {
+            //Arrange
+            var modelIn = new UserModelIn();
+            var userService = new Mock<IUserService>();
+            var controller = new UsersController(userService.Object);
+            //We need to force the error in de ModelState
+            controller.ModelState.AddModelError("", "Error");
+            var result = controller.Post(modelIn);
+
+            //Act
+            var createdResult = result as BadRequestObjectResult;
+
+            //Assert
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual(400, createdResult.StatusCode);
+        }
+        */
     }
 }

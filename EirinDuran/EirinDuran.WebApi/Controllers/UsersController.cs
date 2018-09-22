@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using EirinDuran.IDataAccess;
 using EirinDuran.Domain.User;
 using EirinDuran.Services;
+using EirinDuran.WebApi.Models;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -21,7 +22,8 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<User>> Get() {
+        public ActionResult<List<User>> Get()
+        {
             return userServices.GetAllUsers().ToList();
         }
 
@@ -37,10 +39,21 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(User user)
+        public IActionResult Create(UserModelIn userModel)
         {
-            userServices.AddUser(user);
-            return CreatedAtRoute("GetUser", new { id = user.Name }, user);
+            if (ModelState.IsValid)
+            {
+                //Poner una fábrica acá
+                User user = new User(userModel.Role, userModel.UserName, userModel.Name, userModel.Surname, userModel.Password, userModel.Mail);
+                userServices.AddUser(user);
+
+                var addedUser = new UserModelOut() { UserName = user.UserName, Name = user.Name, Surname = user.Surname, Mail = user.Mail, Role = user.Role };
+                return CreatedAtRoute("GetUserName", new { id = addedUser.UserName }, addedUser);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
     }
 }
