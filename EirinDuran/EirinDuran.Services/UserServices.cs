@@ -28,6 +28,12 @@ namespace EirinDuran.Services
 
         }
 
+        public IEnumerable<User> GetAllUsers()
+        {
+            adminValidator.ValidatePermissions();
+            return userRepository.GetAll();
+        }
+
         public void DeleteUser(string userName)
         {
             adminValidator.ValidatePermissions();

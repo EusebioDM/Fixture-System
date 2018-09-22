@@ -67,7 +67,7 @@ namespace EirinDuran.ServicesTest
             repo.Add(new User(Role.Administrator, "juanandres", "Juan", "Perez", "user", "juan@perez.org"));
             repo.Add(new User(Role.Follower, "robertoj", "roberto", "juarez", "mypass123", "rj@rj.com"));
 
-            Assert.IsTrue(services.GetAllUsers.ToList().Count == 4);
+            Assert.IsTrue(services.GetAllUsers().ToList().Count == 4);
         }
 
         [TestMethod]
