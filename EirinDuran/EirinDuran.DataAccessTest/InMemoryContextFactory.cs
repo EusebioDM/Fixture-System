@@ -1,20 +1,22 @@
 ﻿using EirinDuran.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using System;
 
 namespace EirinDuran.DataAccessTest
 {
-    internal class InMemoryContextFactory : IDesignTimeDbContextFactory<Context>
+    public class InMemoryContextFactory : IDesignTimeDbContextFactory<Context>
     {
-        private DbContextOptions<Context> options;
+        private Guid guid;
 
-        public InMemoryContextFactory(DbContextOptions<Context> options)
+        public InMemoryContextFactory()
         {
-            this.options = options;
+            guid = Guid.NewGuid();
         }
 
         public Context CreateDbContext(string[] args)
         {
+            DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase(guid.ToString()).EnableSensitiveDataLogging().UseLazyLoadingProxies().Options;
             return new Context(options);
         }
     }

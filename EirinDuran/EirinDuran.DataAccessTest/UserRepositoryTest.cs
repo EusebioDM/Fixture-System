@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace EirinDuran.DataAccessTest
@@ -113,7 +114,7 @@ namespace EirinDuran.DataAccessTest
 
         private User CreateUserAlvaro()
         {
-            User user = new User(Role.Administrator, "alvaro", "Álvaro", "Gómez", "pass1234", "gomez@gomez.uy");
+            User user = new User(Role.Administrator, "alvaro", "Alvaro", "Gomez", "pass1234", "gomez@gomez.uy");
             user.AddFollowedTeam(new Team("Boca"));
             user.AddFollowedTeam(new Team("River"));
             return user;
@@ -128,8 +129,7 @@ namespace EirinDuran.DataAccessTest
 
         private IDesignTimeDbContextFactory<Context> GetContextFactory()
         {
-            DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase(Guid.NewGuid().ToString()).UseLazyLoadingProxies().Options;
-            return new InMemoryContextFactory(options);
+            return new InMemoryContextFactory();
         }
 
         private void CleanUpRepo()
@@ -140,5 +140,12 @@ namespace EirinDuran.DataAccessTest
 
         private User GetAlvaro() => repo.Get(new User("alvaro"));
         private User GetMacri() => repo.Get(new User("Gato"));
+
+        private string GetResourcePath(string resourceName)
+        {
+            string current = Directory.GetCurrentDirectory();
+            string resourcesFolder = Directory.EnumerateDirectories(current).First(d => d.EndsWith("Resources"));
+            return Directory.EnumerateFiles(resourcesFolder).First(f => f.EndsWith(resourceName));
+        }
     }
 }

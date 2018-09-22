@@ -13,7 +13,8 @@ namespace EirinDuran.Entities.Mappers
             {
                 User = new UserEntity(comment.User),
                 TimeStamp = comment.TimeStamp,
-                Message = comment.Message
+                Message = comment.Message,
+                Id = comment.Id
             };
         }
 
@@ -27,6 +28,7 @@ namespace EirinDuran.Entities.Mappers
             destination.User = new UserEntity(source.User);
             destination.TimeStamp = source.TimeStamp;
             destination.Message = source.Message;
+            destination.Id = source.Id;
         }
     }
 }

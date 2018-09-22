@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -76,8 +77,7 @@ namespace EirinDuran.DataAccessTest
 
         private IDesignTimeDbContextFactory<Context> GetContextFactory()
         {
-            DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase(Guid.NewGuid().ToString()).EnableSensitiveDataLogging().UseLazyLoadingProxies().Options;
-            return new InMemoryContextFactory(options);
+            return new InMemoryContextFactory();
         }
 
         private Sport CreateFutbolTeam()
@@ -97,7 +97,8 @@ namespace EirinDuran.DataAccessTest
         private Team CreateBocaTeam()
         {
             string name = "Boca Juniors";
-            Image image = Image.FromFile("..\\..\\..\\Resources\\Boca.jpg");
+            string path = GetResourcePath("Boca.jpg");
+            Image image = Image.FromFile(path);
             return new Team(name, image);
 
         }
@@ -105,14 +106,16 @@ namespace EirinDuran.DataAccessTest
         private Team CreateTeamThatBelongsInTheB()
         {
             string name = "River Plate";
-            Image image = Image.FromFile("..\\..\\..\\Resources\\River.jpg");
+            string path = GetResourcePath("River.jpg");
+            Image image = Image.FromFile(path);
             return new Team(name, image);
         }
 
         private Team CreateGodoyCruzTeam()
         {
             string name = "Godoy Cruz";
-            Image image = Image.FromFile("..\\..\\..\\Resources\\GodoyCruz.jpg");
+            string path = GetResourcePath("GodoyCruz.jpg");
+            Image image = Image.FromFile(path);
             return new Team(name, image);
         }
 
@@ -135,6 +138,13 @@ namespace EirinDuran.DataAccessTest
             User user = new User(Role.Administrator, "Gato", "Mauricio", "Macri", "gato123", "macri@gmail.com");
             user.AddFollowedTeam(new Team("River"));
             return user;
+        }
+
+        private string GetResourcePath(string resourceName)
+        {
+            string current = Directory.GetCurrentDirectory();
+            string resourcesFolder = Directory.EnumerateDirectories(current).First(d => d.EndsWith("Resources"));
+            return Directory.EnumerateFiles(resourcesFolder).First(f => f.EndsWith(resourceName));
         }
     }
 }

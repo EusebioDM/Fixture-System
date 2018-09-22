@@ -19,9 +19,9 @@ namespace EirinDuran.DataAccessTest
         [TestClass]
         public class TeamEntityRepositoryTest
         {
-            private const string bocaImagePath = "..\\..\\..\\Resources\\Boca.jpg";
-            private const string riverImagePath = "..\\..\\..\\Resources\\River.jpg";
-            private const string tombaImagePath = "..\\..\\..\\Resources\\GodoyCruz.jpg";
+            private string bocaImagePath;
+            private string riverImagePath;
+            private string tombaImagePath;
 
             private TeamRepository repo;
 
@@ -30,7 +30,6 @@ namespace EirinDuran.DataAccessTest
             {
                 IEnumerable<Team> actual = repo.GetAll();
                 IEnumerable<Team> expected = new List<Team>() { CreateBocaTeam(), CreateTeamThatBelongsInTheB() };
-
                 Assert.IsTrue(Helper.CollectionsHaveSameElements(actual, expected));
             }
 
@@ -101,8 +100,12 @@ namespace EirinDuran.DataAccessTest
             {
                 byte[] firstImageBytes = GetImageBytes(first);
                 byte[] secondImageBytes = GetImageBytes(second);
-
-                return Enumerable.SequenceEqual(firstImageBytes, secondImageBytes);
+                bool areTheSame = firstImageBytes.Length == secondImageBytes.Length;
+                for (int i = 0; i < firstImageBytes.Length && areTheSame; i++)
+                {
+                    areTheSame &= firstImageBytes[i] == secondImageBytes[i];
+                }
+                return areTheSame;
             }
 
             private byte[] GetImageBytes(Image image)
@@ -115,6 +118,9 @@ namespace EirinDuran.DataAccessTest
             [TestInitialize]
             public void TestInit()
             {
+                bocaImagePath = GetResourcePath("Boca.jpg");
+                riverImagePath = GetResourcePath("River.jpg");
+                tombaImagePath = GetResourcePath("GodoyCruz.jpg");
                 repo = new TeamRepository(GetTestContext());
                 repo.Add(CreateBocaTeam());
                 repo.Add(CreateTeamThatBelongsInTheB());
@@ -122,8 +128,7 @@ namespace EirinDuran.DataAccessTest
 
             private IDesignTimeDbContextFactory<Context> GetTestContext()
             {
-                DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
-                return new InMemoryContextFactory(options);
+                return new InMemoryContextFactory();
             }
 
             private Team CreateBocaTeam()
@@ -148,6 +153,13 @@ namespace EirinDuran.DataAccessTest
 
             private Team GetBocaTeam() => repo.Get(new Team("Boca Juniors"));
             private Team GetRiverTeam() => repo.Get(new Team("River Plate"));
+
+            private string GetResourcePath(string resourceName)
+            {
+                string current = Directory.GetCurrentDirectory();
+                string resourcesFolder = Directory.EnumerateDirectories(current).First(d => d.EndsWith("Resources"));
+                return Directory.EnumerateFiles(resourcesFolder).First(f => f.EndsWith(resourceName));
+            }
         }
     }
 }

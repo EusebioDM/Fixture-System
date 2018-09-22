@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.Domain", "EirinD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.Services", "EirinDuran.Services\EirinDuran.Services.csproj", "{36546A25-358E-4526-83FB-E2A7FF1BC6AE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.DomainTest", "EirinDuran.Test\EirinDuran.DomainTest.csproj", "{C2B84AAE-122D-41F4-A9CC-4201C73738F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.DomainTest", "EirinDuran.DomainTest\EirinDuran.DomainTest.csproj", "{C2B84AAE-122D-41F4-A9CC-4201C73738F0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.Entities", "EirinDuran.Entities\EirinDuran.Entities.csproj", "{36119659-F618-46C8-AD17-7EE6CF8A27B0}"
 EndProject
@@ -20,6 +20,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.DataAccessTest", "EirinDuran.DataAccessTest\EirinDuran.DataAccessTest.csproj", "{61BF650C-C376-47D9-893B-B4F150359CC1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EirinDuran.WebApiTest", "EirinDuran.WebApiTest\EirinDuran.WebApiTest.csproj", "{DFB54BE9-CB34-4CA1-B33F-A27431B12391}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.ServicesTest", "EirinDuran.ServicesTest\EirinDuran.ServicesTest.csproj", "{684BDC7E-9CDC-4192-9FCB-D2C54A76ED49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EirinDuran.IServices", "EirinDuran.IServices\EirinDuran.IServices.csproj", "{F935DC72-8986-40FB-A762-910484D2424B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

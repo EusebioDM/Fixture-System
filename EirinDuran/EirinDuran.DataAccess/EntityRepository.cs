@@ -68,7 +68,7 @@ namespace EirinDuran.DataAccess
             {
                 TryToDelete(model);
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (DbUpdateConcurrencyException)
             {
                 throw new ObjectDoesntExistsInDataBaseException(model);
             }
@@ -83,7 +83,7 @@ namespace EirinDuran.DataAccess
             using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
                 Entity toDelete = CreateEntity(model);
-                Set(context).Remove(toDelete);
+                context.Entry(toDelete).State = EntityState.Deleted;
                 context.SaveChanges();
             }
         }

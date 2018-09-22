@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace EirinDuran.DomainTest
@@ -32,7 +33,9 @@ namespace EirinDuran.DomainTest
         public void TeamEqualsSameTeamsTest()
         {
             Team boca = CreateBocaTeam();
-            Team anotherBoca = new Team("Boca Juniors", GetImage(Resources.River));
+            string path = GetResourcePath("Boca.jpeg");
+            Image image = Image.FromFile(path);
+            Team anotherBoca = new Team("Boca Juniors", image);
             Assert.IsTrue(boca.Equals(anotherBoca));
         }
 
@@ -53,20 +56,24 @@ namespace EirinDuran.DomainTest
         private Team CreateBocaTeam()
         {
             string name = "Boca Juniors";
-            Image image = GetImage(Resources.Boca);
+            string path = GetResourcePath("Boca.jpeg");
+            Image image = Image.FromFile(path);
             return new Team(name, image);
         }
 
         private Team CreateTeamThatBelongsInTheB()
         {
             string name = "River Plate";
-            Image image = GetImage(Resources.River);
+            string path = GetResourcePath("River.jpg");
+            Image image = Image.FromFile(path);
             return new Team(name, image);
         }
 
-        private Image GetImage(byte[] resource)
+        private string GetResourcePath(string resourceName)
         {
-            return new Bitmap(new MemoryStream(resource));
+            string current = Directory.GetCurrentDirectory();
+            string resourcesFolder = Directory.EnumerateDirectories(current).First(d => d.EndsWith("Resources"));
+            return Directory.EnumerateFiles(resourcesFolder).First(f => f.EndsWith(resourceName));
         }
     }
 }
