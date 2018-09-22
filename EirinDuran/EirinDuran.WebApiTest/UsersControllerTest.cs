@@ -34,5 +34,25 @@ namespace EirinDuran.WebApiTest
 
             Assert.IsTrue(secuenceAreEqual);
         }
+
+        [TestMethod]
+        public void GetUserOkController()
+        {
+            //Arrange: Construimos el mock y seteamos las expectativas
+            var expectedUser = new User(Role.Administrator, "juanandres", "Juan", "Perez", "user", "juan@perez.org");
+            var mockUserService = new Mock<IUserServices>();
+            mockUserService.Setup(bl => bl.GetUser(expectedUser)).Returns(expectedUser);
+
+            var controller = new UsersController(mockUserService.Object);
+
+            //Act
+            var obtainedResult = controller.GetById(expectedUser.UserName) as ActionResult<User>;
+
+            //Assert
+            mockUserService.Verify(m => m.GetUser(expectedUser), Times.AtMostOnce());
+            Assert.IsNotNull(obtainedResult);
+            Assert.IsNotNull(obtainedResult.Value);
+            Assert.AreEqual(obtainedResult.Value, expectedUser);
+        }
     }
 }
