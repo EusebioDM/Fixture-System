@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EirinDuran.IDataAccess;
 using EirinDuran.Domain.User;
+using EirinDuran.Services;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -13,10 +14,12 @@ namespace EirinDuran.WebApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IRepository<User> userRepository;
+        private readonly UserServices userServices;
 
-        public UsersController(IRepository<User> aUserRepository)
+        public UsersController(/*UserServices userServices*/IRepository<User> userRepository)
         {
-            userRepository = aUserRepository;
+            //this.userServices = userServices;
+            this.userRepository = userRepository;
         }
 
         [HttpGet]

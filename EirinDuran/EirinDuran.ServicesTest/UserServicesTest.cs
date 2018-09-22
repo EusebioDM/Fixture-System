@@ -57,6 +57,35 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
+        public void RecoverAllUsers()
+        {
+            LoginServices login = new LoginServices(repo);
+            UserServices services = new UserServices(repo, login);
+
+            login.CreateSession("sSanchez", "user");
+
+            repo.Add(new User(Role.Administrator, "juanandres", "Juan", "Perez", "user", "juan@perez.org"));
+            repo.Add(new User(Role.Follower, "robertoj", "roberto", "juarez", "mypass123", "rj@rj.com"));
+
+            Assert.IsTrue(services.GetAllUsers.ToList().Count == 4);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
+        public void RecoverAllUsersWithoutSufficientPermissions()
+        {
+            LoginServices login = new LoginServices(repo);
+            UserServices services = new UserServices(repo, login);
+
+            login.CreateSession("martinFowler", "user");
+
+            repo.Add(new User(Role.Administrator, "juanandres", "Juan", "Perez", "user", "juan@perez.org"));
+            repo.Add(new User(Role.Follower, "robertoj", "roberto", "juarez", "mypass123", "rj@rj.com"));
+
+            services.GetAllUsers();
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void DeleteUserSimpleOk()
         {
