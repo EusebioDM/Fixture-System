@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace EirinDuran.Services
 {
-    public class UserServices
+    public class UserServices : IUserServices
     {
         private UserRepository userRepository;
         private PermissionValidator adminValidator;
@@ -34,7 +34,7 @@ namespace EirinDuran.Services
             return userRepository.Get(user);
         }
 
-        public IEnumerable<User> GetAllUsers()
+        public virtual IEnumerable<User> GetAllUsers()
         {
             adminValidator.ValidatePermissions();
             return userRepository.GetAll();

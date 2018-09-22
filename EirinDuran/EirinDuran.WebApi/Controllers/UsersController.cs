@@ -13,9 +13,9 @@ namespace EirinDuran.WebApi.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly UserServices userServices;
+        private readonly IUserServices userServices;
 
-        public UsersController(UserServices userServices)
+        public UsersController(IUserServices userServices)
         {
             this.userServices = userServices;
         }
