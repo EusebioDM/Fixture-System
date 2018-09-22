@@ -28,7 +28,7 @@ namespace EirinDuran.WebApi.Controllers
         [HttpGet("{id}", Name = "GetUser")]
         public ActionResult<User> GetById(string id)
         {
-            User user = userServices.Get(new User(Role.Follower, id, "NOTSET", "NOTSET", "NOTSET", "NOTSET@NOTSE.COM"));
+            User user = userServices.GetUser(new User(Role.Follower, id, "NOTSET", "NOTSET", "NOTSET", "NOTSET@NOTSE.COM"));
             if (user == null)
             {
                 return NotFound();

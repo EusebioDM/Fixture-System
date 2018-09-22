@@ -28,6 +28,12 @@ namespace EirinDuran.Services
 
         }
 
+        public User GetUser(User user)
+        {
+            adminValidator.ValidatePermissions();
+            return userRepository.Get(user);
+        }
+
         public IEnumerable<User> GetAllUsers()
         {
             adminValidator.ValidatePermissions();
