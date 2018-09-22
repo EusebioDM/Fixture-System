@@ -13,25 +13,23 @@ namespace EirinDuran.WebApi.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IRepository<User> userRepository;
         private readonly UserServices userServices;
 
-        public UsersController(/*UserServices userServices*/IRepository<User> userRepository)
+        public UsersController(UserServices userServices)
         {
-            //this.userServices = userServices;
-            this.userRepository = userRepository;
+            this.userServices = userServices;
         }
 
         [HttpGet]
         public ActionResult<List<User>> Get() {
-            return userRepository.GetAll().ToList();
+            return userServices.GetAllUsers().ToList();
         }
 
-        [HttpGet("{id}", Name = "GetTodo")]
+        [HttpGet("{id}", Name = "GetUser")]
         public ActionResult<User> GetById(string id)
         {
-            User user = userRepository.Get(new User(Role.Follower,id, "NOTSET","NOTSET","NOTSET","NOTSET@NOTSE.COM"));
-            if(user == null)
+            User user = userServices.Get(new User(Role.Follower, id, "NOTSET", "NOTSET", "NOTSET", "NOTSET@NOTSE.COM"));
+            if (user == null)
             {
                 return NotFound();
             }
@@ -39,10 +37,10 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(User item)
+        public IActionResult Create(User user)
         {
-            userRepository.Add(item);
-            return CreatedAtRoute("GetTodo", new { id = item.Name }, item);
+            userServices.AddUser(user);
+            return CreatedAtRoute("GetUser", new { id = user.Name }, user);
         }
     }
 }

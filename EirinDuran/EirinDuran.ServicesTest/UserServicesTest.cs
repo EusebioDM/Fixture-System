@@ -32,17 +32,6 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
-        public void AddUserWithoutPermissions()
-        {
-            LoginServices login = new LoginServices(repo);
-            UserServices services = new UserServices(repo, login);
-
-            login.CreateSession("martinFowler", "user");
-            services.AddUser(new User(Role.Administrator, "pepeAvila", "Pepe", "햢ila", "user", "pepeavila@mymail.com"));
-        }
-
-        [TestMethod]
         public void AddUserSimpleOk()
         {
             LoginServices login = new LoginServices(repo);
@@ -54,6 +43,50 @@ namespace EirinDuran.ServicesTest
             User result = repo.Get(new User("pepeAvila"));
 
             Assert.AreEqual("pepeAvila", result.UserName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
+        public void AddUserWithoutPermissions()
+        {
+            LoginServices login = new LoginServices(repo);
+            UserServices services = new UserServices(repo, login);
+
+            login.CreateSession("martinFowler", "user");
+            services.AddUser(new User(Role.Administrator, "pepeAvila", "Pepe", "햢ila", "user", "pepeavila@mymail.com"));
+        }
+
+        [TestMethod]
+        public void GetSingleUserOk()
+        {
+            LoginServices login = new LoginServices(repo);
+            UserServices services = new UserServices(repo, login);
+
+            login.CreateSession("sSanchez", "user");
+            User expected = new User(Role.Administrator, "pepeAvila", "Pepe", "햢ila", "user", "pepeavila@mymail.com");
+
+            repo.Add(expected);
+
+            User recovered = services.GetUser(new User("pepeAvila"));
+
+            Assert.AreEqual(expected, recovered);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
+        public void GetSingleUserWithoutSufficientPermissions()
+        {
+            LoginServices login = new LoginServices(repo);
+            UserServices services = new UserServices(repo, login);
+
+            login.CreateSession("martinFowler", "user");
+            User expected = new User(Role.Administrator, "pepeAvila", "Pepe", "햢ila", "user", "pepeavila@mymail.com");
+
+            repo.Add(expected);
+
+            User recovered = services.GetUser(new User("pepeAvila"));
+
+            Assert.AreEqual(expected, recovered);
         }
 
         [TestMethod]
