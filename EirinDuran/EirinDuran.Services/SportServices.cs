@@ -4,11 +4,12 @@ using System.Text;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices;
+using EirinDuran.Services;
 using EirinDuran.Services.DTO_Mappers;
 
 namespace EirinDuran.Services
 {
-    public class SportServices
+    public class SportServices : ISportServices
     {
         private readonly ILoginServices loginService;
         private readonly IRepository<Sport> repository;

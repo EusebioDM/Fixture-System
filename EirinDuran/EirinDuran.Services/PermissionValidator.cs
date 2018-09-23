@@ -1,5 +1,6 @@
 using EirinDuran.Domain.User;
 using EirinDuran.IServices;
+using EirinDuran.Services;
 
 namespace EirinDuran.Services
 {

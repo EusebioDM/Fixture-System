@@ -53,7 +53,7 @@ namespace EirinDuran.ServicesTest
             UserServices services = new UserServices(repo, login);
 
             login.CreateSession("martinFowler", "user");
-            services.AddUser(pepe);
+            services.CreateUser(pepe);
         }
 
         [TestMethod]
@@ -63,7 +63,7 @@ namespace EirinDuran.ServicesTest
             UserServices services = new UserServices(repo, login);
 
             login.CreateSession("sSanchez", "user");
-            services.AddUser(pepe);
+            services.CreateUser(pepe);
 
             User result = repo.Get(new User("pepeAvila"));
 
@@ -78,7 +78,7 @@ namespace EirinDuran.ServicesTest
             UserServices services = new UserServices(repo, login);
 
             login.CreateSession("sSanchez", "user");
-            services.AddUser(pepe);
+            services.CreateUser(pepe);
 
             services.DeleteUser("pepeAvila");
             User result = repo.Get(new User("pepeAvila"));

@@ -2,15 +2,16 @@ using System;
 using EirinDuran.Domain.User;
 using EirinDuran.DataAccess;
 using EirinDuran.IDataAccess;
-using EirinDuran.IServices;
+using EirinDuran.Services;
 using EirinDuran.Domain.Fixture;
 using System.Collections.Generic;
 using EirinDuran.Services.DTO_Mappers;
 using System.Linq;
+using EirinDuran.IServices;
 
 namespace EirinDuran.Services
 {
-    public class UserServices
+    public class UserServices : IUserServices
     {
         private UserRepository userRepository;
         private PermissionValidator adminValidator;
@@ -27,7 +28,7 @@ namespace EirinDuran.Services
             teamMapper = new TeamMapper();
         }
 
-        public void AddUser(UserDTO userDTO)
+        public void CreateUser(UserDTO userDTO)
         {
             adminValidator.ValidatePermissions();
             User user = userMapper.Map(userDTO);

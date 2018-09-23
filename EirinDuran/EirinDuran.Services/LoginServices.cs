@@ -2,6 +2,7 @@
 using EirinDuran.Domain.User;
 using EirinDuran.DataAccess;
 using EirinDuran.IDataAccess;
+using EirinDuran.Services;
 using EirinDuran.IServices;
 
 namespace EirinDuran.Services
