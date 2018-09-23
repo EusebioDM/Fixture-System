@@ -1,6 +1,8 @@
 using EirinDuran.DataAccess;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
+using EirinDuran.IServices;
+using EirinDuran.Services.DTO_Mappers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,30 +14,38 @@ namespace EirinDuran.Services
         private LoginServices loginServices;
         private EncounterRepository encounterRepository;
         private PermissionValidator adminValidator;
+        private EncounterMapper mapper;
 
         public EncounterServices(EncounterRepository encounterRepository, LoginServices loginServices)
         {
             this.loginServices = loginServices;
             this.encounterRepository = encounterRepository;
             adminValidator = new PermissionValidator(Role.Administrator, loginServices);
+            mapper = new EncounterMapper();
         }
 
-        public void CreateEncounter(Encounter encounter)
+        public void CreateEncounter(EncounterDTO encounterDTO)
         {
             adminValidator.ValidatePermissions();
+            Encounter encounter = mapper.Map(encounterDTO);
             ValidateNonOverlappingOfDates(encounter);
             encounterRepository.Add(encounter);
         }
 
-        public void CreateEncounter(IEnumerable<Encounter> encounters)
+        public void CreateEncounter(IEnumerable<EncounterDTO> encounterDTOs)
         {
             adminValidator.ValidatePermissions();
-            encounters.ToList().ForEach(e => ValidateNonOverlappingOfDates(e));
-            encounters.ToList().ForEach(e => encounterRepository.Add(e));
+            foreach(EncounterDTO encounterDTO in encounterDTOs)
+            {
+                Encounter encounter = mapper.Map(encounterDTO);
+                ValidateNonOverlappingOfDates(encounter);
+                encounterRepository.Add(encounter);
+            }
         }
 
         private void ValidateNonOverlappingOfDates(Encounter encounter)
         {
+
             Team firstTeamToAdd = encounter.Teams.ElementAt(0);
             Team secondTeamToAdd = encounter.Teams.ElementAt(1);
             DateTime encounterDateToAdd = encounter.DateTime;

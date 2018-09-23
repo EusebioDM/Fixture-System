@@ -22,6 +22,7 @@ namespace EirinDuran.ServicesTest
         private LoginServices login;
         private UserRepository userRepository;
         private EncounterRepository encounterRepository;
+        private Services.DTO_Mappers.EncounterMapper mapper;
 
         private Team felix;
         private Team liverpool;
@@ -36,6 +37,7 @@ namespace EirinDuran.ServicesTest
         [TestInitialize]
         public void TestInit()
         {
+            mapper = new Services.DTO_Mappers.EncounterMapper();
             userRepository = new UserRepository(GetContextFactory());
             encounterRepository = new EncounterRepository(GetContextFactory());
             userRepository.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
@@ -77,7 +79,7 @@ namespace EirinDuran.ServicesTest
             basketball.AddTeam(felix);
 
             Encounter expected = new Encounter(basketball, teams, date);
-            encounterServices.CreateEncounter(expected);
+            encounterServices.CreateEncounter(mapper.Map(expected));
 
             List<Encounter> recovered = (List<Encounter>)encounterRepository.GetAll();
 
@@ -102,7 +104,7 @@ namespace EirinDuran.ServicesTest
             basketball.AddTeam(felix);
 
             Encounter encounter = new Encounter(basketball, teams, date);
-            encounterServices.CreateEncounter(encounter);
+            encounterServices.CreateEncounter(mapper.Map(encounter));
         }
 
         [TestMethod]
@@ -126,8 +128,8 @@ namespace EirinDuran.ServicesTest
 
             Encounter encounter = new Encounter(football, teamsFirstEncounter, date);
             Encounter encounterOverlappingDates = new Encounter(football, teamsSecondEncounter, date);
-            encounterServices.CreateEncounter(encounter);
-            encounterServices.CreateEncounter(encounterOverlappingDates);
+            encounterServices.CreateEncounter(mapper.Map(encounter));
+            encounterServices.CreateEncounter(mapper.Map(encounterOverlappingDates));
         }
 
         [TestMethod]
@@ -153,7 +155,7 @@ namespace EirinDuran.ServicesTest
             IFixtureGenerator fixture = new LeagueFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
-            encounterServices.CreateEncounter(encounters);
+            encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
 
             List<Encounter> recovered = (List<Encounter>)encounterRepository.GetAll();
 
@@ -185,8 +187,8 @@ namespace EirinDuran.ServicesTest
             IEnumerable<Encounter> firstEncounters = fixture.GenerateFixture(teams, dateFirstEncounters);
             IEnumerable<Encounter> secondEncounters = fixture.GenerateFixture(teams, dateSecondEncounters);
 
-            encounterServices.CreateEncounter(firstEncounters);
-            encounterServices.CreateEncounter(secondEncounters);
+            encounterServices.CreateEncounter(firstEncounters.Select(e => mapper.Map(e)));
+            encounterServices.CreateEncounter(secondEncounters.Select(e => mapper.Map(e)));
         }
 
         [TestMethod]
@@ -207,7 +209,7 @@ namespace EirinDuran.ServicesTest
             IFixtureGenerator fixture = new LeagueFixture(football);
 
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
-            encounterServices.CreateEncounter(encounters);
+            encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
         }
 
         [TestMethod]
@@ -227,7 +229,7 @@ namespace EirinDuran.ServicesTest
             IFixtureGenerator fixture = new LeagueFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
-            encounterServices.CreateEncounter(encounters);
+            encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
 
             login.CreateSession("martinFowler", "user");
 
@@ -256,7 +258,7 @@ namespace EirinDuran.ServicesTest
             IFixtureGenerator fixture = new LeagueFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
-            encounterServices.CreateEncounter(encounters);
+            encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
 
             IEnumerable<Encounter> result = encounterServices.GetAllEncounters();
 
@@ -283,7 +285,7 @@ namespace EirinDuran.ServicesTest
             IFixtureGenerator fixture = new LeagueFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
-            encounterServices.CreateEncounter(encounters);
+            encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
             IEnumerable<Encounter> allEncounters = encounterServices.GetAllEncounters();
 
             encounterServices.DeleteEncounter(allEncounters.First());
@@ -309,7 +311,7 @@ namespace EirinDuran.ServicesTest
             IFixtureGenerator fixture = new LeagueFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
-            encounterServices.CreateEncounter(encounters);
+            encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
             IEnumerable<Encounter> allEncounters = encounterServices.GetAllEncounters();
 
             encounterServices.DeleteEncounter(allEncounters.First());
@@ -337,10 +339,10 @@ namespace EirinDuran.ServicesTest
             Encounter encounter3 = new Encounter(football, new List<Team> { penhiarol, torque }, new DateTime(2018, 10, 09));
             Encounter encounter4 = new Encounter(football, new List<Team> { river, liverpool }, new DateTime(2018, 10, 11));
 
-            encounterServices.CreateEncounter(encounter1);
-            encounterServices.CreateEncounter(encounter2);
-            encounterServices.CreateEncounter(encounter3);
-            encounterServices.CreateEncounter(encounter4);
+            encounterServices.CreateEncounter(mapper.Map(encounter1));
+            encounterServices.CreateEncounter(mapper.Map(encounter2));
+            encounterServices.CreateEncounter(mapper.Map(encounter3));
+            encounterServices.CreateEncounter(mapper.Map(encounter4));
 
             IEnumerable<Encounter> encountersRiver = encounterServices.GetAllEncounters(river);
             Assert.IsTrue(encountersRiver.ToList().Count == 2);
@@ -379,8 +381,8 @@ namespace EirinDuran.ServicesTest
 
             EncounterServices encounterServices = new EncounterServices(new EncounterRepository(GetContextFactory()), login);
 
-            encounterServices.CreateEncounter(encounter1);
-            encounterServices.CreateEncounter(encounter2);
+            encounterServices.CreateEncounter(mapper.Map(encounter1));
+            encounterServices.CreateEncounter(mapper.Map(encounter2));
 
             login.CreateSession("martinFowler", "user");
             encounter1.AddComment(login.LoggedUser, "Yes, we can!");
