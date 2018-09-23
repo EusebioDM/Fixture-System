@@ -28,32 +28,44 @@ namespace EirinDuran.DataAccess
                 Entity root = context.Find<Entity>(key);
                 //context.ChangeTracker.TrackGraph(root,n,f => Callback(n,set,f));
                 //context.ChangeTracker.TrackGraph<Entity>(root, root,(n, f) => Callback(n, f, set));
-                Rec(context, context.Entry(root), set);
+                Rec(context, context.Entry(root), set, true);
                 context.SaveChanges();
             }
         }
 
-        private void Rec(Context context, EntityEntry entry, HashSet<object> set)
+        private void Rec(Context context, EntityEntry entry, HashSet<object> set, bool mod)
         {
-            object key = HelperFunctions<Entity>.GetKey(entry);
-            if (!set.Contains(key))
-                entry.State = EntityState.Deleted;
+
+            if (mod)
+            {
+                entry.State = EntityState.Modified;
+            }
+
             foreach (var p in entry.Navigations)
             {
                 p.Load();
-                try
+
+                dynamic l = (p.CurrentValue);//.ConvertAll(o => (object)o);
+                if (p.Metadata.IsCollection())
                 {
-                    IEnumerable<object> l = (p.CurrentValue as IEnumerable<object>).Cast<object>().ToList();
-                    foreach (object o in l)
+                    List<dynamic> a = new List<dynamic>();
+                    foreach (dynamic o in l)
                     {
-                        var e = context.Entry(o);
-                        Rec(context, e, set);
+                        EntityEntry e = context.Entry(o);
+                        object key = HelperFunctions<Entity>.GetKey(e);
+                        if (!set.Contains(key))
+                        {
+                            a.Add(o);
+                        }
+                        Rec(context, e, set, true);
                     }
+                    a.ForEach(e => l.Remove(e));
+                    //p.CurrentValue = l;
                 }
-                catch (Exception)
+                else
                 {
                     var e = context.Entry(p.CurrentValue);
-                    Rec(context, e, set);
+                    Rec(context, e, set, false);
                 }
             }
         }
@@ -62,7 +74,10 @@ namespace EirinDuran.DataAccess
         {
             object key = HelperFunctions<Entity>.GetKey(node.Entry);
             if (!set.Contains(key))
+            {
                 node.Entry.State = EntityState.Deleted;
+            }
+
             return true;
         }
 
@@ -73,6 +88,7 @@ namespace EirinDuran.DataAccess
             using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
                 TraverseEntityGraphUpdatingWhenPossible(entitiesLeftToUpdate, rootEntityToUpdate, context, set);
+                //Rec(context, context.Entry(rootEntityToUpdate), set);
                 context.SaveChanges();
             }
             entitiesLeftToUpdate.Dequeue();
