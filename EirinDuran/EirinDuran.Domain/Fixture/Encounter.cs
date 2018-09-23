@@ -17,7 +17,7 @@ namespace EirinDuran.Domain.Fixture
         public IEnumerable<Comment> Comments => comments;
         private ICollection<Comment> comments;
 
-        public Sport Sport { get; set; }
+        public Sport Sport { get; private set; }
 
         public Encounter(Sport sport, IEnumerable<Team> teams, DateTime dateTime)
         {
