@@ -95,6 +95,15 @@ namespace EirinDuran.DataAccessTest
             Assert.IsTrue(HelperFunctions<Team>.CollectionsHaveSameElements(lasLeonas.Teams, fromRepo.Teams));
         }
 
+        [TestMethod]
+        public void RemoveTeamUpdateTest()
+        {
+            rugby.AddTeam(boca);
+            repo.Update(rugby);
+
+            Assert.IsTrue(repo.GetAll().Any(s => s.Teams.Contains(boca)));
+        }
+
         [TestInitialize]
         public void TestInit()
         {
