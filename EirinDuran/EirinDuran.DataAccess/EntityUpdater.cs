@@ -10,93 +10,35 @@ namespace EirinDuran.DataAccess
 {
     internal class EntityUpdater<Entity> where Entity : class
     {
-        public void UpdateGraph(IDesignTimeDbContextFactory<Context> contextFactory, Entity entity)
+        public void UpdateGraph(IDesignTimeDbContextFactory<Context> contextFactory, Entity entityToUpdate)
         {
             Queue<object> entitiesLeftToUpdate = new Queue<object>();
-            HashSet<object> set = new HashSet<object>();
-            entitiesLeftToUpdate.Enqueue(entity);
+            HashSet<object> entitiesThatShouldBeInUpdate = new HashSet<object>();
+            entitiesLeftToUpdate.Enqueue(entityToUpdate);
 
             while (entitiesLeftToUpdate.Count() > 0)
             {
-                UpdateRootEntityAndItsChildrenIfPossible(contextFactory, entitiesLeftToUpdate, set);
+                UpdateRootEntityAndItsChildrenIfPossible(contextFactory, entitiesLeftToUpdate, entitiesThatShouldBeInUpdate);
             }
 
-            using (Context context = contextFactory.CreateDbContext(new string[0]))
-            {
-                EntityEntry entry = context.Entry(entity);
-                object key = HelperFunctions<Entity>.GetKey(entry);
-                Entity root = context.Find<Entity>(key);
-                //context.ChangeTracker.TrackGraph(root,n,f => Callback(n,set,f));
-                //context.ChangeTracker.TrackGraph<Entity>(root, root,(n, f) => Callback(n, f, set));
-                Rec(context, context.Entry(root), set, true);
-                context.SaveChanges();
-            }
+            RemoveNoLongerPresentEntities(contextFactory, entityToUpdate, entitiesThatShouldBeInUpdate);
         }
 
-        private void Rec(Context context, EntityEntry entry, HashSet<object> set, bool mod)
-        {
-
-            if (mod)
-            {
-                entry.State = EntityState.Modified;
-            }
-
-            foreach (var p in entry.Navigations)
-            {
-                p.Load();
-
-                dynamic l = (p.CurrentValue);//.ConvertAll(o => (object)o);
-                if (p.Metadata.IsCollection())
-                {
-                    List<dynamic> a = new List<dynamic>();
-                    foreach (dynamic o in l)
-                    {
-                        EntityEntry e = context.Entry(o);
-                        object key = HelperFunctions<Entity>.GetKey(e);
-                        if (!set.Contains(key))
-                        {
-                            a.Add(o);
-                        }
-                        Rec(context, e, set, true);
-                    }
-                    a.ForEach(e => l.Remove(e));
-                    //p.CurrentValue = l;
-                }
-                else
-                {
-                    var e = context.Entry(p.CurrentValue);
-                    Rec(context, e, set, false);
-                }
-            }
-        }
-
-        private bool Callback(EntityEntryGraphNode node, Entity entity, HashSet<object> set)
-        {
-            object key = HelperFunctions<Entity>.GetKey(node.Entry);
-            if (!set.Contains(key))
-            {
-                node.Entry.State = EntityState.Deleted;
-            }
-
-            return true;
-        }
-
-        private void UpdateRootEntityAndItsChildrenIfPossible(IDesignTimeDbContextFactory<Context> contextFactory, Queue<object> entitiesLeftToUpdate, HashSet<object> set)
+        private void UpdateRootEntityAndItsChildrenIfPossible(IDesignTimeDbContextFactory<Context> contextFactory, Queue<object> entitiesLeftToUpdate, HashSet<object> entitiesThatShouldBeInUpdate)
         {
             object rootEntityToUpdate = entitiesLeftToUpdate.Peek();
 
             using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
-                TraverseEntityGraphUpdatingWhenPossible(entitiesLeftToUpdate, rootEntityToUpdate, context, set);
-                //Rec(context, context.Entry(rootEntityToUpdate), set);
+                TraverseEntityGraphUpdatingWhenPossible(entitiesLeftToUpdate, rootEntityToUpdate, context, entitiesThatShouldBeInUpdate);
                 context.SaveChanges();
             }
             entitiesLeftToUpdate.Dequeue();
         }
 
-        private void TraverseEntityGraphUpdatingWhenPossible(Queue<object> entitiesLeftToUpdate, object rootEntityToUpdate, Context context, HashSet<object> set)
+        private void TraverseEntityGraphUpdatingWhenPossible(Queue<object> entitiesLeftToUpdate, object rootEntityToUpdate, Context context, HashSet<object> entitiesThatShouldBeInUpdate)
         {
-            Action<EntityEntryGraphNode> updateNodeRecursivelyAction = n => UpdateNodeRecursively(context, entitiesLeftToUpdate, n, set);
+            Action<EntityEntryGraphNode> updateNodeRecursivelyAction = n => UpdateNodeRecursively(context, entitiesLeftToUpdate, n, entitiesThatShouldBeInUpdate);
 
             context.ChangeTracker.TrackGraph(rootEntityToUpdate, updateNodeRecursivelyAction);
         }
@@ -121,17 +63,6 @@ namespace EirinDuran.DataAccess
         {
             if (EntryExistsInDb(context, entry))
             {
-                //var db = context.Model.
-                //foreach (var p in db.Collections)
-                //{
-                //    IEnumerable<object> dbCollection = (IEnumerable<object>)p.CurrentValue;
-                //    IEnumerable<object> oCollection = (IEnumerable<object>)entry.Collection(p.Metadata.Name).CurrentValue;
-                //    foreach (var obj in dbCollection.Where(o => !oCollection.Any(ob => HelperFunctions<object>.EntriesAreEqual(context, o, ob))))
-                //    {
-                //        context.Entry(obj).State = EntityState.Deleted;
-                //    }
-                //}
-
                 entry.State = EntityState.Modified;
             }
             else
@@ -160,6 +91,60 @@ namespace EirinDuran.DataAccess
             IEnumerable<EntityEntry> entriesInChangeTracker = context.ChangeTracker.Entries();
             bool exists = entriesInChangeTracker.Any(e => HelperFunctions<Entity>.EntriesAreEqual(e, entry));
             return exists;
+        }
+
+
+
+        private void RemoveNoLongerPresentEntities(IDesignTimeDbContextFactory<Context> contextFactory, Entity entity, HashSet<object> entitiesThatShouldBeInUpdate)
+        {
+            using (Context context = contextFactory.CreateDbContext(new string[0]))
+            {
+                EntityEntry entry = context.Entry(entity);
+                object key = HelperFunctions<Entity>.GetKey(entry);
+                Entity root = context.Find<Entity>(key);
+                RemoveEntitiesNotInUpdateRecusively(context, context.Entry(root), entitiesThatShouldBeInUpdate);
+                context.SaveChanges();
+            }
+        }
+
+        private void RemoveEntitiesNotInUpdateRecusively(Context context, EntityEntry currentEntry, HashSet<object> entitiesThatShouldBeInUpdate)
+        {
+            foreach (var property in currentEntry.Navigations)
+            {
+                property.Load();
+                dynamic propertyCurrentValue = property.CurrentValue;
+                if (property.Metadata.IsCollection())
+                {
+                    RemoveEntitiesFromCollectionThatWereNotPartOftheUpdateAndCallRecursively(context, entitiesThatShouldBeInUpdate, propertyCurrentValue);
+                }
+                else
+                {
+                    CallThisMethodRecusivelyWithChildEntity(context, entitiesThatShouldBeInUpdate, property);
+                }
+            }
+        }
+
+        private void CallThisMethodRecusivelyWithChildEntity(Context context, HashSet<object> entitiesThatShouldBeInUpdate, NavigationEntry property)
+        {
+            EntityEntry entry = context.Entry(property.CurrentValue);
+            RemoveEntitiesNotInUpdateRecusively(context, entry, entitiesThatShouldBeInUpdate);
+        }
+
+        private void RemoveEntitiesFromCollectionThatWereNotPartOftheUpdateAndCallRecursively(Context context, HashSet<object> entitiesThatShouldBeInUpdate, dynamic entitiesThatNeedToBeFiltered)
+        {
+            List<dynamic> toBeDeleted = new List<dynamic>();
+            foreach (dynamic entity in entitiesThatNeedToBeFiltered)
+            {
+                EntityEntry entry = context.Entry(entity);
+                object entityKey = HelperFunctions<Entity>.GetKey(entry);
+                if (!entitiesThatShouldBeInUpdate.Contains(entityKey))
+                {
+                    toBeDeleted.Add(entity);
+                }
+                RemoveEntitiesNotInUpdateRecusively(context, entry, entitiesThatShouldBeInUpdate);
+            }
+            Action<dynamic> deleteFromCollectionOfEntities = e => entitiesThatNeedToBeFiltered.Remove(e);
+            toBeDeleted.ForEach(deleteFromCollectionOfEntities);
         }
     }
 }
