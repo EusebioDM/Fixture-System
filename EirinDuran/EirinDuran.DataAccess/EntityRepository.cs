@@ -68,7 +68,7 @@ namespace EirinDuran.DataAccess
             {
                 TryToDelete(model);
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (DbUpdateConcurrencyException)
             {
                 throw new ObjectDoesntExistsInDataBaseException(model);
             }

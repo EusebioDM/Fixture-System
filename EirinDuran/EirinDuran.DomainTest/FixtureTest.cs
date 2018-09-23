@@ -12,7 +12,6 @@ namespace EirinDuran.Test
     [TestClass]
     public class FixtureTest
     {
-        private Image image;
         private Team felix;
         private Team liverpool;
         private Team river;
@@ -26,21 +25,20 @@ namespace EirinDuran.Test
         [TestInitialize]
         public void SetUp()
         {
-            image = GetImage(Resources.River);
             InitializeTeams();
         }
 
         private void InitializeTeams()
         {
-            felix = new Team("Felix", image);
-            liverpool = new Team("Liverpool", image);
-            river = new Team("River Plate", image);
-            cerro = new Team("Cerro", image);
-            torque = new Team("Torque", image);
-            danubio = new Team("Danubio", image);
-            penhiarol = new Team("Peñarol", image);
-            atenas = new Team("Atenas", image);
-            wanderers = new Team("Wanderes", image);
+            felix = new Team("Felix");
+            liverpool = new Team("Liverpool");
+            river = new Team("River Plate");
+            cerro = new Team("Cerro");
+            torque = new Team("Torque");
+            danubio = new Team("Danubio");
+            penhiarol = new Team("Peñarol");
+            atenas = new Team("Atenas");
+            wanderers = new Team("Wanderes");
         }
 
         [TestMethod]
@@ -118,11 +116,5 @@ namespace EirinDuran.Test
 
             List<Encounter> result = leagueFixture.GenerateFixture(teams, start).ToList();
         }
-
-        private Image GetImage(byte[] resource)
-        {
-            return new Bitmap(new MemoryStream(resource));
-        }
-
     }
 }
