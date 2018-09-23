@@ -10,7 +10,14 @@ namespace EirinDuran.DataAccess
 {
     internal class EntityUpdater<Entity> where Entity : class
     {
-        public void UpdateGraph(IDesignTimeDbContextFactory<Context> contextFactory, Entity entityToUpdate)
+        private readonly IDesignTimeDbContextFactory<Context> contextFactory;
+
+        public EntityUpdater(IDesignTimeDbContextFactory<Context> contextFactory)
+        {
+            this.contextFactory = contextFactory;
+        }
+
+        public void UpdateGraph(Entity entityToUpdate)
         {
             Queue<object> entitiesLeftToUpdate = new Queue<object>();
             HashSet<object> entitiesThatShouldBeInUpdate = new HashSet<object>();
@@ -18,13 +25,13 @@ namespace EirinDuran.DataAccess
 
             while (entitiesLeftToUpdate.Count() > 0)
             {
-                UpdateRootEntityAndItsChildrenIfPossible(contextFactory, entitiesLeftToUpdate, entitiesThatShouldBeInUpdate);
+                UpdateRootEntityAndItsChildrenIfPossible(entitiesLeftToUpdate, entitiesThatShouldBeInUpdate);
             }
 
-            RemoveNoLongerPresentEntities(contextFactory, entityToUpdate, entitiesThatShouldBeInUpdate);
+            RemoveNoLongerPresentEntities(entityToUpdate, entitiesThatShouldBeInUpdate);
         }
 
-        private void UpdateRootEntityAndItsChildrenIfPossible(IDesignTimeDbContextFactory<Context> contextFactory, Queue<object> entitiesLeftToUpdate, HashSet<object> entitiesThatShouldBeInUpdate)
+        private void UpdateRootEntityAndItsChildrenIfPossible(Queue<object> entitiesLeftToUpdate, HashSet<object> entitiesThatShouldBeInUpdate)
         {
             object rootEntityToUpdate = entitiesLeftToUpdate.Peek();
 
@@ -95,7 +102,7 @@ namespace EirinDuran.DataAccess
 
 
 
-        private void RemoveNoLongerPresentEntities(IDesignTimeDbContextFactory<Context> contextFactory, Entity entity, HashSet<object> entitiesThatShouldBeInUpdate)
+        private void RemoveNoLongerPresentEntities(Entity entity, HashSet<object> entitiesThatShouldBeInUpdate)
         {
             using (Context context = contextFactory.CreateDbContext(new string[0]))
             {

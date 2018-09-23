@@ -24,7 +24,7 @@ namespace EirinDuran.DataAccess
             this.factory = factory;
             this.getDBSetFunc = getDBSetFunc;
             this.contextFactory = contextFactory;
-            entityUpdater = new EntityUpdater<Entity>();
+            entityUpdater = new EntityUpdater<Entity>(contextFactory);
         }
 
         public void Add(Model model)
@@ -47,7 +47,7 @@ namespace EirinDuran.DataAccess
         {
             Entity entity = CreateEntity(model);
             ValidateEntityDoesntExistInDataBase(entity);
-            entityUpdater.UpdateGraph(contextFactory, entity);
+            entityUpdater.UpdateGraph(entity);
         }
 
         private void ValidateEntityDoesntExistInDataBase(Entity entity)
@@ -159,7 +159,7 @@ namespace EirinDuran.DataAccess
         private void TryToUpdate(Model model)
         {
             Entity entity = CreateEntity(model);
-            entityUpdater.UpdateGraph(contextFactory, entity);
+            entityUpdater.UpdateGraph(entity);
         }
 
         private Entity CreateEntity(Model model)

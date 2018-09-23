@@ -24,7 +24,6 @@ namespace EirinDuran.DataAccessTest
         private Sport rugby;
         private Team boca;
         private Team river;
-        private User macri;
 
         [TestMethod]
         public void AddSportTest()
