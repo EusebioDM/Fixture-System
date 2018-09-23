@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -20,10 +21,10 @@ namespace EirinDuran.ServicesTest
     {
         private ILoginServices login;
         private SportRepository repo;
-        private Sport futbol;
-        private Sport rugby;
-        private Team boca;
-        private Team river;
+        private SportDTO futbol;
+        private SportDTO rugby;
+        private TeamDTO boca;
+        private TeamDTO river;
 
 
         [TestMethod]
@@ -32,7 +33,7 @@ namespace EirinDuran.ServicesTest
             SportServices service = new SportServices(login, repo);
             service.Create(rugby);
 
-            Assert.IsTrue(repo.GetAll().Contains(rugby));
+            Assert.IsTrue(repo.GetAll().Any(s => s.Name.Equals(rugby.Name)));
         }
 
         [TestMethod]
@@ -47,21 +48,21 @@ namespace EirinDuran.ServicesTest
         public void ModifyExistingSportTest()
         {
             SportServices service = new SportServices(login, repo);
-            futbol.RemoveTeam(boca);
+            futbol.Teams.Remove(boca);
             service.Modify(futbol);
 
-            Sport fromRepo = repo.Get(futbol);
-            Assert.IsFalse(fromRepo.Teams.Contains(boca));
+            Sport fromRepo = repo.Get(new Sport(futbol.Name));
+            Assert.IsFalse(fromRepo.Teams.Contains(new Team("Boca")));
         }
 
         [TestMethod]
         public void ModifyNonExistingSportTest()
         {
             SportServices service = new SportServices(login, repo);
-            rugby.AddTeam(boca);
+            rugby.Teams.Add(boca);
             service.Modify(rugby);
 
-            Assert.IsTrue(repo.Get(rugby).Teams.Contains(boca));
+            Assert.IsTrue(repo.Get(new Sport(rugby.Name)).Teams.Contains(new Team(boca.Name)));
         }
 
         [TestInitialize]
@@ -72,7 +73,7 @@ namespace EirinDuran.ServicesTest
             river = CreateTeamThatBelongsInTheB();
             futbol = CreateFutbolTeam();
             rugby = CreateRugbyTeam();
-            repo.Add(futbol);
+            repo.Add(new Sport(futbol.Name, futbol.Teams.Select(t => new Team(t.Name, t.Logo))));
             login = CreateLoginServices();
         }
 
@@ -87,32 +88,53 @@ namespace EirinDuran.ServicesTest
         }
 
 
-        private Team CreateBocaTeam()
+        private TeamDTO CreateBocaTeam()
         {
             string name = "Boca Juniors";
-            Image image = Image.FromFile("..\\..\\..\\Resources\\Boca.jpg");
-            return new Team(name, image);
+            Image image = Image.FromFile(GetResourcePath("Boca.jpg"));
+            return new TeamDTO()
+            {
+                Name = name,
+                Logo = image
+            };
 
         }
 
-        private Team CreateTeamThatBelongsInTheB()
+        private TeamDTO CreateTeamThatBelongsInTheB()
         {
             string name = "River Plate";
-            Image image = Image.FromFile("..\\..\\..\\Resources\\River.jpg");
-            return new Team(name, image);
+            Image image = Image.FromFile(GetResourcePath("River.jpg"));
+            return new TeamDTO()
+            {
+                Name = name,
+                Logo = image
+            };
         }
 
-        private Sport CreateFutbolTeam()
+        private SportDTO CreateFutbolTeam()
         {
-            Sport futbol = new Sport("Futbol");
-            futbol.AddTeam(boca);
-            futbol.AddTeam(river);
+            SportDTO futbol = new SportDTO()
+            {
+                Name = "Futbol",
+                Teams = new List<TeamDTO> { boca, river }
+            };
             return futbol;
         }
 
-        private Sport CreateRugbyTeam()
+        private SportDTO CreateRugbyTeam()
         {
-            return new Sport("Rugby");
+            return new SportDTO()
+            {
+                Name = "Rugby",
+                Teams = new List<TeamDTO>()
+            };
+        }
+
+        private string GetResourcePath(string resourceName)
+        {
+            string current = Directory.GetCurrentDirectory();
+            string resourcesFolder = Directory.EnumerateDirectories(current).First(d => d.EndsWith("Resources"));
+            return Directory.EnumerateFiles(resourcesFolder).First(f => f.EndsWith(resourceName));
         }
 
     }

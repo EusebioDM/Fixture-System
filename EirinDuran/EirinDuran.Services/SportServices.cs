@@ -4,6 +4,7 @@ using System.Text;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices;
+using EirinDuran.Services.DTO_Mappers;
 
 namespace EirinDuran.Services
 {
@@ -12,17 +13,20 @@ namespace EirinDuran.Services
         private readonly ILoginServices loginService;
         private readonly IRepository<Sport> repository;
         private readonly PermissionValidator validator;
+        private readonly SportMapper mapper;
 
         public SportServices(ILoginServices loginService, IRepository<Sport> repository)
         {
             validator = new PermissionValidator(Domain.User.Role.Administrator, loginService);
             this.loginService = loginService;
             this.repository = repository;
+            mapper = new SportMapper();
         }
 
-        public void Create(Sport sport)
+        public void Create(SportDTO sportDTO)
         {
             validator.ValidatePermissions();
+            Sport sport = mapper.Map(sportDTO);
             try
             {
                 repository.Add(sport);
@@ -33,9 +37,10 @@ namespace EirinDuran.Services
             }
         }
 
-        public void Modify(Sport sport)
+        public void Modify(SportDTO sportDTO)
         {
             validator.ValidatePermissions();
+            Sport sport = mapper.Map(sportDTO);
             repository.Update(sport);
         }
     }
