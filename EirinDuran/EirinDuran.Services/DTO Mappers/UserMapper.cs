@@ -18,6 +18,7 @@ namespace EirinDuran.Services.DTO_Mappers
                 Surname = user.Surname,
                 Password = user.Password,
                 Mail = user.Mail,
+                IsAdmin = user.Role == Role.Administrator,
                 FollowedTeams = user.FollowedTeams.Select(userFollowedTeam => new TeamDTO()
                 {
                     Name = userFollowedTeam.Name,
@@ -28,7 +29,9 @@ namespace EirinDuran.Services.DTO_Mappers
 
         public User Map(UserDTO userDTO)
         {
-            return new User(role: default(Role), userName: userDTO.UserName, name: userDTO.Name, 
+            return new User(userName: userDTO.UserName,
+                name: userDTO.Name, 
+                role: userDTO.IsAdmin ? Role.Administrator : Role.Follower,
                 surname: userDTO.Surname, password: userDTO.Password, 
                 mail: userDTO.Mail, followedTeams: userDTO.FollowedTeams
                 .Select(userDTOFollowedTeam => new Domain.Fixture.Team(name: userDTOFollowedTeam.Name, logo: userDTOFollowedTeam.Logo))

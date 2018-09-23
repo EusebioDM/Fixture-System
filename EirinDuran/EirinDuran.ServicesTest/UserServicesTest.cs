@@ -1,14 +1,17 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore;
-using System;
 using EirinDuran.DataAccess;
-using EirinDuran.Domain.User;
 using EirinDuran.DataAccessTest;
-using EirinDuran.Services;
-using EirinDuran.IDataAccess;
 using EirinDuran.Domain.Fixture;
+using EirinDuran.Domain.User;
+using EirinDuran.IDataAccess;
+using EirinDuran.IServices;
+using EirinDuran.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 
 namespace EirinDuran.ServicesTest
@@ -17,6 +20,7 @@ namespace EirinDuran.ServicesTest
     public class UserServicesTest
     {
         private UserRepository repo;
+        private UserDTO pepe;
 
         [TestInitialize]
         public void TestInit()
@@ -24,6 +28,16 @@ namespace EirinDuran.ServicesTest
             repo = new UserRepository(GetContextFactory());
             repo.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
             repo.Add(new User(Role.Follower, "martinFowler", "Martín", "Fowler", "user", "fowler@fowler.com"));
+            pepe = new UserDTO()
+            {
+                UserName = "pepeAvila",
+                Name = "Pepe",
+                Surname = "Ávila",
+                Password = "user",
+                Mail = "pepeavila@mymail.com",
+                IsAdmin = true,
+                FollowedTeams = new List<TeamDTO>()
+            };
         }
 
         private IDesignTimeDbContextFactory<Context> GetContextFactory()
@@ -39,7 +53,7 @@ namespace EirinDuran.ServicesTest
             UserServices services = new UserServices(repo, login);
 
             login.CreateSession("martinFowler", "user");
-            services.AddUser(new User(Role.Administrator, "pepeAvila", "Pepe", "Ávila", "user", "pepeavila@mymail.com"));
+            services.AddUser(pepe);
         }
 
         [TestMethod]
@@ -49,7 +63,7 @@ namespace EirinDuran.ServicesTest
             UserServices services = new UserServices(repo, login);
 
             login.CreateSession("sSanchez", "user");
-            services.AddUser(new User(Role.Administrator, "pepeAvila", "Pepe", "Ávila", "user", "pepeavila@mymail.com"));
+            services.AddUser(pepe);
 
             User result = repo.Get(new User("pepeAvila"));
 
@@ -64,7 +78,7 @@ namespace EirinDuran.ServicesTest
             UserServices services = new UserServices(repo, login);
 
             login.CreateSession("sSanchez", "user");
-            services.AddUser(new User(Role.Administrator, "pepeAvila", "Pepe", "Ávila", "user", "pepeavila@mymail.com"));
+            services.AddUser(pepe);
 
             services.DeleteUser("pepeAvila");
             User result = repo.Get(new User("pepeAvila"));
@@ -91,7 +105,17 @@ namespace EirinDuran.ServicesTest
             UserServices services = new UserServices(repo, login);
 
             login.CreateSession("sSanchez", "user");
-            services.Modify(new User(Role.Administrator, "pepeAvila", "Angel", "Ávila", "user", "pepeavila@mymail.com"));
+            UserDTO user = new UserDTO()
+            {
+                UserName = "pepeAvila",
+                Name = "Angel",
+                Surname = "Ávila",
+                Password = "user",
+                Mail = "pepeavila@mymail.com",
+                IsAdmin = true,
+                FollowedTeams = new List<TeamDTO>()
+            };
+            services.Modify(user);
 
             User result = repo.Get(new User("pepeAvila"));
 
@@ -106,7 +130,17 @@ namespace EirinDuran.ServicesTest
             UserServices services = new UserServices(repo, login);
 
             login.CreateSession("martinFowler", "user");
-            services.Modify(new User(Role.Administrator, "pepeAvila", "Angel", "Ávila", "user", "pepeavila@mymail.com"));
+            UserDTO user = new UserDTO()
+            {
+                UserName = "pepeAvila",
+                Name = "Angel",
+                Surname = "Ávila",
+                Password = "user",
+                Mail = "pepeavila@mymail.com",
+                IsAdmin = true,
+                FollowedTeams = new List<TeamDTO>()
+            };
+            services.Modify(user);
 
             User result = repo.Get(new User("pepeAvila"));
 
@@ -121,10 +155,17 @@ namespace EirinDuran.ServicesTest
 
             login.CreateSession("martinFowler", "user");
 
-            Team cavaliers = new Team("Cavaliers");
-            Sport basketball = new Sport("Baskteball");
+            TeamDTO cavaliers = new TeamDTO()
+            {
+                Name = "Cavaliers",
+                Logo = Image.FromFile(GetResourcePath("Cavaliers.jpg"))
+            };
+            SportDTO basketball = new SportDTO()
+            {
+                Name = "Baskteball"
+            };
 
-            basketball.AddTeam(cavaliers);
+            basketball.Teams = new List<TeamDTO>() { cavaliers };
 
             services.AddFollowedTeam(cavaliers);
 
@@ -141,15 +182,29 @@ namespace EirinDuran.ServicesTest
 
             login.CreateSession("martinFowler", "user");
 
-            Team cavaliers = new Team("Cavaliers");
-            Sport basketball = new Sport("Baskteball");
+            TeamDTO cavaliers = new TeamDTO()
+            {
+                Name = "Cavaliers",
+                Logo = Image.FromFile(GetResourcePath("Cavaliers.jpg"))
+            };
+            SportDTO basketball = new SportDTO()
+            {
+                Name = "Baskteball"
+            };
 
-            basketball.AddTeam(cavaliers);
+            basketball.Teams = new List<TeamDTO>() { cavaliers };
 
             services.AddFollowedTeam(cavaliers);
 
-            List<Team> followedTeams = services.GetAllFollowedTeams().ToList();
-            Assert.AreEqual(cavaliers, followedTeams[0]);
+            List<Team> followedTeams = services.GetAllFollowedTeams().Select(t => new Team(t.Name)).ToList();
+            Assert.AreEqual(cavaliers.Name, followedTeams[0].Name);
+        }
+
+        private string GetResourcePath(string resourceName)
+        {
+            string current = Directory.GetCurrentDirectory();
+            string resourcesFolder = Directory.EnumerateDirectories(current).First(d => d.EndsWith("Resources"));
+            return Directory.EnumerateFiles(resourcesFolder).First(f => f.EndsWith(resourceName));
         }
     }
 }

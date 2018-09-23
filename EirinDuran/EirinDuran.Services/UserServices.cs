@@ -5,6 +5,8 @@ using EirinDuran.IDataAccess;
 using EirinDuran.IServices;
 using EirinDuran.Domain.Fixture;
 using System.Collections.Generic;
+using EirinDuran.Services.DTO_Mappers;
+using System.Linq;
 
 namespace EirinDuran.Services
 {
@@ -13,19 +15,23 @@ namespace EirinDuran.Services
         private UserRepository userRepository;
         private PermissionValidator adminValidator;
         private ILoginServices login;
+        private UserMapper userMapper;
+        private TeamMapper teamMapper;
 
         public UserServices(UserRepository userRepository, ILoginServices loginServices)
         {
             this.userRepository = userRepository;
             this.login = loginServices;
             adminValidator = new PermissionValidator(Role.Administrator, login);
+            userMapper = new UserMapper();
+            teamMapper = new TeamMapper();
         }
 
-        public void AddUser(User user)
+        public void AddUser(UserDTO userDTO)
         {
             adminValidator.ValidatePermissions();
+            User user = userMapper.Map(userDTO);
             userRepository.Add(user);
-
         }
 
         public void DeleteUser(string userName)
@@ -34,22 +40,25 @@ namespace EirinDuran.Services
             userRepository.Delete(new User(userName));
         }
 
-        public void Modify(User userToModify)
+        public void Modify(UserDTO userDTO)
         {
             adminValidator.ValidatePermissions();
-            userRepository.Update(userToModify);
+            User user = userMapper.Map(userDTO);
+            userRepository.Update(user);
         }
 
-        public void AddFollowedTeam(Team team)
+        public void AddFollowedTeam(TeamDTO teamDTO)
         {
+            Team team = teamMapper.Map(teamDTO);
             login.LoggedUser.AddFollowedTeam(team);
             userRepository.Update(login.LoggedUser);
         }
 
-        public IEnumerable<Team> GetAllFollowedTeams()
+        public IEnumerable<TeamDTO> GetAllFollowedTeams()
         {
             User recovered = userRepository.Get(login.LoggedUser);
-            return recovered.FollowedTeams;
+            Func<Team, TeamDTO> mapDTOs = team => teamMapper.Map(team);
+            return recovered.FollowedTeams.Select(mapDTOs);
         }
     }
 }

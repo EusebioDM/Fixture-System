@@ -2,6 +2,7 @@ using EirinDuran.DataAccess;
 using EirinDuran.DataAccessTest;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
+using EirinDuran.IServices;
 using EirinDuran.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -229,7 +230,7 @@ namespace EirinDuran.ServicesTest
             encounterServices.CreateEncounter(encounters);
 
             login.CreateSession("martinFowler", "user");
-          
+
             IEnumerable<Encounter> allEncounters = encounterRepository.GetAll();
 
             Encounter firstEncounter = allEncounters.First();
@@ -321,7 +322,7 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("sSanchez", "user");
             EncounterServices encounterServices = new EncounterServices(encounterRepository, login);
-            
+
             Sport football = new Sport("Football");
             football.AddTeam(felix);
             football.AddTeam(river);
@@ -353,6 +354,7 @@ namespace EirinDuran.ServicesTest
             login.CreateSession("sSanchez", "user");
 
             Team cavaliers = new Team("Cavaliers");
+            TeamDTO cavaliersDTO = new TeamDTO() { Name = "Cavaliers", Logo = Image.FromFile(GetResourcePath("Cavaliers.jpg")) };
             Team celtics = new Team("Celtics");
 
             Team pistons = new Team("Pistons");
@@ -383,13 +385,20 @@ namespace EirinDuran.ServicesTest
             login.CreateSession("martinFowler", "user");
             encounter1.AddComment(login.LoggedUser, "Yes, we can!");
             encounterServices.AddComment(encounter1, "Yes, we can!");
-         
+
             UserServices userServices = new UserServices(userRepository, login);
 
-            userServices.AddFollowedTeam(cavaliers);
+            userServices.AddFollowedTeam(cavaliersDTO);
             IEnumerable<Encounter> followedTeamsInEncounter = encounterServices.GetAllEncountersWithFollowedTeams();
 
             Assert.IsTrue(followedTeamsInEncounter.ToList().Count == 1);
+        }
+
+        private string GetResourcePath(string resourceName)
+        {
+            string current = Directory.GetCurrentDirectory();
+            string resourcesFolder = Directory.EnumerateDirectories(current).First(d => d.EndsWith("Resources"));
+            return Directory.EnumerateFiles(resourcesFolder).First(f => f.EndsWith(resourceName));
         }
     }
 }
