@@ -41,7 +41,7 @@ namespace EirinDuran.ServicesTest
             userRepository = new UserRepository(GetContextFactory());
             encounterRepository = new EncounterRepository(GetContextFactory());
             userRepository.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
-            userRepository.Add(new User(Role.Follower, "martinFowler", "Martín", "Fowler", "user", "fowler@fowler.com"));
+            userRepository.Add(new User(Role.Follower, "martinFowler", "Martin", "Fowler", "user", "fowler@fowler.com"));
             login = new LoginServices(userRepository);
             InitializeTeams();
         }
@@ -54,7 +54,7 @@ namespace EirinDuran.ServicesTest
             cerro = new Team("Cerro");
             torque = new Team("Torque");
             danubio = new Team("Danubio");
-            penhiarol = new Team("Peñarol");
+            penhiarol = new Team("PeÃ±arol");
             atenas = new Team("Atenas");
             wanderers = new Team("Wanderes");
         }

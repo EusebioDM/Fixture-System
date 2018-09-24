@@ -27,12 +27,12 @@ namespace EirinDuran.ServicesTest
         {
             repo = new UserRepository(GetContextFactory());
             repo.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
-            repo.Add(new User(Role.Follower, "martinFowler", "Martín", "Fowler", "user", "fowler@fowler.com"));
+            repo.Add(new User(Role.Follower, "martinFowler", "Martin", "Fowler", "user", "fowler@fowler.com"));
             pepe = new UserDTO()
             {
                 UserName = "pepeAvila",
                 Name = "Pepe",
-                Surname = "Ávila",
+                Surname = "Avila",
                 Password = "user",
                 Mail = "pepeavila@mymail.com",
                 IsAdmin = true,
@@ -92,7 +92,7 @@ namespace EirinDuran.ServicesTest
             UserServices services = new UserServices(repo, login);
 
             login.CreateSession("martinFowler", "user");
-            repo.Add(new User(Role.Administrator, "pepeAvila", "Pepe", "Ávila", "user", "pepeavila@mymail.com"));
+            repo.Add(new User(Role.Administrator, "pepeAvila", "Pepe", "Avila", "user", "pepeavila@mymail.com"));
 
             services.DeleteUser("pepeAvila");
             User result = repo.Get(new User("pepeAvila"));
@@ -109,7 +109,7 @@ namespace EirinDuran.ServicesTest
             {
                 UserName = "pepeAvila",
                 Name = "Angel",
-                Surname = "Ávila",
+                Surname = "Avila",
                 Password = "user",
                 Mail = "pepeavila@mymail.com",
                 IsAdmin = true,
@@ -134,7 +134,7 @@ namespace EirinDuran.ServicesTest
             {
                 UserName = "pepeAvila",
                 Name = "Angel",
-                Surname = "Ávila",
+                Surname = "Avila",
                 Password = "user",
                 Mail = "pepeavila@mymail.com",
                 IsAdmin = true,

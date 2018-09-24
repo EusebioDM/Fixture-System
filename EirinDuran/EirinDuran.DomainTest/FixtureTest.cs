@@ -7,7 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 
-namespace EirinDuran.Test
+namespace EirinDuran.DomainTest
 {
     [TestClass]
     public class FixtureTest
