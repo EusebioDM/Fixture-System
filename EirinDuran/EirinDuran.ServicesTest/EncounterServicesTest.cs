@@ -288,7 +288,7 @@ namespace EirinDuran.ServicesTest
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
             IEnumerable<Encounter> allEncounters = encounterServices.GetAllEncounters();
 
-            encounterServices.DeleteEncounter(allEncounters.First());
+            encounterServices.DeleteEncounter(allEncounters.First().Id.ToString());
 
             Assert.IsTrue(encounterServices.GetAllEncounters().ToList().Count == 0);
         }
@@ -314,7 +314,7 @@ namespace EirinDuran.ServicesTest
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
             IEnumerable<Encounter> allEncounters = encounterServices.GetAllEncounters();
 
-            encounterServices.DeleteEncounter(allEncounters.First());
+            encounterServices.DeleteEncounter(allEncounters.First().Id.ToString());
 
             Assert.IsTrue(encounterServices.GetAllEncounters().ToList().Count == 0);
         }

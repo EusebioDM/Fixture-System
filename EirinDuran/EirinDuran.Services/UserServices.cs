@@ -38,7 +38,7 @@ namespace EirinDuran.Services
         public void DeleteUser(string userName)
         {
             adminValidator.ValidatePermissions();
-            userRepository.Delete(new User(userName));
+            userRepository.Delete(userName);
         }
 
         public void Modify(UserDTO userDTO)
@@ -57,7 +57,7 @@ namespace EirinDuran.Services
 
         public IEnumerable<TeamDTO> GetAllFollowedTeams()
         {
-            User recovered = userRepository.Get(login.LoggedUser);
+            User recovered = userRepository.Get(login.LoggedUser.UserName);
             Func<Team, TeamDTO> mapDTOs = team => teamMapper.Map(team);
             return recovered.FollowedTeams.Select(mapDTOs);
         }

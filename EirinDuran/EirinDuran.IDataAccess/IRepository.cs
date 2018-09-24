@@ -5,7 +5,7 @@ namespace EirinDuran.IDataAccess
 {
     public interface IRepository<T>
     {
-        T Get(T model);
+        T Get(string id);
 
         IEnumerable<T> GetAll();
 
@@ -13,6 +13,6 @@ namespace EirinDuran.IDataAccess
 
         void Update(T model);
 
-        void Delete(T model);
+        void Delete(string id);
     }
 }

@@ -27,12 +27,13 @@ namespace EirinDuran.WebApi.Controllers
         [HttpGet("{id}", Name = "GetTodo")]
         public ActionResult<User> GetById(string id)
         {
-            User user = userRepository.Get(new User(Role.Follower,id, "NOTSET","NOTSET","NOTSET","NOTSET@NOTSE.COM"));
-            if(user == null)
-            {
-                return NotFound();
-            }
-            return user;
+            //User user = userRepository.Get(new User(Role.Follower,id, "NOTSET","NOTSET","NOTSET","NOTSET@NOTSE.COM"));
+            //if(user == null)
+            //{
+            //    return NotFound();
+            //}
+            //return user;
+            throw new NotImplementedException();
         }
 
         [HttpPost]

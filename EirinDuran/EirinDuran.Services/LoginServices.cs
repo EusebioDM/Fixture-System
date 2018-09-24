@@ -20,7 +20,7 @@ namespace EirinDuran.Services
         {
             try
             {
-                User recovered = userRepository.Get(new User(userName));
+                User recovered = userRepository.Get(userName);
 
                 if(recovered.Password == password)
                 {

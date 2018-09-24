@@ -96,10 +96,10 @@ namespace EirinDuran.Services
             return encountersWhereTeamIs;
         }
 
-        public void DeleteEncounter(Encounter encounter)
+        public void DeleteEncounter(string id)
         {
             adminValidator.ValidatePermissions();
-            encounterRepository.Delete(encounter);
+            encounterRepository.Delete(id);
         }
 
         public IEnumerable<Encounter> GetAllEncountersWithFollowedTeams()

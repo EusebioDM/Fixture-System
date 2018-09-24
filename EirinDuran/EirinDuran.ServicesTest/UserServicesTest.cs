@@ -65,7 +65,7 @@ namespace EirinDuran.ServicesTest
             login.CreateSession("sSanchez", "user");
             services.CreateUser(pepe);
 
-            User result = repo.Get(new User("pepeAvila"));
+            User result = repo.Get("pepeAvila");
 
             Assert.AreEqual("pepeAvila", result.UserName);
         }
@@ -81,7 +81,7 @@ namespace EirinDuran.ServicesTest
             services.CreateUser(pepe);
 
             services.DeleteUser("pepeAvila");
-            User result = repo.Get(new User("pepeAvila"));
+            User result = repo.Get("pepeAvila");
         }
 
         [TestMethod]
@@ -95,7 +95,7 @@ namespace EirinDuran.ServicesTest
             repo.Add(new User(Role.Administrator, "pepeAvila", "Pepe", "Avila", "user", "pepeavila@mymail.com"));
 
             services.DeleteUser("pepeAvila");
-            User result = repo.Get(new User("pepeAvila"));
+            User result = repo.Get("pepeAvila");
         }
 
         [TestMethod]
@@ -117,7 +117,7 @@ namespace EirinDuran.ServicesTest
             };
             services.Modify(user);
 
-            User result = repo.Get(new User("pepeAvila"));
+            User result = repo.Get("pepeAvila");
 
             Assert.AreEqual("ANGEL", result.Name);
         }
@@ -142,7 +142,7 @@ namespace EirinDuran.ServicesTest
             };
             services.Modify(user);
 
-            User result = repo.Get(new User("pepeAvila"));
+            User result = repo.Get("pepeAvila");
 
             Assert.AreEqual("ANGEL", result.Name);
         }
@@ -169,7 +169,7 @@ namespace EirinDuran.ServicesTest
 
             services.AddFollowedTeam(cavaliers);
 
-            User recovered = repo.Get(new User("martinFowler"));
+            User recovered = repo.Get("martinFowler");
             List<Team> followedTeams = recovered.FollowedTeams.ToList();
             Assert.IsTrue(followedTeams[0].Name == "Cavaliers");
         }

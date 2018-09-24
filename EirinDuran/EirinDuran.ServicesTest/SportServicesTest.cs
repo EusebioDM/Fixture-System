@@ -51,7 +51,7 @@ namespace EirinDuran.ServicesTest
             futbol.Teams.Remove(boca);
             service.Modify(futbol);
 
-            Sport fromRepo = repo.Get(new Sport(futbol.Name));
+            Sport fromRepo = repo.Get(futbol.Name);
             Assert.IsFalse(fromRepo.Teams.Contains(new Team("Boca")));
         }
 
@@ -62,7 +62,7 @@ namespace EirinDuran.ServicesTest
             rugby.Teams.Add(boca);
             service.Modify(rugby);
 
-            Assert.IsTrue(repo.Get(new Sport(rugby.Name)).Teams.Contains(new Team(boca.Name)));
+            Assert.IsTrue(repo.Get(rugby.Name).Teams.Contains(new Team(boca.Name)));
         }
 
         [TestInitialize]

@@ -25,14 +25,14 @@ namespace EirinDuran.DataAccess
 
         private Func<Context, DbSet<EncounterEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Encounters;
 
-        public void Add(Encounter model) => repo.Add(model);
+        public void Add(Encounter id) => repo.Add(id);
 
-        public void Delete(Encounter model) => repo.Delete(model);
+        public void Delete(string id) => repo.Delete(Guid.Parse(id));
 
-        public Encounter Get(Encounter encounter) => repo.Get(encounter);
+        public Encounter Get(string id) => repo.Get(Guid.Parse(id));
 
         public IEnumerable<Encounter> GetAll() => repo.GetAll();
 
-        public void Update(Encounter model) => repo.Update(model);
+        public void Update(Encounter id) => repo.Update(id);
     }
 }

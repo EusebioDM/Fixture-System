@@ -8,7 +8,7 @@ namespace EirinDuran.IServices
         void AddComment(Encounter encounterToComment, string comment);
         void CreateEncounter(EncounterDTO encounterDTO);
         void CreateEncounter(IEnumerable<EncounterDTO> encounterDTOs);
-        void DeleteEncounter(Encounter encounter);
+        void DeleteEncounter(string id);
         IEnumerable<Encounter> GetAllEncounters();
         IEnumerable<Encounter> GetAllEncounters(Team team);
         IEnumerable<Encounter> GetAllEncountersWithFollowedTeams();
