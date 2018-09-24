@@ -30,7 +30,7 @@ namespace EirinDuran.DataAccess
 
         public void Delete(User model) => repo.Delete(model);
 
-        public User Get(User user) => repo.Get(user);
+        public User Get(object id) => repo.Get(id);
 
         public IEnumerable<User> GetAll() => repo.GetAll();
 

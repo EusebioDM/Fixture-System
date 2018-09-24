@@ -30,7 +30,7 @@ namespace EirinDuran.DataAccess
 
         public void Delete(Team model) => repo.Delete(model);
 
-        public Team Get(Team team) => repo.Get(team);
+        public Team Get(object id) => repo.Get(id);
 
         public IEnumerable<Team> GetAll() => repo.GetAll();
 

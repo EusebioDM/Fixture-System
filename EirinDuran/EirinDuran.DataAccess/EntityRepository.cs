@@ -88,15 +88,15 @@ namespace EirinDuran.DataAccess
             }
         }
 
-        public Model Get(Model model)
+        public Model Get(object id)
         {
             try
             {
-                return TryToGet(model);
+                return TryToGet(id);
             }
             catch (InvalidOperationException)
             {
-                throw new ObjectDoesntExistsInDataBaseException(model);
+                throw new ObjectDoesntExistsInDataBaseException(id);
             }
             catch (SqlException ex)
             {
@@ -104,15 +104,14 @@ namespace EirinDuran.DataAccess
             }
         }
 
-        private Model TryToGet(Model model)
+        private Model TryToGet(object id)
         {
             using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
-                Entity modelTranslation = CreateEntity(model);
-                Entity toReturn = GetEntityFromRepo(context, modelTranslation);
+                Entity toReturn = context.Find<Entity>(id);
                 if (toReturn == null)
                 {
-                    throw new ObjectDoesntExistsInDataBaseException(model);
+                    throw new ObjectDoesntExistsInDataBaseException(id);
                 }
                 return toReturn.ToModel();
             }

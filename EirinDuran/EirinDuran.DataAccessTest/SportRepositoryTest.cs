@@ -61,7 +61,7 @@ namespace EirinDuran.DataAccessTest
         [TestMethod]
         public void GetSportTest()
         {
-            Sport fromRepo = repo.Get(rugby);
+            Sport fromRepo = repo.Get(rugby.Name);
             Assert.AreEqual(rugby.Name, fromRepo.Name);
             Assert.IsTrue(HelperFunctions<Team>.CollectionsHaveSameElements(rugby.Teams, fromRepo.Teams));
         }
@@ -70,7 +70,7 @@ namespace EirinDuran.DataAccessTest
         [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void GetNonExistantSportTest()
         {
-            repo.Get(new Sport("tennis"));
+            repo.Get("tennis");
         }
 
         [TestMethod]
@@ -78,7 +78,7 @@ namespace EirinDuran.DataAccessTest
         {
             rugby.AddTeam(boca);
             repo.Update(rugby);
-            Sport fromRepo = repo.Get(rugby);
+            Sport fromRepo = repo.Get(rugby.Name);
 
             Assert.IsTrue(fromRepo.Teams.Contains(boca));
         }
@@ -88,7 +88,7 @@ namespace EirinDuran.DataAccessTest
         {
             Sport lasLeonas = new Sport("Hockey", new List<Team>() { new Team("Las Leonas") });
             repo.Update(lasLeonas);
-            Sport fromRepo = repo.Get(new Sport("Hockey"));
+            Sport fromRepo = repo.Get("Hockey");
 
             Assert.IsTrue(HelperFunctions<Team>.CollectionsHaveSameElements(lasLeonas.Teams, fromRepo.Teams));
         }

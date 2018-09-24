@@ -29,7 +29,7 @@ namespace EirinDuran.DataAccess
 
         public void Delete(Encounter model) => repo.Delete(model);
 
-        public Encounter Get(Encounter encounter) => repo.Get(encounter);
+        public Encounter Get(object id) => repo.Get(id);
 
         public IEnumerable<Encounter> GetAll() => repo.GetAll();
 

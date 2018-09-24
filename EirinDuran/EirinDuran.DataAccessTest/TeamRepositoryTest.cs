@@ -62,7 +62,7 @@ namespace EirinDuran.DataAccessTest
             [TestMethod]
             public void GetTeamTest()
             {
-                Team fromRepo = repo.Get(new Team("Boca Juniors"));
+                Team fromRepo = repo.Get("Boca Juniors");
 
                 Assert.AreEqual("Boca Juniors", fromRepo.Name);
                 Assert.IsTrue(ImagesAreTheSame(Image.FromFile(bocaImagePath), fromRepo.Logo));
@@ -72,7 +72,7 @@ namespace EirinDuran.DataAccessTest
             [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
             public void GetNonExistantTeamTest()
             {
-                repo.Get(new Team("Godoy Cruz"));
+                repo.Get("Godoy Cruz");
             }
 
             [TestMethod]
@@ -82,7 +82,7 @@ namespace EirinDuran.DataAccessTest
                 boca.Logo = GetRiverTeam().Logo;
                 repo.Update(boca);
 
-                Team fromRepo = repo.Get(boca);
+                Team fromRepo = repo.Get(boca.Name);
                 Assert.IsFalse(ImagesAreTheSame(Image.FromFile(bocaImagePath), fromRepo.Logo));
             }
 
@@ -91,7 +91,7 @@ namespace EirinDuran.DataAccessTest
             {
                 Team godoyCruz = new Team("Godoy Cruz", Image.FromFile(tombaImagePath));
                 repo.Update(godoyCruz);
-                Team fromRepo = repo.Get(new Team("Godoy Cruz"));
+                Team fromRepo = repo.Get("Godoy Cruz");
 
                 Assert.IsTrue(ImagesAreTheSame(Image.FromFile(tombaImagePath), fromRepo.Logo));
             }
@@ -152,8 +152,8 @@ namespace EirinDuran.DataAccessTest
                     repo.Delete(team);
             }
 
-            private Team GetBocaTeam() => repo.Get(new Team("Boca Juniors"));
-            private Team GetRiverTeam() => repo.Get(new Team("River Plate"));
+            private Team GetBocaTeam() => repo.Get("Boca Juniors");
+            private Team GetRiverTeam() => repo.Get("River Plate");
 
             private string GetResourcePath(string resourceName)
             {

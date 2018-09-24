@@ -29,7 +29,7 @@ namespace EirinDuran.DataAccess
 
         public void Delete(Sport model) => repo.Delete(model);
 
-        public Sport Get(Sport sport) => repo.Get(sport);
+        public Sport Get(object id) => repo.Get(id);
 
         public IEnumerable<Sport> GetAll() => repo.GetAll();
 

@@ -71,19 +71,19 @@ namespace EirinDuran.DataAccessTest
         [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void GetNonExistantUserTest()
         {
-            repo.Get(new User("Cristina"));
+            repo.Get("Cristina");
         }
 
         [TestMethod]
         public void UpdateUserTest()
         {
-            macri = repo.Get(new User("Gato"));
+            macri = repo.Get("Gato");
             macri.Role = Role.Follower;
             macri.Surname = "Rodriges";
             macri.AddFollowedTeam(new Team("Boca"));
 
             repo.Update(macri);
-            User fromRepo = repo.Get(macri);
+            User fromRepo = repo.Get(macri.Name);
 
             Assert.AreEqual(Role.Follower, fromRepo.Role);
             Assert.AreEqual(macri.Surname, fromRepo.Surname);
@@ -95,7 +95,7 @@ namespace EirinDuran.DataAccessTest
         {
             User cristina = new User(Role.Follower, "Cristina", "Cristina", "kirchner", "mecaPeron", "cristi123@cri.com");
             repo.Update(cristina);
-            User fromRepo = repo.Get(new User("Cristina"));
+            User fromRepo = repo.Get("Cristina");
             Assert.AreEqual(cristina.Name, fromRepo.Name);
             Assert.AreEqual(cristina.Password, fromRepo.Password);
             Assert.AreEqual(cristina.Mail, fromRepo.Mail);
@@ -139,8 +139,8 @@ namespace EirinDuran.DataAccessTest
                 repo.Delete(user);
         }
 
-        private User GetAlvaro() => repo.Get(new User("alvaro"));
-        private User GetMacri() => repo.Get(new User("Gato"));
+        private User GetAlvaro() => repo.Get("alvaro");
+        private User GetMacri() => repo.Get("Gato");
 
         private string GetResourcePath(string resourceName)
         {
