@@ -43,7 +43,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(IncorrectPasswordException))]
+        [ExpectedException(typeof(UserTryToLoginDoesNotExistsException))]
         public void TryToLoginUserWithIncorrectPassword()
         {
             LoginServices login = new LoginServices(repo);

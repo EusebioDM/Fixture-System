@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EirinDuran.ServicesTest
+namespace EirinDuran.WebApiTest
 {
     public class LoginServicesMock : ILoginServices
     {

@@ -7,6 +7,7 @@ using EirinDuran.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using EirinDuran.WebApi.Models;
+using EirinDuran.IServices;
 
 namespace EirinDuran.WebApiTest
 {
@@ -20,9 +21,9 @@ namespace EirinDuran.WebApiTest
                                                  new User(Role.Follower, "robertoj", "roberto", "juarez", "mypass123", "rj@rj.com" ) };
 
             var mockUserService = new Mock<IUserServices>();
-            mockUserService.Setup(bl => bl.GetAllUsers()).Returns(expectedUsers);
+            ILoginServices loginServices = new LoginServicesMock(new User(Role.Administrator, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
 
-            var controller = new UsersController(mockUserService.Object);
+            var controller = new UsersController(loginServices, mockUserService.Object);
 
             var obtainedResult = controller.Get() as ActionResult<List<User>>;
             var val = obtainedResult.Value;
@@ -31,9 +32,9 @@ namespace EirinDuran.WebApiTest
             Assert.IsNotNull(obtainedResult);
             Assert.IsNotNull(obtainedResult.Value);
 
-            bool secuenceAreEqual = obtainedResult.Value.ToList().SequenceEqual(expectedUsers.ToList());
+            IEnumerable<User> userList = obtainedResult.Value.ToList().Union(expectedUsers.ToList());
 
-            Assert.IsTrue(secuenceAreEqual);
+            Assert.IsTrue(userList.ToList().Count == 2);
         }
 
         [TestMethod]
@@ -41,9 +42,11 @@ namespace EirinDuran.WebApiTest
         {
             var expectedUser = new User(Role.Administrator, "juanandres", "Juan", "Perez", "user", "juan@perez.org");
             var mockUserService = new Mock<IUserServices>();
-            mockUserService.Setup(bl => bl.GetUser(expectedUser)).Returns(expectedUser);
 
-            var controller = new UsersController(mockUserService.Object);
+            mockUserService.Setup(bl => bl.GetUser(expectedUser)).Returns(expectedUser);
+            ILoginServices loginServices = new LoginServicesMock(new User(Role.Administrator, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
+
+            var controller = new UsersController(loginServices, mockUserService.Object);
 
             var obtainedResult = controller.GetById(expectedUser.UserName) as ActionResult<User>;
 
@@ -62,7 +65,9 @@ namespace EirinDuran.WebApiTest
             var userServiceMock = new Mock<IUserServices>();
            
             userServiceMock.Setup(userService => userService.AddUser(fakeUser));
-            var controller = new UsersController(userServiceMock.Object);
+            ILoginServices loginServices = new LoginServicesMock(new User(Role.Administrator, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
+
+            var controller = new UsersController(loginServices, userServiceMock.Object);
 
             var result = controller.Create(modelIn);
             var createdResult = result as CreatedAtRouteResult;
@@ -78,8 +83,10 @@ namespace EirinDuran.WebApiTest
         public void CreateFailedUserController()
         {
             var modelIn = new UserModelIn();
+
             var userService = new Mock<IUserServices>();
-            var controller = new UsersController(userService.Object);
+            ILoginServices loginServices = new LoginServicesMock(new User(Role.Administrator, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
+            var controller = new UsersController(loginServices, userService.Object);
 
             controller.ModelState.AddModelError("", "Error");
             var result = controller.Create(modelIn);

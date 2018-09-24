@@ -18,17 +18,21 @@ namespace EirinDuran.Services
             try
             {
                 User recovered = userRepository.Get(new User(userName));
-
-                if(recovered.Password == password)
-                {
-                    LoggedUser = recovered;
-                }
-                else
-                {
-                    throw new IncorrectPasswordException();
-                }
+                CheckPassword(recovered, password);
             }
             catch (ObjectDoesntExistsInDataBaseException)
+            {
+                throw new UserTryToLoginDoesNotExistsException();
+            }
+        }
+
+        private void CheckPassword(User recovered, string password)
+        {
+            if (recovered.Password == password)
+            {
+                LoggedUser = recovered;
+            }
+            else
             {
                 throw new UserTryToLoginDoesNotExistsException();
             }

@@ -78,7 +78,7 @@ namespace EirinDuran.ServicesTest
 
         private ILoginServices CreateLoginServices()
         {
-            return new LoginSericesMock(new User(Role.Administrator, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
+            return new LoginServicesMock(new User(Role.Administrator, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
         }
 
         private IDesignTimeDbContextFactory<Context> GetContextFactory()
