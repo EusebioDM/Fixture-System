@@ -7,6 +7,9 @@ using EirinDuran.IDataAccess;
 using EirinDuran.Domain.User;
 using EirinDuran.Services;
 using EirinDuran.WebApi.Models;
+using Microsoft.AspNetCore.Authorization;
+using EirinDuran.IServices;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -14,11 +17,13 @@ namespace EirinDuran.WebApi.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        private readonly ILoginServices loginServices;
         private readonly IUserServices userServices;
 
-        public UsersController(IUserServices userServices)
+        public UsersController(ILoginServices loginServices, IUserServices userServices)
         {
             this.userServices = userServices;
+            this.loginServices = loginServices;
         }
 
         [HttpGet]
@@ -41,6 +46,11 @@ namespace EirinDuran.WebApi.Controllers
         [HttpPost]
         public IActionResult Create(UserModelIn userModel)
         {
+            var jwtToken = new JwtSecurityToken();
+            var a = jwtToken.Claims;
+
+            //loginServices.CreateSession();
+            
             if (ModelState.IsValid)
             {
                 //Poner una fábrica acá

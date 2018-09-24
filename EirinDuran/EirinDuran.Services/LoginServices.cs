@@ -1,6 +1,4 @@
-﻿using System;
-using EirinDuran.Domain.User;
-using EirinDuran.DataAccess;
+﻿using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices;
 
@@ -8,9 +6,9 @@ namespace EirinDuran.Services
 {
     public class LoginServices : ILoginServices
     {
-        private UserRepository userRepository;
+        private IRepository<User> userRepository;
 
-        public LoginServices(UserRepository userRepository)
+        public LoginServices(IRepository<User> userRepository)
         {
             this.userRepository = userRepository;
         }

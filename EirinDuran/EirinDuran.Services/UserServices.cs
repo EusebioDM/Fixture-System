@@ -1,20 +1,19 @@
-using System;
 using EirinDuran.Domain.User;
 using EirinDuran.DataAccess;
-using EirinDuran.IDataAccess;
 using EirinDuran.IServices;
 using EirinDuran.Domain.Fixture;
 using System.Collections.Generic;
+using EirinDuran.IDataAccess;
 
 namespace EirinDuran.Services
 {
     public class UserServices : IUserServices
     {
-        private UserRepository userRepository;
+        private IRepository<User> userRepository;
         private PermissionValidator adminValidator;
         private ILoginServices login;
 
-        public UserServices(UserRepository userRepository, ILoginServices loginServices)
+        public UserServices(IRepository<User> userRepository, ILoginServices loginServices)
         {
             this.userRepository = userRepository;
             this.login = loginServices;
