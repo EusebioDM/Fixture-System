@@ -39,7 +39,7 @@ namespace EirinDuran.DataAccessTest
         [TestMethod]
         public void RemoveUserTest()
         {
-            repo.Delete(macri.Name);
+            repo.Delete(macri.UserName);
 
             IEnumerable<User> actual = repo.GetAll();
             IEnumerable<User> expected = new List<User> { alvaro };
@@ -57,7 +57,7 @@ namespace EirinDuran.DataAccessTest
         [TestMethod]
         public void GetUserTest()
         {
-            User fromRepo = repo.Get(new User("Gato"));
+            User fromRepo = repo.Get("Gato");
 
             Assert.AreEqual(macri.Name, fromRepo.Name);
             Assert.AreEqual(macri.Password, fromRepo.Password);
@@ -83,7 +83,7 @@ namespace EirinDuran.DataAccessTest
             macri.AddFollowedTeam(new Team("Boca"));
 
             repo.Update(macri);
-            User fromRepo = repo.Get(macri.Name);
+            User fromRepo = repo.Get(macri.UserName);
 
             Assert.AreEqual(Role.Follower, fromRepo.Role);
             Assert.AreEqual(macri.Surname, fromRepo.Surname);
