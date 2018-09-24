@@ -13,6 +13,6 @@ namespace EirinDuran.IDataAccess
 
         void Update(T model);
 
-        void Delete(T model);
+        void Delete(object id);
     }
 }

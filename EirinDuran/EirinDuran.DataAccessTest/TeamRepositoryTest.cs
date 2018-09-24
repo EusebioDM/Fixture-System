@@ -43,7 +43,7 @@ namespace EirinDuran.DataAccessTest
             [TestMethod]
             public void RemoveTeamTest()
             {
-                repo.Delete(GetRiverTeam());
+                repo.Delete(GetRiverTeam().Name);
 
                 IEnumerable<Team> actual = repo.GetAll();
                 IEnumerable<Team> expected = new List<Team>() { CreateBocaTeam() };
@@ -55,8 +55,8 @@ namespace EirinDuran.DataAccessTest
             [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
             public void RemoveNonExistingTeamTest()
             {
-                repo.Delete(CreateBocaTeam());
-                repo.Delete(CreateBocaTeam());
+                repo.Delete(CreateBocaTeam().Name);
+                repo.Delete(CreateBocaTeam().Name);
             }
 
             [TestMethod]
@@ -149,7 +149,7 @@ namespace EirinDuran.DataAccessTest
             private void CleanUpRepo()
             {
                 foreach (Team team in repo.GetAll())
-                    repo.Delete(team);
+                    repo.Delete(team.Name);
             }
 
             private Team GetBocaTeam() => repo.Get("Boca Juniors");

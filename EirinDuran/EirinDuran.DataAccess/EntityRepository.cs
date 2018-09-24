@@ -27,15 +27,15 @@ namespace EirinDuran.DataAccess
             entityUpdater = new EntityUpdater<Entity>();
         }
 
-        public void Add(Model model)
+        public void Add(Model id)
         {
             try
             {
-                TryToAdd(model);
+                TryToAdd(id);
             }
             catch (ArgumentException)
             {
-                throw new ObjectAlreadyExistsInDataBaseException(model);
+                throw new ObjectAlreadyExistsInDataBaseException(id);
             }
             catch (SqlException ex)
             {
@@ -43,9 +43,9 @@ namespace EirinDuran.DataAccess
             }
         }
 
-        private void TryToAdd(Model model)
+        private void TryToAdd(Model id)
         {
-            Entity entity = CreateEntity(model);
+            Entity entity = CreateEntity(id);
             ValidateEntityDoesntExistInDataBase(entity);
             entityUpdater.UpdateGraph(contextFactory, entity);
         }
@@ -62,15 +62,15 @@ namespace EirinDuran.DataAccess
             }
         }
 
-        public void Delete(Model model)
+        public void Delete(object id)
         {
             try
             {
-                TryToDelete(model);
+                TryToDelete(id);
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (ArgumentException ex)
             {
-                throw new ObjectDoesntExistsInDataBaseException(model);
+                throw new ObjectDoesntExistsInDataBaseException(id);
             }
             catch (SqlException ex)
             {
@@ -78,12 +78,14 @@ namespace EirinDuran.DataAccess
             }
         }
 
-        private void TryToDelete(Model model)
+        private void TryToDelete(object id)
         {
             using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
-                Entity toDelete = CreateEntity(model);
-                Set(context).Remove(toDelete);
+                Entity toDelete = context.Find<Entity>(id);
+                if(toDelete == null)
+                    throw new ObjectDoesntExistsInDataBaseException(id);
+                context.Entry(toDelete).State = EntityState.Deleted;
                 context.SaveChanges();
             }
         }
@@ -139,15 +141,15 @@ namespace EirinDuran.DataAccess
             }
         }
 
-        public void Update(Model model)
+        public void Update(Model id)
         {
             try
             {
-                TryToUpdate(model);
+                TryToUpdate(id);
             }
             catch (DbUpdateConcurrencyException)
             {
-                throw new ObjectDoesntExistsInDataBaseException(model);
+                throw new ObjectDoesntExistsInDataBaseException(id);
             }
             catch (SqlException ex)
             {
@@ -155,16 +157,16 @@ namespace EirinDuran.DataAccess
             }
         }
 
-        private void TryToUpdate(Model model)
+        private void TryToUpdate(Model id)
         {
-            Entity entity = CreateEntity(model);
+            Entity entity = CreateEntity(id);
             entityUpdater.UpdateGraph(contextFactory, entity);
         }
 
-        private Entity CreateEntity(Model model)
+        private Entity CreateEntity(Model id)
         {
             Entity entity = factory.CreateEmptyEntity();
-            entity.UpdateWith(model);
+            entity.UpdateWith(id);
             return entity;
         }
 

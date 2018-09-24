@@ -39,7 +39,7 @@ namespace EirinDuran.DataAccessTest
         [TestMethod]
         public void RemoveUserTest()
         {
-            repo.Delete(CreateUserMacri());
+            repo.Delete(macri.Name);
 
             IEnumerable<User> actual = repo.GetAll();
             IEnumerable<User> expected = new List<User> { alvaro };
@@ -51,7 +51,7 @@ namespace EirinDuran.DataAccessTest
         [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void RemoveNonExistingUserTest()
         {
-            repo.Delete(new User("Cristina"));
+            repo.Delete("Cristina");
         }
 
         [TestMethod]
@@ -136,7 +136,7 @@ namespace EirinDuran.DataAccessTest
         private void CleanUpRepo()
         {
             foreach (User user in repo.GetAll())
-                repo.Delete(user);
+                repo.Delete(user.Name);
         }
 
         private User GetAlvaro() => repo.Get("alvaro");

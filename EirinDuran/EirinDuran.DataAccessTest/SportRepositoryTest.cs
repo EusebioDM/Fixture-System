@@ -43,7 +43,7 @@ namespace EirinDuran.DataAccessTest
         [TestMethod]
         public void RemoveSportTest()
         {
-            repo.Delete(rugby);
+            repo.Delete(rugby.Name);
 
             IEnumerable<Sport> actual = repo.GetAll();
             IEnumerable<Sport> expected = new List<Sport> { futbol };
@@ -55,7 +55,7 @@ namespace EirinDuran.DataAccessTest
         [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void RemoveNonExistingSportTest()
         {
-            repo.Delete(new Sport("hockey"));
+            repo.Delete("hockey");
         }
 
         [TestMethod]
@@ -129,7 +129,7 @@ namespace EirinDuran.DataAccessTest
         {
             foreach (Sport sport in repo.GetAll())
             {
-                repo.Delete(sport);
+                repo.Delete(sport.Name);
             }
         }
 

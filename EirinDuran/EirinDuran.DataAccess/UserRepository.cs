@@ -26,14 +26,14 @@ namespace EirinDuran.DataAccess
 
         private Func<Context, DbSet<UserEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Users;
 
-        public void Add(User model) => repo.Add(model);
+        public void Add(User id) => repo.Add(id);
 
-        public void Delete(User model) => repo.Delete(model);
+        public void Delete(object id) => repo.Delete(id);
 
         public User Get(object id) => repo.Get(id);
 
         public IEnumerable<User> GetAll() => repo.GetAll();
 
-        public void Update(User model) => repo.Update(model);
+        public void Update(User id) => repo.Update(id);
     }
 }
