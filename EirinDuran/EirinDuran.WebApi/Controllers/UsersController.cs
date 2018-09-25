@@ -1,15 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using EirinDuran.IDataAccess;
 using EirinDuran.Domain.User;
-using EirinDuran.Services;
 using EirinDuran.WebApi.Models;
-using Microsoft.AspNetCore.Authorization;
 using EirinDuran.IServices;
-using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -44,13 +40,17 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create(UserModelIn userModel)
         {
-            var jwtToken = new JwtSecurityToken();
-            var a = jwtToken.Claims;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            List<Claim> claims = identity.Claims.ToList();
 
-            //loginServices.CreateSession();
-            
+            string userName = claims.Where(c => c.Type == "UserName").Select(c => c.Value).SingleOrDefault();
+            string password = claims.Where(c => c.Type == ("Password")).Select(c => c.Value).SingleOrDefault();
+           
+            loginServices.CreateSession(userName, password);
+
             if (ModelState.IsValid)
             {
                 //Poner una fábrica acá
