@@ -76,7 +76,7 @@ namespace EirinDuran.ServicesTest
 
         [TestMethod]
         [ExpectedException(typeof(InvalidaDataException))]
-        public void AddInvalidUserTest()
+        public void AddInvalidUserNameTest()
         {
             LoginServices login = new LoginServices(userRepo);
             UserServices services = new UserServices(login, userRepo, teamRepo);
@@ -86,8 +86,6 @@ namespace EirinDuran.ServicesTest
                 UserName = ""
             };
             services.CreateUser(user);
-
-
         }
 
         [TestMethod]

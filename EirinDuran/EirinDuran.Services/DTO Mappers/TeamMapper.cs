@@ -8,9 +8,9 @@ using System.Text;
 
 namespace EirinDuran.Services.DTO_Mappers
 {
-    internal class TeamMapper
+    internal class TeamMapper : DTOMapper<Team, TeamDTO>
     {
-        public TeamDTO Map(Team team)
+        public override TeamDTO Map(Team team)
         {
             return new TeamDTO()
             {
@@ -19,7 +19,7 @@ namespace EirinDuran.Services.DTO_Mappers
             };
         }
 
-        public Team Map(TeamDTO teamDTO)
+        protected override Team TryToMapModel(TeamDTO teamDTO)
         {
             return new Team(name: teamDTO.Name, logo: teamDTO.Logo);
         }

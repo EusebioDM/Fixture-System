@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace EirinDuran.Services.DTO_Mappers
 {
-    internal class CommentMapper
+    internal class CommentMapper : DTOMapper<Comment, CommentDTO>
     {
         private IRepository<User> userRepo;
 
@@ -16,7 +16,7 @@ namespace EirinDuran.Services.DTO_Mappers
             this.userRepo = userRepo;
         }
 
-        public CommentDTO Map(Comment comment)
+        public override CommentDTO Map(Comment comment)
         {
             return new CommentDTO()
             {
@@ -27,7 +27,7 @@ namespace EirinDuran.Services.DTO_Mappers
             };
         }
 
-        public Comment Map(CommentDTO commentDTO)
+        protected override Comment TryToMapModel(CommentDTO commentDTO)
         {
             return new Comment(user: userRepo.Get(commentDTO.UserName),
                 message: commentDTO.Message

@@ -10,14 +10,14 @@ using System.Text;
 
 namespace EirinDuran.Services.DTO_Mappers
 {
-    internal class SportMapper
+    internal class SportMapper : DTOMapper<Sport, SportDTO>
     {
         private IRepository<Team> teamRepo;
 
         public SportMapper(IRepository<Team> teamRepo){
             this.teamRepo = teamRepo;
         }
-        public SportDTO Map(Sport sport)
+        public override SportDTO Map(Sport sport)
         {
             return new SportDTO()
             {
@@ -26,7 +26,7 @@ namespace EirinDuran.Services.DTO_Mappers
             };
         }
 
-        public Sport Map(SportDTO sportDTO)
+        protected override Sport TryToMapModel(SportDTO sportDTO)
         {
             return new Sport(name: sportDTO.Name, 
                 teams: sportDTO.TeamsNames.ConvertAll(name => teamRepo.Get(name))

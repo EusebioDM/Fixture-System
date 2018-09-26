@@ -12,7 +12,7 @@ using System.Text;
 
 namespace EirinDuran.Services.DTO_Mappers
 {
-    internal class EncounterMapper
+    internal class EncounterMapper : DTOMapper<Encounter, EncounterDTO>
     {
         private IRepository<Sport> sportRepo;
         private IRepository<Team> teamRepo;
@@ -24,7 +24,7 @@ namespace EirinDuran.Services.DTO_Mappers
             this.teamRepo = teamRepo;
         }
 
-        public EncounterDTO Map(Encounter encounter)
+        public override EncounterDTO Map(Encounter encounter)
         {
             return new EncounterDTO()
             {
@@ -37,7 +37,7 @@ namespace EirinDuran.Services.DTO_Mappers
             };
         }
 
-        public Encounter Map(EncounterDTO encounterDTO)
+        protected override Encounter TryToMapModel(EncounterDTO encounterDTO)
         {
             return new Encounter(id: encounterDTO.Id,
                 teams: new List<Team>() { teamRepo.Get(encounterDTO.HomeTeamName), teamRepo.Get(encounterDTO.AwayTeamName) },

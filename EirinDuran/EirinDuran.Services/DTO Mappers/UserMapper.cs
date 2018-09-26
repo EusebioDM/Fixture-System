@@ -11,14 +11,14 @@ using System.Text;
 
 namespace EirinDuran.Services.DTO_Mappers
 {
-    internal class UserMapper
+    internal class UserMapper : DTOMapper<User, UserDTO>
     {
         private IRepository<Team> teamRepo;
 
         public UserMapper(IRepository<Team> teamRepo){
             this.teamRepo = teamRepo;
         }
-        public UserDTO Map(User user)
+        public override UserDTO Map(User user)
         {
             return new UserDTO()
             {
@@ -32,7 +32,7 @@ namespace EirinDuran.Services.DTO_Mappers
             };
         }
 
-        public User Map(UserDTO userDTO)
+        protected override User TryToMapModel(UserDTO userDTO)
         {
             return new User(userName: userDTO.UserName,
                 name: userDTO.Name, 
