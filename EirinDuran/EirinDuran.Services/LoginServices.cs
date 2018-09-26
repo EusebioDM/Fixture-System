@@ -29,12 +29,12 @@ namespace EirinDuran.Services
                 }
                 else
                 {
-                    throw new IncorrectPasswordException();
+                    throw new IServices.Exceptions.InvalidaDataException(userName);
                 }
             }
             catch (ObjectDoesntExistsInDataBaseException)
             {
-                throw new UserTryToLoginDoesNotExistsException();
+                throw new IServices.Exceptions.InvalidaDataException(userName);
             }
         }
 

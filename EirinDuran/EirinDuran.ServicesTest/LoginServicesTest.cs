@@ -35,7 +35,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UserTryToLoginDoesNotExistsException))]
+        [ExpectedException(typeof(IServices.Exceptions.InvalidaDataException))]
         public void UserTryToLogginDoesNotExists()
         {
             LoginServices login = new LoginServices(repo);
@@ -43,7 +43,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(IncorrectPasswordException))]
+        [ExpectedException(typeof(IServices.Exceptions.InvalidaDataException))]
         public void TryToLoginUserWithIncorrectPassword()
         {
             LoginServices login = new LoginServices(repo);
