@@ -14,7 +14,7 @@ namespace EirinDuran.IServices.DTOs
 
         public string AwayTeamName { get; set; }
 
-        public List<Guid> CommentsIds { get; set; }
+        public List<Guid> CommentsIds { get; set; } = new List<Guid>();
 
         public string SportName { get; set; }
     }
