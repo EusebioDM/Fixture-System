@@ -22,9 +22,9 @@ namespace EirinDuran.Domain.Fixture
 
         public Comment(User.User user, DateTime timeStamp, string message, Guid id)
         {
-            Id = id;
+            Id = id == Guid.Empty ? Guid.NewGuid() : id;
             User = user;
-            TimeStamp = timeStamp;
+            TimeStamp = timeStamp == null ? DateTime.Now : timeStamp;
             Message = message;
         }
 

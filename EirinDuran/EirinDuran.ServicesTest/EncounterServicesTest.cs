@@ -235,6 +235,20 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
+        [ExpectedException(typeof(InvalidaDataException))]
+        public void CreateEncounterWithInvalidRelationshipTest()
+        {
+            login.CreateSession("sSanchez", "user");
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo);
+            EncounterDTO encounter = new EncounterDTO()
+            {
+                SportName = "Football",
+                AwayTeamName = "River Plate",
+                HomeTeamName = " adawd aw"
+            };
+        }
+
+        [TestMethod]
         public void AddCommentToEncounter()
         {
             login.CreateSession("sSanchez", "user");
