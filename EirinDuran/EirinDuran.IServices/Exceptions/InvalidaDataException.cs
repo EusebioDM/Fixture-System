@@ -8,9 +8,9 @@ namespace EirinDuran.IServices.Exceptions
     {
         private string message;
 
-        public InvalidaDataException(object source, string invalidField, Exception innerException = null) : base("", innerException)
+        public InvalidaDataException(object source, Exception innerException = null) : base("", innerException)
         {
-            message = $"Object {source} had invalid data in the field {invalidField}";
+            message = $"Object {source} had invalid data";
             
         }
 
