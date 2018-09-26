@@ -1,4 +1,5 @@
 ﻿using EirinDuran.Domain.Fixture;
+using EirinDuran.IDataAccess;
 using EirinDuran.IServices;
 using EirinDuran.Services;
 using System;
@@ -10,24 +11,25 @@ namespace EirinDuran.Services.DTO_Mappers
 {
     internal class SportMapper
     {
+        private IRepository<Team> teamRepo;
+
+        public SportMapper(IRepository<Team> teamRepo){
+            this.teamRepo = teamRepo;
+        }
         public SportDTO Map(Sport sport)
         {
             return new SportDTO()
             {
                 Name = sport.Name,
-                Teams = sport.Teams.Select(sportTeam => new TeamDTO()
-                {
-                    Name = sportTeam.Name,
-                    Logo = sportTeam.Logo
-                }).ToList()
+                TeamsNames = sport.Teams.Select(team => team.Name).ToList()
             };
         }
 
         public Sport Map(SportDTO sportDTO)
         {
             return new Sport(name: sportDTO.Name, 
-                teams: sportDTO.Teams.Select(sportDTOTeam => new Team(name: sportDTOTeam.Name, logo: sportDTOTeam.Logo))
-                .ToList());
+                teams: sportDTO.TeamsNames.ConvertAll(name => teamRepo.Get(name))
+            );
         }
     }
 }

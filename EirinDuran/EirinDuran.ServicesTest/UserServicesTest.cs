@@ -19,15 +19,17 @@ namespace EirinDuran.ServicesTest
     [TestClass]
     public class UserServicesTest
     {
-        private UserRepository repo;
+        private IRepository<User> userRepo;
+        private IRepository<Team> teamRepo;
         private UserDTO pepe;
 
         [TestInitialize]
         public void TestInit()
         {
-            repo = new UserRepository(GetContextFactory());
-            repo.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
-            repo.Add(new User(Role.Follower, "martinFowler", "Martin", "Fowler", "user", "fowler@fowler.com"));
+            userRepo = new UserRepository(GetContextFactory());
+            teamRepo = new TeamRepository(GetContextFactory());
+            userRepo.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
+            userRepo.Add(new User(Role.Follower, "martinFowler", "Martin", "Fowler", "user", "fowler@fowler.com"));
             pepe = new UserDTO()
             {
                 UserName = "pepeAvila",
@@ -36,7 +38,7 @@ namespace EirinDuran.ServicesTest
                 Password = "user",
                 Mail = "pepeavila@mymail.com",
                 IsAdmin = true,
-                FollowedTeams = new List<TeamDTO>()
+                FollowedTeamsNames = new List<string>()
             };
         }
 
@@ -49,8 +51,8 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
         public void AddUserWithoutPermissions()
         {
-            LoginServices login = new LoginServices(repo);
-            UserServices services = new UserServices(repo, login);
+            LoginServices login = new LoginServices(userRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo);
 
             login.CreateSession("martinFowler", "user");
             services.CreateUser(pepe);
@@ -59,13 +61,13 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void AddUserSimpleOk()
         {
-            LoginServices login = new LoginServices(repo);
-            UserServices services = new UserServices(repo, login);
+            LoginServices login = new LoginServices(userRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo);
 
             login.CreateSession("sSanchez", "user");
             services.CreateUser(pepe);
 
-            User result = repo.Get("pepeAvila");
+            User result = userRepo.Get("pepeAvila");
 
             Assert.AreEqual("pepeAvila", result.UserName);
         }
@@ -74,35 +76,35 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void DeleteUserSimpleOk()
         {
-            LoginServices login = new LoginServices(repo);
-            UserServices services = new UserServices(repo, login);
+            LoginServices login = new LoginServices(userRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo);
 
             login.CreateSession("sSanchez", "user");
             services.CreateUser(pepe);
 
             services.DeleteUser("pepeAvila");
-            User result = repo.Get("pepeAvila");
+            User result = userRepo.Get("pepeAvila");
         }
 
         [TestMethod]
         [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
         public void DeleteUserWithoutSufficientPermissions()
         {
-            LoginServices login = new LoginServices(repo);
-            UserServices services = new UserServices(repo, login);
+            LoginServices login = new LoginServices(userRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo);
 
             login.CreateSession("martinFowler", "user");
-            repo.Add(new User(Role.Administrator, "pepeAvila", "Pepe", "Avila", "user", "pepeavila@mymail.com"));
+            userRepo.Add(new User(Role.Administrator, "pepeAvila", "Pepe", "Avila", "user", "pepeavila@mymail.com"));
 
             services.DeleteUser("pepeAvila");
-            User result = repo.Get("pepeAvila");
+            User result = userRepo.Get("pepeAvila");
         }
 
         [TestMethod]
         public void ModifyUserOk()
         {
-            LoginServices login = new LoginServices(repo);
-            UserServices services = new UserServices(repo, login);
+            LoginServices login = new LoginServices(userRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo);
 
             login.CreateSession("sSanchez", "user");
             UserDTO user = new UserDTO()
@@ -113,11 +115,11 @@ namespace EirinDuran.ServicesTest
                 Password = "user",
                 Mail = "pepeavila@mymail.com",
                 IsAdmin = true,
-                FollowedTeams = new List<TeamDTO>()
+                FollowedTeamsNames = new List<string>()
             };
             services.Modify(user);
 
-            User result = repo.Get("pepeAvila");
+            User result = userRepo.Get("pepeAvila");
 
             Assert.AreEqual("ANGEL", result.Name);
         }
@@ -126,8 +128,8 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
         public void ModifyUserwithoutSufficientPermissions()
         {
-            LoginServices login = new LoginServices(repo);
-            UserServices services = new UserServices(repo, login);
+            LoginServices login = new LoginServices(userRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo);
 
             login.CreateSession("martinFowler", "user");
             UserDTO user = new UserDTO()
@@ -138,11 +140,11 @@ namespace EirinDuran.ServicesTest
                 Password = "user",
                 Mail = "pepeavila@mymail.com",
                 IsAdmin = true,
-                FollowedTeams = new List<TeamDTO>()
+                FollowedTeamsNames = new List<string>()
             };
             services.Modify(user);
 
-            User result = repo.Get("pepeAvila");
+            User result = userRepo.Get("pepeAvila");
 
             Assert.AreEqual("ANGEL", result.Name);
         }
@@ -150,8 +152,8 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void FollowTeam()
         {
-            LoginServices login = new LoginServices(repo);
-            UserServices services = new UserServices(repo, login);
+            LoginServices login = new LoginServices(userRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo);
 
             login.CreateSession("martinFowler", "user");
 
@@ -165,11 +167,11 @@ namespace EirinDuran.ServicesTest
                 Name = "Baskteball"
             };
 
-            basketball.Teams = new List<TeamDTO>() { cavaliers };
+            basketball.TeamsNames = new List<string>() { cavaliers.Name };
 
             services.AddFollowedTeam(cavaliers);
 
-            User recovered = repo.Get("martinFowler");
+            User recovered = userRepo.Get("martinFowler");
             List<Team> followedTeams = recovered.FollowedTeams.ToList();
             Assert.IsTrue(followedTeams[0].Name == "Cavaliers");
         }
@@ -177,8 +179,8 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void RecoverAllFollowedTeams()
         {
-            LoginServices login = new LoginServices(repo);
-            UserServices services = new UserServices(repo, login);
+            LoginServices login = new LoginServices(userRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo);
 
             login.CreateSession("martinFowler", "user");
 
@@ -192,7 +194,7 @@ namespace EirinDuran.ServicesTest
                 Name = "Baskteball"
             };
 
-            basketball.Teams = new List<TeamDTO>() { cavaliers };
+            basketball.TeamsNames = new List<string>() { cavaliers.Name };
 
             services.AddFollowedTeam(cavaliers);
 

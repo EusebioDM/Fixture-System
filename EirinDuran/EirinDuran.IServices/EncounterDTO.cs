@@ -10,12 +10,12 @@ namespace EirinDuran.IServices
 
         public DateTime DateTime { get; set; }
 
-        public TeamDTO HomeTeam { get; set; }
+        public string HomeTeamName { get; set; }
 
-        public TeamDTO AwayTeam { get; set; }
+        public string AwayTeamName { get; set; }
 
-        public ICollection<CommentDTO> Comments { get; set; }
+        public List<Guid> CommentsIds { get; set; }
 
-        public SportDTO Sport { get; set; }
+        public string SportName { get; set; }
     }
 }

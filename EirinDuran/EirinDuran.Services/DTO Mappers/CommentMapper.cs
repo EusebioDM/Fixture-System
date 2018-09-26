@@ -1,4 +1,6 @@
 ﻿using EirinDuran.Domain.Fixture;
+using EirinDuran.Domain.User;
+using EirinDuran.IDataAccess;
 using EirinDuran.IServices;
 using EirinDuran.Services;
 using System.Linq;
@@ -7,11 +9,10 @@ namespace EirinDuran.Services.DTO_Mappers
 {
     internal class CommentMapper
     {
-        private UserMapper userMapper;
+        private IRepository<User> userRepo;
 
-        public CommentMapper()
-        {
-            userMapper = new UserMapper();
+        public CommentMapper(IRepository<User> userRepo){
+            this.userRepo = userRepo;
         }
 
         public CommentDTO Map(Comment comment)
@@ -19,7 +20,7 @@ namespace EirinDuran.Services.DTO_Mappers
             return new CommentDTO()
             {
                 Id = comment.Id,
-                User = userMapper.Map(comment.User),
+                UserName = comment.User.UserName,
                 TimeStamp = comment.TimeStamp,
                 Message = comment.Message
             };
@@ -27,7 +28,9 @@ namespace EirinDuran.Services.DTO_Mappers
 
         public Comment Map(CommentDTO commentDTO)
         {
-            return new Comment(user: userMapper.Map(commentDTO.User), message: commentDTO.Message);
+            return new Comment(user: userRepo.Get(commentDTO.UserName),
+                message: commentDTO.Message
+            );
         }
     }
 }

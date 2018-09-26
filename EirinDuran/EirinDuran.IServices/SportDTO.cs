@@ -8,6 +8,6 @@ namespace EirinDuran.IServices
     {
         public string Name { get; set; }
 
-        public ICollection<TeamDTO> Teams { get; set; }
+        public List<string> TeamsNames { get; set; }
     }
 }

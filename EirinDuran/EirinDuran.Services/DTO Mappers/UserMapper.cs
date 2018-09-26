@@ -1,4 +1,6 @@
-﻿using EirinDuran.Domain.User;
+﻿using EirinDuran.Domain.Fixture;
+using EirinDuran.Domain.User;
+using EirinDuran.IDataAccess;
 using EirinDuran.IServices;
 using EirinDuran.Services;
 using System;
@@ -10,6 +12,11 @@ namespace EirinDuran.Services.DTO_Mappers
 {
     internal class UserMapper
     {
+        private IRepository<Team> teamRepo;
+
+        public UserMapper(IRepository<Team> teamRepo){
+            this.teamRepo = teamRepo;
+        }
         public UserDTO Map(User user)
         {
             return new UserDTO()
@@ -20,11 +27,7 @@ namespace EirinDuran.Services.DTO_Mappers
                 Password = user.Password,
                 Mail = user.Mail,
                 IsAdmin = user.Role == Role.Administrator,
-                FollowedTeams = user.FollowedTeams.Select(userFollowedTeam => new TeamDTO()
-                {
-                    Name = userFollowedTeam.Name,
-                    Logo = userFollowedTeam.Logo
-                }).ToList()
+                FollowedTeamsNames = user.FollowedTeams.Select(userFollowedTeam => userFollowedTeam.Name).ToList()
             };
         }
 
@@ -34,9 +37,9 @@ namespace EirinDuran.Services.DTO_Mappers
                 name: userDTO.Name, 
                 role: userDTO.IsAdmin ? Role.Administrator : Role.Follower,
                 surname: userDTO.Surname, password: userDTO.Password, 
-                mail: userDTO.Mail, followedTeams: userDTO.FollowedTeams
-                .Select(userDTOFollowedTeam => new Domain.Fixture.Team(name: userDTOFollowedTeam.Name, logo: userDTOFollowedTeam.Logo))
-                .ToList());
+                mail: userDTO.Mail, 
+                followedTeams: userDTO.FollowedTeamsNames.ConvertAll(name => teamRepo.Get(name))
+            );
         }
     }
 }

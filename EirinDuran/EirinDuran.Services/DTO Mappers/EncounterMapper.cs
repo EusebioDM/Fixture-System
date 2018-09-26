@@ -1,4 +1,5 @@
 ﻿using EirinDuran.Domain.Fixture;
+using EirinDuran.IDataAccess;
 using EirinDuran.IServices;
 using EirinDuran.Services;
 using System;
@@ -12,15 +13,14 @@ namespace EirinDuran.Services.DTO_Mappers
 {
     internal class EncounterMapper
     {
-        private SportMapper sportMapper;
-        private TeamMapper teamMapper;
-        private CommentMapper commentMapper;
+        private IRepository<Sport> sportRepo;
+        private IRepository<Team> teamRepo;
+        private IRepository<Comment> commentRepo;
 
-        public EncounterMapper()
+        public EncounterMapper(IRepository<Sport> sportRepo, IRepository<Team> teamRepo)
         {
-            sportMapper = new SportMapper();
-            teamMapper = new TeamMapper();
-            commentMapper = new CommentMapper();
+            this.sportRepo = sportRepo;
+            this.teamRepo = teamRepo;
         }
 
         public EncounterDTO Map(Encounter encounter)
@@ -29,20 +29,21 @@ namespace EirinDuran.Services.DTO_Mappers
             {
                 Id = encounter.Id,
                 DateTime = encounter.DateTime,
-                Comments = encounter.Comments.Select(c => commentMapper.Map(c)).ToList(),
-                Sport = sportMapper.Map(encounter.Sport),
-                HomeTeam = new TeamDTO() { Name = encounter.Teams.First().Name, Logo = encounter.Teams.First().Logo },
-                AwayTeam = new TeamDTO() { Name = encounter.Teams.Last().Name, Logo = encounter.Teams.Last().Logo }
+                CommentsIds = encounter.Comments.Select(comment => comment.Id).ToList(),
+                SportName = encounter.Sport.Name,
+                HomeTeamName = encounter.Teams.First().Name,
+                AwayTeamName = encounter.Teams.Last().Name
             };
         }
 
         public Encounter Map(EncounterDTO encounterDTO)
         {
             return new Encounter(id: encounterDTO.Id,
-                teams: new List<Team> { teamMapper.Map(encounterDTO.HomeTeam), teamMapper.Map(encounterDTO.AwayTeam) },
-                comments: encounterDTO.Comments.Select(c => commentMapper.Map(c)).ToList(),
+                teams: new List<Team>() { teamRepo.Get(encounterDTO.HomeTeamName), teamRepo.Get(encounterDTO.AwayTeamName) },
+                comments: encounterDTO.CommentsIds.ConvertAll(comment => commentRepo.Get(comment.ToString())),
                 dateTime: encounterDTO.DateTime,
-                sport: sportMapper.Map(encounterDTO.Sport));
+                sport: sportRepo.Get(encounterDTO.SportName)
+            );
         }
     }
 }

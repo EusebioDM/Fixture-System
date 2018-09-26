@@ -19,8 +19,10 @@ namespace EirinDuran.ServicesTest
     [TestClass]
     public class SportServicesTest
     {
+        private IDesignTimeDbContextFactory<Context> contextFactory;
         private ILoginServices login;
-        private SportRepository repo;
+        private IRepository<Sport> sportRepo;
+        private IRepository<Team> teamRepo;
         private SportDTO futbol;
         private SportDTO rugby;
         private TeamDTO boca;
@@ -30,50 +32,53 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void CreatedSportTest()
         {
-            SportServices service = new SportServices(login, repo);
+            SportServices service = new SportServices(login, sportRepo, teamRepo);
             service.Create(rugby);
 
-            Assert.IsTrue(repo.GetAll().Any(s => s.Name.Equals(rugby.Name)));
+            Assert.IsTrue(sportRepo.GetAll().Any(s => s.Name.Equals(rugby.Name)));
         }
 
         [TestMethod]
         [ExpectedException(typeof(ObjectAlreadyExistsException))]
         public void CreateAlreadyExistingSport()
         {
-            SportServices service = new SportServices(login, repo);
+            SportServices service = new SportServices(login, sportRepo, teamRepo);
             service.Create(futbol);
         }
 
         [TestMethod]
         public void ModifyExistingSportTest()
         {
-            SportServices service = new SportServices(login, repo);
-            futbol.Teams.Remove(boca);
+            SportServices service = new SportServices(login, sportRepo, teamRepo);
+            futbol.TeamsNames.Remove(boca.Name);
             service.Modify(futbol);
 
-            Sport fromRepo = repo.Get(futbol.Name);
+            Sport fromRepo = sportRepo.Get(futbol.Name);
             Assert.IsFalse(fromRepo.Teams.Contains(new Team("Boca")));
         }
 
         [TestMethod]
         public void ModifyNonExistingSportTest()
         {
-            SportServices service = new SportServices(login, repo);
-            rugby.Teams.Add(boca);
+            SportServices service = new SportServices(login, sportRepo, teamRepo);
+            rugby.TeamsNames.Add(boca.Name);
             service.Modify(rugby);
 
-            Assert.IsTrue(repo.Get(rugby.Name).Teams.Contains(new Team(boca.Name)));
+            Assert.IsTrue(sportRepo.Get(rugby.Name).Teams.Contains(new Team(boca.Name)));
         }
 
         [TestInitialize]
         public void TestInit()
         {
-            repo = new SportRepository(GetContextFactory());
+            contextFactory = GetContextFactory();
+            sportRepo = new SportRepository(contextFactory);
+            teamRepo = new TeamRepository(contextFactory);
             boca = CreateBocaTeam();
             river = CreateTeamThatBelongsInTheB();
             futbol = CreateFutbolTeam();
             rugby = CreateRugbyTeam();
-            repo.Add(new Sport(futbol.Name, futbol.Teams.Select(t => new Team(t.Name, t.Logo))));
+            sportRepo.Add(new Sport(futbol.Name, new List<Team>() { new Team(boca.Name, boca.Logo), new Team(river.Name, river.Logo) }));
+            var a = sportRepo.GetAll();
             login = CreateLoginServices();
         }
 
@@ -116,7 +121,7 @@ namespace EirinDuran.ServicesTest
             SportDTO futbol = new SportDTO()
             {
                 Name = "Futbol",
-                Teams = new List<TeamDTO> { boca, river }
+                TeamsNames = new List<string> { boca.Name, river.Name }
             };
             return futbol;
         }
@@ -126,7 +131,7 @@ namespace EirinDuran.ServicesTest
             return new SportDTO()
             {
                 Name = "Rugby",
-                Teams = new List<TeamDTO>()
+                TeamsNames = new List<string>()
             };
         }
 

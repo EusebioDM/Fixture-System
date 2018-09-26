@@ -12,16 +12,18 @@ namespace EirinDuran.Services
     public class SportServices : ISportServices
     {
         private readonly ILoginServices loginService;
-        private readonly IRepository<Sport> repository;
+        private readonly IRepository<Sport> sportRepo;
+        private readonly IRepository<Team> teamRepo;
         private readonly PermissionValidator validator;
         private readonly SportMapper mapper;
 
-        public SportServices(ILoginServices loginService, IRepository<Sport> repository)
+        public SportServices(ILoginServices loginService, IRepository<Sport> sportRepo, IRepository<Team> teamRepo)
         {
             validator = new PermissionValidator(Domain.User.Role.Administrator, loginService);
             this.loginService = loginService;
-            this.repository = repository;
-            mapper = new SportMapper();
+            this.sportRepo = sportRepo;
+            this.teamRepo = teamRepo;
+            mapper = new SportMapper(teamRepo);
         }
 
         public void Create(SportDTO sportDTO)
@@ -30,7 +32,7 @@ namespace EirinDuran.Services
             Sport sport = mapper.Map(sportDTO);
             try
             {
-                repository.Add(sport);
+                sportRepo.Add(sport);
             }
             catch (ObjectAlreadyExistsInDataBaseException)
             {
@@ -42,7 +44,7 @@ namespace EirinDuran.Services
         {
             validator.ValidatePermissions();
             Sport sport = mapper.Map(sportDTO);
-            repository.Update(sport);
+            sportRepo.Update(sport);
         }
     }
 }

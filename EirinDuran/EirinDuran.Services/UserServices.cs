@@ -13,18 +13,20 @@ namespace EirinDuran.Services
 {
     public class UserServices : IUserServices
     {
-        private UserRepository userRepository;
         private PermissionValidator adminValidator;
         private ILoginServices login;
+        private IRepository<User> userRepository;
+        private IRepository<Team> teamRepository;
         private UserMapper userMapper;
         private TeamMapper teamMapper;
 
-        public UserServices(UserRepository userRepository, ILoginServices loginServices)
+        public UserServices(ILoginServices loginServices, IRepository<User> userRepository, IRepository<Team> teamRepository)
         {
             this.userRepository = userRepository;
+            this.teamRepository = teamRepository;
             this.login = loginServices;
             adminValidator = new PermissionValidator(Role.Administrator, login);
-            userMapper = new UserMapper();
+            userMapper = new UserMapper(teamRepository);
             teamMapper = new TeamMapper();
         }
 

@@ -18,6 +18,6 @@ namespace EirinDuran.IServices
 
         public string Mail { get; set; }
 
-        public ICollection<TeamDTO> FollowedTeams { get; set; }
+        public List<string> FollowedTeamsNames { get; set; }
     }
 }
