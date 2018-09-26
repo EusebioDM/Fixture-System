@@ -47,7 +47,7 @@ namespace EirinDuran.WebApi.Controllers
             List<Claim> claims = identity.Claims.ToList();
 
             string userName = claims.Where(c => c.Type == "UserName").Select(c => c.Value).SingleOrDefault();
-            string password = claims.Where(c => c.Type == ("Password")).Select(c => c.Value).SingleOrDefault();
+            string password = claims.Where(c => c.Type == "Password").Select(c => c.Value).SingleOrDefault();
            
             loginServices.CreateSession(userName, password);
 

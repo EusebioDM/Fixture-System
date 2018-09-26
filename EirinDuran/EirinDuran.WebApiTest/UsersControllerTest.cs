@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using EirinDuran.WebApi.Models;
 using EirinDuran.IServices;
+using Microsoft.AspNetCore.Http;
 
 namespace EirinDuran.WebApiTest
 {
@@ -63,11 +64,16 @@ namespace EirinDuran.WebApiTest
             var fakeUser = new User(Role.Administrator, "pepeAvila", "Pepe", "Ávila", "user", "pepeavila@mymail.com");
 
             var userServiceMock = new Mock<IUserServices>();
-           
+
             userServiceMock.Setup(userService => userService.AddUser(fakeUser));
             ILoginServices loginServices = new LoginServicesMock(new User(Role.Administrator, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
 
-            var controller = new UsersController(loginServices, userServiceMock.Object);
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiVXNlck5hbWUiOiJGcmFuY28iLCJQYXNzd29yZCI6InVzZXIiLCJleHAiOjE1Mzc5MTkxNTEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.t2Tm_mvehwOv20p8Wc1yFUeBa2yS-jfYKfiurNLawhc"; 
+                                                                                                                                                                                                                                                                                                                                                                                                                           
+            var controllerContext = new ControllerContext() { HttpContext = httpContext, };
+
+            var controller = new UsersController(loginServices, userServiceMock.Object) { ControllerContext = controllerContext, }; 
 
             var result = controller.Create(modelIn);
             var createdResult = result as CreatedAtRouteResult;
@@ -86,7 +92,16 @@ namespace EirinDuran.WebApiTest
 
             var userService = new Mock<IUserServices>();
             ILoginServices loginServices = new LoginServicesMock(new User(Role.Administrator, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
-            var controller = new UsersController(loginServices, userService.Object);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiVXNlck5hbWUiOiJGcmFuY28iLCJQYXNzd29yZCI6InVzZXIiLCJleHAiOjE1Mzc5MTkxNTEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.t2Tm_mvehwOv20p8Wc1yFUeBa2yS-jfYKfiurNLawhc";
+
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
+            var controller = new UsersController(loginServices, userService.Object) { ControllerContext = controllerContext, };
 
             controller.ModelState.AddModelError("", "Error");
             var result = controller.Create(modelIn);

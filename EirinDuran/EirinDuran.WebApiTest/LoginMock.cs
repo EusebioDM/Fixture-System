@@ -17,7 +17,6 @@ namespace EirinDuran.WebApiTest
 
         public void CreateSession(string userName, string password)
         {
-            throw new NotImplementedException();
         }
     }
 }
