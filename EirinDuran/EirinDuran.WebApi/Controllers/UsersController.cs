@@ -23,8 +23,17 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Administrator")]
         public ActionResult<List<User>> Get()
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            List<Claim> claims = identity.Claims.ToList();
+
+            string userName = claims.Where(c => c.Type == "UserName").Select(c => c.Value).SingleOrDefault();
+            string password = claims.Where(c => c.Type == "Password").Select(c => c.Value).SingleOrDefault();
+
+            loginServices.CreateSession(userName, password);
+
             return userServices.GetAllUsers().ToList();
         }
 
@@ -58,7 +67,7 @@ namespace EirinDuran.WebApi.Controllers
                 userServices.AddUser(user);
 
                 var addedUser = new UserModelOut() { UserName = user.UserName, Name = user.Name, Surname = user.Surname, Mail = user.Mail, Role = user.Role };
-                return CreatedAtRoute("GetUserName", new { id = addedUser.UserName }, addedUser);
+                return CreatedAtRoute("GetUser", new { id = addedUser.UserName }, addedUser);
             }
             else
             {
@@ -68,8 +77,18 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Administrator")]
-        public void Delete(int id)
+        public IActionResult Delete(string id)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            List<Claim> claims = identity.Claims.ToList();
+
+            string userName = claims.Where(c => c.Type == "UserName").Select(c => c.Value).SingleOrDefault();
+            string password = claims.Where(c => c.Type == "Password").Select(c => c.Value).SingleOrDefault();
+
+            loginServices.CreateSession(userName, password);
+            userServices.DeleteUser(id);
+
+            return Ok();
         }
     }
 }

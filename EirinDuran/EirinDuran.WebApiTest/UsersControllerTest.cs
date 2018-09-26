@@ -21,15 +21,23 @@ namespace EirinDuran.WebApiTest
             var expectedUsers = new List<User> { new User(Role.Administrator, "juanandres", "Juan", "Perez", "user", "juan@perez.org"),
                                                  new User(Role.Follower, "robertoj", "roberto", "juarez", "mypass123", "rj@rj.com" ) };
 
-            var mockUserService = new Mock<IUserServices>();
+            var userService = new Mock<IUserServices>();
             ILoginServices loginServices = new LoginServicesMock(new User(Role.Administrator, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
 
-            var controller = new UsersController(loginServices, mockUserService.Object);
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiVXNlck5hbWUiOiJGcmFuY28iLCJQYXNzd29yZCI6InVzZXIiLCJleHAiOjE1Mzc5MTkxNTEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.t2Tm_mvehwOv20p8Wc1yFUeBa2yS-jfYKfiurNLawhc";
+
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
+            var controller = new UsersController(loginServices, userService.Object) { ControllerContext = controllerContext, }; 
 
             var obtainedResult = controller.Get() as ActionResult<List<User>>;
             var val = obtainedResult.Value;
 
-            mockUserService.VerifyAll();
+            userService.VerifyAll();
             Assert.IsNotNull(obtainedResult);
             Assert.IsNotNull(obtainedResult.Value);
 
@@ -80,7 +88,7 @@ namespace EirinDuran.WebApiTest
             var modelOut = createdResult.Value as UserModelOut;
 
             Assert.IsNotNull(createdResult);
-            Assert.AreEqual("GetUserName", createdResult.RouteName);
+            Assert.AreEqual("GetUser", createdResult.RouteName);
             Assert.AreEqual(201, createdResult.StatusCode);
             Assert.AreEqual(modelIn.UserName, modelOut.UserName);
         }
@@ -118,6 +126,11 @@ namespace EirinDuran.WebApiTest
             var modelIn = new UserModelIn();
 
             var userService = new Mock<IUserServices>();
+
+            string id = "pepe";
+
+            userService.Setup(us => us.DeleteUser(id));
+
             ILoginServices loginServices = new LoginServicesMock(new User(Role.Administrator, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
 
             var httpContext = new DefaultHttpContext();
@@ -130,13 +143,12 @@ namespace EirinDuran.WebApiTest
 
             var controller = new UsersController(loginServices, userService.Object) { ControllerContext = controllerContext, };
 
-            controller.ModelState.AddModelError("", "Error");
-            var result = controller.Delete(modelIn);
+            var result = controller.Delete(id);
 
-            var createdResult = result as CreatedAtRouteResult;
+            var createdResult = result as OkResult;
 
             Assert.IsNotNull(createdResult);
-            Assert.AreEqual(201, createdResult.StatusCode);
+            Assert.AreEqual(200, createdResult.StatusCode);
         }
     }
 }
