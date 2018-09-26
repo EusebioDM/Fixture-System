@@ -65,5 +65,11 @@ namespace EirinDuran.WebApi.Controllers
                 return BadRequest(ModelState);
             }
         }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
+        public void Delete(int id)
+        {
+        }
     }
 }
