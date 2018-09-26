@@ -244,7 +244,23 @@ namespace EirinDuran.ServicesTest
             {
                 SportName = "Football",
                 AwayTeamName = "River Plate",
-                HomeTeamName = " adawd aw"
+                HomeTeamName = "Cerro",
+                DateTime = DateTime.UnixEpoch
+            };
+            encounterServices.CreateEncounter(encounter);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidaDataException))]
+        public void CreateEncounterWithInvalidDateTest()
+        {
+            login.CreateSession("sSanchez", "user");
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo);
+            EncounterDTO encounter = new EncounterDTO()
+            {
+                SportName = "Football",
+                AwayTeamName = "River Plate",
+                HomeTeamName = ""
             };
             encounterServices.CreateEncounter(encounter);
         }
