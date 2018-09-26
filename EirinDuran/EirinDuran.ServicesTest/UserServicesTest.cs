@@ -89,6 +89,21 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
+        [ExpectedException(typeof(InvalidaDataException))]
+        public void AddInvalidMailTest()
+        {
+            LoginServices login = new LoginServices(userRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo);
+            login.CreateSession("sSanchez", "user");
+            UserDTO user = new UserDTO()
+            {
+                UserName = "Holanda",
+                Mail = "esto NO es un mail"
+            };
+            services.CreateUser(user);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void DeleteUserSimpleOk()
         {
