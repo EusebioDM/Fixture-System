@@ -1,5 +1,6 @@
 ﻿using EirinDuran.Domain.User;
 using EirinDuran.IServices;
+using EirinDuran.IServices.Interfaces;
 using EirinDuran.Services;
 using System;
 using System.Collections.Generic;

@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using EirinDuran.Services.DTO_Mappers;
 using System.Linq;
 using EirinDuran.IServices;
+using EirinDuran.IServices.DTOs;
+using EirinDuran.IServices.Interfaces;
 
 namespace EirinDuran.Services
 {

@@ -1,5 +1,7 @@
 ﻿
-namespace EirinDuran.IServices
+using EirinDuran.IServices.DTOs;
+
+namespace EirinDuran.IServices.Interfaces
 {
     public interface ISportServices
     {

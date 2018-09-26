@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace EirinDuran.IServices
+namespace EirinDuran.IServices.DTOs
 {
     public class TeamDTO
     {

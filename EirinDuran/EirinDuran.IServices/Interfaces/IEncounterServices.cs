@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using EirinDuran.Domain.Fixture;
+using EirinDuran.IServices.DTOs;
 
-namespace EirinDuran.IServices
+namespace EirinDuran.IServices.Interfaces
 {
     public interface IEncounterServices
     {

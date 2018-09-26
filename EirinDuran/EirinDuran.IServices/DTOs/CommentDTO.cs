@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EirinDuran.IServices
+namespace EirinDuran.IServices.DTOs
 {
     public class CommentDTO
     {

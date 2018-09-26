@@ -1,7 +1,7 @@
 ﻿using EirinDuran.Domain.User;
 using System;
 
-namespace EirinDuran.IServices
+namespace EirinDuran.IServices.Interfaces
 {
     public interface ILoginServices
     {

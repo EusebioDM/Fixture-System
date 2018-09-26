@@ -1,5 +1,6 @@
 ﻿using EirinDuran.Domain.Fixture;
 using EirinDuran.IServices;
+using EirinDuran.IServices.DTOs;
 using EirinDuran.Services;
 using System;
 using System.Collections.Generic;

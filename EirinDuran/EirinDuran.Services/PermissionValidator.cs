@@ -1,5 +1,7 @@
 using EirinDuran.Domain.User;
 using EirinDuran.IServices;
+using EirinDuran.IServices.Exceptions;
+using EirinDuran.IServices.Interfaces;
 using EirinDuran.Services;
 
 namespace EirinDuran.Services
@@ -19,7 +21,7 @@ namespace EirinDuran.Services
         {
             if (login.LoggedUser == null || login.LoggedUser.Role != required)
             {
-                throw new InsufficientPermissionToPerformThisActionException();
+                throw new InsufficientPermissionException();
             }
         }
     }

@@ -66,7 +66,7 @@ namespace EirinDuran.DataAccess
             {
                 TryToDelete(id);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 throw new ObjectDoesntExistsInDataBaseException(id);
             }

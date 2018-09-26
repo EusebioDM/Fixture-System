@@ -4,6 +4,8 @@ using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices;
+using EirinDuran.IServices.DTOs;
+using EirinDuran.IServices.Exceptions;
 using EirinDuran.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -48,7 +50,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
+        [ExpectedException(typeof(InsufficientPermissionException))]
         public void AddUserWithoutPermissions()
         {
             LoginServices login = new LoginServices(userRepo);
@@ -87,7 +89,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
+        [ExpectedException(typeof(InsufficientPermissionException))]
         public void DeleteUserWithoutSufficientPermissions()
         {
             LoginServices login = new LoginServices(userRepo);
@@ -125,7 +127,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
+        [ExpectedException(typeof(InsufficientPermissionException))]
         public void ModifyUserwithoutSufficientPermissions()
         {
             LoginServices login = new LoginServices(userRepo);

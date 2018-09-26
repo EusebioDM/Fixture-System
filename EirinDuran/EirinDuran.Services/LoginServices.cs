@@ -4,6 +4,7 @@ using EirinDuran.DataAccess;
 using EirinDuran.IDataAccess;
 using EirinDuran.Services;
 using EirinDuran.IServices;
+using EirinDuran.IServices.Interfaces;
 
 namespace EirinDuran.Services
 {

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using EirinDuran.IServices.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EirinDuran.IServices
+namespace EirinDuran.IServices.Interfaces
 {
     public interface IUserServices
     {
