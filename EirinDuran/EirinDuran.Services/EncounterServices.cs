@@ -16,26 +16,27 @@ namespace EirinDuran.Services
 {
     public class EncounterServices : IEncounterServices
     {
-        private LoginServices loginServices;
         private IRepository<Encounter> encounterRepo;
         private IRepository<Sport> sportRepo;
         private IRepository<Team> teamRepo;
         private PermissionValidator adminValidator;
         private EncounterMapper mapper;
 
-        public EncounterServices(LoginServices loginServices, IRepository<Encounter> encounterRepository, IRepository<Sport> sportRepository, IRepository<Team> teamRepository)
+        public EncounterServices(IRepository<Encounter> encounterRepository, IRepository<Sport> sportRepository, IRepository<Team> teamRepository)
         {
-            this.loginServices = loginServices;
+            this.Login = Login;
             this.encounterRepo = encounterRepository;
             this.sportRepo = sportRepository;
             this.teamRepo = teamRepository;
-            adminValidator = new PermissionValidator(Role.Administrator, loginServices);
+            adminValidator = new PermissionValidator(Role.Administrator);
             mapper = new EncounterMapper(sportRepository, teamRepository);
         }
 
+        public ILoginServices Login { get; set; }
+
         public void CreateEncounter(EncounterDTO encounterDTO)
         {
-            adminValidator.ValidatePermissions();
+            adminValidator.ValidatePermissions(Login);
             Encounter encounter = mapper.Map(encounterDTO);
             ValidateNonOverlappingOfDates(encounter);
             encounterRepo.Add(encounter);
@@ -43,7 +44,7 @@ namespace EirinDuran.Services
 
         public void CreateEncounter(IEnumerable<EncounterDTO> encounterDTOs)
         {
-            adminValidator.ValidatePermissions();
+            adminValidator.ValidatePermissions(Login);
             foreach(EncounterDTO encounterDTO in encounterDTOs)
             {
                 Encounter encounter = mapper.Map(encounterDTO);
@@ -79,7 +80,7 @@ namespace EirinDuran.Services
 
         public void AddComment(Encounter encounterToComment, string comment)
         {
-            encounterToComment.AddComment(loginServices.LoggedUser, comment);
+            encounterToComment.AddComment(Login.LoggedUser, comment);
             encounterRepo.Update(encounterToComment);
         }
 
@@ -106,7 +107,7 @@ namespace EirinDuran.Services
 
         public void DeleteEncounter(string id)
         {
-            adminValidator.ValidatePermissions();
+            adminValidator.ValidatePermissions(Login);
             encounterRepo.Delete(id);
         }
 
@@ -116,7 +117,7 @@ namespace EirinDuran.Services
             IEnumerable<Encounter> allEncounters = encounterRepo.GetAll();
             foreach (var encounter in allEncounters)
             {
-                bool intersect = encounter.Teams.Intersect(loginServices.LoggedUser.FollowedTeams).Any();
+                bool intersect = encounter.Teams.Intersect(Login.LoggedUser.FollowedTeams).Any();
                 bool hasComments = (encounter.Comments.Count() > 0);
 
                 if (intersect && hasComments)

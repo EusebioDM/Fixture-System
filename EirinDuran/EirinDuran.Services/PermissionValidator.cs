@@ -9,17 +9,15 @@ namespace EirinDuran.Services
     public class PermissionValidator
     {
         private Role required;
-        private ILoginServices login;
 
-        public PermissionValidator(Role required, ILoginServices login)
+        public PermissionValidator(Role required)
         {
             this.required = required;
-            this.login = login;
         }
 
-        public void ValidatePermissions()
+        public void ValidatePermissions(ILoginServices login)
         {
-            if (login.LoggedUser == null || login.LoggedUser.Role != required)
+            if (login == null || login.LoggedUser == null || login.LoggedUser.Role != required)
             {
                 throw new InsufficientPermissionException();
             }

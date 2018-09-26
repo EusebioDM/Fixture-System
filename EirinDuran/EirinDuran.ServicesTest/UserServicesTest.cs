@@ -54,7 +54,10 @@ namespace EirinDuran.ServicesTest
         public void AddUserWithoutPermissions()
         {
             LoginServices login = new LoginServices(userRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(userRepo, teamRepo)
+            {
+                Login = login
+            };
 
             login.CreateSession("martinFowler", "user");
             services.CreateUser(pepe);
@@ -64,7 +67,10 @@ namespace EirinDuran.ServicesTest
         public void AddUserSimpleOk()
         {
             LoginServices login = new LoginServices(userRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(userRepo, teamRepo)
+            {
+                Login = login
+            };
 
             login.CreateSession("sSanchez", "user");
             services.CreateUser(pepe);
@@ -79,7 +85,10 @@ namespace EirinDuran.ServicesTest
         public void AddInvalidUserNameTest()
         {
             LoginServices login = new LoginServices(userRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(userRepo, teamRepo)
+            {
+                Login = login
+            };
             login.CreateSession("sSanchez", "user");
             UserDTO user = new UserDTO()
             {
@@ -93,7 +102,10 @@ namespace EirinDuran.ServicesTest
         public void AddInvalidMailTest()
         {
             LoginServices login = new LoginServices(userRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(userRepo, teamRepo)
+            {
+                Login = login
+            };
             login.CreateSession("sSanchez", "user");
             UserDTO user = new UserDTO()
             {
@@ -108,7 +120,10 @@ namespace EirinDuran.ServicesTest
         public void DeleteUserSimpleOk()
         {
             LoginServices login = new LoginServices(userRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(userRepo, teamRepo)
+            {
+                Login = login
+            };
 
             login.CreateSession("sSanchez", "user");
             services.CreateUser(pepe);
@@ -122,7 +137,10 @@ namespace EirinDuran.ServicesTest
         public void DeleteUserWithoutSufficientPermissions()
         {
             LoginServices login = new LoginServices(userRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(userRepo, teamRepo)
+            {
+                Login = login
+            };
 
             login.CreateSession("martinFowler", "user");
             userRepo.Add(new User(Role.Administrator, "pepeAvila", "Pepe", "Avila", "user", "pepeavila@mymail.com"));
@@ -135,7 +153,10 @@ namespace EirinDuran.ServicesTest
         public void ModifyUserOk()
         {
             LoginServices login = new LoginServices(userRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(userRepo, teamRepo)
+            {
+                Login = login
+            };
 
             login.CreateSession("sSanchez", "user");
             UserDTO user = new UserDTO()
@@ -160,7 +181,10 @@ namespace EirinDuran.ServicesTest
         public void ModifyUserwithoutSufficientPermissions()
         {
             LoginServices login = new LoginServices(userRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(userRepo, teamRepo)
+            {
+                Login = login
+            };
 
             login.CreateSession("martinFowler", "user");
             UserDTO user = new UserDTO()
@@ -184,7 +208,10 @@ namespace EirinDuran.ServicesTest
         public void FollowTeam()
         {
             LoginServices login = new LoginServices(userRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(userRepo, teamRepo)
+            {
+                Login = login
+            };
 
             login.CreateSession("martinFowler", "user");
 
@@ -211,7 +238,10 @@ namespace EirinDuran.ServicesTest
         public void RecoverAllFollowedTeams()
         {
             LoginServices login = new LoginServices(userRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(userRepo, teamRepo)
+            {
+                Login = login
+            };
 
             login.CreateSession("martinFowler", "user");
 

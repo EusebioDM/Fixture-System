@@ -14,24 +14,24 @@ namespace EirinDuran.Services
 {
     public class SportServices : ISportServices
     {
-        private readonly ILoginServices loginService;
         private readonly IRepository<Sport> sportRepo;
         private readonly IRepository<Team> teamRepo;
         private readonly PermissionValidator validator;
         private readonly SportMapper mapper;
 
-        public SportServices(ILoginServices loginService, IRepository<Sport> sportRepo, IRepository<Team> teamRepo)
+        public SportServices(IRepository<Sport> sportRepo, IRepository<Team> teamRepo)
         {
-            validator = new PermissionValidator(Domain.User.Role.Administrator, loginService);
-            this.loginService = loginService;
+            validator = new PermissionValidator(Domain.User.Role.Administrator);
             this.sportRepo = sportRepo;
             this.teamRepo = teamRepo;
             mapper = new SportMapper(teamRepo);
         }
 
+        public ILoginServices Login { get; set; }
+
         public void Create(SportDTO sportDTO)
         {
-            validator.ValidatePermissions();
+            validator.ValidatePermissions(Login);
             Sport sport = mapper.Map(sportDTO);
             try
             {
@@ -45,7 +45,7 @@ namespace EirinDuran.Services
 
         public void Modify(SportDTO sportDTO)
         {
-            validator.ValidatePermissions();
+            validator.ValidatePermissions(Login);
             Sport sport = mapper.Map(sportDTO);
             sportRepo.Update(sport);
         }
