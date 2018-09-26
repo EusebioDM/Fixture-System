@@ -35,8 +35,7 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void CreatedSportTest()
         {
-            SportServices service = new SportServices(sportRepo, teamRepo);
-            service.Login = login;
+            SportServices service = new SportServices(login, sportRepo, teamRepo);
             service.Create(rugby);
 
             Assert.IsTrue(sportRepo.GetAll().Any(s => s.Name.Equals(rugby.Name)));
@@ -46,8 +45,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(ObjectAlreadyExistsException))]
         public void CreateAlreadyExistingSport()
         {
-            SportServices service = new SportServices(sportRepo, teamRepo);
-            service.Login = login;
+            SportServices service = new SportServices(login, sportRepo, teamRepo);
             service.Create(futbol);
         }
 
@@ -55,8 +53,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(InvalidaDataException))]
         public void CreateInvalidNullSportTest()
         {
-            SportServices service = new SportServices(sportRepo, teamRepo);
-            service.Login = login;
+            SportServices service = new SportServices(login, sportRepo, teamRepo);
             SportDTO sport = new SportDTO();
             service.Create(sport);
         }
@@ -65,8 +62,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(InvalidaDataException))]
         public void CreateInvalidNameSportTest()
         {
-            SportServices service = new SportServices(sportRepo, teamRepo);
-            service.Login = login;
+            SportServices service = new SportServices(login, sportRepo, teamRepo);
             SportDTO sport = new SportDTO()
             {
                 Name = "                  "
@@ -77,8 +73,7 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void ModifyExistingSportTest()
         {
-            SportServices service = new SportServices(sportRepo, teamRepo);
-            service.Login = login;
+            SportServices service = new SportServices(login, sportRepo, teamRepo);
             futbol.TeamsNames.Remove(boca.Name);
             service.Modify(futbol);
 
@@ -89,8 +84,7 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void ModifyNonExistingSportTest()
         {
-            SportServices service = new SportServices(sportRepo, teamRepo);
-            service.Login = login;
+            SportServices service = new SportServices(login, sportRepo, teamRepo);
             rugby.TeamsNames.Add(boca.Name);
             service.Modify(rugby);
 
