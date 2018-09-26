@@ -31,7 +31,7 @@ namespace EirinDuran.Domain.Fixture
 
         public Encounter(Guid id, Sport sport, IEnumerable<Team> teams, DateTime dateTime, ICollection<Comment> comments)
         {
-            Id = id;
+            Id = id == Guid.Empty ? Guid.NewGuid() : id;
             ValidateNumberOfTeams(teams);
             Sport = sport;
             this.teams = GetTeamsArray(teams);

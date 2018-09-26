@@ -246,6 +246,7 @@ namespace EirinDuran.ServicesTest
                 AwayTeamName = "River Plate",
                 HomeTeamName = " adawd aw"
             };
+            encounterServices.CreateEncounter(encounter);
         }
 
         [TestMethod]
