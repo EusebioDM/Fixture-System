@@ -59,6 +59,18 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
+        [ExpectedException(typeof(InvalidaDataException))]
+        public void CreateInvalidNameSportTest()
+        {
+            SportServices service = new SportServices(login, sportRepo, teamRepo);
+            SportDTO sport = new SportDTO()
+            {
+                Name = "                  "
+            };
+            service.Create(sport);
+        }
+
+        [TestMethod]
         public void ModifyExistingSportTest()
         {
             SportServices service = new SportServices(login, sportRepo, teamRepo);
