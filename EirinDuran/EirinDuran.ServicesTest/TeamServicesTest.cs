@@ -28,7 +28,41 @@ namespace EirinDuran.ServicesTest
             TeamServices services = new TeamServices(login, teamRepository);
             services.AddTeam(boca);
             IEnumerable<Team> recovered = teamRepository.GetAll();
-            Assert.IsTrue(recovered.ToList().Count == 1);
+            Assert.AreEqual(1, recovered.ToList().Count);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(TeamTryToAddAlreadyExistsException))]
+        public void AddSameTeam()
+        {
+            Team boca = new Team("Boca");
+            TeamServices services = new TeamServices(login, teamRepository);
+
+            services.AddTeam(boca);
+            services.AddTeam(boca);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
+        public void AddTeamWithoutSufficientPermission()
+        {
+            login = new LoginServicesMock(new User(Role.Follower, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
+
+            Team boca = new Team("Boca");
+            TeamServices services = new TeamServices(login, teamRepository);
+            services.AddTeam(boca);
+        }
+
+        [TestMethod]
+        public void DeleteTeamOk()
+        {
+            Team boca = new Team("Boca");
+            TeamServices services = new TeamServices(login, teamRepository);
+            services.AddTeam(boca);
+            services.DeleteTeam("Boca");
+
+            IEnumerable<Team> recovered = teamRepository.GetAll();
+            Assert.AreEqual(0, recovered.ToList().Count);
         }
 
         private ILoginServices CreateLoginServices()
