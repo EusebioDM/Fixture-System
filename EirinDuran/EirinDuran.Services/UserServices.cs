@@ -30,7 +30,15 @@ namespace EirinDuran.Services
         public User GetUser(User user)
         {
             adminValidator.ValidatePermissions();
-            return userRepository.Get(user);
+
+            try
+            {
+                return userRepository.Get(user);
+            }
+            catch (ObjectDoesntExistsInDataBaseException)
+            {
+                throw new UserTryToRecoverDoesNotExistsException();
+            }
         }
 
         public virtual IEnumerable<User> GetAllUsers()

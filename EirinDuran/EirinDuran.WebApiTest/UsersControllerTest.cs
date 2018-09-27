@@ -208,7 +208,40 @@ namespace EirinDuran.WebApiTest
 
             var result = controller.Delete(id);
 
-            var createdResult = result as BadRequestObjectResult;
+            var createdResult = result as BadRequestResult;
+
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual(400, createdResult.StatusCode);
+        }
+
+        [TestMethod]
+        public void UpdateUserDataUserController()
+        {
+            var modelIn = new UserModelIn();
+
+            var userService = new Mock<IUserServices>();
+
+            string id = "Macri";
+
+            User macri = new User(Role.Administrator, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com");
+
+            userService.Setup(us => us.Modify(macri));
+
+            ILoginServices loginServices = new LoginServicesMock(macri);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiVXNlck5hbWUiOiJGcmFuY28iLCJQYXNzd29yZCI6InVzZXIiLCJleHAiOjE1Mzc5MTkxNTEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.t2Tm_mvehwOv20p8Wc1yFUeBa2yS-jfYKfiurNLawhc";
+
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
+            var controller = new UsersController(loginServices, userService.Object) { ControllerContext = controllerContext, };
+
+            //var result = controller.Put(id, );
+
+            //var createdResult = result as BadRequestResult;
 
             Assert.IsNotNull(createdResult);
             Assert.AreEqual(400, createdResult.StatusCode);

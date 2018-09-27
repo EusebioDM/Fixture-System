@@ -28,14 +28,7 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize(Roles = "Administrator")]
         public ActionResult<List<User>> Get()
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            List<Claim> claims = identity.Claims.ToList();
-
-            string userName = claims.Where(c => c.Type == "UserName").Select(c => c.Value).SingleOrDefault();
-            string password = claims.Where(c => c.Type == "Password").Select(c => c.Value).SingleOrDefault();
-
-            loginServices.CreateSession(userName, password);
-
+            CreateSession();
             return userServices.GetAllUsers().ToList();
         }
 
@@ -43,38 +36,25 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize(Roles = "Administrator")]
         public ActionResult<User> GetById(string id)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            List<Claim> claims = identity.Claims.ToList();
-
-            string userName = claims.Where(c => c.Type == "UserName").Select(c => c.Value).SingleOrDefault();
-            string password = claims.Where(c => c.Type == "Password").Select(c => c.Value).SingleOrDefault();
-
-            loginServices.CreateSession(userName, password);
-
-            User user = userServices.GetUser(new User(id));
-            if (user == null)
+            CreateSession();
+            try
             {
-                return NotFound();
+                return userServices.GetUser(new User(id));
             }
-            return user;
+            catch(UserTryToRecoverDoesNotExistsException)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]
         [Authorize(Roles = "Administrator")]
         public IActionResult Create(UserModelIn userModel)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            List<Claim> claims = identity.Claims.ToList();
-
-            string userName = claims.Where(c => c.Type == "UserName").Select(c => c.Value).SingleOrDefault();
-            string password = claims.Where(c => c.Type == "Password").Select(c => c.Value).SingleOrDefault();
-
-            loginServices.CreateSession(userName, password);
-
+            CreateSession();
             if (ModelState.IsValid)
             {
                 return TryToAddUser(userModel);
-                
             }
             else
             {
@@ -99,17 +79,21 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator")]
+        public IActionResult Put(string id, [FromBody] UserModelIn userModel)
+        {
+            CreateSession();
+            User user = new User(userModel.Role, userModel.UserName, userModel.Name, userModel.Surname, userModel.Password, userModel.Mail);
+            userServices.Modify(user);
+            return Ok();
+        }
+
         [HttpDelete("{id}")]
         [Authorize(Roles = "Administrator")]
         public IActionResult Delete(string id)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            List<Claim> claims = identity.Claims.ToList();
-
-            string userName = claims.Where(c => c.Type == "UserName").Select(c => c.Value).SingleOrDefault();
-            string password = claims.Where(c => c.Type == "Password").Select(c => c.Value).SingleOrDefault();
-
-            loginServices.CreateSession(userName, password);
+            CreateSession();
             return TryToDelete(id);
         }
 
@@ -124,6 +108,17 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        private void CreateSession()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            List<Claim> claims = identity.Claims.ToList();
+
+            string userName = claims.Where(c => c.Type == "UserName").Select(c => c.Value).SingleOrDefault();
+            string password = claims.Where(c => c.Type == "Password").Select(c => c.Value).SingleOrDefault();
+
+            loginServices.CreateSession(userName, password);
         }
     }
 }
