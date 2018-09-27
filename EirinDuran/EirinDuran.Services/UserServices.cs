@@ -42,7 +42,15 @@ namespace EirinDuran.Services
         public void DeleteUser(string userName)
         {
             adminValidator.ValidatePermissions();
-            userRepository.Delete(new User(userName));
+            try
+            {
+                userRepository.Delete(new User(userName));
+            }
+            catch (ObjectDoesntExistsInDataBaseException)
+            {
+                throw new UserTryToDeleteDoesNotExistsException();
+            }
+            
         }
 
         public void Modify(User userToModify)

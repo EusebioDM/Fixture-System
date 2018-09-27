@@ -6,6 +6,8 @@ using EirinDuran.WebApi.Models;
 using EirinDuran.IServices;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using EirinDuran.Services;
+using System;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -38,8 +40,17 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet("{id}", Name = "GetUser")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult<User> GetById(string id)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            List<Claim> claims = identity.Claims.ToList();
+
+            string userName = claims.Where(c => c.Type == "UserName").Select(c => c.Value).SingleOrDefault();
+            string password = claims.Where(c => c.Type == "Password").Select(c => c.Value).SingleOrDefault();
+
+            loginServices.CreateSession(userName, password);
+
             User user = userServices.GetUser(new User(id));
             if (user == null)
             {
@@ -57,10 +68,23 @@ namespace EirinDuran.WebApi.Controllers
 
             string userName = claims.Where(c => c.Type == "UserName").Select(c => c.Value).SingleOrDefault();
             string password = claims.Where(c => c.Type == "Password").Select(c => c.Value).SingleOrDefault();
-           
+
             loginServices.CreateSession(userName, password);
 
             if (ModelState.IsValid)
+            {
+                return TryToAddUser(userModel);
+                
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        private IActionResult TryToAddUser(UserModelIn userModel)
+        {
+            try
             {
                 //Poner una fábrica acá
                 User user = new User(userModel.Role, userModel.UserName, userModel.Name, userModel.Surname, userModel.Password, userModel.Mail);
@@ -69,9 +93,9 @@ namespace EirinDuran.WebApi.Controllers
                 var addedUser = new UserModelOut() { UserName = user.UserName, Name = user.Name, Surname = user.Surname, Mail = user.Mail, Role = user.Role };
                 return CreatedAtRoute("GetUser", new { id = addedUser.UserName }, addedUser);
             }
-            else
+            catch(InsufficientPermissionToPerformThisActionException)
             {
-                return BadRequest(ModelState);
+                return BadRequest();
             }
         }
 
@@ -86,9 +110,20 @@ namespace EirinDuran.WebApi.Controllers
             string password = claims.Where(c => c.Type == "Password").Select(c => c.Value).SingleOrDefault();
 
             loginServices.CreateSession(userName, password);
-            userServices.DeleteUser(id);
+            return TryToDelete(id);
+        }
 
-            return Ok();
+        private IActionResult TryToDelete(string id)
+        {
+            try
+            {
+                userServices.DeleteUser(id);
+                return Ok();
+            }
+            catch(UserTryToDeleteDoesNotExistsException)
+            {
+                return BadRequest();
+            }
         }
     }
 }

@@ -55,7 +55,13 @@ namespace EirinDuran.WebApiTest
             mockUserService.Setup(bl => bl.GetUser(expectedUser)).Returns(expectedUser);
             ILoginServices loginServices = new LoginServicesMock(new User(Role.Administrator, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
 
-            var controller = new UsersController(loginServices, mockUserService.Object);
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiVXNlck5hbWUiOiJGcmFuY28iLCJQYXNzd29yZCI6InVzZXIiLCJleHAiOjE1Mzc5MTkxNTEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.t2Tm_mvehwOv20p8Wc1yFUeBa2yS-jfYKfiurNLawhc";
+
+            var controllerContext = new ControllerContext() { HttpContext = httpContext, };
+
+
+            var controller = new UsersController(loginServices, mockUserService.Object) { ControllerContext = controllerContext, }; 
 
             var obtainedResult = controller.GetById(expectedUser.UserName) as ActionResult<User>;
 
@@ -175,6 +181,37 @@ namespace EirinDuran.WebApiTest
 
             Assert.IsNotNull(createdResult);
             Assert.AreEqual(200, createdResult.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteUserDoesNotExistsUserController()
+        {
+            var modelIn = new UserModelIn();
+
+            var userService = new Mock<IUserServices>();
+
+            string id = "pepe";
+
+            userService.Setup(us => us.DeleteUser(id)).Throws(new UserTryToDeleteDoesNotExistsException());
+
+            ILoginServices loginServices = new LoginServicesMock(new User(Role.Administrator, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiVXNlck5hbWUiOiJGcmFuY28iLCJQYXNzd29yZCI6InVzZXIiLCJleHAiOjE1Mzc5MTkxNTEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.t2Tm_mvehwOv20p8Wc1yFUeBa2yS-jfYKfiurNLawhc";
+
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
+            var controller = new UsersController(loginServices, userService.Object) { ControllerContext = controllerContext, };
+
+            var result = controller.Delete(id);
+
+            var createdResult = result as BadRequestObjectResult;
+
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual(400, createdResult.StatusCode);
         }
     }
 }
