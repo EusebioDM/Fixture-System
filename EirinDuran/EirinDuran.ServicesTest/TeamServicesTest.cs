@@ -65,6 +65,60 @@ namespace EirinDuran.ServicesTest
             Assert.AreEqual(0, recovered.ToList().Count);
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(TeamTryToDeleteDoesNotExistsException))]
+        public void DeleteTeamDoesNotExists()
+        {
+            TeamServices services = new TeamServices(login, teamRepository);
+            services.DeleteTeam("Boca");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
+        public void DeleteTeamWithoutSufficientPermission()
+        {
+            login = new LoginServicesMock(new User(Role.Follower, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
+            TeamServices services = new TeamServices(login, teamRepository);
+            Team boca = new Team("Boca");
+            services.AddTeam(boca);
+            services.DeleteTeam("Boca");
+        }
+
+        [TestMethod]
+        public void GetTeamOk()
+        {
+            TeamServices services = new TeamServices(login, teamRepository);
+            Team boca = new Team("Boca");
+            teamRepository.Add(boca);
+
+            Team recovered = services.GetTeam("Boca");
+
+            Assert.AreEqual(boca, recovered);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(TeamTryToRecoverDoesNotExistException))]
+        public void GetTeamDoesNotExists()
+        {
+            TeamServices services = new TeamServices(login, teamRepository);
+            Team recovered = services.GetTeam("Boca");
+        }
+
+        [TestMethod]
+        public void GetAllTeams()
+        {
+            TeamServices services = new TeamServices(login, teamRepository);
+            Team boca = new Team("Boca");
+            Team river = new Team("River");
+
+            teamRepository.Add(boca);
+            teamRepository.Add(river);
+
+            IEnumerable<Team> recovered = services.GetAll();
+            Assert.AreEqual(2, recovered.ToList().Count);
+
+        }
+
         private ILoginServices CreateLoginServices()
         {
             return new LoginServicesMock(new User(Role.Administrator, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
