@@ -9,6 +9,10 @@ namespace EirinDuran.IServices.Interfaces
     {
         void CreateUser(UserDTO userDTO);
 
+        UserDTO GetUser(string username);
+
+        IEnumerable<UserDTO> GetAllUsers();
+
         void DeleteUser(string userName);
 
         void Modify(UserDTO userDTO);
@@ -16,5 +20,6 @@ namespace EirinDuran.IServices.Interfaces
         void AddFollowedTeam(TeamDTO teamDTO);
 
         IEnumerable<TeamDTO> GetAllFollowedTeams();
+
     }
 }

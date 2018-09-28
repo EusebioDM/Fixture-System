@@ -19,7 +19,7 @@ namespace EirinDuran.Services
 
         public void ValidatePermissions()
         {
-            if (login.LoggedUser == null || login.LoggedUser.Role != required)
+            if (login.LoggedUser == null || (required == Role.Administrator && !login.LoggedUser.IsAdmin))
             {
                 throw new InsufficientPermissionException();
             }

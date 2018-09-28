@@ -1,4 +1,3 @@
-using System;
 using EirinDuran.Domain.User;
 using EirinDuran.DataAccess;
 using EirinDuran.IDataAccess;
@@ -10,6 +9,7 @@ using System.Linq;
 using EirinDuran.IServices;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Interfaces;
+using System;
 
 namespace EirinDuran.Services
 {
@@ -23,6 +23,7 @@ namespace EirinDuran.Services
         private TeamMapper teamMapper;
 
         public UserServices(ILoginServices loginServices, IRepository<User> userRepository, IRepository<Team> teamRepository)
+
         {
             this.userRepository = userRepository;
             this.teamRepository = teamRepository;
@@ -39,10 +40,38 @@ namespace EirinDuran.Services
             userRepository.Add(user);
         }
 
+        public UserDTO GetUser(string username)
+        {
+            adminValidator.ValidatePermissions();
+
+            try
+            {
+                return userMapper.Map(userRepository.Get(username));
+            }
+            catch (ObjectDoesntExistsInDataBaseException)
+            {
+                throw new UserTryToRecoverDoesNotExistsException();
+            }
+        }
+
+        public virtual IEnumerable<UserDTO> GetAllUsers()
+        {
+            adminValidator.ValidatePermissions();
+            return userRepository.GetAll().Select(u => userMapper.Map(u));
+        }
+
         public void DeleteUser(string userName)
         {
             adminValidator.ValidatePermissions();
-            userRepository.Delete(userName);
+            try
+            {
+                userRepository.Delete(userName);
+            }
+            catch (ObjectDoesntExistsInDataBaseException)
+            {
+                throw new UserTryToDeleteDoesNotExistsException();
+            }
+            
         }
 
         public void Modify(UserDTO userDTO)
@@ -55,8 +84,9 @@ namespace EirinDuran.Services
         public void AddFollowedTeam(TeamDTO teamDTO)
         {
             Team team = teamMapper.Map(teamDTO);
-            login.LoggedUser.AddFollowedTeam(team);
-            userRepository.Update(login.LoggedUser);
+            User user = userRepository.Get(login.LoggedUser.UserName);
+            user.AddFollowedTeam(teamMapper.Map(teamDTO));
+            userRepository.Update(user);
         }
 
         public IEnumerable<TeamDTO> GetAllFollowedTeams()

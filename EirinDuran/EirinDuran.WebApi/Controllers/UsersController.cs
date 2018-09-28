@@ -1,10 +1,16 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using EirinDuran.IDataAccess;
-using EirinDuran.Domain.User;
+using EirinDuran.WebApi.Models;
+using EirinDuran.IServices;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using EirinDuran.Services;
+using System;
+using EirinDuran.IServices.Interfaces;
+using EirinDuran.IServices.Exceptions;
+using EirinDuran.IServices.DTOs;
+using EirinDuran.WebApi.Mappers;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -12,35 +18,110 @@ namespace EirinDuran.WebApi.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IRepository<User> userRepository;
+        private readonly ILoginServices loginServices;
+        private readonly IUserServices userServices;
 
-        public UsersController(IRepository<User> aUserRepository)
+        public UsersController(ILoginServices loginServices, IUserServices userServices)
         {
-            userRepository = aUserRepository;
+            this.userServices = userServices;
+            this.loginServices = loginServices;
         }
 
         [HttpGet]
-        public ActionResult<List<User>> Get() {
-            return userRepository.GetAll().ToList();
+        [Authorize(Roles = "Administrator")]
+        public ActionResult<List<UserDTO>> Get()
+        {
+            CreateSession();
+            return userServices.GetAllUsers().ToList();
         }
 
-        [HttpGet("{id}", Name = "GetTodo")]
-        public ActionResult<User> GetById(string id)
+        [HttpGet("{id}", Name = "GetUser")]
+        [Authorize(Roles = "Administrator")]
+        public ActionResult<UserDTO> GetById(string id)
         {
-            //User user = userRepository.Get(new User(Role.Follower,id, "NOTSET","NOTSET","NOTSET","NOTSET@NOTSE.COM"));
-            //if(user == null)
-            //{
-            //    return NotFound();
-            //}
-            //return user;
-            throw new NotImplementedException();
+            CreateSession();
+            try
+            {
+                return userServices.GetUser(id);
+            }
+            catch(UserTryToRecoverDoesNotExistsException)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]
-        public IActionResult Create(User item)
+        [Authorize(Roles = "Administrator")]
+        public IActionResult Create(UserModelIn userModel)
         {
-            userRepository.Add(item);
-            return CreatedAtRoute("GetTodo", new { id = item.Name }, item);
+            CreateSession();
+            if (ModelState.IsValid)
+            {
+                return TryToAddUser(userModel);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        private IActionResult TryToAddUser(UserModelIn userModel)
+        {
+            try
+            {
+                //Poner una fábrica acá
+                UserDTO user = UserMapper.Map(userModel);
+                userServices.CreateUser(user);
+
+                var addedUser = new UserModelOut() { UserName = user.UserName, Name = user.Name, Surname = user.Surname, Mail = user.Mail, IsAdmin = user.IsAdmin };
+                return CreatedAtRoute("GetUser", new { id = addedUser.UserName }, addedUser);
+            }
+            catch(InsufficientPermissionException)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator")]
+        public IActionResult Put(string id, [FromBody] UserModelIn userModel)
+        {
+            CreateSession();
+            UserDTO user = UserMapper.Map(userModel);
+            userServices.Modify(user);
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
+        public IActionResult Delete(string id)
+        {
+            CreateSession();
+            return TryToDelete(id);
+        }
+
+        private IActionResult TryToDelete(string id)
+        {
+            try
+            {
+                userServices.DeleteUser(id);
+                return Ok();
+            }
+            catch(UserTryToDeleteDoesNotExistsException)
+            {
+                return BadRequest();
+            }
+        }
+
+        private void CreateSession()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            List<Claim> claims = identity.Claims.ToList();
+
+            string userName = claims.Where(c => c.Type == "UserName").Select(c => c.Value).SingleOrDefault();
+            string password = claims.Where(c => c.Type == "Password").Select(c => c.Value).SingleOrDefault();
+
+            loginServices.CreateSession(userName, password);
         }
     }
 }

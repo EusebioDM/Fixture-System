@@ -2,12 +2,11 @@
 using EirinDuran.IServices;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Interfaces;
-using EirinDuran.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EirinDuran.ServicesTest
+namespace EirinDuran.WebApiTest
 {
     public class LoginServicesMock : ILoginServices
     {
@@ -20,7 +19,6 @@ namespace EirinDuran.ServicesTest
 
         public void CreateSession(string userName, string password)
         {
-            throw new NotImplementedException();
         }
     }
 }

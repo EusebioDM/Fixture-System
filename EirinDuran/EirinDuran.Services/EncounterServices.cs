@@ -20,17 +20,20 @@ namespace EirinDuran.Services
         private IRepository<Encounter> encounterRepo;
         private IRepository<Sport> sportRepo;
         private IRepository<Team> teamRepo;
+        private IRepository<User> userRepo;
+
         private PermissionValidator adminValidator;
         private EncounterMapper mapper;
 
-        public EncounterServices(LoginServices loginServices, IRepository<Encounter> encounterRepository, IRepository<Sport> sportRepository, IRepository<Team> teamRepository)
+        public EncounterServices(LoginServices loginServices, IRepository<Encounter> encounterRepo, IRepository<Sport> sportRepo, IRepository<Team> teamRepo, IRepository<User> userRepo)
         {
             this.loginServices = loginServices;
-            this.encounterRepo = encounterRepository;
-            this.sportRepo = sportRepository;
-            this.teamRepo = teamRepository;
+            this.userRepo = userRepo;
+            this.encounterRepo = encounterRepo;
+            this.sportRepo = sportRepo;
+            this.teamRepo = teamRepo;
             adminValidator = new PermissionValidator(Role.Administrator, loginServices);
-            mapper = new EncounterMapper(sportRepository, teamRepository);
+            mapper = new EncounterMapper(sportRepo, teamRepo);
         }
 
         public void CreateEncounter(EncounterDTO encounterDTO)
@@ -79,7 +82,8 @@ namespace EirinDuran.Services
 
         public void AddComment(Encounter encounterToComment, string comment)
         {
-            encounterToComment.AddComment(loginServices.LoggedUser, comment);
+            User user = userRepo.Get(loginServices.LoggedUser.UserName);
+            encounterToComment.AddComment(user, comment);
             encounterRepo.Update(encounterToComment);
         }
 
@@ -116,7 +120,7 @@ namespace EirinDuran.Services
             IEnumerable<Encounter> allEncounters = encounterRepo.GetAll();
             foreach (var encounter in allEncounters)
             {
-                bool intersect = encounter.Teams.Intersect(loginServices.LoggedUser.FollowedTeams).Any();
+                bool intersect = encounter.Teams.Select(t => t.Name).Intersect(loginServices.LoggedUser.FollowedTeamsNames).Any();
                 bool hasComments = (encounter.Comments.Count() > 0);
 
                 if (intersect && hasComments)

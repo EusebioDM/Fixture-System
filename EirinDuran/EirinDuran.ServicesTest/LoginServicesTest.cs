@@ -6,19 +6,23 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using EirinDuran.DataAccessTest;
 using EirinDuran.Domain.User;
+using EirinDuran.IDataAccess;
+using EirinDuran.Domain.Fixture;
 
 namespace EirinDuran.ServicesTest
 {
     [TestClass]
     public class LoginServicesTest
     {
-        private UserRepository repo;
+        private IRepository<User> userRepo;
+        private IRepository<Team> teamRepo;
 
         [TestInitialize]
         public void TestInit()
         {
-            repo = new UserRepository(GetContextFactory());
-            repo.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
+            userRepo = new UserRepository(GetContextFactory());
+            teamRepo = new TeamRepository(GetContextFactory());
+            userRepo.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
         }
 
         private IDesignTimeDbContextFactory<Context> GetContextFactory()
@@ -29,7 +33,7 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void SimpleLoginOk()
         {
-            LoginServices login = new LoginServices(repo);
+            LoginServices login = new LoginServices(userRepo, teamRepo);
             login.CreateSession("sSanchez", "user");
             Assert.AreEqual("sSanchez", login.LoggedUser.UserName);
         }
@@ -38,7 +42,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(IServices.Exceptions.InvalidaDataException))]
         public void UserTryToLogginDoesNotExists()
         {
-            LoginServices login = new LoginServices(repo);
+            LoginServices login = new LoginServices(userRepo, teamRepo);
             login.CreateSession("pAntonio", "user");
         }
 
@@ -46,7 +50,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(IServices.Exceptions.InvalidaDataException))]
         public void TryToLoginUserWithIncorrectPassword()
         {
-            LoginServices login = new LoginServices(repo);
+            LoginServices login = new LoginServices(userRepo, teamRepo);
             login.CreateSession("sSanchez", "pass");
         }
     }
