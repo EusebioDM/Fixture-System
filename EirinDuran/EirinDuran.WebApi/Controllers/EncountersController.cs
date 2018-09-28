@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Authorization;
 using EirinDuran.Services;
 using System;
 using EirinDuran.Domain.Fixture;
-using EirinDuran.IServices;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -34,30 +33,14 @@ namespace EirinDuran.WebApi.Controllers
             return encounterServices.GetAllEncounters().ToList();
         }
 
-        [HttpGet("{id}", Name = "GetUser")]
-        [Authorize(Roles = "Administrator")]
-        public ActionResult<User> GetById(string id)
-        {
-            CreateSession();
-            try
-            {
-                // return encounterServices.GetUser(new User(id));
-                return Ok();
-            }
-            catch(UserTryToRecoverDoesNotExistsException)
-            {
-                return BadRequest();
-            }
-        }
-
         [HttpPost]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Create(UserModelIn userModel)
+        public IActionResult Create(Encounter encounter)
         {
             CreateSession();
             if (ModelState.IsValid)
             {
-                return TryToAddUser(userModel);
+                return TryToAddEncounter(encounter);
             }
             else
             {
@@ -65,16 +48,12 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        private IActionResult TryToAddUser(UserModelIn userModel)
+        private IActionResult TryToAddEncounter(Encounter encounter)
         {
             try
             {
-                //Poner una f�brica ac�
-                User user = new User(userModel.Role, userModel.UserName, userModel.Name, userModel.Surname, userModel.Password, userModel.Mail);
-              //  encounterServices.AddUser(user);
-
-                var addedUser = new UserModelOut() { UserName = user.UserName, Name = user.Name, Surname = user.Surname, Mail = user.Mail, Role = user.Role };
-                return CreatedAtRoute("GetUser", new { id = addedUser.UserName }, addedUser);
+                encounterServices.CreateEncounter(encounter);
+                return Ok();
             }
             catch(InsufficientPermissionToPerformThisActionException)
             {

@@ -1,4 +1,5 @@
 ﻿using EirinDuran.DataAccess;
+using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices;
@@ -6,20 +7,12 @@ using EirinDuran.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace EirinDuran.WebApi
 {
@@ -39,6 +32,8 @@ namespace EirinDuran.WebApi
             services.AddScoped<IRepository<User>, UserRepository>();
             services.AddScoped<ILoginServices, LoginServices>();
             services.AddScoped<IUserServices, UserServices>();
+            services.AddScoped<IRepository<Encounter>, EncounterRepository>();
+            services.AddScoped<IEncounterServices, EncounterServices>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

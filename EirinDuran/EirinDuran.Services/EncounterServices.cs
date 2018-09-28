@@ -1,6 +1,7 @@
 using EirinDuran.DataAccess;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
+using EirinDuran.IDataAccess;
 using EirinDuran.IServices;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,11 @@ namespace EirinDuran.Services
 {
     public class EncounterServices : IEncounterServices
     {
-        private LoginServices loginServices;
-        private EncounterRepository encounterRepository;
+        private ILoginServices loginServices;
+        private IRepository<Encounter> encounterRepository;
         private PermissionValidator adminValidator;
 
-        public EncounterServices(EncounterRepository encounterRepository, LoginServices loginServices)
+        public EncounterServices(IRepository<Encounter> encounterRepository, ILoginServices loginServices)
         {
             this.loginServices = loginServices;
             this.encounterRepository = encounterRepository;
