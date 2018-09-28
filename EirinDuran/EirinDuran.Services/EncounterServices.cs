@@ -1,13 +1,14 @@
 using EirinDuran.DataAccess;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
+using EirinDuran.IServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace EirinDuran.Services
 {
-    public class EncounterServices
+    public class EncounterServices : IEncounterServices
     {
         private LoginServices loginServices;
         private EncounterRepository encounterRepository;
