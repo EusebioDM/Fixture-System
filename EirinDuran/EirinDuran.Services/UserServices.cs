@@ -1,39 +1,52 @@
 using EirinDuran.Domain.User;
 using EirinDuran.DataAccess;
-using EirinDuran.IServices;
+using EirinDuran.IDataAccess;
+using EirinDuran.Services;
 using EirinDuran.Domain.Fixture;
 using System.Collections.Generic;
-using EirinDuran.IDataAccess;
+using EirinDuran.Services.DTO_Mappers;
+using System.Linq;
+using EirinDuran.IServices;
+using EirinDuran.IServices.DTOs;
+using EirinDuran.IServices.Interfaces;
+using System;
 
 namespace EirinDuran.Services
 {
     public class UserServices : IUserServices
     {
-        private IRepository<User> userRepository;
         private PermissionValidator adminValidator;
         private ILoginServices login;
+        private IRepository<User> userRepository;
+        private IRepository<Team> teamRepository;
+        private UserMapper userMapper;
+        private TeamMapper teamMapper;
 
-        public UserServices(IRepository<User> userRepository, ILoginServices loginServices)
+        public UserServices(ILoginServices loginServices, IRepository<User> userRepository, IRepository<Team> teamRepository)
+
         {
             this.userRepository = userRepository;
+            this.teamRepository = teamRepository;
             this.login = loginServices;
             adminValidator = new PermissionValidator(Role.Administrator, login);
+            userMapper = new UserMapper(teamRepository);
+            teamMapper = new TeamMapper();
         }
 
-        public void AddUser(User user)
+        public void CreateUser(UserDTO userDTO)
         {
             adminValidator.ValidatePermissions();
+            User user = userMapper.Map(userDTO);
             userRepository.Add(user);
-
         }
 
-        public User GetUser(User user)
+        public UserDTO GetUser(string username)
         {
             adminValidator.ValidatePermissions();
 
             try
             {
-                return userRepository.Get(user);
+                return userMapper.Map(userRepository.Get(username));
             }
             catch (ObjectDoesntExistsInDataBaseException)
             {
@@ -41,10 +54,10 @@ namespace EirinDuran.Services
             }
         }
 
-        public virtual IEnumerable<User> GetAllUsers()
+        public virtual IEnumerable<UserDTO> GetAllUsers()
         {
             adminValidator.ValidatePermissions();
-            return userRepository.GetAll();
+            return userRepository.GetAll().Select(u => userMapper.Map(u));
         }
 
         public void DeleteUser(string userName)
@@ -52,7 +65,7 @@ namespace EirinDuran.Services
             adminValidator.ValidatePermissions();
             try
             {
-                userRepository.Delete(new User(userName));
+                userRepository.Delete(userName);
             }
             catch (ObjectDoesntExistsInDataBaseException)
             {
@@ -61,22 +74,26 @@ namespace EirinDuran.Services
             
         }
 
-        public void Modify(User userToModify)
+        public void Modify(UserDTO userDTO)
         {
             adminValidator.ValidatePermissions();
-            userRepository.Update(userToModify);
+            User user = userMapper.Map(userDTO);
+            userRepository.Update(user);
         }
 
-        public void AddFollowedTeam(Team team)
+        public void AddFollowedTeam(TeamDTO teamDTO)
         {
-            login.LoggedUser.AddFollowedTeam(team);
-            userRepository.Update(login.LoggedUser);
+            Team team = teamMapper.Map(teamDTO);
+            User user = userRepository.Get(login.LoggedUser.UserName);
+            user.AddFollowedTeam(teamMapper.Map(teamDTO));
+            userRepository.Update(user);
         }
 
-        public IEnumerable<Team> GetAllFollowedTeams()
+        public IEnumerable<TeamDTO> GetAllFollowedTeams()
         {
-            User recovered = userRepository.Get(login.LoggedUser);
-            return recovered.FollowedTeams;
+            User recovered = userRepository.Get(login.LoggedUser.UserName);
+            Func<Team, TeamDTO> mapDTOs = team => teamMapper.Map(team);
+            return recovered.FollowedTeams.Select(mapDTOs);
         }
     }
 }

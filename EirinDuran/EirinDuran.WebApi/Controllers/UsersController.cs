@@ -1,13 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using EirinDuran.Domain.User;
 using EirinDuran.WebApi.Models;
 using EirinDuran.IServices;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using EirinDuran.Services;
 using System;
+using EirinDuran.IServices.Interfaces;
+using EirinDuran.IServices.Exceptions;
+using EirinDuran.IServices.DTOs;
+using EirinDuran.WebApi.Mappers;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -26,7 +29,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Administrator")]
-        public ActionResult<List<User>> Get()
+        public ActionResult<List<UserDTO>> Get()
         {
             CreateSession();
             return userServices.GetAllUsers().ToList();
@@ -34,12 +37,12 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet("{id}", Name = "GetUser")]
         [Authorize(Roles = "Administrator")]
-        public ActionResult<User> GetById(string id)
+        public ActionResult<UserDTO> GetById(string id)
         {
             CreateSession();
             try
             {
-                return userServices.GetUser(new User(id));
+                return userServices.GetUser(id);
             }
             catch(UserTryToRecoverDoesNotExistsException)
             {
@@ -67,13 +70,13 @@ namespace EirinDuran.WebApi.Controllers
             try
             {
                 //Poner una fábrica acá
-                User user = new User(userModel.Role, userModel.UserName, userModel.Name, userModel.Surname, userModel.Password, userModel.Mail);
-                userServices.AddUser(user);
+                UserDTO user = UserMapper.Map(userModel);
+                userServices.CreateUser(user);
 
-                var addedUser = new UserModelOut() { UserName = user.UserName, Name = user.Name, Surname = user.Surname, Mail = user.Mail, Role = user.Role };
+                var addedUser = new UserModelOut() { UserName = user.UserName, Name = user.Name, Surname = user.Surname, Mail = user.Mail, IsAdmin = user.IsAdmin };
                 return CreatedAtRoute("GetUser", new { id = addedUser.UserName }, addedUser);
             }
-            catch(InsufficientPermissionToPerformThisActionException)
+            catch(InsufficientPermissionException)
             {
                 return BadRequest();
             }
@@ -84,7 +87,7 @@ namespace EirinDuran.WebApi.Controllers
         public IActionResult Put(string id, [FromBody] UserModelIn userModel)
         {
             CreateSession();
-            User user = new User(userModel.Role, userModel.UserName, userModel.Name, userModel.Surname, userModel.Password, userModel.Mail);
+            UserDTO user = UserMapper.Map(userModel);
             userServices.Modify(user);
             return Ok();
         }

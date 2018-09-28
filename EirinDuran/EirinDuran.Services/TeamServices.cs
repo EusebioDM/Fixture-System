@@ -1,6 +1,7 @@
 using EirinDuran.Domain.Fixture;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices;
+using EirinDuran.IServices.Interfaces;
 using System.Collections.Generic;
 
 namespace EirinDuran.Services
@@ -35,7 +36,7 @@ namespace EirinDuran.Services
         {
             try
             {
-                return teamRepository.Get(new Team(teamName));
+                return teamRepository.Get(teamName);
             }
             catch (ObjectDoesntExistsInDataBaseException)
             {
@@ -53,7 +54,7 @@ namespace EirinDuran.Services
             validator.ValidatePermissions();
             try
             {
-                teamRepository.Delete(new Team(teamName));
+                teamRepository.Delete(teamName);
             }
             catch (ObjectDoesntExistsInDataBaseException)
             {

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using EirinDuran.Domain.User;
 using EirinDuran.WebApi.Models;
 using EirinDuran.IServices;
 using System.Security.Claims;
@@ -10,6 +9,10 @@ using EirinDuran.Services;
 using System;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.IServices;
+using EirinDuran.IServices.Interfaces;
+using EirinDuran.IServices.DTOs;
+using EirinDuran.WebApi.Mappers;
+using EirinDuran.IServices.Exceptions;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -36,7 +39,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet("{id}", Name = "GetUser")]
         [Authorize(Roles = "Administrator")]
-        public ActionResult<User> GetById(string id)
+        public ActionResult<UserDTO> GetById(string id)
         {
             CreateSession();
             try
@@ -70,13 +73,13 @@ namespace EirinDuran.WebApi.Controllers
             try
             {
                 //Poner una f�brica ac�
-                User user = new User(userModel.Role, userModel.UserName, userModel.Name, userModel.Surname, userModel.Password, userModel.Mail);
+                UserDTO user = UserMapper.Map(userModel);
               //  encounterServices.AddUser(user);
 
-                var addedUser = new UserModelOut() { UserName = user.UserName, Name = user.Name, Surname = user.Surname, Mail = user.Mail, Role = user.Role };
+                var addedUser = new UserModelOut() { UserName = user.UserName, Name = user.Name, Surname = user.Surname, Mail = user.Mail, IsAdmin = user.IsAdmin };
                 return CreatedAtRoute("GetUser", new { id = addedUser.UserName }, addedUser);
             }
-            catch(InsufficientPermissionToPerformThisActionException)
+            catch(InsufficientPermissionException)
             {
                 return BadRequest();
             }
@@ -87,8 +90,8 @@ namespace EirinDuran.WebApi.Controllers
         public IActionResult Put(string id, [FromBody] UserModelIn userModel)
         {
             CreateSession();
-            User user = new User(userModel.Role, userModel.UserName, userModel.Name, userModel.Surname, userModel.Password, userModel.Mail);
-           // encounterServices.Modify(user);
+            UserDTO user = UserMapper.Map(userModel);
+            // encounterServices.Modify(user);
             return Ok();
         }
 

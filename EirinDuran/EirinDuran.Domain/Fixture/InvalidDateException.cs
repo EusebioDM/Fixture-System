@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace EirinDuran.Domain.Fixture
 {
-    public class InvalidDateException : Exception
+    public class InvalidDateException : DomainException
     {
         public InvalidDateException()
         {

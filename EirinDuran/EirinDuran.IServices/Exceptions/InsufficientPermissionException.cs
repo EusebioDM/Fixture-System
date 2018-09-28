@@ -1,9 +1,9 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace EirinDuran.Services
+namespace EirinDuran.IServices.Exceptions
 {
-    public class InsufficientPermissionToPerformThisActionException : Exception
+    public class InsufficientPermissionException : Exception
     {
         public override string Message
         {

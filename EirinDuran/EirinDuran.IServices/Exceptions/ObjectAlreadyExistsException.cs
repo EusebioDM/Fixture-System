@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EirinDuran.IServices
+namespace EirinDuran.IServices.Exceptions
 {
     public class ObjectAlreadyExistsException : Exception
     {

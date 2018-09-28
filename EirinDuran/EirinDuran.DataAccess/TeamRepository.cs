@@ -26,14 +26,14 @@ namespace EirinDuran.DataAccess
 
         private Func<Context, DbSet<TeamEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Teams;
 
-        public void Add(Team model) => repo.Add(model);
+        public void Add(Team i) => repo.Add(i);
 
-        public void Delete(Team model) => repo.Delete(model);
+        public void Delete(string i) => repo.Delete(i);
 
-        public Team Get(Team team) => repo.Get(team);
+        public Team Get(string id) => repo.Get(id);
 
         public IEnumerable<Team> GetAll() => repo.GetAll();
 
-        public void Update(Team model) => repo.Update(model);
+        public void Update(Team i) => repo.Update(i);
     }
 }

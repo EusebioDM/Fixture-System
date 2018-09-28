@@ -22,6 +22,6 @@ namespace EirinDuran.WebApi.Models
         public string Password { get; set; }
 
         [Required]
-        public Role Role { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

@@ -11,6 +11,9 @@ using EirinDuran.IDataAccess;
 using EirinDuran.Domain.Fixture;
 using System.Collections.Generic;
 using System.Linq;
+using EirinDuran.IServices.Exceptions;
+using EirinDuran.IServices.Interfaces;
+using EirinDuran.IServices.DTOs;
 
 namespace EirinDuran.ServicesTest
 {
@@ -19,6 +22,7 @@ namespace EirinDuran.ServicesTest
     {
         private ILoginServices login;
         private IRepository<Team> teamRepository;
+        private UserDTO macri;
 
 
        [TestMethod]
@@ -43,10 +47,10 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
+        [ExpectedException(typeof(InsufficientPermissionException))]
         public void AddTeamWithoutSufficientPermission()
         {
-            login = new LoginServicesMock(new User(Role.Follower, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
+            login = new LoginServicesMock(macri);
 
             Team boca = new Team("Boca");
             TeamServices services = new TeamServices(login, teamRepository);
@@ -74,10 +78,10 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
+        [ExpectedException(typeof(InsufficientPermissionException))]
         public void DeleteTeamWithoutSufficientPermission()
         {
-            login = new LoginServicesMock(new User(Role.Follower, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
+            login = new LoginServicesMock(macri);
             TeamServices services = new TeamServices(login, teamRepository);
             Team boca = new Team("Boca");
             services.AddTeam(boca);
@@ -121,7 +125,7 @@ namespace EirinDuran.ServicesTest
 
         private ILoginServices CreateLoginServices()
         {
-            return new LoginServicesMock(new User(Role.Administrator, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
+            return new LoginServicesMock(macri);
         }
 
         private IDesignTimeDbContextFactory<Context> GetContextFactory()
@@ -134,6 +138,15 @@ namespace EirinDuran.ServicesTest
         {
             teamRepository = new TeamRepository(GetContextFactory());
             login = CreateLoginServices();
+            macri = new UserDTO()
+            {
+                UserName = "Macri",
+                Name = "Mauricio",
+                Surname = "Macri",
+                Password = "cat123",
+                Mail = "mail@gmail.com",
+                IsAdmin = true
+            };
         }
     }
 }

@@ -1,5 +1,8 @@
 using EirinDuran.Domain.User;
 using EirinDuran.IServices;
+using EirinDuran.IServices.Exceptions;
+using EirinDuran.IServices.Interfaces;
+using EirinDuran.Services;
 
 namespace EirinDuran.Services
 {
@@ -16,9 +19,9 @@ namespace EirinDuran.Services
 
         public void ValidatePermissions()
         {
-            if (login.LoggedUser == null || login.LoggedUser.Role != required)
+            if (login.LoggedUser == null || (required == Role.Administrator && !login.LoggedUser.IsAdmin))
             {
-                throw new InsufficientPermissionToPerformThisActionException();
+                throw new InsufficientPermissionException();
             }
         }
     }

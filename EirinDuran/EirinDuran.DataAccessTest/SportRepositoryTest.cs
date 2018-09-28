@@ -24,7 +24,6 @@ namespace EirinDuran.DataAccessTest
         private Sport rugby;
         private Team boca;
         private Team river;
-        private User macri;
 
         [TestMethod]
         public void AddSportTest()
@@ -45,7 +44,7 @@ namespace EirinDuran.DataAccessTest
         [TestMethod]
         public void RemoveSportTest()
         {
-            repo.Delete(rugby);
+            repo.Delete(rugby.Name);
 
             IEnumerable<Sport> actual = repo.GetAll();
             IEnumerable<Sport> expected = new List<Sport> { futbol };
@@ -57,13 +56,13 @@ namespace EirinDuran.DataAccessTest
         [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void RemoveNonExistingSportTest()
         {
-            repo.Delete(new Sport("hockey"));
+            repo.Delete("hockey");
         }
 
         [TestMethod]
         public void GetSportTest()
         {
-            Sport fromRepo = repo.Get(rugby);
+            Sport fromRepo = repo.Get(rugby.Name);
             Assert.AreEqual(rugby.Name, fromRepo.Name);
             Assert.IsTrue(HelperFunctions<Team>.CollectionsHaveSameElements(rugby.Teams, fromRepo.Teams));
         }
@@ -72,7 +71,7 @@ namespace EirinDuran.DataAccessTest
         [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void GetNonExistantSportTest()
         {
-            repo.Get(new Sport("tennis"));
+            repo.Get("tennis");
         }
 
         [TestMethod]
@@ -80,7 +79,7 @@ namespace EirinDuran.DataAccessTest
         {
             rugby.AddTeam(boca);
             repo.Update(rugby);
-            Sport fromRepo = repo.Get(rugby);
+            Sport fromRepo = repo.Get(rugby.Name);
 
             Assert.IsTrue(fromRepo.Teams.Contains(boca));
         }
@@ -90,9 +89,18 @@ namespace EirinDuran.DataAccessTest
         {
             Sport lasLeonas = new Sport("Hockey", new List<Team>() { new Team("Las Leonas") });
             repo.Update(lasLeonas);
-            Sport fromRepo = repo.Get(new Sport("Hockey"));
+            Sport fromRepo = repo.Get("Hockey");
 
             Assert.IsTrue(HelperFunctions<Team>.CollectionsHaveSameElements(lasLeonas.Teams, fromRepo.Teams));
+        }
+
+        [TestMethod]
+        public void RemoveTeamUpdateTest()
+        {
+            rugby.AddTeam(boca);
+            repo.Update(rugby);
+
+            Assert.IsTrue(repo.GetAll().Any(s => s.Teams.Contains(boca)));
         }
 
         [TestInitialize]
@@ -130,7 +138,7 @@ namespace EirinDuran.DataAccessTest
         {
             foreach (Sport sport in repo.GetAll())
             {
-                repo.Delete(sport);
+                repo.Delete(sport.Name);
             }
         }
 

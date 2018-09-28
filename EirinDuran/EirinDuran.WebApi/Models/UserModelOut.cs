@@ -1,4 +1,3 @@
-using EirinDuran.Domain.User;
 
 namespace EirinDuran.WebApi.Models
 {
@@ -12,6 +11,6 @@ namespace EirinDuran.WebApi.Models
 
         public string Mail { get; set; }
 
-        public Role Role { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

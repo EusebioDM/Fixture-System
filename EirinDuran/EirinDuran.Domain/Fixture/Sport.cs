@@ -30,7 +30,7 @@ namespace EirinDuran.Domain.Fixture
             bool valid = validator.ValidateNotNullOrEmptyString(value);
             if (!valid)
             {
-                throw new EmptyFieldException();
+                throw new EmptyFieldException("Name");
             }
             else
             {

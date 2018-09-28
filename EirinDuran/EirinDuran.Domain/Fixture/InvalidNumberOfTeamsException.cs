@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace EirinDuran.Domain.Fixture
 {
-    public class InvalidNumberOfTeamsException : Exception
+    public class InvalidNumberOfTeamsException : DomainException
     {
         public InvalidNumberOfTeamsException()
         {
