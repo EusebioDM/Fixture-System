@@ -1,7 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore;
-using System;
 using EirinDuran.DataAccess;
 using EirinDuran.Domain.User;
 using EirinDuran.DataAccessTest;

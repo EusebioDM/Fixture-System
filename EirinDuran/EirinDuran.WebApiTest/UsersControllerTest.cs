@@ -100,32 +100,6 @@ namespace EirinDuran.WebApiTest
         }
 
         [TestMethod]
-        public void CreateUserWithoutPermissionController()
-        {
-            var modelIn = new UserModelIn() { UserName = "Alberto", Name = "Alberto", Surname = "Lacaze", Mail = "albertito@mail.com", Password = "pass", Role = Role.Follower };
-            var fakeUser = new User(Role.Administrator, "pepeAvila", "Pepe", "Ávila", "user", "pepeavila@mymail.com");
-
-            var userServiceMock = new Mock<IUserServices>();
-
-            userServiceMock.Setup(userService => userService.AddUser(fakeUser)).Throws(new InsufficientPermissionToPerformThisActionException());
-            ILoginServices loginServices = new LoginServicesMock(new User(Role.Follower, "Macri", "Mauricio", "Macri", "cat123", "mail@gmail.com"));
-
-            var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJGb2xsb3dlciIsIlVzZXJOYW1lIjoianVhbmNhcmxvc3MiLCJQYXNzd29yZCI6InVzZXIiLCJleHAiOjE1MzgwNzg0OTYsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.t0LDLnYGnD-eDM9xvc_CJkzyDzFAoGJZYivDzKGrjeM";
-
-            var controllerContext = new ControllerContext() { HttpContext = httpContext, };
-
-            var controller = new UsersController(loginServices, userServiceMock.Object) { ControllerContext = controllerContext, };
-
-            var result = controller.Create(modelIn);
-            var createdResult = result as BadRequestResult;
-
-            Assert.IsNotNull(createdResult);
-            
-            Assert.AreEqual(403, createdResult.StatusCode);
-        }
-
-        [TestMethod]
         public void CreateFailedUserController()
         {
             var modelIn = new UserModelIn();
