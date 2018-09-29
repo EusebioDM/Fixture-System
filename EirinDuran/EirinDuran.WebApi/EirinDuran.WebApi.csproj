@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EirinDuran.Domain\EirinDuran.Domain.csproj" />
     <ProjectReference Include="..\EirinDuran.DataAccess\EirinDuran.DataAccess.csproj" />
     <ProjectReference Include="..\EirinDuran.Services\EirinDuran.Services.csproj" />
   </ItemGroup>

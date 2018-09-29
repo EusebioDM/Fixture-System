@@ -3,6 +3,7 @@ using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices;
+using EirinDuran.IServices.Interfaces;
 using EirinDuran.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

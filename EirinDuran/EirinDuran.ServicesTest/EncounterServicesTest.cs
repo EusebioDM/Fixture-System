@@ -2,6 +2,10 @@ using EirinDuran.DataAccess;
 using EirinDuran.DataAccessTest;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
+using EirinDuran.IDataAccess;
+using EirinDuran.IServices;
+using EirinDuran.IServices.DTOs;
+using EirinDuran.IServices.Exceptions;
 using EirinDuran.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -19,8 +23,11 @@ namespace EirinDuran.ServicesTest
     public class EncounterServicesTest
     {
         private LoginServices login;
-        private UserRepository userRepository;
-        private EncounterRepository encounterRepository;
+        private IRepository<User> userRepo;
+        private IRepository<Sport> sportRepo;
+        private IRepository<Team> teamRepo;
+        private IRepository<Encounter> encounterRepo;
+        private Services.DTO_Mappers.EncounterMapper mapper;
 
         private Team felix;
         private Team liverpool;
@@ -35,25 +42,39 @@ namespace EirinDuran.ServicesTest
         [TestInitialize]
         public void TestInit()
         {
-            userRepository = new UserRepository(GetContextFactory());
-            encounterRepository = new EncounterRepository(GetContextFactory());
-            userRepository.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
-            userRepository.Add(new User(Role.Follower, "martinFowler", "Martín", "Fowler", "user", "fowler@fowler.com"));
-            login = new LoginServices(userRepository);
+
+            userRepo = new UserRepository(GetContextFactory());
+            sportRepo = new SportRepository(GetContextFactory());
+            teamRepo = new TeamRepository(GetContextFactory());
+            encounterRepo = new EncounterRepository(GetContextFactory());
+            mapper = new Services.DTO_Mappers.EncounterMapper(sportRepo, teamRepo);
+            userRepo.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
+            userRepo.Add(new User(Role.Follower, "martinFowler", "Martin", "Fowler", "user", "fowler@fowler.com"));
+            login = new LoginServices(userRepo, teamRepo);
             InitializeTeams();
         }
 
         private void InitializeTeams()
         {
             felix = new Team("Felix");
+            teamRepo.Add(felix);
             liverpool = new Team("Liverpool");
+            teamRepo.Add(liverpool);
             river = new Team("River Plate");
+            teamRepo.Add(river);
             cerro = new Team("Cerro");
+            teamRepo.Add(cerro);
             torque = new Team("Torque");
+            teamRepo.Add(torque);
             danubio = new Team("Danubio");
-            penhiarol = new Team("Peñarol");
+            teamRepo.Add(danubio);
+            penhiarol = new Team("PeÃ±arol");
+            teamRepo.Add(penhiarol);
             atenas = new Team("Atenas");
+            teamRepo.Add(atenas);
             wanderers = new Team("Wanderes");
+            teamRepo.Add(wanderers);
+            
         }
 
         private IDesignTimeDbContextFactory<Context> GetContextFactory()
@@ -66,7 +87,7 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("sSanchez", "user");
 
-            EncounterServices encounterServices = new EncounterServices(encounterRepository, login);
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             IEnumerable<Team> teams = new List<Team> { felix, river };
             DateTime date = new DateTime(2018, 10, 07);
 
@@ -74,11 +95,12 @@ namespace EirinDuran.ServicesTest
 
             basketball.AddTeam(river);
             basketball.AddTeam(felix);
+            sportRepo.Add(basketball);
 
             Encounter expected = new Encounter(basketball, teams, date);
-            encounterServices.CreateEncounter(expected);
+            encounterServices.CreateEncounter(mapper.Map(expected));
 
-            List<Encounter> recovered = (List<Encounter>)encounterRepository.GetAll();
+            List<Encounter> recovered = (List<Encounter>)encounterRepo.GetAll();
 
             bool result = recovered.Contains(expected);
 
@@ -86,12 +108,12 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
+        [ExpectedException(typeof(InsufficientPermissionException))]
         public void CreateFixtureWithoutPermissions()
         {
             login.CreateSession("martinFowler", "user");
 
-            EncounterServices encounterServices = new EncounterServices(encounterRepository, login);
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             IEnumerable<Team> teams = new List<Team> { felix, river };
             DateTime date = new DateTime(2018, 10, 07);
 
@@ -101,7 +123,7 @@ namespace EirinDuran.ServicesTest
             basketball.AddTeam(felix);
 
             Encounter encounter = new Encounter(basketball, teams, date);
-            encounterServices.CreateEncounter(encounter);
+            encounterServices.CreateEncounter(mapper.Map(encounter));
         }
 
         [TestMethod]
@@ -110,7 +132,7 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("sSanchez", "user");
 
-            EncounterServices encounterServices = new EncounterServices(encounterRepository, login);
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
 
             IEnumerable<Team> teamsFirstEncounter = new List<Team> { felix, river };
             IEnumerable<Team> teamsSecondEncounter = new List<Team> { felix, penhiarol };
@@ -122,18 +144,19 @@ namespace EirinDuran.ServicesTest
             football.AddTeam(river);
             football.AddTeam(felix);
             football.AddTeam(penhiarol);
+            sportRepo.Add(football);
 
             Encounter encounter = new Encounter(football, teamsFirstEncounter, date);
             Encounter encounterOverlappingDates = new Encounter(football, teamsSecondEncounter, date);
-            encounterServices.CreateEncounter(encounter);
-            encounterServices.CreateEncounter(encounterOverlappingDates);
+            encounterServices.CreateEncounter(mapper.Map(encounter));
+            encounterServices.CreateEncounter(mapper.Map(encounterOverlappingDates));
         }
 
         [TestMethod]
         public void CreateAutoGeneratedFixture()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(encounterRepository, login);
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
 
             IEnumerable<Team> teams = new List<Team> { felix, river, penhiarol, atenas, cerro, torque, danubio, wanderers };
 
@@ -146,15 +169,16 @@ namespace EirinDuran.ServicesTest
             football.AddTeam(torque);
             football.AddTeam(danubio);
             football.AddTeam(wanderers);
+            sportRepo.Add(football);
 
             DateTime date = new DateTime(2018, 10, 10);
 
             IFixtureGenerator fixture = new LeagueFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
-            encounterServices.CreateEncounter(encounters);
+            encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
 
-            List<Encounter> recovered = (List<Encounter>)encounterRepository.GetAll();
+            List<Encounter> recovered = (List<Encounter>)encounterRepo.GetAll();
 
             bool areAllPresent = recovered.All(i => encounters.ToList().Remove(i));
 
@@ -166,7 +190,7 @@ namespace EirinDuran.ServicesTest
         public void CreateAutoGeneratedFixtureWithOverlappingDates()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(encounterRepository, login);
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
 
             IEnumerable<Team> teams = new List<Team> { felix, river, penhiarol, atenas };
 
@@ -175,6 +199,7 @@ namespace EirinDuran.ServicesTest
             football.AddTeam(river);
             football.AddTeam(penhiarol);
             football.AddTeam(atenas);
+            sportRepo.Add(football);
 
             DateTime dateFirstEncounters = new DateTime(2018, 10, 10);
             DateTime dateSecondEncounters = new DateTime(2018, 10, 12);
@@ -184,16 +209,16 @@ namespace EirinDuran.ServicesTest
             IEnumerable<Encounter> firstEncounters = fixture.GenerateFixture(teams, dateFirstEncounters);
             IEnumerable<Encounter> secondEncounters = fixture.GenerateFixture(teams, dateSecondEncounters);
 
-            encounterServices.CreateEncounter(firstEncounters);
-            encounterServices.CreateEncounter(secondEncounters);
+            encounterServices.CreateEncounter(firstEncounters.Select(e => mapper.Map(e)));
+            encounterServices.CreateEncounter(secondEncounters.Select(e => mapper.Map(e)));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
+        [ExpectedException(typeof(InsufficientPermissionException))]
         public void CreateAutoGeneratedFixtureWithoutPermissions()
         {
             login.CreateSession("martinFowler", "user");
-            EncounterServices encounterServices = new EncounterServices(encounterRepository, login);
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
 
             IEnumerable<Team> teams = new List<Team> { felix, river };
 
@@ -206,56 +231,89 @@ namespace EirinDuran.ServicesTest
             IFixtureGenerator fixture = new LeagueFixture(football);
 
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
-            encounterServices.CreateEncounter(encounters);
+            encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidaDataException))]
+        public void CreateEncounterWithInvalidRelationshipTest()
+        {
+            login.CreateSession("sSanchez", "user");
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterDTO encounter = new EncounterDTO()
+            {
+                SportName = "Football",
+                AwayTeamName = "River Plate",
+                HomeTeamName = "Cerro",
+                DateTime = DateTime.UnixEpoch
+            };
+            encounterServices.CreateEncounter(encounter);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidaDataException))]
+        public void CreateEncounterWithInvalidDateTest()
+        {
+            login.CreateSession("sSanchez", "user");
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterDTO encounter = new EncounterDTO()
+            {
+                SportName = "Football",
+                AwayTeamName = "River Plate",
+                HomeTeamName = ""
+            };
+            encounterServices.CreateEncounter(encounter);
         }
 
         [TestMethod]
         public void AddCommentToEncounter()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(encounterRepository, login);
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
 
             IEnumerable<Team> teams = new List<Team> { felix, river };
 
             Sport football = new Sport("Football");
             football.AddTeam(felix);
             football.AddTeam(river);
+            sportRepo.Add(football);
 
             DateTime date = new DateTime(2018, 10, 12);
 
             IFixtureGenerator fixture = new LeagueFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
-            encounterServices.CreateEncounter(encounters);
+            encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
 
             login.CreateSession("martinFowler", "user");
-          
-            IEnumerable<Encounter> allEncounters = encounterRepository.GetAll();
+
+            IEnumerable<Encounter> allEncounters = encounterRepo.GetAll();
 
             Encounter firstEncounter = allEncounters.First();
 
             encounterServices.AddComment(firstEncounter, "I told you, Felix will win");
-            Assert.AreEqual("I told you, Felix will win", encounterRepository.GetAll().First().Comments.First().ToString());
+            Assert.AreEqual("I told you, Felix will win", encounterRepo.GetAll().First().Comments.First().ToString());
         }
 
         [TestMethod]
         public void GetAllEncounters()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(encounterRepository, login);
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
 
             IEnumerable<Team> teams = new List<Team> { felix, river };
 
             Sport football = new Sport("Football");
             football.AddTeam(felix);
             football.AddTeam(river);
+            sportRepo.Add(football);
 
             DateTime date = new DateTime(2018, 10, 12);
 
             IFixtureGenerator fixture = new LeagueFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
-            encounterServices.CreateEncounter(encounters);
+            encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
 
             IEnumerable<Encounter> result = encounterServices.GetAllEncounters();
 
@@ -269,33 +327,33 @@ namespace EirinDuran.ServicesTest
         public void DeleteEncounter()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(encounterRepository, login);
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
 
             IEnumerable<Team> teams = new List<Team> { felix, river };
 
             Sport football = new Sport("Football");
             football.AddTeam(felix);
             football.AddTeam(river);
-
+            sportRepo.Add(football);
             DateTime date = new DateTime(2018, 10, 12);
 
             IFixtureGenerator fixture = new LeagueFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
-            encounterServices.CreateEncounter(encounters);
+            encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
             IEnumerable<Encounter> allEncounters = encounterServices.GetAllEncounters();
 
-            encounterServices.DeleteEncounter(allEncounters.First());
+            encounterServices.DeleteEncounter(allEncounters.First().Id.ToString());
 
             Assert.IsTrue(encounterServices.GetAllEncounters().ToList().Count == 0);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InsufficientPermissionToPerformThisActionException))]
+        [ExpectedException(typeof(InsufficientPermissionException))]
         public void DeleteEncounterWithoutSufficientPermission()
         {
             login.CreateSession("martinFowler", "user");
-            EncounterServices encounterServices = new EncounterServices(encounterRepository, login);
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
 
             IEnumerable<Team> teams = new List<Team> { felix, river };
 
@@ -308,10 +366,10 @@ namespace EirinDuran.ServicesTest
             IFixtureGenerator fixture = new LeagueFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
-            encounterServices.CreateEncounter(encounters);
+            encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
             IEnumerable<Encounter> allEncounters = encounterServices.GetAllEncounters();
 
-            encounterServices.DeleteEncounter(allEncounters.First());
+            encounterServices.DeleteEncounter(allEncounters.First().Id.ToString());
 
             Assert.IsTrue(encounterServices.GetAllEncounters().ToList().Count == 0);
         }
@@ -320,8 +378,8 @@ namespace EirinDuran.ServicesTest
         public void ListEncountersForATeam()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(encounterRepository, login);
-            
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+
             Sport football = new Sport("Football");
             football.AddTeam(felix);
             football.AddTeam(river);
@@ -330,16 +388,17 @@ namespace EirinDuran.ServicesTest
             football.AddTeam(torque);
             football.AddTeam(wanderers);
             football.AddTeam(liverpool);
+            sportRepo.Add(football);
 
             Encounter encounter1 = new Encounter(football, new List<Team> { felix, river }, new DateTime(2018, 10, 05));
             Encounter encounter2 = new Encounter(football, new List<Team> { atenas, wanderers }, new DateTime(2018, 10, 07));
             Encounter encounter3 = new Encounter(football, new List<Team> { penhiarol, torque }, new DateTime(2018, 10, 09));
             Encounter encounter4 = new Encounter(football, new List<Team> { river, liverpool }, new DateTime(2018, 10, 11));
 
-            encounterServices.CreateEncounter(encounter1);
-            encounterServices.CreateEncounter(encounter2);
-            encounterServices.CreateEncounter(encounter3);
-            encounterServices.CreateEncounter(encounter4);
+            encounterServices.CreateEncounter(mapper.Map(encounter1));
+            encounterServices.CreateEncounter(mapper.Map(encounter2));
+            encounterServices.CreateEncounter(mapper.Map(encounter3));
+            encounterServices.CreateEncounter(mapper.Map(encounter4));
 
             IEnumerable<Encounter> encountersRiver = encounterServices.GetAllEncounters(river);
             Assert.IsTrue(encountersRiver.ToList().Count == 2);
@@ -353,10 +412,14 @@ namespace EirinDuran.ServicesTest
             login.CreateSession("sSanchez", "user");
 
             Team cavaliers = new Team("Cavaliers");
+            teamRepo.Add(cavaliers);
+            TeamDTO cavaliersDTO = new TeamDTO() { Name = "Cavaliers", Logo = Image.FromFile(GetResourcePath("Cavaliers.jpg")) };
             Team celtics = new Team("Celtics");
-
+            teamRepo.Add(celtics);
             Team pistons = new Team("Pistons");
+            teamRepo.Add(pistons);
             Team raptors = new Team("Raptors");
+            teamRepo.Add(raptors);
 
             List<Team> teamList1 = new List<Team>();
             List<Team> teamList2 = new List<Team>();
@@ -365,6 +428,7 @@ namespace EirinDuran.ServicesTest
             basketball.AddTeam(celtics);
             basketball.AddTeam(pistons);
             basketball.AddTeam(raptors);
+            sportRepo.Add(basketball);
 
             teamList1.Add(cavaliers);
             teamList1.Add(celtics);
@@ -375,21 +439,32 @@ namespace EirinDuran.ServicesTest
             Encounter encounter1 = new Encounter(basketball, teamList1, new DateTime(2018, 10, 09));
             Encounter encounter2 = new Encounter(basketball, teamList1, new DateTime(2018, 10, 10));
 
-            EncounterServices encounterServices = new EncounterServices(new EncounterRepository(GetContextFactory()), login);
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
 
-            encounterServices.CreateEncounter(encounter1);
-            encounterServices.CreateEncounter(encounter2);
+            encounterServices.CreateEncounter(mapper.Map(encounter1));
+            encounterServices.CreateEncounter(mapper.Map(encounter2));
+
+            User user = userRepo.Get(login.LoggedUser.UserName);
+            login.CreateSession("martinFowler", "user");
+            
+            encounterServices.AddComment(encounter1, "Yes, we can!");
+
+            UserServices userServices = new UserServices(login, userRepo, teamRepo);
+
+            userServices.AddFollowedTeam(cavaliersDTO);
 
             login.CreateSession("martinFowler", "user");
-            encounter1.AddComment(login.LoggedUser, "Yes, we can!");
-            encounterServices.AddComment(encounter1, "Yes, we can!");
-         
-            UserServices userServices = new UserServices(userRepository, login);
 
-            userServices.AddFollowedTeam(cavaliers);
             IEnumerable<Encounter> followedTeamsInEncounter = encounterServices.GetAllEncountersWithFollowedTeams();
 
             Assert.IsTrue(followedTeamsInEncounter.ToList().Count == 1);
+        }
+
+        private string GetResourcePath(string resourceName)
+        {
+            string current = Directory.GetCurrentDirectory();
+            string resourcesFolder = Directory.EnumerateDirectories(current).First(d => d.EndsWith("Resources"));
+            return Directory.EnumerateFiles(resourcesFolder).First(f => f.EndsWith(resourceName));
         }
     }
 }

@@ -52,7 +52,7 @@ namespace EirinDuran.Domain.User
                 }
                 else
                 {
-                    throw new EmptyFieldException();
+                    throw new EmptyFieldException("Username");
                 }
             }
         }
@@ -67,7 +67,7 @@ namespace EirinDuran.Domain.User
                 }
                 else
                 {
-                    throw new InvalidCharactersFieldExcepion();
+                    throw new InvalidCharactersFieldExcepion("Name");
                 }
             }
         }
@@ -82,7 +82,7 @@ namespace EirinDuran.Domain.User
                 }
                 else
                 {
-                    throw new InvalidCharactersFieldExcepion();
+                    throw new InvalidCharactersFieldExcepion("Surname");
                 }
             }
         }
@@ -97,7 +97,7 @@ namespace EirinDuran.Domain.User
                 }
                 else
                 {
-                    throw new EmptyFieldException();
+                    throw new EmptyFieldException("Password");
                 }
             }
         }
@@ -111,7 +111,7 @@ namespace EirinDuran.Domain.User
                 }
                 else
                 {
-                    throw new InvalidMailFormatException();
+                    throw new InvalidMailFormatException("Mail");
                 }
             }
         }

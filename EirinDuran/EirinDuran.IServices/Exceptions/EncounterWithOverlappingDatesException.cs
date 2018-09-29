@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace EirinDuran.Services
+namespace EirinDuran.IServices.Exceptions
 {
     public class EncounterWithOverlappingDatesException : Exception
     {

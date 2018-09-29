@@ -1,12 +1,12 @@
-﻿using EirinDuran.Domain.User;
+﻿using EirinDuran.IServices.DTOs;
 using System;
 
-namespace EirinDuran.IServices
+namespace EirinDuran.IServices.Interfaces
 {
     public interface ILoginServices
     {
         void CreateSession(string userName, string password);
 
-        User LoggedUser { get; }
+        UserDTO LoggedUser { get; }
     }
 }

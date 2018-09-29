@@ -38,7 +38,7 @@ namespace EirinDuran.DataAccessTest
         [TestMethod]
         public void RemoveUserTest()
         {
-            repo.Delete(CreateUserMacri());
+            repo.Delete(macri.UserName);
 
             IEnumerable<User> actual = repo.GetAll();
             IEnumerable<User> expected = new List<User> { alvaro };
@@ -50,13 +50,13 @@ namespace EirinDuran.DataAccessTest
         [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void RemoveNonExistingUserTest()
         {
-            repo.Delete(new User("Cristina"));
+            repo.Delete("Cristina");
         }
 
         [TestMethod]
         public void GetUserTest()
         {
-            User fromRepo = repo.Get(new User("Gato"));
+            User fromRepo = repo.Get("Gato");
 
             Assert.AreEqual(macri.Name, fromRepo.Name);
             Assert.AreEqual(macri.Password, fromRepo.Password);
@@ -70,19 +70,19 @@ namespace EirinDuran.DataAccessTest
         [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
         public void GetNonExistantUserTest()
         {
-            repo.Get(new User("Cristina"));
+            repo.Get("Cristina");
         }
 
         [TestMethod]
         public void UpdateUserTest()
         {
-            macri = repo.Get(new User("Gato"));
+            macri = repo.Get("Gato");
             macri.Role = Role.Follower;
             macri.Surname = "Rodriges";
             macri.AddFollowedTeam(new Team("Boca"));
 
             repo.Update(macri);
-            User fromRepo = repo.Get(macri);
+            User fromRepo = repo.Get(macri.UserName);
 
             Assert.AreEqual(Role.Follower, fromRepo.Role);
             Assert.AreEqual(macri.Surname, fromRepo.Surname);
@@ -94,7 +94,7 @@ namespace EirinDuran.DataAccessTest
         {
             User cristina = new User(Role.Follower, "Cristina", "Cristina", "kirchner", "mecaPeron", "cristi123@cri.com");
             repo.Update(cristina);
-            User fromRepo = repo.Get(new User("Cristina"));
+            User fromRepo = repo.Get("Cristina");
             Assert.AreEqual(cristina.Name, fromRepo.Name);
             Assert.AreEqual(cristina.Password, fromRepo.Password);
             Assert.AreEqual(cristina.Mail, fromRepo.Mail);
@@ -134,11 +134,11 @@ namespace EirinDuran.DataAccessTest
         private void CleanUpRepo()
         {
             foreach (User user in repo.GetAll())
-                repo.Delete(user);
+                repo.Delete(user.Name);
         }
 
-        private User GetAlvaro() => repo.Get(new User("alvaro"));
-        private User GetMacri() => repo.Get(new User("Gato"));
+        private User GetAlvaro() => repo.Get("alvaro");
+        private User GetMacri() => repo.Get("Gato");
 
         private string GetResourcePath(string resourceName)
         {

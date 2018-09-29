@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
+using EirinDuran.IServices.Interfaces;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -53,7 +54,7 @@ namespace EirinDuran.WebApi.Controllers
                 issuer: "http://localhost:5000",
                 audience: "http://localhost:5000",
                 claims: new List<Claim>{
-                    new Claim(ClaimTypes.Role, loginServices.LoggedUser.Role.ToString()),
+                    new Claim(ClaimTypes.Role, loginServices.LoggedUser.IsAdmin ? "Administrator" : "Follower"),
                     new Claim("UserName", loginModel.UserName),
                     new Claim("Password", loginModel.Password),
                 },

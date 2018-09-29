@@ -2,11 +2,12 @@ using System;
 
 namespace EirinDuran.Domain
 {
-    public class EmptyFieldException : Exception
+    public class EmptyFieldException : DomainException
     {
-        public override string Message
+
+        public EmptyFieldException(string field) : base($"Field {field} cannot be empty")
         {
-            get { return "This field can not be empty."; }
+
         }
     }
 }

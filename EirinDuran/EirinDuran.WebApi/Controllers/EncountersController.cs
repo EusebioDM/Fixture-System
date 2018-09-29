@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using EirinDuran.Domain.User;
 using EirinDuran.WebApi.Models;
 using EirinDuran.IServices;
 using System.Security.Claims;
@@ -9,6 +8,11 @@ using Microsoft.AspNetCore.Authorization;
 using EirinDuran.Services;
 using System;
 using EirinDuran.Domain.Fixture;
+using EirinDuran.IServices;
+using EirinDuran.IServices.Interfaces;
+using EirinDuran.IServices.DTOs;
+using EirinDuran.WebApi.Mappers;
+using EirinDuran.IServices.Exceptions;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -33,9 +37,25 @@ namespace EirinDuran.WebApi.Controllers
             return encounterServices.GetAllEncounters().ToList();
         }
 
+        [HttpGet("{id}", Name = "GetUser")]
+        [Authorize(Roles = "Administrator")]
+        public ActionResult<UserDTO> GetById(string id)
+        {
+            CreateSession();
+            try
+            {
+                // return encounterServices.GetUser(new User(id));
+                return Ok();
+            }
+            catch(UserTryToRecoverDoesNotExistsException)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpPost]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Create(Encounter encounter)
+        public IActionResult Create(EncounterDTO encounter)
         {
             CreateSession();
             if (ModelState.IsValid)
@@ -48,14 +68,14 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        private IActionResult TryToAddEncounter(Encounter encounter)
+        private IActionResult TryToAddEncounter(EncounterDTO encounter)
         {
             try
             {
                 encounterServices.CreateEncounter(encounter);
                 return Ok();
             }
-            catch(InsufficientPermissionToPerformThisActionException)
+            catch(InsufficientPermissionException)
             {
                 return BadRequest();
             }
@@ -66,8 +86,8 @@ namespace EirinDuran.WebApi.Controllers
         public IActionResult Put(string id, [FromBody] UserModelIn userModel)
         {
             CreateSession();
-            User user = new User(userModel.Role, userModel.UserName, userModel.Name, userModel.Surname, userModel.Password, userModel.Mail);
-           // encounterServices.Modify(user);
+            UserDTO user = UserMapper.Map(userModel);
+            // encounterServices.Modify(user);
             return Ok();
         }
 
