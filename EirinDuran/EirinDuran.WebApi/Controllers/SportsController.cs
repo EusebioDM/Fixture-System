@@ -21,11 +21,10 @@ namespace EirinDuran.WebApi.Controllers
             this.sportServices = sportServices;
         }
 
-        // GET api/values
         [HttpGet]
         public ActionResult<List<SportDTO>> Get()
         {
-            return BadRequest();
+            return sportServices.GetAllSports().ToList();
         }
 
         // GET api/values/5

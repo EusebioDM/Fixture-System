@@ -9,6 +9,7 @@ using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.Interfaces;
 using EirinDuran.Services;
 using EirinDuran.Services.DTO_Mappers;
+using System.Linq;
 
 namespace EirinDuran.Services
 {
@@ -48,6 +49,11 @@ namespace EirinDuran.Services
             validator.ValidatePermissions();
             Sport sport = mapper.Map(sportDTO);
             sportRepo.Update(sport);
+        }
+
+        public IEnumerable<SportDTO> GetAllSports()
+        {
+            return sportRepo.GetAll().Select(s => mapper.Map(s));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿
 using EirinDuran.IServices.DTOs;
+using System.Collections.Generic;
 
 namespace EirinDuran.IServices.Interfaces
 {
@@ -8,5 +9,7 @@ namespace EirinDuran.IServices.Interfaces
         void Create(SportDTO sportDTO);
 
         void Modify(SportDTO sportDTO);
+
+        IEnumerable<SportDTO> GetAllSports();
     }
 }
