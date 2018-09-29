@@ -1,10 +1,5 @@
-﻿using EirinDuran.Domain.User;
-using EirinDuran.IServices;
-using EirinDuran.IServices.DTOs;
+﻿using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EirinDuran.WebApiTest
 {

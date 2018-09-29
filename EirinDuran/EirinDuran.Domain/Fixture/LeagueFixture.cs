@@ -43,7 +43,7 @@ namespace EirinDuran.Domain.Fixture
             int amountTeams = teamList.Count;
             int necessaryEncounters = amountTeams * (amountTeams - 1) / 2;
             int maxEncountersPerDay = amountTeams / 2;
-            int necessaryRounds = necessaryEncounters / maxEncountersPerDay;
+            int necessaryRounds = amountTeams - 1;
 
             Encounter enconter;
 
@@ -62,12 +62,12 @@ namespace EirinDuran.Domain.Fixture
                 start = start.AddDays(1);
 
                 Team lastOfLocal = local[(amountTeams / 2) - 1];
-
-                for (int l = 1; l < (amountTeams / 2) - 1; l++)
-                {
-                    local[l + 1] = local[l];
-                }
                 
+                for (int l = ((amountTeams / 2) - 1); l > 1; l--)
+                {
+                    local[l] = local[l - 1];
+                }
+
                 if ((amountTeams / 2) - 1 > 0)
                 {
                     local[1] = visitant[0];

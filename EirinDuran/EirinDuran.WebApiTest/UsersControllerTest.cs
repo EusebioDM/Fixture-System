@@ -1,4 +1,3 @@
-using EirinDuran.Domain.User;
 using EirinDuran.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
@@ -7,7 +6,6 @@ using EirinDuran.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using EirinDuran.WebApi.Models;
-using EirinDuran.IServices;
 using Microsoft.AspNetCore.Http;
 using EirinDuran.IServices.Interfaces;
 using EirinDuran.IServices.DTOs;
