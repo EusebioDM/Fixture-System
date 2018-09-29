@@ -55,5 +55,11 @@ namespace EirinDuran.Services
         {
             return sportRepo.GetAll().Select(s => mapper.Map(s));
         }
+
+        public void DeleteSport(string id)
+        {
+            validator.ValidatePermissions();
+            sportRepo.Delete(id);
+        }
     }
 }
