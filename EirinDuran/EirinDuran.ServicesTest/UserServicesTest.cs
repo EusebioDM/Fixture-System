@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using EirinDuran.IServices.Interfaces;
 
 namespace EirinDuran.ServicesTest
 {
@@ -24,6 +25,7 @@ namespace EirinDuran.ServicesTest
         private IRepository<User> userRepo;
         private IRepository<Team> teamRepo;
         private UserDTO pepe;
+        private UserDTO pablo;
 
         [TestInitialize]
         public void TestInit()
@@ -40,6 +42,17 @@ namespace EirinDuran.ServicesTest
                 Password = "user",
                 Mail = "pepeavila@mymail.com",
                 IsAdmin = true,
+                FollowedTeamsNames = new List<string>()
+            };
+
+            pablo = new UserDTO()
+            {
+                UserName = "pablo",
+                Name = "pablo",
+                Surname = "pablo",
+                Password = "user",
+                Mail = "pepeavila@mymail.com",
+                IsAdmin = false,
                 FollowedTeamsNames = new List<string>()
             };
         }
@@ -183,26 +196,34 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void FollowTeam()
         {
-            LoginServices login = new LoginServices(userRepo, teamRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            ILoginServices login = new LoginServicesMock(pepe); 
+            
+            ITeamServices teamServices = new TeamServices(login, teamRepo);
 
-            login.CreateSession("martinFowler", "user");
+            Team team = new Team("Cavaliers", Image.FromFile(GetResourcePath("Cavaliers.jpg")));
+            teamServices.AddTeam(team);
+
+            login = new LoginServicesMock(pablo);
+            IUserServices services = new UserServices(login, userRepo, teamRepo);
 
             TeamDTO cavaliers = new TeamDTO()
             {
                 Name = "Cavaliers",
                 Logo = Image.FromFile(GetResourcePath("Cavaliers.jpg"))
             };
+
             SportDTO basketball = new SportDTO()
             {
                 Name = "Baskteball"
             };
 
             basketball.TeamsNames = new List<string>() { cavaliers.Name };
+            
+            userRepo.Add(new User(Role.Follower, "pablo", "pablo", "pablo", "user", "pepeavila@mymail.com"));
 
-            services.AddFollowedTeam(cavaliers);
+            services.AddFollowedTeam("Cavaliers");
 
-            User recovered = userRepo.Get("martinFowler");
+            User recovered = userRepo.Get("pablo");
             List<Team> followedTeams = recovered.FollowedTeams.ToList();
             Assert.IsTrue(followedTeams[0].Name == "Cavaliers");
         }
@@ -212,8 +233,9 @@ namespace EirinDuran.ServicesTest
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);
             UserServices services = new UserServices(login, userRepo, teamRepo);
+            ITeamServices teamServices = new TeamServices(login, teamRepo);
 
-            login.CreateSession("martinFowler", "user");
+            login.CreateSession("sSanchez", "user");
 
             TeamDTO cavaliers = new TeamDTO()
             {
@@ -225,9 +247,12 @@ namespace EirinDuran.ServicesTest
                 Name = "Baskteball"
             };
 
+            Team team = new Team("Cavaliers", Image.FromFile(GetResourcePath("Cavaliers.jpg")));
+            teamServices.AddTeam(team);
+
             basketball.TeamsNames = new List<string>() { cavaliers.Name };
 
-            services.AddFollowedTeam(cavaliers);
+            services.AddFollowedTeam("Cavaliers");
 
             List<Team> followedTeams = services.GetAllFollowedTeams().Select(t => new Team(t.Name)).ToList();
             Assert.AreEqual(cavaliers.Name, followedTeams[0].Name);

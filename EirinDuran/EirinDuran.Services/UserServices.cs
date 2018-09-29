@@ -1,12 +1,9 @@
 using EirinDuran.Domain.User;
-using EirinDuran.DataAccess;
 using EirinDuran.IDataAccess;
-using EirinDuran.Services;
 using EirinDuran.Domain.Fixture;
 using System.Collections.Generic;
 using EirinDuran.Services.DTO_Mappers;
 using System.Linq;
-using EirinDuran.IServices;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Interfaces;
 using System;
@@ -81,11 +78,11 @@ namespace EirinDuran.Services
             userRepository.Update(user);
         }
 
-        public void AddFollowedTeam(TeamDTO teamDTO)
+        public void AddFollowedTeam(string id)
         {
-            Team team = teamMapper.Map(teamDTO);
+            Team team = teamRepository.Get(id);
             User user = userRepository.Get(login.LoggedUser.UserName);
-            user.AddFollowedTeam(teamMapper.Map(teamDTO));
+            user.AddFollowedTeam(team);
             userRepository.Update(user);
         }
 

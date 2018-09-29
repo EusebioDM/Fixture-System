@@ -36,6 +36,7 @@ namespace EirinDuran.WebApi
             services.AddScoped<IRepository<Team>, TeamRepository>();
             services.AddScoped<IRepository<Sport>, SportRepository>();
             services.AddScoped<IRepository<Encounter>, EncounterRepository>();
+            services.AddScoped<ITeamServices, TeamServices>();
             services.AddScoped<IEncounterServices, EncounterServices>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         

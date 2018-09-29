@@ -17,7 +17,7 @@ namespace EirinDuran.IServices.Interfaces
 
         void Modify(UserDTO userDTO);
 
-        void AddFollowedTeam(TeamDTO teamDTO);
+        void AddFollowedTeam(string id);
 
         IEnumerable<TeamDTO> GetAllFollowedTeams();
 

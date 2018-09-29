@@ -537,7 +537,7 @@ namespace EirinDuran.ServicesTest
 
             UserServices userServices = new UserServices(login, userRepo, teamRepo);
 
-            userServices.AddFollowedTeam(cavaliersDTO);
+            userServices.AddFollowedTeam("Cavaliers");
 
             login.CreateSession("martinFowler", "user");
 

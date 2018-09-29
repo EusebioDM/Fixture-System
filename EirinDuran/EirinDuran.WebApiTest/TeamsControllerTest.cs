@@ -34,7 +34,7 @@ namespace EirinDuran.WebApiTest
         [TestMethod]
         public void CreateTeamOkTeamsController()
         {
-            var teamServicesMock = new Mock<TeamServices>();
+            var teamServicesMock = new Mock<ITeamServices>();
             ILoginServices login = new LoginServicesMock(mariano);
 
             var httpContext = new DefaultHttpContext();
@@ -47,14 +47,14 @@ namespace EirinDuran.WebApiTest
 
             var controller = new TeamsController(login, teamServicesMock.Object) { ControllerContext = controllerContext, };
 
-            TeamDTO teamIn = new TeamDTO() { Name = "Liverpool" };
+            TeamDTO teamIn = new TeamDTO() { Name = "Cavaliers" };
 
             var result = controller.Create(teamIn);
             var createdResult = result as CreatedAtRouteResult;
             var teamOut = createdResult.Value as TeamDTO;
 
             Assert.IsNotNull(createdResult);
-            Assert.AreEqual("GetSport", createdResult.RouteName);
+            Assert.AreEqual("GetTeam", createdResult.RouteName);
             Assert.AreEqual(201, createdResult.StatusCode);
             Assert.AreEqual(teamIn.Name, teamOut.Name);
         }

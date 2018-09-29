@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace EirinDuran.Services
 {
-    public class TeamServices
+    public class TeamServices : ITeamServices
     {
         private readonly ILoginServices loginServices;
         private readonly IRepository<Team> teamRepository;
