@@ -50,10 +50,14 @@ namespace EirinDuran.WebApi.Controllers
         {
         }
 
-        // DELETE api/values/5
+
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [Authorize(Roles = "Administrator")]
+        public IActionResult Delete(string id)
         {
+            CreateSession();
+            sportServices.DeleteSport(id);
+            return Ok();
         }
 
         private void CreateSession()
