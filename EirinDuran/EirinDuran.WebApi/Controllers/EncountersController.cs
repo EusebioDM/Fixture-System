@@ -1,14 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using EirinDuran.WebApi.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using EirinDuran.Services;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.IServices.Interfaces;
 using EirinDuran.IServices.DTOs;
-using EirinDuran.WebApi.Mappers;
 using EirinDuran.IServices.Exceptions;
 
 namespace EirinDuran.WebApi.Controllers
@@ -34,20 +31,12 @@ namespace EirinDuran.WebApi.Controllers
             return encounterServices.GetAllEncounters().ToList();
         }
 
-        [HttpGet("{id}", Name = "GetUser")]
+        [HttpGet("{id}", Name = "GetEncounter")]
         [Authorize(Roles = "Administrator")]
-        public ActionResult<UserDTO> GetById(string id)
+        public ActionResult<EncounterDTO> GetById(string id)
         {
             CreateSession();
-            try
-            {
-                // return encounterServices.GetUser(new User(id));
-                return Ok();
-            }
-            catch(UserTryToRecoverDoesNotExistsException)
-            {
-                return BadRequest();
-            }
+            return BadRequest();
         }
 
         [HttpPost]
@@ -70,9 +59,9 @@ namespace EirinDuran.WebApi.Controllers
             try
             {
                 encounterServices.CreateEncounter(encounter);
-                return Ok();
+                return CreatedAtRoute("GetEncounter", new { id = encounter.Id }, encounter);
             }
-            catch(InsufficientPermissionException)
+            catch (InsufficientPermissionException)
             {
                 return BadRequest();
             }
@@ -80,12 +69,10 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Put(string id, [FromBody] UserModelIn userModel)
+        public IActionResult Put(string id, [FromBody] EncounterDTO encounterModel)
         {
             CreateSession();
-            UserDTO user = UserMapper.Map(userModel);
-            // encounterServices.Modify(user);
-            return Ok();
+            return BadRequest();
         }
 
         [HttpDelete("{id}")]
@@ -98,15 +85,7 @@ namespace EirinDuran.WebApi.Controllers
 
         private IActionResult TryToDelete(string id)
         {
-            try
-            {
-           //     encounterServices.DeleteUser(id);
-                return Ok();
-            }
-            catch(UserTryToDeleteDoesNotExistsException)
-            {
-                return BadRequest();
-            }
+            return BadRequest();
         }
 
         private void CreateSession()

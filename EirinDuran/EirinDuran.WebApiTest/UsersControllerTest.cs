@@ -79,7 +79,7 @@ namespace EirinDuran.WebApiTest
         public void CreateUserOkController()
         {
             var modelIn = new UserModelIn() { UserName = "Alberto", Name = "Alberto", Surname = "Lacaze", Mail = "albertito@mail.com", Password = "pass", IsAdmin = true };
-            var fakeUser = new UserDTO() { UserName = "pepeAvila", Surname = "Ávila", Name = "Pepe", Password = "user", Mail = "pepeavila@mymail.com", IsAdmin = true };
+            var fakeUser = new UserDTO() { UserName = "pepeAvila", Surname = "ï¿½vila", Name = "Pepe", Password = "user", Mail = "pepeavila@mymail.com", IsAdmin = true };
 
             var userServiceMock = new Mock<IUserServices>();
 
