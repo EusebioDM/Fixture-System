@@ -241,12 +241,19 @@ namespace EirinDuran.WebApiTest
 
             var controller = new UsersController(loginServices, userService.Object) { ControllerContext = controllerContext, };
 
-            //var result = controller.Put(id, );
+            var result = controller.Put(id, new UserModelIn() {
+                UserName = "Macri",
+                Name = "UserTest",
+                Surname = "UserTest",
+                Password = "user",
+                Mail = "mail@gmail.com",
+                IsAdmin = true
+            } );
 
-            //var createdResult = result as BadRequestResult;
+            var createdResult = result as OkResult;
 
-            //Assert.IsNotNull(createdResult);
-            //Assert.AreEqual(400, createdResult.StatusCode);
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual(200, createdResult.StatusCode);
         }
 
         [TestInitialize]
