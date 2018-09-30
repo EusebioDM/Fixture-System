@@ -161,7 +161,7 @@ namespace EirinDuran.ServicesTest
                 IsAdmin = true,
                 FollowedTeamsNames = new List<string>()
             };
-            services.Modify(user);
+            services.ModifyUser(user);
 
             User result = userRepo.Get("pepeAvila");
 
@@ -186,7 +186,7 @@ namespace EirinDuran.ServicesTest
                 IsAdmin = true,
                 FollowedTeamsNames = new List<string>()
             };
-            services.Modify(user);
+            services.ModifyUser(user);
 
             User result = userRepo.Get("pepeAvila");
 

@@ -37,17 +37,16 @@ namespace EirinDuran.Services
             userRepository.Add(user);
         }
 
-        public UserDTO GetUser(string username)
+        public UserDTO GetUser(string id)
         {
             adminValidator.ValidatePermissions();
-
             try
             {
-                return userMapper.Map(userRepository.Get(username));
+                return userMapper.Map(userRepository.Get(id));
             }
-            catch (ObjectDoesntExistsInDataBaseException)
+            catch (DataAccessException)
             {
-                throw new UserTryToRecoverDoesNotExistsException();
+                throw new FailureToTryToRecoverUserException();
             }
         }
 
@@ -57,25 +56,32 @@ namespace EirinDuran.Services
             return userRepository.GetAll().Select(u => userMapper.Map(u));
         }
 
-        public void DeleteUser(string userName)
+        public void DeleteUser(string id)
         {
             adminValidator.ValidatePermissions();
             try
             {
-                userRepository.Delete(userName);
+                userRepository.Delete(id);
             }
-            catch (ObjectDoesntExistsInDataBaseException)
+            catch (DataAccessException)
             {
-                throw new UserTryToDeleteDoesNotExistsException();
+                throw new FailureToTryToDeleteUserException();
             }
             
         }
 
-        public void Modify(UserDTO userDTO)
+        public void ModifyUser(UserDTO userDTO)
         {
             adminValidator.ValidatePermissions();
             User user = userMapper.Map(userDTO);
-            userRepository.Update(user);
+            try
+            {
+                userRepository.Update(user);
+            }
+            catch (DataAccessException)
+            {
+                throw new FailureToTryToModifyUserException();
+            }
         }
 
         public void AddFollowedTeam(string id)
@@ -83,14 +89,28 @@ namespace EirinDuran.Services
             Team team = teamRepository.Get(id);
             User user = userRepository.Get(login.LoggedUser.UserName);
             user.AddFollowedTeam(team);
-            userRepository.Update(user);
+            try
+            {
+                userRepository.Update(user);
+            }
+            catch(DataAccessException)
+            {
+                throw new FailureToTryToModifyUserException();
+            }
         }
 
         public IEnumerable<TeamDTO> GetAllFollowedTeams()
         {
-            User recovered = userRepository.Get(login.LoggedUser.UserName);
-            Func<Team, TeamDTO> mapDTOs = team => teamMapper.Map(team);
-            return recovered.FollowedTeams.Select(mapDTOs);
+            try
+            {
+                User recovered = userRepository.Get(login.LoggedUser.UserName);
+                Func<Team, TeamDTO> mapDTOs = team => teamMapper.Map(team);
+                return recovered.FollowedTeams.Select(mapDTOs);
+            }
+            catch(DataAccessException)
+            {
+                throw new FailureToTryToRecoverUserLoggedInFollowedTeamsException();
+            }
         }
     }
 }

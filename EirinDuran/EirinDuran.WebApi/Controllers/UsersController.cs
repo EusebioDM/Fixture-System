@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using EirinDuran.WebApi.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using EirinDuran.Services;
 using EirinDuran.IServices.Interfaces;
 using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.DTOs;
@@ -30,7 +29,26 @@ namespace EirinDuran.WebApi.Controllers
         public ActionResult<List<UserDTO>> Get()
         {
             CreateSession();
-            return userServices.GetAllUsers().ToList();
+            try
+            {
+                return TryToGet();
+            }
+            catch(InsufficientPermissionException)
+            {
+                return Unauthorized();
+            }
+        }
+
+        private ActionResult<List<UserDTO>> TryToGet()
+        {
+            try
+            {
+                return userServices.GetAllUsers().ToList();
+            }
+            catch (UserServicesException)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("{id}", Name = "GetUser")]
@@ -40,9 +58,21 @@ namespace EirinDuran.WebApi.Controllers
             CreateSession();
             try
             {
+                return TryToGetById(id);
+            }
+            catch(InsufficientPermissionException)
+            {
+                return Unauthorized();
+            }
+        }
+
+        private ActionResult<UserDTO> TryToGetById(string id)
+        {
+            try
+            {
                 return userServices.GetUser(id);
             }
-            catch(UserTryToRecoverDoesNotExistsException)
+            catch (UserServicesException)
             {
                 return BadRequest();
             }
@@ -53,13 +83,18 @@ namespace EirinDuran.WebApi.Controllers
         public IActionResult Create(UserModelIn userModel)
         {
             CreateSession();
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
             {
                 return TryToAddUser(userModel);
             }
-            else
+            catch(InsufficientPermissionException)
             {
-                return BadRequest(ModelState);
+                return Unauthorized();
             }
         }
 
@@ -67,14 +102,13 @@ namespace EirinDuran.WebApi.Controllers
         {
             try
             {
-                //Poner una fábrica acá
                 UserDTO user = UserMapper.Map(userModel);
                 userServices.CreateUser(user);
 
                 var addedUser = new UserModelOut() { UserName = user.UserName, Name = user.Name, Surname = user.Surname, Mail = user.Mail, IsAdmin = user.IsAdmin };
                 return CreatedAtRoute("GetUser", new { id = addedUser.UserName }, addedUser);
             }
-            catch(InsufficientPermissionException)
+            catch(UserServicesException)
             {
                 return BadRequest();
             }
@@ -82,12 +116,32 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Put(string id, [FromBody] UserModelIn userModel)
+        public IActionResult Modify(string id, [FromBody] UserUpdateModelIn userModel)
         {
             CreateSession();
-            UserDTO user = UserMapper.Map(userModel);
-            userServices.Modify(user);
-            return Ok();
+            try
+            {
+                return TryToModify(userModel);
+            }
+            catch(InsufficientPermissionException)
+            {
+                return Unauthorized();
+            }
+            
+        }
+
+        private IActionResult TryToModify(UserUpdateModelIn userModel)
+        {
+            try
+            {
+                UserDTO user = UserMapper.Map(userModel);
+                userServices.ModifyUser(user);
+                return Ok();
+            }
+            catch (UserServicesException)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpDelete("{id}")]
@@ -95,7 +149,14 @@ namespace EirinDuran.WebApi.Controllers
         public IActionResult Delete(string id)
         {
             CreateSession();
-            return TryToDelete(id);
+            try
+            {
+                return TryToDelete(id);
+            }
+            catch(InsufficientPermissionException)
+            {
+                return Unauthorized();
+            }
         }
 
         private IActionResult TryToDelete(string id)
@@ -105,19 +166,27 @@ namespace EirinDuran.WebApi.Controllers
                 userServices.DeleteUser(id);
                 return Ok();
             }
-            catch(UserTryToDeleteDoesNotExistsException)
+            catch(UserServicesException)
             {
                 return BadRequest();
             }
         }
 
-        [HttpPut("AddFollowedTeam/{id}")]
+        [HttpPut("follow/{id}")]
         [Authorize(Roles = "Administrator, Follower")]
         public IActionResult AddFollowedTeamToLogedUser(string id)
         {
             CreateSession();
-            userServices.AddFollowedTeam(id);
-            return Ok();
+            try
+            {
+                userServices.AddFollowedTeam(id);
+                return Ok();
+            }
+            catch (UserServicesException)
+            {
+                return BadRequest();
+            }
+            
         }
 
         private void CreateSession()

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.IDataAccess;
-using EirinDuran.IServices;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.Interfaces;
-using EirinDuran.Services;
 using EirinDuran.Services.DTO_Mappers;
 using System.Linq;
 

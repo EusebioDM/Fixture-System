@@ -21,5 +21,16 @@ namespace EirinDuran.WebApi.Mappers
                 IsAdmin = modelIn.IsAdmin
             };
         }
+
+        public static UserDTO Map(UserUpdateModelIn modelIn)
+        {
+            return new UserDTO()
+            {
+                Name = modelIn.Name,
+                Surname = modelIn.Surname,
+                Password = modelIn.Password,
+                Mail = modelIn.Mail,
+            };
+        }
     }
 }

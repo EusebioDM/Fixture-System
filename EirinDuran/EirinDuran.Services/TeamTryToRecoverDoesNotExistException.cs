@@ -1,7 +1,8 @@
-﻿using System;
+﻿using EirinDuran.IServices.Exceptions;
+
 namespace EirinDuran.Services
 {
-    public class TeamTryToRecoverDoesNotExistException : Exception
+    public class TeamTryToRecoverDoesNotExistException : UserServicesException
     {
         public override string Message
         {

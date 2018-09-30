@@ -1,8 +1,8 @@
-﻿using System;
+﻿using EirinDuran.IServices.Exceptions;
 
 namespace EirinDuran.Services
 {
-    public class TeamTryToAddAlreadyExistsException : Exception
+    public class TeamTryToAddAlreadyExistsException : UserServicesException
     {
         public override string Message
         {

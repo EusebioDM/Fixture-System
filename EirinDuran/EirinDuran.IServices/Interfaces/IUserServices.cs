@@ -15,7 +15,7 @@ namespace EirinDuran.IServices.Interfaces
 
         void DeleteUser(string userName);
 
-        void Modify(UserDTO userDTO);
+        void ModifyUser(UserDTO userDTO);
 
         void AddFollowedTeam(string id);
 

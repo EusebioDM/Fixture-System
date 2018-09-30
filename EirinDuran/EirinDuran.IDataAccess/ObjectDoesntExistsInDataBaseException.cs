@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EirinDuran.IDataAccess
 {
-    public class ObjectDoesntExistsInDataBaseException : Exception
+    public class ObjectDoesntExistsInDataBaseException : DataAccessException
     {
         private object objectThatDoesntExist;
 
@@ -18,6 +18,6 @@ namespace EirinDuran.IDataAccess
             this.objectThatDoesntExist = objectThatDoesntExist;
         }
 
-        public override string Message => $"Object {objectThatDoesntExist} doesnt exists in the DataBase";
+        public override string Message => $"Object {objectThatDoesntExist} does not exists in the DataBase";
     }
 }

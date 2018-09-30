@@ -49,12 +49,12 @@ namespace EirinDuran.Services
             return teamRepository.GetAll();
         }
 
-        public void DeleteTeam(string teamName)
+        public void DeleteTeam(string id)
         {
             validator.ValidatePermissions();
             try
             {
-                teamRepository.Delete(teamName);
+                teamRepository.Delete(id);
             }
             catch (ObjectDoesntExistsInDataBaseException)
             {

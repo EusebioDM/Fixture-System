@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
 
 namespace EirinDuran.IDataAccess
 {
-    public class ObjectAlreadyExistsInDataBaseException : Exception
+    public class ObjectAlreadyExistsInDataBaseException : DataAccessException
     {
         private object objectThatAlreadyExists;
         public ObjectAlreadyExistsInDataBaseException(object objectThatAlreadyExists)

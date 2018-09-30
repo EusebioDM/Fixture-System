@@ -1,10 +1,8 @@
-﻿
-using System;
-using System.Runtime.Serialization;
+﻿using EirinDuran.IServices.Exceptions;
 
 namespace EirinDuran.Services
 {
-    public class TeamTryToDeleteDoesNotExistsException : Exception
+    public class TeamTryToDeleteDoesNotExistsException : UserServicesException
     {
         public override string Message
         {

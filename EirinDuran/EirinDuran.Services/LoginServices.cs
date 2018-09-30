@@ -1,7 +1,5 @@
 ﻿using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
-using EirinDuran.Services;
-using EirinDuran.IServices;
 using EirinDuran.IServices.Interfaces;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.Services.DTO_Mappers;

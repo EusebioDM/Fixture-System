@@ -121,11 +121,11 @@ namespace EirinDuran.WebApiTest
             var controller = new UsersController(loginServices, userServiceMock.Object) { ControllerContext = controllerContext, };
 
             var result = controller.Create(modelIn);
-            var createdResult = result as BadRequestResult;
+            var createdResult = result as UnauthorizedResult;
 
             Assert.IsNotNull(createdResult);
             
-            Assert.AreEqual(400, createdResult.StatusCode);
+            Assert.AreEqual(401, createdResult.StatusCode);
         }
 
         [TestMethod]
@@ -150,7 +150,7 @@ namespace EirinDuran.WebApiTest
             controller.ModelState.AddModelError("", "Error");
             var result = controller.Create(modelIn);
 
-            var createdResult = result as BadRequestObjectResult;
+            var createdResult = result as BadRequestResult;
 
             Assert.IsNotNull(createdResult);
             Assert.AreEqual(400, createdResult.StatusCode);
@@ -196,7 +196,7 @@ namespace EirinDuran.WebApiTest
 
             string id = "pepe";
 
-            userService.Setup(us => us.DeleteUser(id)).Throws(new UserTryToDeleteDoesNotExistsException());
+            userService.Setup(us => us.DeleteUser(id)).Throws(new FailureToTryToDeleteUserException());
 
             ILoginServices loginServices = new LoginServicesMock(macri);
 
@@ -227,7 +227,7 @@ namespace EirinDuran.WebApiTest
 
             string id = "Macri";
 
-            userService.Setup(us => us.Modify(macri));
+            userService.Setup(us => us.ModifyUser(macri));
 
             ILoginServices loginServices = new LoginServicesMock(macri);
 
@@ -241,13 +241,11 @@ namespace EirinDuran.WebApiTest
 
             var controller = new UsersController(loginServices, userService.Object) { ControllerContext = controllerContext, };
 
-            var result = controller.Put(id, new UserModelIn() {
-                UserName = "Macri",
+            var result = controller.Modify(id, new UserUpdateModelIn(){
                 Name = "UserTest",
                 Surname = "UserTest",
                 Password = "user",
-                Mail = "mail@gmail.com",
-                IsAdmin = true
+                Mail = "mail@gmail.com"
             } );
 
             var createdResult = result as OkResult;
