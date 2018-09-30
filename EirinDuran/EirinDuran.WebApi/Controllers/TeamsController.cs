@@ -1,14 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using EirinDuran.IServices.Interfaces;
-using EirinDuran.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using EirinDuran.IServices.DTOs;
 using System.Security.Claims;
 using EirinDuran.Domain.Fixture;
+using EirinDuran.IServices.Exceptions;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -39,17 +37,33 @@ namespace EirinDuran.WebApi.Controllers
             return "value";
         }
 
-        // POST api/values
         [HttpPost]
         [Authorize(Roles = "Administrator")]
         public IActionResult Create(TeamDTO team)
         {
             CreateSession();
+            try
+            {
+                return TryToCreate(team);
+            }
+            catch(InsufficientPermissionException)
+            {
+                return Unauthorized();
+            }            
+        }
 
+        private IActionResult TryToCreate(TeamDTO team)
+        {
             Team teamReal = new Team(team.Name);
-
-            teamServices.AddTeam(teamReal);
-            return CreatedAtRoute("GetTeam", new { id = team.Name }, team);
+            try
+            {
+                teamServices.AddTeam(teamReal);
+                return CreatedAtRoute("GetTeam", new { id = team.Name }, team);
+            }
+            catch (TeamServicesException)
+            {
+                return BadRequest();
+            }
         }
 
         // PUT api/values/5
@@ -60,8 +74,30 @@ namespace EirinDuran.WebApi.Controllers
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [Authorize(Roles = "Administrator")]
+        public IActionResult Delete(string id)
         {
+            try
+            {
+                return TryToDelete(id);
+            }
+            catch (InsufficientPermissionException)
+            {
+                return Unauthorized();
+            }
+        }
+
+        private IActionResult TryToDelete(string id)
+        {
+            try
+            {
+                teamServices.DeleteTeam(id);
+                return Ok();
+            }
+            catch (TeamServicesException)
+            {
+                return BadRequest();
+            }
         }
 
         private void CreateSession()

@@ -2,7 +2,7 @@ using System;
 
 namespace EirinDuran.IServices.Exceptions
 {
-    public class EncounterWithOverlappingDatesException : Exception
+    public class EncounterWithOverlappingDatesException : EncounterServicesException
     {
         public override string Message
         {

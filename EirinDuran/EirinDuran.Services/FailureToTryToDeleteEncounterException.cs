@@ -2,7 +2,7 @@
 
 namespace EirinDuran.Services
 {
-    public class FailureToTryDeleteEncounterException : EncounterServicesException
+    public class FailureToTryToDeleteEncounterException : EncounterServicesException
     {
     }
 }

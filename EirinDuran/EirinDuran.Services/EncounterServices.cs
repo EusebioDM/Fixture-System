@@ -108,7 +108,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException)
             {
-                throw new FailureToTryGetAllEncountersException();
+                throw new FailureToTryToGetAllEncountersException();
             }
         }
 
@@ -138,7 +138,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException)
             {
-                throw new FailureToTryDeleteEncounterException();
+                throw new FailureToTryToDeleteEncounterException();
             }
             
         }

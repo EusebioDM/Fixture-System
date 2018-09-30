@@ -2,7 +2,7 @@
 
 namespace EirinDuran.Services
 {
-    public class FailureToTryGetAllEncountersException : EncounterServicesException
+    public class FailureToTryToGetAllTeamsException : UserServicesException
     {
     }
 }

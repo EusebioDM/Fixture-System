@@ -28,7 +28,26 @@ namespace EirinDuran.WebApi.Controllers
         public ActionResult<List<Encounter>> Get()
         {
             CreateSession();
-            return encounterServices.GetAllEncounters().ToList();
+            try
+            {
+                return TryToGetAllEncounters();
+            }
+            catch(InsufficientPermissionException)
+            {
+                return Unauthorized();
+            }
+        }
+
+        private ActionResult<List<Encounter>> TryToGetAllEncounters()
+        {
+            try
+            {
+                return encounterServices.GetAllEncounters().ToList();
+            }
+            catch (EncounterServicesException)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("{id}", Name = "GetEncounter")]
@@ -44,13 +63,18 @@ namespace EirinDuran.WebApi.Controllers
         public IActionResult Create(EncounterDTO encounter)
         {
             CreateSession();
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
             {
                 return TryToAddEncounter(encounter);
             }
-            else
+            catch(InsufficientPermissionException)
             {
-                return BadRequest(ModelState);
+                return Unauthorized();
             }
         }
 
@@ -61,7 +85,7 @@ namespace EirinDuran.WebApi.Controllers
                 encounterServices.CreateEncounter(encounter);
                 return CreatedAtRoute("GetEncounter", new { id = encounter.Id }, encounter);
             }
-            catch (InsufficientPermissionException)
+            catch (EncounterServicesException)
             {
                 return BadRequest();
             }
@@ -80,11 +104,6 @@ namespace EirinDuran.WebApi.Controllers
         public IActionResult Delete(string id)
         {
             CreateSession();
-            return TryToDelete(id);
-        }
-
-        private IActionResult TryToDelete(string id)
-        {
             return BadRequest();
         }
 

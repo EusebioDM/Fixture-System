@@ -26,9 +26,9 @@ namespace EirinDuran.Services
             {
                 teamRepository.Add(team);
             }
-            catch (ObjectAlreadyExistsInDataBaseException)
+            catch (DataAccessException)
             {
-                throw new TeamTryToAddAlreadyExistsException();
+                throw new FailureToTryToAddTeamException();
             }
         }
 
@@ -38,15 +38,22 @@ namespace EirinDuran.Services
             {
                 return teamRepository.Get(teamName);
             }
-            catch (ObjectDoesntExistsInDataBaseException)
+            catch (DataAccessException)
             {
-                throw new TeamTryToRecoverDoesNotExistException();
+                throw new FailureToTryToRecoverTeamException();
             }
         }
 
         public IEnumerable<Team> GetAll()
         {
-            return teamRepository.GetAll();
+            try
+            {
+                return teamRepository.GetAll();
+            }
+            catch(DataAccessException)
+            {
+                throw new FailureToTryToGetAllTeamsException();
+            }
         }
 
         public void DeleteTeam(string id)
@@ -56,9 +63,9 @@ namespace EirinDuran.Services
             {
                 teamRepository.Delete(id);
             }
-            catch (ObjectDoesntExistsInDataBaseException)
+            catch (DataAccessException)
             {
-                throw new TeamTryToDeleteDoesNotExistsException();
+                throw new FailureToTryToDeleteTeamException();
             }
         }
     }
