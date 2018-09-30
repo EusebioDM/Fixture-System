@@ -9,8 +9,12 @@ namespace EirinDuran.Entities
     public class TeamEntity : IEntity<Team>
     {
         public string Name { get; set; }
+
         public byte[] Logo { get; set; }
+
         private TeamMapper mapper;
+
+        public virtual ICollection<TeamUserEntity> TeamUsers { get; set; }
 
         public TeamEntity()
         {

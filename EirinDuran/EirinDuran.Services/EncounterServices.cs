@@ -38,7 +38,15 @@ namespace EirinDuran.Services
             adminValidator.ValidatePermissions();
             Encounter encounter = mapper.Map(encounterDTO);
             ValidateNonOverlappingOfDates(encounter);
-            encounterRepository.Add(encounter);
+
+            try
+            {
+                encounterRepository.Add(encounter);
+            }
+            catch (DataAccessException)
+            {
+                throw new FailureToTryToCreateEncounterException();
+            }
         }
 
         public void CreateEncounter(IEnumerable<EncounterDTO> encounterDTOs)
@@ -48,7 +56,15 @@ namespace EirinDuran.Services
             {
                 Encounter encounter = mapper.Map(encounterDTO);
                 ValidateNonOverlappingOfDates(encounter);
-                encounterRepository.Add(encounter);
+
+                try
+                {
+                    encounterRepository.Add(encounter);
+                }
+                catch (DataAccessException)
+                {
+                    throw new FailureToTryToCreateEncounterException();
+                }
             }
         }
 
@@ -86,7 +102,14 @@ namespace EirinDuran.Services
 
         public IEnumerable<Encounter> GetAllEncounters()
         {
-            return encounterRepository.GetAll();
+            try
+            {
+                return encounterRepository.GetAll();
+            }
+            catch (DataAccessException)
+            {
+                throw new FailureToTryGetAllEncountersException();
+            }
         }
 
         public IEnumerable<Encounter> GetAllEncounters(Team team)
@@ -108,7 +131,16 @@ namespace EirinDuran.Services
         public void DeleteEncounter(string id)
         {
             adminValidator.ValidatePermissions();
-            encounterRepository.Delete(id);
+
+            try
+            {
+                encounterRepository.Delete(id);
+            }
+            catch (DataAccessException)
+            {
+                throw new FailureToTryDeleteEncounterException();
+            }
+            
         }
 
         public IEnumerable<Encounter> GetAllEncountersWithFollowedTeams()
