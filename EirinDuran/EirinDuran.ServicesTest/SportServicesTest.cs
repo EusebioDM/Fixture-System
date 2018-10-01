@@ -42,7 +42,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ObjectAlreadyExistsException))]
+        [ExpectedException(typeof(ServicesException))]
         public void CreateAlreadyExistingSport()
         {
             SportServices service = new SportServices(login, sportRepo, teamRepo);

@@ -7,7 +7,7 @@ using System.Linq;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Interfaces;
 using System;
-using EirinDuran.IServices;
+using EirinDuran.IServices.Exceptions;
 
 namespace EirinDuran.Services
 {

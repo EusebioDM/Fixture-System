@@ -1,8 +1,6 @@
 ﻿using EirinDuran.Domain.Fixture;
 using EirinDuran.Entities.Mappers;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EirinDuran.Entities
 {

@@ -1,6 +1,6 @@
 using EirinDuran.Domain.Fixture;
 using EirinDuran.IDataAccess;
-using EirinDuran.IServices;
+using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.Interfaces;
 using System.Collections.Generic;
 

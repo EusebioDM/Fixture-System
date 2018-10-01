@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.IDataAccess;
+using EirinDuran.IServices;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.Interfaces;
@@ -36,7 +37,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ObjectAlreadyExistsException(sport);
+                throw new ServicesException("Failure to try to create sport.", e);
             }
         }
 
@@ -44,18 +45,42 @@ namespace EirinDuran.Services
         {
             validator.ValidatePermissions();
             Sport sport = mapper.Map(sportDTO);
-            sportRepo.Update(sport);
+
+            try
+            {
+                sportRepo.Update(sport);
+            }
+            catch(DataAccessException e)
+            {
+                throw new ServicesException("Failure to try to modify sport.", e);
+            }
+            
         }
 
         public IEnumerable<SportDTO> GetAllSports()
         {
-            return sportRepo.GetAll().Select(s => mapper.Map(s));
+            try
+            {
+                return sportRepo.GetAll().Select(s => mapper.Map(s));
+            }
+            catch(DataAccessException e)
+            {
+                throw new ServicesException("Failure to try to get all sports.", e);
+            }
         }
 
         public void DeleteSport(string id)
         {
             validator.ValidatePermissions();
-            sportRepo.Delete(id);
+            try
+            {
+                sportRepo.Delete(id);
+            }
+            catch(DataAccessException e)
+            {
+                throw new ServicesException("Failure to try to delete sport.", e);
+            }
+            
         }
     }
 }
