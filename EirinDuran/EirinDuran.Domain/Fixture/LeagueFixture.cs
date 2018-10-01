@@ -17,27 +17,23 @@ namespace EirinDuran.Domain.Fixture
 
         public ICollection<Encounter> GenerateFixture(IEnumerable<Team> teams, DateTime start)
         {
-            ControlValidParams(teams, start);
-
             List<Encounter> encounters = new List<Encounter>();
             List<Team> teamList = teams.ToList();
 
-            GenerateLeagueFixture(encounters, teamList, start);
+            if(teams.ToList().Count % 2 == 0)
+            {
+                GenerateLeagueFixtureParAmountOfTeams(encounters, teamList, start);
+            }
+            else
+            {
+                GenerateLeagueFixtureImparAmountOfTeams(encounters, teamList, start);
+            }
+            
 
             return encounters;
         }
 
-        private void ControlValidParams(IEnumerable<Team> teams, DateTime start)
-        {
-            int amountTeams = teams.ToList().Count;
-
-            if((amountTeams == 0) || (amountTeams % 2 != 0))
-            {
-                throw new InvalidNumberOfTeamsException();
-            }
-        }
-
-        private void GenerateLeagueFixture(List<Encounter> encounters, List<Team> teamList, DateTime start)
+        private void GenerateLeagueFixtureParAmountOfTeams(List<Encounter> encounters, List<Team> teamList, DateTime start)
         {
 
             int amountTeams = teamList.Count;
@@ -45,7 +41,7 @@ namespace EirinDuran.Domain.Fixture
             int maxEncountersPerDay = amountTeams / 2;
             int necessaryRounds = amountTeams - 1;
 
-            Encounter enconter;
+            Encounter encounter;
 
             Team[] local = ConvertCollectionOfTeamToVector(teamList, 0, (amountTeams / 2));
             Team[] visitant = ConvertCollectionOfTeamToVector(teamList, (amountTeams / 2), amountTeams);
@@ -55,8 +51,8 @@ namespace EirinDuran.Domain.Fixture
                 for (int j = 0; j < (amountTeams / 2); j++)
                 {
                     IEnumerable<Team> teamsIn = new List<Team>() { local[j], visitant[j] };
-                    enconter = new Encounter(sport, teamsIn, start);
-                    encounters.Add(enconter);
+                    encounter = new Encounter(sport, teamsIn, start);
+                    encounters.Add(encounter);
                 }
 
                 start = start.AddDays(1);
@@ -96,6 +92,66 @@ namespace EirinDuran.Domain.Fixture
             }
 
             return teamsVector;
+        }
+
+        private void GenerateLeagueFixtureImparAmountOfTeams(List<Encounter> encounters, List<Team> teamList, DateTime start)
+        {
+            int amountTeams = teamList.Count;
+            int necessaryEncounters = amountTeams * (amountTeams - 1) / 2;
+            int maxEncountersPerDay = (amountTeams - 1) / 2;
+            int necessaryRounds = amountTeams;
+
+            Encounter encounter;
+
+            Team[] local = new Team[(amountTeams - 1) / 2 + 1];
+            Team[] visitant = new Team[amountTeams - ((amountTeams - 1) / 2)];
+
+            for (int i = 0; i < (amountTeams - 1) / 2; i++)
+            {
+                local[i] = teamList[i];
+            }
+
+            for (int i = 0; i < (amountTeams - 1) / 2 + 1; i++)
+            {
+                visitant[i] = teamList[i + (amountTeams - 1) / 2];
+            }
+
+            for (int i = 0; i < necessaryRounds; i++)
+            {
+                for (int j = 0; j < (amountTeams / 2); j++)
+                {
+                    if (local[j] != null && visitant[j] != null)
+                    {
+                        IEnumerable<Team> teamsIn = new List<Team>() { local[j], visitant[j] };
+                        encounter = new Encounter(sport, teamsIn, start);
+                        encounters.Add(encounter);
+                    }
+                }
+
+                start = start.AddDays(1);
+
+                Team lastOfLocal = local[(amountTeams / 2) - 1];
+
+                for (int l = ((amountTeams / 2) - 1); l > 1; l--)
+                {
+                    local[l] = local[l - 1];
+                }
+
+                if ((amountTeams / 2) - 1 > 0)
+                {
+                    local[1] = visitant[0];
+                }
+
+                for (int g = 0; g < (amountTeams / 2) - 1; g++)
+                {
+                    visitant[g] = visitant[g + 1];
+                }
+
+                if ((amountTeams / 2) - 1 > 0)
+                {
+                    visitant[(amountTeams / 2) - 1] = lastOfLocal;
+                }
+            }
         }
     }
 }

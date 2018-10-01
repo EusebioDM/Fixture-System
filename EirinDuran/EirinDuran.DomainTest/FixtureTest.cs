@@ -42,7 +42,6 @@ namespace EirinDuran.DomainTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidNumberOfTeamsException))]
         public void SampleAutoFixtureLeagueWithEmptyTeams()
         {
             Sport football = new Sport("football");
@@ -53,6 +52,8 @@ namespace EirinDuran.DomainTest
             IFixtureGenerator leagueFixture = new LeagueFixture(football);
 
             List<Encounter> result = leagueFixture.GenerateFixture(teams, start).ToList();
+
+            Assert.AreEqual(0, result.Count);
         }
 
         [TestMethod]
@@ -96,25 +97,6 @@ namespace EirinDuran.DomainTest
             List<Encounter> result = leagueFixture.GenerateFixture(teams, start).ToList();
 
             Assert.AreEqual(15, result.Count);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidNumberOfTeamsException))]
-        public void OddNumberOfTeamsInFixture()
-        {
-            Sport football = new Sport("football");
-
-            football.AddTeam(felix);
-            football.AddTeam(liverpool);
-            football.AddTeam(river);
-
-            List<Team> teams = new List<Team>() { felix, liverpool, river };
-
-            DateTime start = new DateTime(2018, 10, 07);
-
-            IFixtureGenerator leagueFixture = new LeagueFixture(football);
-
-            List<Encounter> result = leagueFixture.GenerateFixture(teams, start).ToList();
         }
     }
 }
