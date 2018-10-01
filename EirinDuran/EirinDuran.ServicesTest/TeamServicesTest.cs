@@ -37,7 +37,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FailureToTryToAddTeamException))]
+        [ExpectedException(typeof(ServicesException))]
         public void AddSameTeam()
         {
             Team boca = new Team("Boca");
@@ -71,7 +71,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FailureToTryToDeleteTeamException))]
+        [ExpectedException(typeof(ServicesException))]
         public void DeleteTeamDoesNotExists()
         {
             TeamServices services = new TeamServices(login, teamRepository);
@@ -102,7 +102,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FailureToTryToRecoverTeamException))]
+        [ExpectedException(typeof(ServicesException))]
         public void GetTeamDoesNotExists()
         {
             TeamServices services = new TeamServices(login, teamRepository);

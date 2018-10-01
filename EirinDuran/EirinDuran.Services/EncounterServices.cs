@@ -1,6 +1,7 @@
 using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
+using EirinDuran.IServices;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.Interfaces;
@@ -43,9 +44,9 @@ namespace EirinDuran.Services
             {
                 encounterRepository.Add(encounter);
             }
-            catch (DataAccessException)
+            catch (DataAccessException e)
             {
-                throw new FailureToTryToCreateEncounterException();
+                throw new ServicesException("Failure to try to create encounter.", e);
             }
         }
 
@@ -61,9 +62,9 @@ namespace EirinDuran.Services
                 {
                     encounterRepository.Add(encounter);
                 }
-                catch (DataAccessException)
+                catch (DataAccessException e)
                 {
-                    throw new FailureToTryToCreateEncounterException();
+                    throw new ServicesException("Failure to try to create encounter.", e);
                 }
             }
         }
@@ -106,9 +107,9 @@ namespace EirinDuran.Services
             {
                 return encounterRepository.GetAll();
             }
-            catch (DataAccessException)
+            catch (DataAccessException e)
             {
-                throw new FailureToTryToGetAllEncountersException();
+                throw new ServicesException("Failure to try to get all encounters.", e);
             }
         }
 
@@ -136,9 +137,9 @@ namespace EirinDuran.Services
             {
                 encounterRepository.Delete(id);
             }
-            catch (DataAccessException)
+            catch (DataAccessException e)
             {
-                throw new FailureToTryToDeleteEncounterException();
+                throw new ServicesException("Failure to try to delete encounter.", e);
             }
             
         }

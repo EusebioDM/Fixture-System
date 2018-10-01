@@ -36,7 +36,7 @@ namespace EirinDuran.Services
                 }
 
             }
-            catch (ObjectDoesntExistsInDataBaseException)
+            catch (DataAccessException)
             {
                 throw new IServices.Exceptions.InvalidaDataException(userName);
             }

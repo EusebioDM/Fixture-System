@@ -8,6 +8,7 @@ using EirinDuran.IServices.Interfaces;
 using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.WebApi.Mappers;
+using EirinDuran.IServices;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -45,7 +46,7 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return userServices.GetAllUsers().ToList();
             }
-            catch (UserServicesException)
+            catch (ServicesException)
             {
                 return BadRequest();
             }
@@ -72,7 +73,7 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return userServices.GetUser(id);
             }
-            catch (UserServicesException)
+            catch (ServicesException)
             {
                 return BadRequest();
             }
@@ -108,7 +109,7 @@ namespace EirinDuran.WebApi.Controllers
                 var addedUser = new UserModelOut() { UserName = user.UserName, Name = user.Name, Surname = user.Surname, Mail = user.Mail, IsAdmin = user.IsAdmin };
                 return CreatedAtRoute("GetUser", new { id = addedUser.UserName }, addedUser);
             }
-            catch(UserServicesException)
+            catch(ServicesException)
             {
                 return BadRequest();
             }
@@ -138,7 +139,7 @@ namespace EirinDuran.WebApi.Controllers
                 userServices.ModifyUser(user);
                 return Ok();
             }
-            catch (UserServicesException)
+            catch (ServicesException)
             {
                 return BadRequest();
             }
@@ -166,7 +167,7 @@ namespace EirinDuran.WebApi.Controllers
                 userServices.DeleteUser(id);
                 return Ok();
             }
-            catch(UserServicesException)
+            catch(ServicesException)
             {
                 return BadRequest();
             }
@@ -182,7 +183,7 @@ namespace EirinDuran.WebApi.Controllers
                 userServices.AddFollowedTeam(id);
                 return Ok();
             }
-            catch (UserServicesException)
+            catch (ServicesException)
             {
                 return BadRequest();
             }

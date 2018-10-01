@@ -7,6 +7,7 @@ using EirinDuran.Domain.Fixture;
 using EirinDuran.IServices.Interfaces;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
+using EirinDuran.IServices;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -44,7 +45,7 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return encounterServices.GetAllEncounters().ToList();
             }
-            catch (EncounterServicesException)
+            catch (ServicesException)
             {
                 return BadRequest();
             }
@@ -85,7 +86,7 @@ namespace EirinDuran.WebApi.Controllers
                 encounterServices.CreateEncounter(encounter);
                 return CreatedAtRoute("GetEncounter", new { id = encounter.Id }, encounter);
             }
-            catch (EncounterServicesException)
+            catch (ServicesException)
             {
                 return BadRequest();
             }

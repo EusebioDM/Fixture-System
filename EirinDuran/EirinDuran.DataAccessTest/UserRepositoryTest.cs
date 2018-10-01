@@ -29,7 +29,7 @@ namespace EirinDuran.DataAccessTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ObjectAlreadyExistsInDataBaseException))]
+        [ExpectedException(typeof(DataAccessException))]
         public void AddExistingUserTest()
         {
             repo.Add(CreateUserMacri());
@@ -47,7 +47,7 @@ namespace EirinDuran.DataAccessTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
+        [ExpectedException(typeof(DataAccessException))]
         public void RemoveNonExistingUserTest()
         {
             repo.Delete("Cristina");
@@ -67,7 +67,7 @@ namespace EirinDuran.DataAccessTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
+        [ExpectedException(typeof(DataAccessException))]
         public void GetNonExistantUserTest()
         {
             repo.Get("Cristina");

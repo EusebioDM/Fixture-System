@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using EirinDuran.IServices.Interfaces;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
+using EirinDuran.IServices;
 
 namespace EirinDuran.WebApiTest
 {
@@ -196,7 +197,7 @@ namespace EirinDuran.WebApiTest
 
             string id = "pepe";
 
-            userService.Setup(us => us.DeleteUser(id)).Throws(new FailureToTryToDeleteUserException());
+            userService.Setup(us => us.DeleteUser(id)).Throws(new ServicesException());
 
             ILoginServices loginServices = new LoginServicesMock(macri);
 

@@ -7,6 +7,7 @@ using System.Linq;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Interfaces;
 using System;
+using EirinDuran.IServices;
 
 namespace EirinDuran.Services
 {
@@ -44,9 +45,9 @@ namespace EirinDuran.Services
             {
                 return userMapper.Map(userRepository.Get(id));
             }
-            catch (DataAccessException)
+            catch (DataAccessException e)
             {
-                throw new FailureToTryToRecoverUserException();
+                throw new ServicesException("Failure to try to recover user.", e);
             }
         }
 
@@ -63,9 +64,9 @@ namespace EirinDuran.Services
             {
                 userRepository.Delete(id);
             }
-            catch (DataAccessException)
+            catch (DataAccessException e)
             {
-                throw new FailureToTryToDeleteUserException();
+                throw new ServicesException("Failure to try to delete user.", e);
             }
             
         }
@@ -78,9 +79,9 @@ namespace EirinDuran.Services
             {
                 userRepository.Update(user);
             }
-            catch (DataAccessException)
+            catch (DataAccessException e)
             {
-                throw new FailureToTryToModifyUserException();
+                throw new ServicesException("Failure to try to modify user.", e);
             }
         }
 
@@ -93,9 +94,9 @@ namespace EirinDuran.Services
             {
                 userRepository.Update(user);
             }
-            catch(DataAccessException)
+            catch(DataAccessException e)
             {
-                throw new FailureToTryToModifyUserException();
+                throw new ServicesException("Failure to try to modify user.", e);
             }
         }
 
@@ -107,9 +108,9 @@ namespace EirinDuran.Services
                 Func<Team, TeamDTO> mapDTOs = team => teamMapper.Map(team);
                 return recovered.FollowedTeams.Select(mapDTOs);
             }
-            catch(DataAccessException)
+            catch(DataAccessException e)
             {
-                throw new FailureToTryToRecoverUserLoggedInFollowedTeamsException();
+                throw new ServicesException("Failure to try to recover user logged in followes teams exception.", e);
             }
         }
     }

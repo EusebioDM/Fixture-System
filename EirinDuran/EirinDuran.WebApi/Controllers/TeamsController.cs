@@ -7,6 +7,7 @@ using EirinDuran.IServices.DTOs;
 using System.Security.Claims;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.IServices.Exceptions;
+using EirinDuran.IServices;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -60,7 +61,7 @@ namespace EirinDuran.WebApi.Controllers
                 teamServices.AddTeam(teamReal);
                 return CreatedAtRoute("GetTeam", new { id = team.Name }, team);
             }
-            catch (TeamServicesException)
+            catch (ServicesException)
             {
                 return BadRequest();
             }
@@ -94,7 +95,7 @@ namespace EirinDuran.WebApi.Controllers
                 teamServices.DeleteTeam(id);
                 return Ok();
             }
-            catch (TeamServicesException)
+            catch (ServicesException)
             {
                 return BadRequest();
             }

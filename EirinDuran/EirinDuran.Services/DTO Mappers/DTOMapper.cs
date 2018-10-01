@@ -14,7 +14,7 @@ namespace EirinDuran.Services.DTO_Mappers
             {
                 return TryToMapModel(dto);
             }
-            catch (Exception ex ) when (ex is Domain.DomainException  || ex is ArgumentNullException || ex is IDataAccess.ObjectDoesntExistsInDataBaseException)
+            catch (Exception ex ) when (ex is Domain.DomainException  || ex is ArgumentNullException || ex is IDataAccess.DataAccessException)
             {
                 throw new IServices.Exceptions.InvalidaDataException(dto, ex);
             }

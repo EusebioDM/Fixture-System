@@ -1,13 +1,9 @@
 ﻿using EirinDuran.Domain.Fixture;
 using EirinDuran.IDataAccess;
-using EirinDuran.IServices;
 using EirinDuran.IServices.DTOs;
-using EirinDuran.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 [assembly: InternalsVisibleTo("EirinDuran.ServicesTest")]
 
 namespace EirinDuran.Services.DTO_Mappers

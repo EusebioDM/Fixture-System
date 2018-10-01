@@ -117,7 +117,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
+        [ExpectedException(typeof(DataAccessException))]
         public void DeleteUserSimpleOk()
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);

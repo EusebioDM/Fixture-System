@@ -35,7 +35,7 @@ namespace EirinDuran.DataAccessTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ObjectAlreadyExistsInDataBaseException))]
+        [ExpectedException(typeof(DataAccessException))]
         public void AddExistingSportTest()
         {
             repo.Add(rugby);
@@ -53,7 +53,7 @@ namespace EirinDuran.DataAccessTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
+        [ExpectedException(typeof(DataAccessException))]
         public void RemoveNonExistingSportTest()
         {
             repo.Delete("hockey");
@@ -68,7 +68,7 @@ namespace EirinDuran.DataAccessTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
+        [ExpectedException(typeof(DataAccessException))]
         public void GetNonExistantSportTest()
         {
             repo.Get("tennis");

@@ -34,7 +34,7 @@ namespace EirinDuran.Services
             {
                 sportRepo.Add(sport);
             }
-            catch (ObjectAlreadyExistsInDataBaseException)
+            catch (DataAccessException e)
             {
                 throw new ObjectAlreadyExistsException(sport);
             }

@@ -34,7 +34,7 @@ namespace EirinDuran.DataAccessTest
             }
 
             [TestMethod]
-            [ExpectedException(typeof(ObjectAlreadyExistsInDataBaseException))]
+            [ExpectedException(typeof(DataAccessException))]
             public void AddExistingTeamTest()
             {
                 repo.Add(GetBocaTeam());
@@ -52,7 +52,7 @@ namespace EirinDuran.DataAccessTest
             }
 
             [TestMethod]
-            [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
+            [ExpectedException(typeof(DataAccessException))]
             public void RemoveNonExistingTeamTest()
             {
                 repo.Delete(CreateBocaTeam().Name);
@@ -69,7 +69,7 @@ namespace EirinDuran.DataAccessTest
             }
 
             [TestMethod]
-            [ExpectedException(typeof(ObjectDoesntExistsInDataBaseException))]
+            [ExpectedException(typeof(DataAccessException))]
             public void GetNonExistantTeamTest()
             {
                 repo.Get("Godoy Cruz");

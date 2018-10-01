@@ -26,9 +26,9 @@ namespace EirinDuran.Services
             {
                 teamRepository.Add(team);
             }
-            catch (DataAccessException)
+            catch (DataAccessException e)
             {
-                throw new FailureToTryToAddTeamException();
+                throw new ServicesException("Failure to try to add team.", e);
             }
         }
 
@@ -38,9 +38,9 @@ namespace EirinDuran.Services
             {
                 return teamRepository.Get(teamName);
             }
-            catch (DataAccessException)
+            catch (DataAccessException e)
             {
-                throw new FailureToTryToRecoverTeamException();
+                throw new ServicesException("Failure to try to recover team.", e);
             }
         }
 
@@ -50,9 +50,9 @@ namespace EirinDuran.Services
             {
                 return teamRepository.GetAll();
             }
-            catch(DataAccessException)
+            catch(DataAccessException e)
             {
-                throw new FailureToTryToGetAllTeamsException();
+                throw new ServicesException("Failure to try to get all teams.", e);
             }
         }
 
@@ -63,9 +63,9 @@ namespace EirinDuran.Services
             {
                 teamRepository.Delete(id);
             }
-            catch (DataAccessException)
+            catch (DataAccessException e)
             {
-                throw new FailureToTryToDeleteTeamException();
+                throw new ServicesException("Failure to try to delete team.", e);
             }
         }
     }

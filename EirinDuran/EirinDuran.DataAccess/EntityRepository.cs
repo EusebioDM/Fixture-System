@@ -31,13 +31,13 @@ namespace EirinDuran.DataAccess
             {
                 TryToAdd(id);
             }
-            catch (ArgumentException)
+            catch (ArgumentException e)
             {
-                throw new ObjectAlreadyExistsInDataBaseException(id);
+                throw new DataAccessException("Object already exists in database.", e);
             }
-            catch (SqlException ex)
+            catch (SqlException e)
             {
-                throw new ConnectionToDataAccessFailedException(ex);
+                throw new DataAccessException("Connection to database failed.", e);
             }
         }
 
@@ -55,7 +55,7 @@ namespace EirinDuran.DataAccess
                 Entity fromRepo = GetEntityFromRepo(context, entity);
                 if (fromRepo != null)
                 {
-                    throw new ObjectAlreadyExistsInDataBaseException(entity);
+                    throw new DataAccessException("Object already exists in database.");
                 }
             }
         }
@@ -66,13 +66,13 @@ namespace EirinDuran.DataAccess
             {
                 TryToDelete(id);
             }
-            catch (ArgumentException)
+            catch (ArgumentException e)
             {
-                throw new ObjectDoesntExistsInDataBaseException(id);
+                throw new DataAccessException("Object does not exists in database.", e);
             }
-            catch (SqlException ex)
+            catch (SqlException e)
             {
-                throw new ConnectionToDataAccessFailedException(ex);
+                throw new DataAccessException("Connection to database failed.", e);
             }
         }
 
@@ -82,7 +82,7 @@ namespace EirinDuran.DataAccess
             {
                 Entity toDelete = context.Find<Entity>(id);
                 if(toDelete == null)
-                    throw new ObjectDoesntExistsInDataBaseException(id);
+                    throw new DataAccessException("Object does not exists in database.");
                 context.Entry(toDelete).State = EntityState.Deleted;
                 context.SaveChanges();
             }
@@ -94,13 +94,13 @@ namespace EirinDuran.DataAccess
             {
                 return TryToGet(id);
             }
-            catch (ArgumentException)
+            catch (ArgumentException e)
             {
-                throw new ObjectDoesntExistsInDataBaseException(id);
+                throw new DataAccessException("Object does not exists in database.", e);
             }
-            catch (SqlException ex)
+            catch (SqlException e)
             {
-                throw new ConnectionToDataAccessFailedException(ex);
+                throw new DataAccessException("Connection to database failed.", e);
             }
         }
 
@@ -111,7 +111,7 @@ namespace EirinDuran.DataAccess
                 Entity toReturn = context.Find<Entity>(id);
                 if (toReturn == null)
                 {
-                    throw new ObjectDoesntExistsInDataBaseException(id);
+                    throw new DataAccessException("Object does not exists in database.");
                 }
                 return toReturn.ToModel();
             }
@@ -123,9 +123,9 @@ namespace EirinDuran.DataAccess
             {
                 return TryToGetAll();
             }
-            catch (SqlException ex)
+            catch (SqlException e)
             {
-                throw new ConnectionToDataAccessFailedException(ex);
+                throw new DataAccessException("Connection to database failed.", e);
             }
         }
 
@@ -145,13 +145,13 @@ namespace EirinDuran.DataAccess
             {
                 TryToUpdate(id);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException e)
             {
-                throw new ObjectDoesntExistsInDataBaseException(id);
+                throw new DataAccessException("Object does not exists in database.", e);
             }
-            catch (SqlException ex)
+            catch (SqlException e)
             {
-                throw new ConnectionToDataAccessFailedException(ex);
+                throw new DataAccessException("Connection to database failed.", e);
             }
         }
 
