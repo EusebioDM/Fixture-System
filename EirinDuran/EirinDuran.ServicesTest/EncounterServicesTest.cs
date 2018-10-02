@@ -162,7 +162,7 @@ namespace EirinDuran.ServicesTest
 
             DateTime date = new DateTime(2018, 10, 10);
 
-            IFixtureGenerator fixture = new LeagueFixture(football);
+            IFixtureGenerator fixture = new RoundRobinFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
@@ -194,7 +194,7 @@ namespace EirinDuran.ServicesTest
 
             DateTime date = new DateTime(2018, 10, 10);
 
-            IFixtureGenerator fixture = new LeagueFixture(football);
+            IFixtureGenerator fixture = new RoundRobinFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
@@ -227,7 +227,7 @@ namespace EirinDuran.ServicesTest
 
             DateTime date = new DateTime(2018, 10, 10);
 
-            IFixtureGenerator fixture = new LeagueFixture(football);
+            IFixtureGenerator fixture = new RoundRobinFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
@@ -257,7 +257,7 @@ namespace EirinDuran.ServicesTest
 
             DateTime date = new DateTime(2018, 10, 10);
 
-            IFixtureGenerator fixture = new LeagueFixture(football);
+            IFixtureGenerator fixture = new RoundRobinFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
@@ -289,7 +289,7 @@ namespace EirinDuran.ServicesTest
 
             DateTime date = new DateTime(2018, 10, 10);
 
-            IFixtureGenerator fixture = new LeagueFixture(football);
+            IFixtureGenerator fixture = new RoundRobinFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
@@ -316,7 +316,7 @@ namespace EirinDuran.ServicesTest
 
             DateTime date = new DateTime(2018, 10, 10);
 
-            IFixtureGenerator fixture = new LeagueFixture(football);
+            IFixtureGenerator fixture = new RoundRobinFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
@@ -347,7 +347,7 @@ namespace EirinDuran.ServicesTest
             DateTime dateFirstEncounters = new DateTime(2018, 10, 10);
             DateTime dateSecondEncounters = new DateTime(2018, 10, 12);
 
-            IFixtureGenerator fixture = new LeagueFixture(football);
+            IFixtureGenerator fixture = new RoundRobinFixture(football);
 
             IEnumerable<Encounter> firstEncounters = fixture.GenerateFixture(teams, dateFirstEncounters);
             IEnumerable<Encounter> secondEncounters = fixture.GenerateFixture(teams, dateSecondEncounters);
@@ -371,7 +371,7 @@ namespace EirinDuran.ServicesTest
 
             DateTime date = new DateTime(2018, 10, 12);
 
-            IFixtureGenerator fixture = new LeagueFixture(football);
+            IFixtureGenerator fixture = new RoundRobinFixture(football);
 
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
@@ -423,7 +423,7 @@ namespace EirinDuran.ServicesTest
 
             DateTime date = new DateTime(2018, 10, 12);
 
-            IFixtureGenerator fixture = new LeagueFixture(football);
+            IFixtureGenerator fixture = new RoundRobinFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
@@ -453,7 +453,7 @@ namespace EirinDuran.ServicesTest
 
             DateTime date = new DateTime(2018, 10, 12);
 
-            IFixtureGenerator fixture = new LeagueFixture(football);
+            IFixtureGenerator fixture = new RoundRobinFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
@@ -480,7 +480,7 @@ namespace EirinDuran.ServicesTest
             sportRepo.Add(football);
             DateTime date = new DateTime(2018, 10, 12);
 
-            IFixtureGenerator fixture = new LeagueFixture(football);
+            IFixtureGenerator fixture = new RoundRobinFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
@@ -506,7 +506,7 @@ namespace EirinDuran.ServicesTest
 
             DateTime date = new DateTime(2018, 10, 12);
 
-            IFixtureGenerator fixture = new LeagueFixture(football);
+            IFixtureGenerator fixture = new RoundRobinFixture(football);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
