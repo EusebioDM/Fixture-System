@@ -1,8 +1,11 @@
 using EirinDuran.Domain.Fixture;
 using EirinDuran.IDataAccess;
+using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.Interfaces;
+using EirinDuran.Services.DTO_Mappers;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EirinDuran.Services
 {
@@ -11,12 +14,14 @@ namespace EirinDuran.Services
         private readonly ILoginServices loginServices;
         private readonly IRepository<Team> teamRepository;
         private readonly PermissionValidator validator;
+        private TeamMapper teamMapper;
 
         public TeamServices(ILoginServices loginServices, IRepository<Team> teamRepository)
         {
             this.teamRepository = teamRepository;
             this.loginServices = loginServices;
             validator = new PermissionValidator(Domain.User.Role.Administrator, loginServices);
+            teamMapper = new TeamMapper();
         }
 
         public void AddTeam(Team team)
@@ -32,11 +37,11 @@ namespace EirinDuran.Services
             }
         }
 
-        public Team GetTeam(string teamName)
+        public TeamDTO GetTeam(string teamName)
         {
             try
             {
-                return teamRepository.Get(teamName);
+                return teamMapper.Map(teamRepository.Get(teamName));
             }
             catch (DataAccessException e)
             {
@@ -44,11 +49,11 @@ namespace EirinDuran.Services
             }
         }
 
-        public IEnumerable<Team> GetAll()
+        public IEnumerable<TeamDTO> GetAll()
         {
             try
             {
-                return teamRepository.GetAll();
+                return teamRepository.GetAll().Select(t => teamMapper.Map(t));
             }
             catch(DataAccessException e)
             {

@@ -7,6 +7,7 @@ using EirinDuran.IServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using EirinDuran.IServices.Exceptions;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -26,7 +27,15 @@ namespace EirinDuran.WebApi.Controllers
         [HttpGet]
         public ActionResult<List<SportDTO>> Get()
         {
-            return sportServices.GetAllSports().ToList();
+            try
+            {
+                return sportServices.GetAllSports().ToList();
+            }
+            catch(ServicesException)
+            {
+                return BadRequest();
+            }
+            
         }
 
         [HttpGet("{id}", Name = "GetSport")]
@@ -40,8 +49,16 @@ namespace EirinDuran.WebApi.Controllers
         public IActionResult Create(SportDTO sport)
         {
             CreateSession();
-            sportServices.Create(sport);
-            return CreatedAtRoute("GetSport", new { id = sport.Name }, sport);
+            try
+            {
+                sportServices.Create(sport);
+                return CreatedAtRoute("GetSport", new { id = sport.Name }, sport);
+            }
+            catch (ServicesException)
+            {
+                return BadRequest();
+            }
+            
         }
 
         // PUT api/values/5

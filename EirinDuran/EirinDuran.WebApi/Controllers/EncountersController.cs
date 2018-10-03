@@ -7,7 +7,6 @@ using EirinDuran.Domain.Fixture;
 using EirinDuran.IServices.Interfaces;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
-using EirinDuran.IServices;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -26,20 +25,20 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Administrator")]
-        public ActionResult<List<Encounter>> Get()
+        public ActionResult<List<EncounterDTO>> Get()
         {
             CreateSession();
             try
             {
                 return TryToGetAllEncounters();
             }
-            catch(InsufficientPermissionException)
+            catch (InsufficientPermissionException)
             {
                 return Unauthorized();
             }
         }
 
-        private ActionResult<List<Encounter>> TryToGetAllEncounters()
+        private ActionResult<List<EncounterDTO>> TryToGetAllEncounters()
         {
             try
             {
@@ -73,7 +72,7 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return TryToAddEncounter(encounter);
             }
-            catch(InsufficientPermissionException)
+            catch (InsufficientPermissionException)
             {
                 return Unauthorized();
             }
@@ -106,6 +105,22 @@ namespace EirinDuran.WebApi.Controllers
         {
             CreateSession();
             return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("comment/{encounterId}")]
+        public IActionResult AddComment(string encounterId, [FromBody] string menssage)
+        {
+            CreateSession();
+            try
+            {
+                encounterServices.AddComment(encounterId, menssage);
+                return Ok();
+            }
+            catch (ServicesException)
+            {
+                return BadRequest();
+            }
         }
 
         private void CreateSession()

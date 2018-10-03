@@ -96,9 +96,9 @@ namespace EirinDuran.ServicesTest
             Team boca = new Team("Boca");
             teamRepository.Add(boca);
 
-            Team recovered = services.GetTeam("Boca");
+            TeamDTO recovered = services.GetTeam("Boca");
 
-            Assert.AreEqual(boca, recovered);
+            Assert.AreEqual(boca.Name, recovered.Name);
         }
 
         [TestMethod]
@@ -106,7 +106,7 @@ namespace EirinDuran.ServicesTest
         public void GetTeamDoesNotExists()
         {
             TeamServices services = new TeamServices(login, teamRepository);
-            Team recovered = services.GetTeam("Boca");
+            TeamDTO recovered = services.GetTeam("Boca");
         }
 
         [TestMethod]
@@ -119,7 +119,7 @@ namespace EirinDuran.ServicesTest
             teamRepository.Add(boca);
             teamRepository.Add(river);
 
-            IEnumerable<Team> recovered = services.GetAll();
+            IEnumerable<TeamDTO> recovered = services.GetAll();
             Assert.AreEqual(2, recovered.ToList().Count);
 
         }

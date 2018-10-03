@@ -187,7 +187,6 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return BadRequest();
             }
-            
         }
 
         private void CreateSession()

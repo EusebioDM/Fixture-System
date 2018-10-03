@@ -94,18 +94,19 @@ namespace EirinDuran.Services
             }
         }
 
-        public void AddComment(Encounter encounterToComment, string comment)
+        public void AddComment(string encounterId, string comment)
         {
             User user = userRepo.Get(loginServices.LoggedUser.UserName);
+            Encounter encounterToComment = encounterRepository.Get(encounterId);
             encounterToComment.AddComment(user, comment);
             encounterRepository.Update(encounterToComment);
         }
 
-        public IEnumerable<Encounter> GetAllEncounters()
+        public IEnumerable<EncounterDTO> GetAllEncounters()
         {
             try
             {
-                return encounterRepository.GetAll();
+                return encounterRepository.GetAll().Select(e => mapper.Map(e));
             }
             catch (DataAccessException e)
             {

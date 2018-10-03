@@ -7,7 +7,6 @@ using EirinDuran.IServices.DTOs;
 using System.Security.Claims;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.IServices.Exceptions;
-using EirinDuran.IServices;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -26,16 +25,31 @@ namespace EirinDuran.WebApi.Controllers
 
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<List<TeamDTO>> Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                return teamServices.GetAll().ToList();
+            }
+            catch (ServicesException)
+            {
+                return BadRequest();
+            }
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public ActionResult<TeamDTO> Get(string id)
         {
-            return "value";
+            try
+            {
+                return teamServices.GetTeam(id);
+            }
+            catch (ServicesException)
+            {
+                return BadRequest();
+            }
+            
         }
 
         [HttpPost]
@@ -69,7 +83,7 @@ namespace EirinDuran.WebApi.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(string id, [FromBody] TeamDTO team)
         {
         }
 
@@ -90,6 +104,7 @@ namespace EirinDuran.WebApi.Controllers
 
         private IActionResult TryToDelete(string id)
         {
+            CreateSession();
             try
             {
                 teamServices.DeleteTeam(id);

@@ -54,7 +54,14 @@ namespace EirinDuran.Services
         public virtual IEnumerable<UserDTO> GetAllUsers()
         {
             adminValidator.ValidatePermissions();
-            return userRepository.GetAll().Select(u => userMapper.Map(u));
+            try
+            {
+                return userRepository.GetAll().Select(u => userMapper.Map(u));
+            }
+            catch(DataAccessException e)
+            {
+                throw new ServicesException("Failure to try to get all users.", e);
+            }
         }
 
         public void DeleteUser(string id)

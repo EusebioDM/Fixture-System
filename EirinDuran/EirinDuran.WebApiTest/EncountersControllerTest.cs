@@ -56,16 +56,21 @@ namespace EirinDuran.WebApiTest
                 HttpContext = httpContext,
             };
 
-            IEnumerable<Team> teams = new List<Team>() { river, boca };
+            List<Team> teams = new List<Team>() { river, boca };
             DateTime encounterDate = new DateTime(2018, 12, 10);
 
-            Encounter enc = new Encounter(football, teams, encounterDate);
-            List<Encounter> encs = new List<Encounter>() { enc };
+            EncounterDTO enc = new EncounterDTO();
+            enc.SportName = football.Name;
+            enc.AwayTeamName = teams[0].Name;
+            enc.AwayTeamName = teams[1].Name;
+            enc.DateTime = encounterDate;
+
+            List<EncounterDTO> encs = new List<EncounterDTO>() { enc };
             enconunterServices.Setup(m => m.GetAllEncounters()).Returns(encs);
 
             var controller = new EncountersController(loginServices, enconunterServices.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.Get() as ActionResult<List<Encounter>>;
+            var obtainedResult = controller.Get() as ActionResult<List<EncounterDTO>>;
             enconunterServices.Verify(m => m.GetAllEncounters(), Times.AtMostOnce());
 
             bool areEqual = obtainedResult.Value.ToList().All(encs.Contains);

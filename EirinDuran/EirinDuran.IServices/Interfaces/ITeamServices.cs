@@ -1,4 +1,5 @@
 ﻿using EirinDuran.Domain.Fixture;
+using EirinDuran.IServices.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,9 +10,9 @@ namespace EirinDuran.IServices.Interfaces
     {
         void AddTeam(Team team);
 
-        Team GetTeam(string teamName);
+        TeamDTO GetTeam(string teamName);
 
-        IEnumerable<Team> GetAll();
+        IEnumerable<TeamDTO> GetAll();
 
         void DeleteTeam(string teamName);
     }

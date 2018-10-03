@@ -434,7 +434,7 @@ namespace EirinDuran.ServicesTest
 
             Encounter firstEncounter = allEncounters.First();
 
-            encounterServices.AddComment(firstEncounter, "I told you, Felix will win");
+            encounterServices.AddComment(firstEncounter.Id.ToString(), "I told you, Felix will win");
             Assert.AreEqual("I told you, Felix will win", encounterRepo.GetAll().First().Comments.First().ToString());
         }
 
@@ -454,11 +454,14 @@ namespace EirinDuran.ServicesTest
             DateTime date = new DateTime(2018, 10, 12);
 
             IFixtureGenerator fixture = new RoundRobinFixture(football);
+
+            Services.DTO_Mappers.EncounterMapper mapper = new Services.DTO_Mappers.EncounterMapper(sportRepo, teamRepo);
+
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
 
-            IEnumerable<Encounter> result = encounterServices.GetAllEncounters();
+            IEnumerable<Encounter> result = encounterServices.GetAllEncounters().Select(e => mapper.Map(e));
 
             bool areAllPresent = encounters.All(i => result.ToList().Remove(i));
 
@@ -484,7 +487,7 @@ namespace EirinDuran.ServicesTest
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
-            IEnumerable<Encounter> allEncounters = encounterServices.GetAllEncounters();
+            IEnumerable<EncounterDTO> allEncounters = encounterServices.GetAllEncounters();
 
             encounterServices.DeleteEncounter(allEncounters.First().Id.ToString());
 
@@ -510,7 +513,7 @@ namespace EirinDuran.ServicesTest
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
-            IEnumerable<Encounter> allEncounters = encounterServices.GetAllEncounters();
+            IEnumerable<EncounterDTO> allEncounters = encounterServices.GetAllEncounters();
 
             encounterServices.DeleteEncounter(allEncounters.First().Id.ToString());
 
@@ -589,8 +592,10 @@ namespace EirinDuran.ServicesTest
 
             User user = userRepo.Get(login.LoggedUser.UserName);
             login.CreateSession("martinFowler", "user");
+
+            IEnumerable<Encounter> allEncounters = encounterRepo.GetAll();
             
-            encounterServices.AddComment(encounter1, "Yes, we can!");
+            encounterServices.AddComment(allEncounters.ToList()[0].Id.ToString(), "Yes, we can!");
 
             UserServices userServices = new UserServices(login, userRepo, teamRepo);
 
