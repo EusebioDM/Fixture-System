@@ -98,12 +98,28 @@ namespace EirinDuran.ServicesTest
             SportServices service = new SportServices(login, sportRepo, teamRepo);
             IRepository<Encounter> encounterRepository = new EncounterRepository(contextFactory);
             EncounterMapper mapper = new EncounterMapper(sportRepo, teamRepo);
+
             TeamMapper teamMapper = new TeamMapper();
+            SportMapper sportMapper = new SportMapper(teamRepo);
 
-           // encounterRepository.Add(teamMapper.Map(CreateBocaTeam()));
+            Sport sport = sportMapper.Map(CreateFutbolTeam());
 
+            Team boca = teamMapper.Map(CreateBocaTeam());
+            Team river = teamMapper.Map(CreateTeamThatBelongsInTheB());
 
-            Assert.IsFalse(true);
+            List<Team> teams = new List<Team>() { boca, river };
+
+            DateTime encounterDate = new DateTime(2020, 12, 12);
+
+            Encounter encounter = new Encounter(sport, teams, encounterDate);
+
+            encounterRepository.Add(encounter);
+
+            IEnumerable<EncounterDTO> recovered = service.GetAllEncountersWithSpecificSport("Futbol");
+
+            Assert.AreEqual(1, recovered.ToList().Count);
+            Assert.AreEqual(boca.Name, recovered.ToList()[0].AwayTeamName);
+            Assert.AreEqual(river.Name, recovered.ToList()[0].HomeTeamName);
         }
 
         [TestInitialize]
@@ -188,8 +204,5 @@ namespace EirinDuran.ServicesTest
             string resourcesFolder = Directory.EnumerateDirectories(current).First(d => d.EndsWith("Resources"));
             return Directory.EnumerateFiles(resourcesFolder).First(f => f.EndsWith(resourceName));
         }
-
     }
-
-
 }
