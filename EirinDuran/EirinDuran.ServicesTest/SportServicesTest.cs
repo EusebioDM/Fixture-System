@@ -27,6 +27,7 @@ namespace EirinDuran.ServicesTest
         private ILoginServices login;
         private IRepository<Sport> sportRepo;
         private IRepository<Team> teamRepo;
+        private IRepository<Encounter> encounterRepo;
         private SportDTO futbol;
         private SportDTO rugby;
         private TeamDTO boca;
@@ -36,7 +37,7 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void CreatedSportTest()
         {
-            SportServices service = new SportServices(login, sportRepo, teamRepo);
+            SportServices service = new SportServices(login, sportRepo, teamRepo, encounterRepo);
             service.Create(rugby);
 
             Assert.IsTrue(sportRepo.GetAll().Any(s => s.Name.Equals(rugby.Name)));
@@ -46,7 +47,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(ServicesException))]
         public void CreateAlreadyExistingSport()
         {
-            SportServices service = new SportServices(login, sportRepo, teamRepo);
+            SportServices service = new SportServices(login, sportRepo, teamRepo, encounterRepo);
             service.Create(futbol);
         }
 
@@ -54,7 +55,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(InvalidaDataException))]
         public void CreateInvalidNullSportTest()
         {
-            SportServices service = new SportServices(login, sportRepo, teamRepo);
+            SportServices service = new SportServices(login, sportRepo, teamRepo, encounterRepo);
             SportDTO sport = new SportDTO();
             service.Create(sport);
         }
@@ -63,7 +64,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(InvalidaDataException))]
         public void CreateInvalidNameSportTest()
         {
-            SportServices service = new SportServices(login, sportRepo, teamRepo);
+            SportServices service = new SportServices(login, sportRepo, teamRepo, encounterRepo);
             SportDTO sport = new SportDTO()
             {
                 Name = "                  "
@@ -74,7 +75,7 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void ModifyExistingSportTest()
         {
-            SportServices service = new SportServices(login, sportRepo, teamRepo);
+            SportServices service = new SportServices(login, sportRepo, teamRepo, encounterRepo);
             futbol.TeamsNames.Remove(boca.Name);
             service.Modify(futbol);
 
@@ -85,7 +86,7 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void ModifyNonExistingSportTest()
         {
-            SportServices service = new SportServices(login, sportRepo, teamRepo);
+            SportServices service = new SportServices(login, sportRepo, teamRepo, encounterRepo);
             rugby.TeamsNames.Add(boca.Name);
             service.Modify(rugby);
 
@@ -93,9 +94,9 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        public void ListAllEncountersWithSpecificSport()
+        public void ListAllEncountersOfASpecificSport()
         {
-            SportServices service = new SportServices(login, sportRepo, teamRepo);
+            SportServices service = new SportServices(login, sportRepo, teamRepo, encounterRepo);
             IRepository<Encounter> encounterRepository = new EncounterRepository(contextFactory);
             EncounterMapper mapper = new EncounterMapper(sportRepo, teamRepo);
 
@@ -115,11 +116,11 @@ namespace EirinDuran.ServicesTest
 
             encounterRepository.Add(encounter);
 
-            IEnumerable<EncounterDTO> recovered = service.GetAllEncountersWithSpecificSport("Futbol");
+            IEnumerable<EncounterDTO> recovered = service.GetAllEncountersOfASpecificSport("Futbol");
 
             Assert.AreEqual(1, recovered.ToList().Count);
-            Assert.AreEqual(boca.Name, recovered.ToList()[0].AwayTeamName);
-            Assert.AreEqual(river.Name, recovered.ToList()[0].HomeTeamName);
+            Assert.AreEqual(boca.Name, recovered.ToList()[0].HomeTeamName);
+            Assert.AreEqual(river.Name, recovered.ToList()[0].AwayTeamName);
         }
 
         [TestInitialize]
@@ -128,6 +129,7 @@ namespace EirinDuran.ServicesTest
             contextFactory = GetContextFactory();
             sportRepo = new SportRepository(contextFactory);
             teamRepo = new TeamRepository(contextFactory);
+            encounterRepo = new EncounterRepository(contextFactory);
             boca = CreateBocaTeam();
             river = CreateTeamThatBelongsInTheB();
             futbol = CreateFutbolTeam();
