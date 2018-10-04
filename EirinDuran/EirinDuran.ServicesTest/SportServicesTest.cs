@@ -35,7 +35,7 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void CreatedSportTest()
         {
-            SportServices service = new SportServices(login, sportRepo, teamRepo);
+            SportServices service = new SportServices(login, sportRepo);
             service.Create(rugby);
 
             Assert.IsTrue(sportRepo.GetAll().Any(s => s.Name.Equals(rugby.Name)));
@@ -45,7 +45,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(ServicesException))]
         public void CreateAlreadyExistingSport()
         {
-            SportServices service = new SportServices(login, sportRepo, teamRepo);
+            SportServices service = new SportServices(login, sportRepo);
             service.Create(futbol);
         }
 
@@ -53,7 +53,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(InvalidaDataException))]
         public void CreateInvalidNullSportTest()
         {
-            SportServices service = new SportServices(login, sportRepo, teamRepo);
+            SportServices service = new SportServices(login, sportRepo);
             SportDTO sport = new SportDTO();
             service.Create(sport);
         }
@@ -62,33 +62,12 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(InvalidaDataException))]
         public void CreateInvalidNameSportTest()
         {
-            SportServices service = new SportServices(login, sportRepo, teamRepo);
+            SportServices service = new SportServices(login, sportRepo);
             SportDTO sport = new SportDTO()
             {
                 Name = "                  "
             };
             service.Create(sport);
-        }
-
-        [TestMethod]
-        public void ModifyExistingSportTest()
-        {
-            SportServices service = new SportServices(login, sportRepo, teamRepo);
-            futbol.TeamsNames.Remove(boca.Name);
-            service.Modify(futbol);
-
-            Sport fromRepo = sportRepo.Get(futbol.Name);
-            Assert.IsFalse(fromRepo.Teams.Contains(new Team("Boca")));
-        }
-
-        [TestMethod]
-        public void ModifyNonExistingSportTest()
-        {
-            SportServices service = new SportServices(login, sportRepo, teamRepo);
-            rugby.TeamsNames.Add(boca.Name);
-            service.Modify(rugby);
-
-            Assert.IsTrue(sportRepo.Get(rugby.Name).Teams.Contains(new Team(boca.Name)));
         }
 
         [TestInitialize]
@@ -97,12 +76,13 @@ namespace EirinDuran.ServicesTest
             contextFactory = GetContextFactory();
             sportRepo = new SportRepository(contextFactory);
             teamRepo = new TeamRepository(contextFactory);
+            futbol = CreateFutbol();
+            rugby = CreateRugby();
             boca = CreateBocaTeam();
             river = CreateTeamThatBelongsInTheB();
-            futbol = CreateFutbolTeam();
-            rugby = CreateRugbyTeam();
-            sportRepo.Add(new Sport(futbol.Name, new List<Team>() { new Team(boca.Name, boca.Logo), new Team(river.Name, river.Logo) }));
-            var a = sportRepo.GetAll();
+            sportRepo.Add(new Sport("Futbol"));
+            teamRepo.Add(new Team(boca.Name, new Sport("Futbol")));
+            teamRepo.Add(new Team(river.Name, new Sport("Futbol")));
             login = CreateLoginServices();
         }
 
@@ -148,22 +128,19 @@ namespace EirinDuran.ServicesTest
             };
         }
 
-        private SportDTO CreateFutbolTeam()
-        {
-            SportDTO futbol = new SportDTO()
-            {
-                Name = "Futbol",
-                TeamsNames = new List<string> { boca.Name, river.Name }
-            };
-            return futbol;
-        }
-
-        private SportDTO CreateRugbyTeam()
+        private SportDTO CreateFutbol()
         {
             return new SportDTO()
             {
-                Name = "Rugby",
-                TeamsNames = new List<string>()
+                Name = "Futbol"
+            };
+        }
+
+        private SportDTO CreateRugby()
+        {
+            return new SportDTO()
+            {
+                Name = "Rugby"
             };
         }
 

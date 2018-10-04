@@ -16,20 +16,22 @@ namespace EirinDuran.Services
         private readonly PermissionValidator validator;
         private TeamMapper teamMapper;
 
-        public TeamServices(ILoginServices loginServices, IRepository<Team> teamRepository)
+        public TeamServices(ILoginServices loginServices, IRepository<Team> teamRepository, IRepository<Sport> sportRepo)
         {
             this.teamRepository = teamRepository;
             this.loginServices = loginServices;
             validator = new PermissionValidator(Domain.User.Role.Administrator, loginServices);
-            teamMapper = new TeamMapper();
+            teamMapper = new TeamMapper(sportRepo
+            );
         }
 
-        public void AddTeam(Team team)
+        public void AddTeam(TeamDTO team)
         {
             validator.ValidatePermissions();
             try
             {
-                teamRepository.Add(team);
+                Team domianTeam = teamMapper.Map(team);
+                teamRepository.Add(domianTeam);
             }
             catch (DataAccessException e)
             {

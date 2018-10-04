@@ -7,6 +7,7 @@ using EirinDuran.IServices.DTOs;
 using System.Security.Claims;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.IServices.Exceptions;
+using System;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -69,7 +70,8 @@ namespace EirinDuran.WebApi.Controllers
 
         private IActionResult TryToCreate(TeamDTO team)
         {
-            Team teamReal = new Team(team.Name);
+            /* 
+            Team teamReal = new Team(team.Name
             try
             {
                 teamServices.AddTeam(teamReal);
@@ -79,6 +81,8 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return BadRequest();
             }
+            */
+            throw new NotImplementedException();
         }
 
         // PUT api/values/5

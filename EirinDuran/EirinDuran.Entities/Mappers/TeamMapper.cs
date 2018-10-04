@@ -10,18 +10,24 @@ namespace EirinDuran.Entities.Mappers
 {
     internal class TeamMapper 
     {
+
         public TeamEntity Map(Team team)
         {
             return new TeamEntity()
             {
                 Name = team.Name,
-                Logo = ImageToByteArray(team.Logo)
+                Logo = ImageToByteArray(team.Logo),
+                Sport = new SportEntity(team.Sport)
             };
         }
 
         public Team Map(TeamEntity entity)
         {
-            return new Team(name: entity.Name, logo: ByteArrayToImage(entity.Logo));
+            return new Team(
+                name: entity.Name,
+                sport: entity.Sport.ToModel() ,
+                logo: ByteArrayToImage(entity.Logo)
+            );
         }
 
         public void Update(Team source, TeamEntity desination)

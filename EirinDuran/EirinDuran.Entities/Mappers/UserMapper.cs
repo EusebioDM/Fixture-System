@@ -22,14 +22,21 @@ namespace EirinDuran.Entities.Mappers
                 Password = user.Password,
                 Mail = user.Mail,
                 Role = user.Role,
-                FollowedTeams = user.FollowedTeams.Select(t => new TeamEntity(t)).ToList()
+                TeamUsers = user.FollowedTeams.Select(t => new TeamUserEntity(t,user)).ToList()
             };
         }
 
         public User Map(UserEntity entity)
         {
-            ICollection<Team> teams = entity.FollowedTeams.Select(t => t.ToModel()).ToList();
-            return new User(role: entity.Role, userName: entity.UserName, name: entity.Name, surname: entity.Surname, password: entity.Password, mail: entity.Mail, followedTeams: teams);
+            return new User(
+                role: entity.Role,
+                userName: entity.UserName,
+                name: entity.Name,
+                surname: entity.Surname,
+                password: entity.Password,
+                mail: entity.Mail,
+                followedTeams: entity.TeamUsers.Select(eu => eu.Team.ToModel()).ToList()
+            );
         }
 
         public void Update(User source, UserEntity destination)
@@ -40,7 +47,7 @@ namespace EirinDuran.Entities.Mappers
             destination.Password = source.Password;
             destination.Mail = source.Mail;
             destination.Role = source.Role;
-            destination.FollowedTeams = source.FollowedTeams.Select(t => new TeamEntity(t)).ToList();
+            destination.TeamUsers = source.FollowedTeams.Select(t => new TeamUserEntity(t,source)).ToList();
         }
     }
 }

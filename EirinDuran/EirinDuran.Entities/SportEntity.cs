@@ -7,13 +7,11 @@ namespace EirinDuran.Entities
     public class SportEntity : IEntity<Sport>
     {
         public string Name { get; set; }
-        public virtual ICollection<TeamEntity> Teams { get; set; }
         private SportMapper mapper;
 
         public SportEntity()
         {
             mapper = new SportMapper();
-            Teams = new List<TeamEntity>();
         }
 
         public SportEntity(Sport sport) : this()

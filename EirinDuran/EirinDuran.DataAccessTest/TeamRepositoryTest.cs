@@ -22,7 +22,7 @@ namespace EirinDuran.DataAccessTest
             private string bocaImagePath;
             private string riverImagePath;
             private string tombaImagePath;
-
+            private Sport football;
             private TeamRepository repo;
 
             [TestMethod]
@@ -89,7 +89,7 @@ namespace EirinDuran.DataAccessTest
             [TestMethod]
             public void UpdateNonExistantTeamTest()
             {
-                Team godoyCruz = new Team("Godoy Cruz", Image.FromFile(tombaImagePath));
+                Team godoyCruz = new Team("Godoy Cruz", football, Image.FromFile(tombaImagePath));
                 repo.Update(godoyCruz);
                 Team fromRepo = repo.Get("Godoy Cruz");
 
@@ -118,6 +118,7 @@ namespace EirinDuran.DataAccessTest
             [TestInitialize]
             public void TestInit()
             {
+                football = new Sport("Football");
                 bocaImagePath = GetResourcePath("Boca.jpg");
                 riverImagePath = GetResourcePath("River.jpg");
                 tombaImagePath = GetResourcePath("GodoyCruz.jpg");
@@ -135,14 +136,14 @@ namespace EirinDuran.DataAccessTest
             {
                 string name = "Boca Juniors";
                 Image image = Image.FromFile(bocaImagePath);
-                return new Team(name, image);
+                return new Team(name, football, image);
             }
 
             private Team CreateTeamThatBelongsInTheB()
             {
                 string name = "River Plate";
                 Image image = Image.FromFile(riverImagePath);
-                return new Team(name, image);
+                return new Team(name, football, image);
             }
 
             private void CleanUpRepo()

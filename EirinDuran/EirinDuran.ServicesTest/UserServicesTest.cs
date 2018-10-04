@@ -24,14 +24,18 @@ namespace EirinDuran.ServicesTest
     {
         private IRepository<User> userRepo;
         private IRepository<Team> teamRepo;
+        private IRepository<Sport> sportRepo;
         private UserDTO pepe;
         private UserDTO pablo;
+        private Sport futbol;
 
         [TestInitialize]
         public void TestInit()
         {
+            futbol = new Sport("Futbol");
             userRepo = new UserRepository(GetContextFactory());
             teamRepo = new TeamRepository(GetContextFactory());
+            sportRepo = new SportRepository(GetContextFactory());
             userRepo.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
             userRepo.Add(new User(Role.Follower, "martinFowler", "Martin", "Fowler", "user", "fowler@fowler.com"));
             pepe = new UserDTO()
@@ -67,7 +71,7 @@ namespace EirinDuran.ServicesTest
         public void AddUserWithoutPermissions()
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
 
             login.CreateSession("martinFowler", "user");
             services.CreateUser(pepe);
@@ -77,7 +81,7 @@ namespace EirinDuran.ServicesTest
         public void AddUserSimpleOk()
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
 
             login.CreateSession("sSanchez", "user");
             services.CreateUser(pepe);
@@ -92,7 +96,7 @@ namespace EirinDuran.ServicesTest
         public void AddInvalidUserNameTest()
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
             login.CreateSession("sSanchez", "user");
             UserDTO user = new UserDTO()
             {
@@ -106,7 +110,7 @@ namespace EirinDuran.ServicesTest
         public void AddInvalidMailTest()
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
             login.CreateSession("sSanchez", "user");
             UserDTO user = new UserDTO()
             {
@@ -121,7 +125,7 @@ namespace EirinDuran.ServicesTest
         public void DeleteUserSimpleOk()
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
 
             login.CreateSession("sSanchez", "user");
             services.CreateUser(pepe);
@@ -135,7 +139,7 @@ namespace EirinDuran.ServicesTest
         public void DeleteUserWithoutSufficientPermissions()
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
 
             login.CreateSession("martinFowler", "user");
             userRepo.Add(new User(Role.Administrator, "pepeAvila", "Pepe", "Avila", "user", "pepeavila@mymail.com"));
@@ -148,7 +152,7 @@ namespace EirinDuran.ServicesTest
         public void ModifyUserOk()
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
 
             login.CreateSession("sSanchez", "user");
             UserDTO user = new UserDTO()
@@ -173,7 +177,7 @@ namespace EirinDuran.ServicesTest
         public void ModifyUserwithoutSufficientPermissions()
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
 
             login.CreateSession("martinFowler", "user");
             UserDTO user = new UserDTO()
@@ -196,31 +200,33 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void FollowTeam()
         {
-            ILoginServices login = new LoginServicesMock(pepe); 
-            
-            ITeamServices teamServices = new TeamServices(login, teamRepo);
+            ILoginServices login = new LoginServicesMock(pepe);
 
-            Team team = new Team("Cavaliers", Image.FromFile(GetResourcePath("Cavaliers.jpg")));
+            ITeamServices teamServices = new TeamServices(login, teamRepo, sportRepo);
+
+            TeamDTO team = new TeamDTO()
+            {
+                Name = "Cavaliers",
+                Logo = Image.FromFile(GetResourcePath("Cavaliers.jpg")),
+                SportName = "Baskteball"
+            };
             teamServices.AddTeam(team);
 
             login = new LoginServicesMock(pablo);
-            IUserServices services = new UserServices(login, userRepo, teamRepo);
+            IUserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
 
             TeamDTO cavaliers = new TeamDTO()
             {
                 Name = "Cavaliers",
-                Logo = Image.FromFile(GetResourcePath("Cavaliers.jpg"))
+                Logo = Image.FromFile(GetResourcePath("Cavaliers.jpg")),
+                SportName = "Baskteball"
             };
 
             SportDTO basketball = new SportDTO()
             {
                 Name = "Baskteball"
             };
-
-            basketball.TeamsNames = new List<string>() { cavaliers.Name };
-            
             userRepo.Add(new User(Role.Follower, "pablo", "pablo", "pablo", "user", "pepeavila@mymail.com"));
-
             services.AddFollowedTeam("Cavaliers");
 
             User recovered = userRepo.Get("pablo");
@@ -232,30 +238,33 @@ namespace EirinDuran.ServicesTest
         public void RecoverAllFollowedTeams()
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo);
-            ITeamServices teamServices = new TeamServices(login, teamRepo);
+            UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
+            ITeamServices teamServices = new TeamServices(login, teamRepo, sportRepo);
 
             login.CreateSession("sSanchez", "user");
 
             TeamDTO cavaliers = new TeamDTO()
             {
                 Name = "Cavaliers",
-                Logo = Image.FromFile(GetResourcePath("Cavaliers.jpg"))
+                Logo = Image.FromFile(GetResourcePath("Cavaliers.jpg")),
+                SportName = "Baskteball"
             };
             SportDTO basketball = new SportDTO()
             {
                 Name = "Baskteball"
             };
 
-            Team team = new Team("Cavaliers", Image.FromFile(GetResourcePath("Cavaliers.jpg")));
+            TeamDTO team = new TeamDTO()
+            {
+                Name = "Cavaliers",
+                Logo = Image.FromFile(GetResourcePath("Cavaliers.jpg")),
+                SportName = "Baskteball"
+            };
             teamServices.AddTeam(team);
-
-            basketball.TeamsNames = new List<string>() { cavaliers.Name };
-
             services.AddFollowedTeam("Cavaliers");
 
-            List<Team> followedTeams = services.GetAllFollowedTeams().Select(t => new Team(t.Name)).ToList();
-            Assert.AreEqual(cavaliers.Name, followedTeams[0].Name);
+            IEnumerable<TeamDTO> followedTeams = services.GetAllFollowedTeams();
+            Assert.AreEqual(cavaliers.Name, followedTeams.First().Name);
         }
 
         private string GetResourcePath(string resourceName)

@@ -83,9 +83,6 @@ namespace EirinDuran.DataAccessTest
         private Sport CreateFutbolTeam()
         {
             Sport futbol = new Sport("Futbol");
-            futbol.AddTeam(boca);
-            futbol.AddTeam(river);
-            futbol.AddTeam(tomba);
             return futbol;
         }
 
@@ -99,7 +96,7 @@ namespace EirinDuran.DataAccessTest
             string name = "Boca Juniors";
             string path = GetResourcePath("Boca.jpg");
             Image image = Image.FromFile(path);
-            return new Team(name, image);
+            return new Team(name, futbol, image);
 
         }
 
@@ -108,7 +105,7 @@ namespace EirinDuran.DataAccessTest
             string name = "River Plate";
             string path = GetResourcePath("River.jpg");
             Image image = Image.FromFile(path);
-            return new Team(name, image);
+            return new Team(name,  futbol,image);
         }
 
         private Team CreateGodoyCruzTeam()
@@ -116,7 +113,7 @@ namespace EirinDuran.DataAccessTest
             string name = "Godoy Cruz";
             string path = GetResourcePath("GodoyCruz.jpg");
             Image image = Image.FromFile(path);
-            return new Team(name, image);
+            return new Team(name, futbol,image);
         }
 
         private Encounter CreateBocaRiverEncounter()
@@ -136,7 +133,7 @@ namespace EirinDuran.DataAccessTest
         private User CreateMacriUser()
         {
             User user = new User(Role.Administrator, "Gato", "Mauricio", "Macri", "gato123", "macri@gmail.com");
-            user.AddFollowedTeam(new Team("River"));
+            user.AddFollowedTeam(new Team("River",futbol));
             return user;
         }
 

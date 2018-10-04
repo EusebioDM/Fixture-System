@@ -14,17 +14,15 @@ namespace EirinDuran.Services
     {
         private readonly ILoginServices loginService;
         private readonly IRepository<Sport> sportRepo;
-        private readonly IRepository<Team> teamRepo;
         private readonly PermissionValidator validator;
         private readonly SportMapper mapper;
 
-        public SportServices(ILoginServices loginService, IRepository<Sport> sportRepo, IRepository<Team> teamRepo)
+        public SportServices(ILoginServices loginService, IRepository<Sport> sportRepo)
         {
             validator = new PermissionValidator(Domain.User.Role.Administrator, loginService);
             this.loginService = loginService;
             this.sportRepo = sportRepo;
-            this.teamRepo = teamRepo;
-            mapper = new SportMapper(teamRepo);
+            mapper = new SportMapper();
         }
 
         public void Create(SportDTO sportDTO)

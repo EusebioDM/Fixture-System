@@ -66,7 +66,7 @@ namespace EirinDuran.Domain.Fixture
 
         private void ValidateTeamIsValid(Team team)
         {
-            if (!Sport.Teams.Contains(team))
+            if (!team.Sport.Equals(Sport))
                 throw new InvalidTeamException();
         }
 

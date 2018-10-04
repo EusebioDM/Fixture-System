@@ -15,6 +15,7 @@ using System.Linq;
 
 namespace EirinDuran.WebApiTest
 {
+    /* 
     [TestClass]
     public class EnconuntersControllerTest
     {
@@ -80,7 +81,7 @@ namespace EirinDuran.WebApiTest
             Assert.IsTrue(areEqual);
         }
 
-        /*[TestMethod]
+        [TestMethod]
         public void CreateEncounterOkEncountersControllerTest()
         {
             var enconunterServices = new Mock<IEncounterServices>();
@@ -110,6 +111,7 @@ namespace EirinDuran.WebApiTest
 
             Assert.IsNotNull(createdResult);
             Assert.AreEqual(200, createdResult.StatusCode);
-        }*/
+        }
     }
+    */
 }

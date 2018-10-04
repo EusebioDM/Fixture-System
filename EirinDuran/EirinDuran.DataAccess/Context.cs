@@ -34,18 +34,17 @@ namespace EirinDuran.DataAccess
             builder.Entity<SportEntity>().HasKey(s => s.Name);
             builder.Entity<EncounterEntity>().HasKey(e => e.Id);
             builder.Entity<CommentEntity>().HasKey(e => e.Id);
-
             builder.Entity<TeamUserEntity>().HasKey(tu => new { tu.TeamName, tu.UserName });
 
-            builder.Entity<TeamUserEntity>()
-                .HasOne(tu => tu.User)
-                .WithMany(u => u.TeamUsers)
-                .HasForeignKey(tu => tu.UserName);
+            // builder.Entity<TeamUserEntity>()
+            //     .HasOne(tu => tu.User)
+            //     .WithMany(u => u.TeamUsers)
+            //     .HasForeignKey(tu => tu.UserName);
 
-            builder.Entity<TeamUserEntity>()
-                .HasOne(tu => tu.Team)
-                .WithMany(t => t.TeamUsers)
-                .HasForeignKey(tu => tu.TeamName);
+            //            builder.Entity<TeamUserEntity>()
+            //                .HasOne(tu => tu.Team)
+            //                .WithMany(t => t.TeamUsers)
+            //                .HasForeignKey(tu => tu.TeamName);
         }
 
     }
