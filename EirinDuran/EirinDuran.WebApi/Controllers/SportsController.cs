@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using EirinDuran.IServices.Exceptions;
+using EirinDuran.IDataAccess;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -34,6 +35,20 @@ namespace EirinDuran.WebApi.Controllers
                 return BadRequest();
             }
             
+        }
+
+        [HttpGet]
+        [Route("{sportId}/encounters")]
+        public ActionResult<List<EncounterDTO>> GetEncounters(string sportId)
+        {
+            try
+            {
+                return sportServices.GetAllEncountersOfASpecificSport(sportId).ToList();
+            }
+            catch (DataAccessException)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("{id}", Name = "GetSport")]
