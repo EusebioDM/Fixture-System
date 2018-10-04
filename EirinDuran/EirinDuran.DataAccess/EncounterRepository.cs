@@ -23,7 +23,7 @@ namespace EirinDuran.DataAccess
 
         private EntityFactory<EncounterEntity> CreateEntityFactory() => new EntityFactory<EncounterEntity>(() => new EncounterEntity());
 
-        private Func<Context, DbSet<EncounterEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Encounters;
+        protected Func<Context, DbSet<EncounterEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Encounters;
 
         public void Add(Encounter encounter) => repo.Add(encounter);
 

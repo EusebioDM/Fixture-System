@@ -28,12 +28,23 @@ namespace EirinDuran.DataAccessTest
         [TestMethod]
         private void GetSingleEncountersByTeamTest()
         {
+            IEnumerable<Encounter> encounters = repo.GetByTeam(boca);
+
+            Assert.IsTrue(encounters.Contains(bocaRiver));
+            Assert.AreEqual(1, encounters.Count());
+        }
+
+        [TestMethod]
+        private void GetMultipleEncountersByTeamTest()
+        {
             IEnumerable<Encounter> encounters = repo.GetByTeam(river);
 
             Assert.IsTrue(encounters.Contains(bocaRiver));
             Assert.IsTrue(encounters.Contains(tombaRiver));
             Assert.AreEqual(2, encounters.Count());
         }
+
+
 
         [TestInitialize]
         public void TestInit()
