@@ -36,9 +36,13 @@ namespace EirinDuran.DataAccess
 
         public override int GetHashCode()
         {
-            int hash = 15659;
-            hash += keys.Sum(o => o.GetHashCode());
-            return hash;
+            int hashCode = 0;
+            foreach (object p in keys)
+            {
+                hashCode ^= p.GetHashCode(); // XOR is used to prevent Integer Overflow
+            }
+
+            return hashCode;
         }
     }
 }
