@@ -14,16 +14,21 @@ namespace EirinDuran.Entities.Mappers
     {
         public UserEntity Map(User user)
         {
-            return new UserEntity()
+            UserEntity userEntity = new UserEntity()
             {
                 UserName = user.UserName,
                 Name = user.Name,
                 Surname = user.Surname,
                 Password = user.Password,
                 Mail = user.Mail,
-                Role = user.Role,
-                TeamUsers = user.FollowedTeams.Select(t => new TeamUserEntity(t,user)).ToList()
+                Role = user.Role
             };
+            List<TeamUserEntity> teamUsersRelations = user.FollowedTeams.ToList().ConvertAll(t => new TeamUserEntity(
+                team: new TeamEntity(t),
+                user: userEntity
+            ));
+            userEntity.TeamUsers = teamUsersRelations;
+            return userEntity;
         }
 
         public User Map(UserEntity entity)
@@ -47,7 +52,13 @@ namespace EirinDuran.Entities.Mappers
             destination.Password = source.Password;
             destination.Mail = source.Mail;
             destination.Role = source.Role;
-            destination.TeamUsers = source.FollowedTeams.Select(t => new TeamUserEntity(t,source)).ToList();
+            destination.TeamUsers = source.FollowedTeams.Select(t => new TeamUserEntity()
+            {
+                Team = new TeamEntity(t),
+                TeamName = t.Name,
+                User = Map(source),
+                UserName = source.UserName
+            }).ToList();
         }
     }
 }

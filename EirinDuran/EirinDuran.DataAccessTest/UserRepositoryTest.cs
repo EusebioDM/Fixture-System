@@ -106,6 +106,7 @@ namespace EirinDuran.DataAccessTest
         public void TestInit()
         {
             repo = new UserRepository(GetContextFactory());
+            football = new Sport("Futbol");
             macri = CreateUserMacri();
             alvaro = CreateUserAlvaro();
             repo.Add(CreateUserAlvaro());

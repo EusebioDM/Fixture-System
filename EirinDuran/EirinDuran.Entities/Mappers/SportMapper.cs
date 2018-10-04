@@ -14,18 +14,18 @@ namespace EirinDuran.Entities.Mappers
         {
             return new SportEntity()
             {
-                Name = sport.Name
+                TeamName = sport.Name
             };
         }
 
         public Sport Map(SportEntity entity)
         {
-            return new Sport( name: entity.Name);
+            return new Sport( name: entity.TeamName);
         }
 
         public void Update(Sport source, SportEntity destination)
         {
-            destination.Name = source.Name;
+            destination.TeamName = source.Name;
         }
     }
 }

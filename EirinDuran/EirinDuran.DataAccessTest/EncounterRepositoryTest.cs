@@ -63,12 +63,12 @@ namespace EirinDuran.DataAccessTest
         public void TestInit()
         {
             repo = new EncounterRepository(GetContextFactory());
+            futbol = CreateFutbolTeam();
+            rugby = CreateRugbyTeam();
             macri = CreateMacriUser();
             boca = CreateBocaTeam();
             river = CreateTeamThatBelongsInTheB();
             tomba = CreateGodoyCruzTeam();
-            futbol = CreateFutbolTeam();
-            rugby = CreateRugbyTeam();
             bocaRiver = CreateBocaRiverEncounter();
             tombaRiver = CreateTombaRiverEncounter();
             repo.Add(bocaRiver);
@@ -105,7 +105,7 @@ namespace EirinDuran.DataAccessTest
             string name = "River Plate";
             string path = GetResourcePath("River.jpg");
             Image image = Image.FromFile(path);
-            return new Team(name,  futbol,image);
+            return new Team(name, futbol, image);
         }
 
         private Team CreateGodoyCruzTeam()
@@ -113,7 +113,7 @@ namespace EirinDuran.DataAccessTest
             string name = "Godoy Cruz";
             string path = GetResourcePath("GodoyCruz.jpg");
             Image image = Image.FromFile(path);
-            return new Team(name, futbol,image);
+            return new Team(name, futbol, image);
         }
 
         private Encounter CreateBocaRiverEncounter()
@@ -133,7 +133,7 @@ namespace EirinDuran.DataAccessTest
         private User CreateMacriUser()
         {
             User user = new User(Role.Administrator, "Gato", "Mauricio", "Macri", "gato123", "macri@gmail.com");
-            user.AddFollowedTeam(new Team("River",futbol));
+            user.AddFollowedTeam(new Team("River", futbol));
             return user;
         }
 

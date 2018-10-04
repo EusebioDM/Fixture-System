@@ -28,14 +28,18 @@ namespace EirinDuran.ServicesTest
         private UserDTO pepe;
         private UserDTO pablo;
         private Sport futbol;
+        private Sport baskteball;
 
         [TestInitialize]
         public void TestInit()
         {
-            futbol = new Sport("Futbol");
+
             userRepo = new UserRepository(GetContextFactory());
             teamRepo = new TeamRepository(GetContextFactory());
             sportRepo = new SportRepository(GetContextFactory());
+            futbol = new Sport("Futbol");
+            baskteball = new Sport("Baskteball");
+            sportRepo.Add(baskteball);
             userRepo.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
             userRepo.Add(new User(Role.Follower, "martinFowler", "Martin", "Fowler", "user", "fowler@fowler.com"));
             pepe = new UserDTO()

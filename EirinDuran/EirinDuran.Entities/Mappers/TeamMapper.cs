@@ -34,6 +34,7 @@ namespace EirinDuran.Entities.Mappers
         {
             desination.Name = source.Name;
             desination.Logo = ImageToByteArray(source.Logo);
+            desination.Sport = new SportEntity(source.Sport);
         }
 
         private byte[] ImageToByteArray(Image imageIn)

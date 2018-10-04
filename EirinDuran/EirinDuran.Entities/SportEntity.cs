@@ -6,7 +6,7 @@ namespace EirinDuran.Entities
 {
     public class SportEntity : IEntity<Sport>
     {
-        public string Name { get; set; }
+        public string TeamName { get; set; } // Key cant have the same property name as Team because of EF for no good reason at all
         private SportMapper mapper;
 
         public SportEntity()
@@ -33,12 +33,12 @@ namespace EirinDuran.Entities
         {
             var entity = obj as SportEntity;
             return entity != null &&
-                   Name == entity.Name;
+                   TeamName == entity.TeamName;
         }
 
         public override int GetHashCode()
         {
-            return 539060726 + EqualityComparer<string>.Default.GetHashCode(Name);
+            return 539060726 + EqualityComparer<string>.Default.GetHashCode(TeamName);
         }
     }
 }

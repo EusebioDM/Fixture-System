@@ -16,7 +16,7 @@ using System.Linq;
 
 namespace EirinDuran.ServicesTest
 {
-    /* 
+    /*
     [TestClass]
     public class EncounterServicesTest
     {
@@ -28,6 +28,7 @@ namespace EirinDuran.ServicesTest
         private Services.DTO_Mappers.EncounterMapper mapper;
 
         private Sport futbol;
+        private Sport basquetball;
         private Team felix;
         private Team liverpool;
         private Team river;
@@ -54,6 +55,8 @@ namespace EirinDuran.ServicesTest
 
         private void InitializeTeams()
         {
+            futbol = new Sport("Futbol");
+            basquetball = new Sport("Basquetball");
             felix = new Team("Felix");
             teamRepo.Add(felix);
             liverpool = new Team("Liverpool");

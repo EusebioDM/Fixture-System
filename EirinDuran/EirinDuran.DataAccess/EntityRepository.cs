@@ -25,15 +25,15 @@ namespace EirinDuran.DataAccess
             entityUpdater = new EntityUpdater<Entity>(contextFactory);
         }
 
-        public void Add(Model id)
+        public void Add(Model model)
         {
             try
             {
-                TryToAdd(id);
+                TryToAdd(model);
             }
             catch (ArgumentException e)
             {
-                throw new DataAccessException("Object already exists in database.", e);
+                throw new DataAccessException($"Object {model} already exists in database.", e);
             }
             catch (SqlException e)
             {
@@ -82,7 +82,7 @@ namespace EirinDuran.DataAccess
             {
                 Entity toDelete = context.Find<Entity>(id);
                 if(toDelete == null)
-                    throw new DataAccessException("Object does not exists in database.");
+                    throw new DataAccessException($"Object of id {id} does not exists in database.");
                 context.Entry(toDelete).State = EntityState.Deleted;
                 context.SaveChanges();
             }
@@ -96,7 +96,7 @@ namespace EirinDuran.DataAccess
             }
             catch (ArgumentException e)
             {
-                throw new DataAccessException("Object does not exists in database.", e);
+                throw new DataAccessException($"Object of id {id} does not exists in database.", e);
             }
             catch (SqlException e)
             {
@@ -111,7 +111,7 @@ namespace EirinDuran.DataAccess
                 Entity toReturn = context.Find<Entity>(id);
                 if (toReturn == null)
                 {
-                    throw new DataAccessException("Object does not exists in database.");
+                    throw new DataAccessException($"Object of id { id } does not exists in database.");
                 }
                 return toReturn.ToModel();
             }
@@ -139,15 +139,15 @@ namespace EirinDuran.DataAccess
             }
         }
 
-        public void Update(Model id)
+        public void Update(Model model)
         {
             try
             {
-                TryToUpdate(id);
+                TryToUpdate(model);
             }
             catch (DbUpdateConcurrencyException e)
             {
-                throw new DataAccessException("Object does not exists in database.", e);
+                throw new DataAccessException($"Object {model} does not exists in database.", e);
             }
             catch (SqlException e)
             {
@@ -171,8 +171,8 @@ namespace EirinDuran.DataAccess
         private Entity GetEntityFromRepo(Context context, Entity localEntity)
         {
             EntityEntry entry = context.Entry(localEntity);
-            object key = HelperFunctions<Entity>.GetKey(entry);
-            return context.Find<Entity>(key);
+            EntityKeys key = HelperFunctions<Entity>.GetKeys(entry);
+            return context.Find<Entity>(key.Keys.ToArray());
         }
 
         private DbSet<Entity> Set(Context context) => getDBSetFunc.Invoke(context);

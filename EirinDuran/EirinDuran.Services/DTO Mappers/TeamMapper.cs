@@ -29,7 +29,10 @@ namespace EirinDuran.Services.DTO_Mappers
         protected override Team TryToMapModel(TeamDTO teamDTO)
         {
             Sport sport = repo.Get(teamDTO.SportName);
-            return new Team(name: teamDTO.Name,sport: sport,logo: teamDTO.Logo);
+            Team team = new Team(name: teamDTO.Name, sport: sport);
+            if (teamDTO.Logo != null)
+                team.Logo = teamDTO.Logo;
+            return team;
         }
     }
 }

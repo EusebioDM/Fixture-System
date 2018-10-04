@@ -26,13 +26,13 @@ namespace EirinDuran.ServicesTest
         private UserDTO macri;
         private UserDTO christina;
 
-
         [TestMethod]
         public void AddTeamOk()
         {
             TeamDTO boca = new TeamDTO
             {
-                Name = "Boca"
+                Name = "Boca",
+                SportName = "Futbol"
             };
             TeamServices services = new TeamServices(login, teamRepository, sportRepo);
             services.AddTeam(boca);
@@ -46,7 +46,8 @@ namespace EirinDuran.ServicesTest
         {
             TeamDTO boca = new TeamDTO()
             {
-                Name = "Boca"
+                Name = "Boca",
+                SportName = "Futbol"
             };
             TeamServices services = new TeamServices(login, teamRepository, sportRepo);
 
@@ -62,7 +63,8 @@ namespace EirinDuran.ServicesTest
 
             TeamDTO boca = new TeamDTO()
             {
-                Name = "Boca"
+                Name = "Boca",
+                SportName = "Futbol"
             };
             TeamServices services = new TeamServices(login, teamRepository, sportRepo);
             services.AddTeam(boca);
@@ -71,7 +73,7 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void DeleteTeamOk()
         {
-            TeamDTO boca = new TeamDTO() { Name = "Boca" };
+            TeamDTO boca = new TeamDTO() { Name = "Boca", SportName = "Futbol" };
             TeamServices services = new TeamServices(login, teamRepository, sportRepo);
             services.AddTeam(boca);
             services.DeleteTeam("Boca");
@@ -94,7 +96,7 @@ namespace EirinDuran.ServicesTest
         {
             login = new LoginServicesMock(christina);
             TeamServices services = new TeamServices(login, teamRepository, sportRepo);
-            TeamDTO boca = new TeamDTO() { Name = "Boca" };
+            TeamDTO boca = new TeamDTO() { Name = "Boca" , SportName = "Futbol" };
             services.AddTeam(boca);
             services.DeleteTeam("Boca");
         }
@@ -149,6 +151,7 @@ namespace EirinDuran.ServicesTest
         {
             teamRepository = new TeamRepository(GetContextFactory());
             sportRepo = new SportRepository(GetContextFactory());
+            sportRepo.Add(new Sport("Futbol"));
 
             macri = new UserDTO()
             {

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using EirinDuran.Domain.Fixture;
+using EirinDuran.Domain.User;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using EirinDuran.Domain.Fixture;
-using EirinDuran.Domain.User;
 
 namespace EirinDuran.Entities
 {
@@ -18,12 +18,20 @@ namespace EirinDuran.Entities
 
         }
 
-        public TeamUserEntity(Team team, User user)
+        public TeamUserEntity(TeamEntity team, UserEntity user)
         {
-            Team = new TeamEntity(team);
-            User = new UserEntity(user);
+            Team = team;
+            User = user;
             TeamName = Team.Name;
             UserName = User.UserName;
         }
+
+        //public TeamUserEntity(Team team, User user)
+        //{
+        //    Team = new TeamEntity(team);
+        //    User = new UserEntity(user);
+        //    TeamName = Team.Name;
+        //    UserName = User.UserName;
+        //}
     }
 }

@@ -11,11 +11,15 @@ namespace EirinDuran.Domain.Fixture
         public Image Logo { get; set; }
         private StringValidator validator;
 
-        public Team(string name, Sport sport)
+        public Team()
+        {
+            Logo = GetDefaultImage();
+        }
+
+        public Team(string name, Sport sport) : this()
         {
             validator = new StringValidator();
             Name = name;
-            Logo = GetDefaultImage();
             Sport = sport;
         }
 
