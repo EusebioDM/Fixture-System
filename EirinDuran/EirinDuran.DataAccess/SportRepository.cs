@@ -25,7 +25,7 @@ namespace EirinDuran.DataAccess
 
         private Func<Context, DbSet<SportEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Sports;
 
-        public void Add(Sport id) => repo.Add(id);
+        public void Add(Sport sport) => repo.Add(sport);
 
         public void Delete(string id) => repo.Delete(id);
 
@@ -33,6 +33,6 @@ namespace EirinDuran.DataAccess
 
         public IEnumerable<Sport> GetAll() => repo.GetAll();
 
-        public void Update(Sport id) => repo.Update(id);
+        public void Update(Sport sport) => repo.Update(sport);
     }
 }

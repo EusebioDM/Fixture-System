@@ -26,7 +26,7 @@ namespace EirinDuran.DataAccess
 
         private Func<Context, DbSet<TeamEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Teams;
 
-        public void Add(Team i) => repo.Add(i);
+        public void Add(Team team) => repo.Add(team);
 
         public void Delete(string i) => repo.Delete(i);
 
@@ -34,6 +34,6 @@ namespace EirinDuran.DataAccess
 
         public IEnumerable<Team> GetAll() => repo.GetAll();
 
-        public void Update(Team i) => repo.Update(i);
+        public void Update(Team team) => repo.Update(team);
     }
 }

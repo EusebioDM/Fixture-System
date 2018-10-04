@@ -115,6 +115,22 @@ namespace EirinDuran.DataAccessTest
             Assert.AreEqual(1, macriFromRepo.FollowedTeams.Count());
         }
 
+        [TestMethod]
+        public void RemoveMultipleFollowedTeamsTest()
+        {
+            alvaro.RemoveFollowedTeam(new Team("River", football));
+            repo.Update(alvaro);
+
+            User alvaroFromRepo = repo.Get(alvaro.UserName);
+            User macriFromRepo = repo.Get(macri.UserName);
+
+            Assert.IsTrue(alvaroFromRepo.FollowedTeams.Contains(new Team("Boca", football)));
+            Assert.IsFalse(alvaroFromRepo.FollowedTeams.Contains(new Team("River", football)));
+            Assert.AreEqual(1, alvaroFromRepo.FollowedTeams.Count());
+            Assert.IsTrue(macriFromRepo.FollowedTeams.Contains(new Team("River", football)));
+            Assert.AreEqual(1, macriFromRepo.FollowedTeams.Count());
+        }
+
         [TestInitialize]
         public void TestInit()
         {
