@@ -57,7 +57,6 @@ namespace EirinDuran.Services
             {
                 Encounter encounter = mapper.Map(encounterDTO);
                 ValidateNonOverlappingOfDates(encounter);
-
                 try
                 {
                     encounterRepository.Add(encounter);
@@ -114,6 +113,7 @@ namespace EirinDuran.Services
             }
         }
 
+        /*Este método debería cambiarse para el sport services*/
         public IEnumerable<Encounter> GetAllEncounters(Team team)
         {
             IEnumerable<Encounter> allEncounters = encounterRepository.GetAll();
@@ -130,6 +130,18 @@ namespace EirinDuran.Services
             return encountersWhereTeamIs;
         }
 
+        public IEnumerable<Comment> GetAllCommentsToOneEncounter(string encounterId)
+        {
+            try
+            {
+                return encounterRepository.Get(encounterId).Comments;
+            }
+            catch (DataAccessException e)
+            {
+                throw new ServicesException("Failure to try to recover all commentaries to encounter " + encounterId, e);
+            }
+        }
+
         public void DeleteEncounter(string id)
         {
             adminValidator.ValidatePermissions();
@@ -142,7 +154,6 @@ namespace EirinDuran.Services
             {
                 throw new ServicesException("Failure to try to delete encounter.", e);
             }
-            
         }
 
         public IEnumerable<Encounter> GetAllEncountersWithFollowedTeams()

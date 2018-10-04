@@ -107,8 +107,24 @@ namespace EirinDuran.WebApi.Controllers
             return BadRequest();
         }
 
+        [HttpGet]
+        [Route("{encounterId}/commentaries")]
+        public ActionResult<IEnumerable<Comment>> GetEncounterComments(string encounterId)
+        {
+            CreateSession();
+            try
+            {
+                //return encounterServices.GetAllCommentsToOneEncounter(encounterId);
+                return BadRequest();
+            }
+            catch (ServicesException)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpPost]
-        [Route("comment/{encounterId}")]
+        [Route("{encounterId}/commentaries")]
         public IActionResult AddComment(string encounterId, [FromBody] string menssage)
         {
             CreateSession();

@@ -7,6 +7,7 @@ using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.Interfaces;
 using EirinDuran.Services.DTO_Mappers;
 using System.Linq;
+using System;
 
 namespace EirinDuran.Services
 {
@@ -50,11 +51,11 @@ namespace EirinDuran.Services
             {
                 sportRepo.Update(sport);
             }
-            catch(DataAccessException e)
+            catch (DataAccessException e)
             {
                 throw new ServicesException("Failure to try to modify sport.", e);
             }
-            
+
         }
 
         public IEnumerable<SportDTO> GetAllSports()
@@ -63,10 +64,15 @@ namespace EirinDuran.Services
             {
                 return sportRepo.GetAll().Select(s => mapper.Map(s));
             }
-            catch(DataAccessException e)
+            catch (DataAccessException e)
             {
                 throw new ServicesException("Failure to try to get all sports.", e);
             }
+        }
+
+        public IEnumerable<EncounterDTO> GetAllEncountersWithSpecificSport(string sportName)
+        {
+            throw new NotImplementedException();
         }
 
         public void DeleteSport(string id)
@@ -80,7 +86,6 @@ namespace EirinDuran.Services
             {
                 throw new ServicesException("Failure to try to delete sport.", e);
             }
-            
         }
     }
 }

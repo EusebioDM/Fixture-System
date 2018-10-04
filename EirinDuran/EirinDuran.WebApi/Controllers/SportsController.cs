@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;

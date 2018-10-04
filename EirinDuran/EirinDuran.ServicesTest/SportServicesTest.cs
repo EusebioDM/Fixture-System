@@ -8,6 +8,7 @@ using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.Interfaces;
 using EirinDuran.Services;
+using EirinDuran.Services.DTO_Mappers;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -89,6 +90,20 @@ namespace EirinDuran.ServicesTest
             service.Modify(rugby);
 
             Assert.IsTrue(sportRepo.Get(rugby.Name).Teams.Contains(new Team(boca.Name)));
+        }
+
+        [TestMethod]
+        public void ListAllEncountersWithSpecificSport()
+        {
+            SportServices service = new SportServices(login, sportRepo, teamRepo);
+            IRepository<Encounter> encounterRepository = new EncounterRepository(contextFactory);
+            EncounterMapper mapper = new EncounterMapper(sportRepo, teamRepo);
+            TeamMapper teamMapper = new TeamMapper();
+
+           // encounterRepository.Add(teamMapper.Map(CreateBocaTeam()));
+
+
+            Assert.IsFalse(true);
         }
 
         [TestInitialize]
