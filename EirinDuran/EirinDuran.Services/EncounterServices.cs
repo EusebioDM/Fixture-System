@@ -113,23 +113,6 @@ namespace EirinDuran.Services
             }
         }
 
-        /*Este método debería cambiarse para el sport services*/
-        public IEnumerable<Encounter> GetAllEncounters(Team team)
-        {
-            IEnumerable<Encounter> allEncounters = encounterRepository.GetAll();
-            List<Encounter> encountersWhereTeamIs = new List<Encounter>();
-
-            foreach (var encounter in allEncounters)
-            {
-                if (encounter.Teams.Contains(team))
-                {
-                    encountersWhereTeamIs.Add(encounter);
-                }
-            }
-
-            return encountersWhereTeamIs;
-        }
-
         public IEnumerable<Comment> GetAllCommentsToOneEncounter(string encounterId)
         {
             try

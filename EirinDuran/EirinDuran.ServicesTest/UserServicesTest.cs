@@ -23,7 +23,9 @@ namespace EirinDuran.ServicesTest
     public class UserServicesTest
     {
         private IRepository<User> userRepo;
+        private IRepository<Sport> sportRepo;
         private IRepository<Team> teamRepo;
+        private IRepository<Encounter> encounterRepo;
         private UserDTO pepe;
         private UserDTO pablo;
 
@@ -31,7 +33,9 @@ namespace EirinDuran.ServicesTest
         public void TestInit()
         {
             userRepo = new UserRepository(GetContextFactory());
+            sportRepo = new SportRepository(GetContextFactory());
             teamRepo = new TeamRepository(GetContextFactory());
+            encounterRepo = new EncounterRepository(GetContextFactory());
             userRepo.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
             userRepo.Add(new User(Role.Follower, "martinFowler", "Martin", "Fowler", "user", "fowler@fowler.com"));
             pepe = new UserDTO()
@@ -198,7 +202,7 @@ namespace EirinDuran.ServicesTest
         {
             ILoginServices login = new LoginServicesMock(pepe); 
             
-            ITeamServices teamServices = new TeamServices(login, teamRepo);
+            ITeamServices teamServices = new TeamServices(login, teamRepo, encounterRepo, sportRepo);
 
             Team team = new Team("Cavaliers", Image.FromFile(GetResourcePath("Cavaliers.jpg")));
             teamServices.AddTeam(team);
@@ -233,7 +237,7 @@ namespace EirinDuran.ServicesTest
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);
             UserServices services = new UserServices(login, userRepo, teamRepo);
-            ITeamServices teamServices = new TeamServices(login, teamRepo);
+            ITeamServices teamServices = new TeamServices(login, teamRepo, encounterRepo, sportRepo);
 
             login.CreateSession("sSanchez", "user");
 

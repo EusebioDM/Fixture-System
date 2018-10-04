@@ -6,6 +6,7 @@ using EirinDuran.IDataAccess;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
 using EirinDuran.Services;
+using EirinDuran.Services.DTO_Mappers;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -24,7 +25,7 @@ namespace EirinDuran.ServicesTest
         private IRepository<Sport> sportRepo;
         private IRepository<Team> teamRepo;
         private IRepository<Encounter> encounterRepo;
-        private Services.DTO_Mappers.EncounterMapper mapper;
+        private EncounterMapper mapper;
 
         private Team felix;
         private Team liverpool;
@@ -524,6 +525,7 @@ namespace EirinDuran.ServicesTest
         public void ListEncountersForATeam()
         {
             login.CreateSession("sSanchez", "user");
+            TeamServices teamServices = new TeamServices(login, teamRepo, encounterRepo, sportRepo);
             EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
 
             Sport football = new Sport("Football");
@@ -546,7 +548,7 @@ namespace EirinDuran.ServicesTest
             encounterServices.CreateEncounter(mapper.Map(encounter3));
             encounterServices.CreateEncounter(mapper.Map(encounter4));
 
-            IEnumerable<Encounter> encountersRiver = encounterServices.GetAllEncounters(river);
+            IEnumerable<EncounterDTO> encountersRiver = teamServices.GetAllEncounters(river);
             Assert.IsTrue(encountersRiver.ToList().Count == 2);
         }
 
