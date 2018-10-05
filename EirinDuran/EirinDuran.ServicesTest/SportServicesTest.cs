@@ -8,6 +8,7 @@ using EirinDuran.IServices.Interfaces;
 using EirinDuran.Services;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -107,7 +108,7 @@ namespace EirinDuran.ServicesTest
             return new TeamDTO()
             {
                 Name = name,
-                Logo = image
+                Logo = EncondeImage(image)
             };
 
         }
@@ -119,7 +120,7 @@ namespace EirinDuran.ServicesTest
             return new TeamDTO()
             {
                 Name = name,
-                Logo = image
+                Logo = EncondeImage(image)
             };
         }
 
@@ -144,6 +145,14 @@ namespace EirinDuran.ServicesTest
             string current = Directory.GetCurrentDirectory();
             string resourcesFolder = Directory.EnumerateDirectories(current).First(d => d.EndsWith("Resources"));
             return Directory.EnumerateFiles(resourcesFolder).First(f => f.EndsWith(resourceName));
+        }
+
+        private string EncondeImage(Image image)
+        {
+            MemoryStream stream = new MemoryStream();
+            image.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+            byte[] imageBytes = stream.ToArray();
+            return Convert.ToBase64String(imageBytes);
         }
     }
 }
