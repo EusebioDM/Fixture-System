@@ -28,5 +28,15 @@ namespace EirinDuran.DataAccess
                 return context.Encounters.Where(encounterHasTeam).Select(mapEntity).ToList();
             }
         }
+
+        public IEnumerable<Encounter> GetBySport(Sport sport)
+        {
+            Func<EncounterEntity, bool> encounterHasTeam = e => e.Sport.SportName.Equals(sport.Name);
+
+            using (Context context = contextFactory.CreateDbContext(new string[0]))
+            {
+                return context.Encounters.Where(encounterHasTeam).Select(mapEntity).ToList();
+            }
+        }
     }
 }

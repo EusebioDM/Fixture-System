@@ -18,7 +18,7 @@ namespace EirinDuran.DataAccessTest
     public class EncounterExtendedRepositoryTest
     {
         private ExtendedEncounterRepository repo;
-        private Sport futbol;
+        private Sport football;
         private Sport rugby;
         private Team boca;
         private Team river;
@@ -49,26 +49,29 @@ namespace EirinDuran.DataAccessTest
         [TestMethod]
         public void GetNoEncountersByTeamTest()
         {
-            IEnumerable<Encounter> encounters = repo.GetByTeam(river);
+            IEnumerable<Encounter> encounters = repo.GetByTeam(new Team("Independiente", football));
 
-            Assert.IsTrue(encounters.Contains(bocaRiver));
-            Assert.IsTrue(encounters.Contains(tombaRiver));
-            Assert.AreEqual(2, encounters.Count());
+            Assert.AreEqual(0, encounters.Count());
         }
 
         [TestMethod]
         public void GetSingleEncountersBySportTest()
         {
-            IEnumerable<Encounter> encounters = repo.GetBySport(boca);
+            Sport rugby = new Sport("Rugby");
+            Team allBlacks = new Team("AllBlacks", rugby);
+            Team someTeam = new Team("SomeTeam", rugby);
+            Encounter encounter = new Encounter(rugby, new List<Team>(){ allBlacks, someTeam }, new DateTime(3000, 1, 1));
+            repo.Add(encounter);
+            IEnumerable<Encounter> encounters = repo.GetBySport(rugby);
 
-            Assert.IsTrue(encounters.Contains(bocaRiver));
+            Assert.IsTrue(encounters.Contains(encounter));
             Assert.AreEqual(1, encounters.Count());
         }
 
         [TestMethod]
         public void GetMultipleEncountersBySportTest()
         {
-            IEnumerable<Encounter> encounters = repo.GetBySport(river);
+            IEnumerable<Encounter> encounters = repo.GetBySport(football);
 
             Assert.IsTrue(encounters.Contains(bocaRiver));
             Assert.IsTrue(encounters.Contains(tombaRiver));
@@ -78,18 +81,16 @@ namespace EirinDuran.DataAccessTest
         [TestMethod]
         public void GetNoEncountersBySportTest()
         {
-            IEnumerable<Encounter> encounters = repo.GetBySport(river);
+            IEnumerable<Encounter> encounters = repo.GetBySport(new Sport("Rugby"));
 
-            Assert.IsTrue(encounters.Contains(bocaRiver));
-            Assert.IsTrue(encounters.Contains(tombaRiver));
-            Assert.AreEqual(2, encounters.Count());
+            Assert.AreEqual(0, encounters.Count());
         }
 
         [TestInitialize]
         public void TestInit()
         {
             repo = new ExtendedEncounterRepository(GetContextFactory());
-            futbol = CreateFutbolTeam();
+            football = CreateFutbolTeam();
             rugby = CreateRugbyTeam();
             macri = CreateMacriUser();
             boca = CreateBocaTeam();
@@ -122,7 +123,7 @@ namespace EirinDuran.DataAccessTest
             string name = "Boca Juniors";
             string path = GetResourcePath("Boca.jpg");
             Image image = Image.FromFile(path);
-            return new Team(name, futbol, image);
+            return new Team(name, football, image);
 
         }
 
@@ -131,7 +132,7 @@ namespace EirinDuran.DataAccessTest
             string name = "River Plate";
             string path = GetResourcePath("River.jpg");
             Image image = Image.FromFile(path);
-            return new Team(name, futbol, image);
+            return new Team(name, football, image);
         }
 
         private Team CreateGodoyCruzTeam()
@@ -139,19 +140,19 @@ namespace EirinDuran.DataAccessTest
             string name = "Godoy Cruz";
             string path = GetResourcePath("GodoyCruz.jpg");
             Image image = Image.FromFile(path);
-            return new Team(name, futbol, image);
+            return new Team(name, football, image);
         }
 
         private Encounter CreateBocaRiverEncounter()
         {
-            Encounter encounter = new Encounter(futbol, new List<Team>() { boca, river }, new DateTime(3001, 10, 10));
+            Encounter encounter = new Encounter(football, new List<Team>() { boca, river }, new DateTime(3001, 10, 10));
             encounter.AddComment(macri, "Meow");
             return encounter;
         }
 
         private Encounter CreateTombaRiverEncounter()
         {
-            Encounter encounter = new Encounter(futbol, new List<Team>() { tomba, river }, new DateTime(3001, 10, 11));
+            Encounter encounter = new Encounter(football, new List<Team>() { tomba, river }, new DateTime(3001, 10, 11));
             encounter.AddComment(macri, "Meow");
             return encounter;
         }
@@ -159,7 +160,7 @@ namespace EirinDuran.DataAccessTest
         private User CreateMacriUser()
         {
             User user = new User(Role.Administrator, "Gato", "Mauricio", "Macri", "gato123", "macri@gmail.com");
-            user.AddFollowedTeam(new Team("River", futbol));
+            user.AddFollowedTeam(new Team("River", football));
             return user;
         }
 
