@@ -7,6 +7,8 @@ namespace EirinDuran.IDataAccess
 {
     public interface IExtendedEncounterRepository : IRepository<Encounter>
     {
-        IEnumerable<Encounter> GetByTeam(Team river);
+        IEnumerable<Encounter> GetByTeam(string sportId_TeamName);
+
+        IEnumerable<Encounter> GetBySport(string sportId);
     }
 }
