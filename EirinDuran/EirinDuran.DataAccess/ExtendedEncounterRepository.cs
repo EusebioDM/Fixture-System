@@ -20,12 +20,17 @@ namespace EirinDuran.DataAccess
             this.contextFactory = contextFactory;
         }
 
-        public IEnumerable<Encounter> GetByTeam(string sportId_teamName)
+        public IEnumerable<Encounter> GetByTeam(string id)
         {
-            throw new NotImplementedException();
-            //Func<EncounterEntity, bool> encounterHasTeam = e => e.AwayTeam.Name.Equals(team.Name) || e.HomeTeam.Name.Equals(team.Name);
+            Func<EncounterEntity, bool> encounterHasTeam = e => TeamHasId(e.AwayTeam, id) || TeamHasId(e.HomeTeam, id);
 
-            //return GetFilteredEncounters(encounterHasTeam);
+            return GetFilteredEncounters(encounterHasTeam);
+        }
+
+        private bool TeamHasId(TeamEntity team ,string id)
+        {
+            string teamId = team.Name + "_" + team.SportName;
+            return teamId == id;
         }
 
         public IEnumerable<Encounter> GetBySport(string sportId)

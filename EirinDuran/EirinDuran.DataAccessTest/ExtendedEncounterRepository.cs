@@ -30,7 +30,7 @@ namespace EirinDuran.DataAccessTest
         [TestMethod]
         public void GetSingleEncountersByTeamTest()
         {
-            IEnumerable<Encounter> encounters = repo.GetByTeam(boca);
+            IEnumerable<Encounter> encounters = repo.GetByTeam(GetTeamId(boca));
 
             Assert.IsTrue(encounters.Contains(bocaRiver));
             Assert.AreEqual(1, encounters.Count());
@@ -39,7 +39,7 @@ namespace EirinDuran.DataAccessTest
         [TestMethod]
         public void GetMultipleEncountersByTeamTest()
         {
-            IEnumerable<Encounter> encounters = repo.GetByTeam(river);
+            IEnumerable<Encounter> encounters = repo.GetByTeam(GetTeamId(river));
 
             Assert.IsTrue(encounters.Contains(bocaRiver));
             Assert.IsTrue(encounters.Contains(tombaRiver));
@@ -49,9 +49,14 @@ namespace EirinDuran.DataAccessTest
         [TestMethod]
         public void GetNoEncountersByTeamTest()
         {
-            IEnumerable<Encounter> encounters = repo.GetByTeam(new Team("Independiente", football));
+            IEnumerable<Encounter> encounters = repo.GetByTeam("Independiente_Futbol");
 
             Assert.AreEqual(0, encounters.Count());
+        }
+
+        private string GetTeamId(Team team)
+        {
+            return team.Name + "_" + team.Sport.Name;
         }
 
         [TestMethod]

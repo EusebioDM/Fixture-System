@@ -58,7 +58,7 @@ namespace EirinDuran.WebApi.Controllers
         {
             try
             {
-                return encounterServices.GetEncountersByTeam(sportId_teamName);
+                return encounterServices.GetEncountersByTeam(sportId_teamName).ToList();
             }
             catch (ServicesException e)
             {

@@ -35,9 +35,9 @@ namespace EirinDuran.Entities
 
         public override bool Equals(object obj)
         {
-            var entity = obj as TeamEntity;
-            return entity != null &&
-                   Name == entity.Name;
+            return obj is TeamEntity other &&
+                   Name == other.Name &&
+                   SportName == other.SportName;
         }
 
         public override int GetHashCode()
