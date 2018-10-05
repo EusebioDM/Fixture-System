@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using EirinDuran.IDataAccess;
 
 namespace EirinDuran.DataAccess
 {
-    public class ExtendedEncounterRepository : EncounterRepository
+    public class ExtendedEncounterRepository : EncounterRepository, IExtendedEncounterRepository
     {
         IDesignTimeDbContextFactory<Context> contextFactory;
 
