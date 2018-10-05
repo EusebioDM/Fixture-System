@@ -30,13 +30,13 @@ namespace EirinDuran.DataAccess
 
         public void Delete(string ids)
         {
-            string[] keys = ids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] keys = ids.Split(new char[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
             repo.Delete(keys);
         }
 
         public Team Get(string id)
         {
-            string[] keys = id.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] keys = id.Split(new char[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
             return repo.Get(keys);
         }
 
