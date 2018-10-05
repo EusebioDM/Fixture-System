@@ -26,8 +26,8 @@ namespace EirinDuran.Services
             this.sportRepo = sportRepo;
             this.teamRepo = teamRepo;
             this.encounterRepo = encounterRepo;
-            sportMapper = new SportMapper(teamRepo);
             encounterMapper = new EncounterMapper(sportRepo, teamRepo);
+            sportMapper = new SportMapper();
         }
 
         public void Create(SportDTO sportDTO)

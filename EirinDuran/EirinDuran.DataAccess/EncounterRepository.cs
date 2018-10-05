@@ -23,9 +23,9 @@ namespace EirinDuran.DataAccess
 
         private EntityFactory<EncounterEntity> CreateEntityFactory() => new EntityFactory<EncounterEntity>(() => new EncounterEntity());
 
-        private Func<Context, DbSet<EncounterEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Encounters;
+        protected Func<Context, DbSet<EncounterEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Encounters;
 
-        public void Add(Encounter id) => repo.Add(id);
+        public void Add(Encounter encounter) => repo.Add(encounter);
 
         public void Delete(string id) => repo.Delete(Guid.Parse(id));
 
@@ -33,6 +33,6 @@ namespace EirinDuran.DataAccess
 
         public IEnumerable<Encounter> GetAll() => repo.GetAll();
 
-        public void Update(Encounter id) => repo.Update(id);
+        public void Update(Encounter encounter) => repo.Update(encounter);
     }
 }

@@ -8,11 +8,11 @@ namespace EirinDuran.IServices.Exceptions
         {
         }
 
-        public ServicesException(string message) : base()
+        public ServicesException(string message) : base(message)
         {
         }
 
-        public ServicesException(string message, Exception innerException) : base()
+        public ServicesException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

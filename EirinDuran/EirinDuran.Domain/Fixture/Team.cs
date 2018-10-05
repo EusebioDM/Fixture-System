@@ -7,14 +7,20 @@ namespace EirinDuran.Domain.Fixture
     {
         public string Name { get => name; set => SetNameIfValid(value); }
         private string name;
+        public Sport Sport { get; set; }
         public Image Logo { get; set; }
         private StringValidator validator;
 
-        public Team(string name)
+        public Team()
+        {
+            Logo = GetDefaultImage();
+        }
+
+        public Team(string name, Sport sport) : this()
         {
             validator = new StringValidator();
             Name = name;
-            Logo = GetDefaultImage();
+            Sport = sport;
         }
 
         private Image GetDefaultImage()
@@ -23,7 +29,7 @@ namespace EirinDuran.Domain.Fixture
             return bitmap;
         }
 
-        public Team(string name, Image logo) : this(name)
+        public Team(string name, Sport sport, Image logo) : this(name, sport)
         {
             Logo = logo;
         }

@@ -33,7 +33,7 @@ namespace EirinDuran.DomainTest
         [ExpectedException(typeof(InvalidNumberOfTeamsException))]
         public void HigherNumberOfTeamsTest()
         {
-            teams.Add(new Team("Godoy Cruz Antonio Tomba",null));
+            teams.Add(new Team("Godoy Cruz Antonio Tomba", null));
             Encounter encounter = new Encounter(futbol, teams, fechaMenor);
         }
 
@@ -49,7 +49,7 @@ namespace EirinDuran.DomainTest
         [ExpectedException(typeof(InvalidDateException))]
         public void InvalidDateException()
         {
-            Encounter encounter = new Encounter(futbol, teams, new DateTime(1900,1,1));
+            Encounter encounter = new Encounter(futbol, teams, new DateTime(1900, 1, 1));
         }
 
         [TestMethod]
@@ -78,15 +78,10 @@ namespace EirinDuran.DomainTest
         {
             fechaMenor = new DateTime(3000, 1, 20, 1, 1, 1);
             fechaMayor = new DateTime(3000, 1, 21, 1, 1, 1);
+            futbol = new Sport("Futbol");
             boca = CreateBocaTeam();
             river = CreateTeamThatBelongsInTheB();
-            teams = new List<Team>()
-            {
-                boca, river
-            };
-            futbol = new Sport("Futbol");
-            futbol.AddTeam(boca);
-            futbol.AddTeam(river);
+            teams = new List<Team>() { boca, river };
         }
 
         private Team CreateBocaTeam()
@@ -94,7 +89,7 @@ namespace EirinDuran.DomainTest
             string name = "Boca Juniors";
             string path = GetResourcePath("Boca.jpeg");
             Image image = Image.FromFile(path);
-            return new Team(name, image);
+            return new Team(name, futbol, image);
         }
 
         private Team CreateTeamThatBelongsInTheB()
@@ -102,7 +97,7 @@ namespace EirinDuran.DomainTest
             string name = "River Plate";
             string path = GetResourcePath("River.jpg");
             Image image = Image.FromFile(path);
-            return new Team(name, image);
+            return new Team(name, futbol, image);
         }
 
         private string GetResourcePath(string resourceName)

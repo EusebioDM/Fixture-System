@@ -8,19 +8,12 @@ namespace EirinDuran.Domain.Fixture
         private HashSet<Team> teams;
         private StringValidator validator;
         public string Name { get => name; set => SetNameIfValid(value); }
-        public IEnumerable<Team> Teams { get => teams; }
 
         public Sport(string name)
         {
             validator = new StringValidator();
             teams = new HashSet<Team>();
             Name = name;
-        }
-
-        public Sport(string name, IEnumerable<Team> teams) : this(name)
-        {
-            foreach (Team team in teams)
-                AddTeam(team);
         }
 
         private void SetNameIfValid(string value)
@@ -34,16 +27,6 @@ namespace EirinDuran.Domain.Fixture
             {
                 name = value;
             }
-        }
-
-        public void AddTeam(Team team)
-        {
-            teams.Add(team);
-        }
-
-        public void RemoveTeam(Team boca)
-        {
-            teams.Remove(boca);
         }
 
         public override bool Equals(object obj)

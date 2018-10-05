@@ -64,7 +64,6 @@ namespace EirinDuran.DataAccessTest
         {
             Sport fromRepo = repo.Get(rugby.Name);
             Assert.AreEqual(rugby.Name, fromRepo.Name);
-            Assert.IsTrue(HelperFunctions<Team>.CollectionsHaveSameElements(rugby.Teams, fromRepo.Teams));
         }
 
         [TestMethod]
@@ -72,35 +71,6 @@ namespace EirinDuran.DataAccessTest
         public void GetNonExistantSportTest()
         {
             repo.Get("tennis");
-        }
-
-        [TestMethod]
-        public void UpdateSportTest()
-        {
-            rugby.AddTeam(boca);
-            repo.Update(rugby);
-            Sport fromRepo = repo.Get(rugby.Name);
-
-            Assert.IsTrue(fromRepo.Teams.Contains(boca));
-        }
-
-        [TestMethod]
-        public void UpdateNonExistantSportTest()
-        {
-            Sport lasLeonas = new Sport("Hockey", new List<Team>() { new Team("Las Leonas") });
-            repo.Update(lasLeonas);
-            Sport fromRepo = repo.Get("Hockey");
-
-            Assert.IsTrue(HelperFunctions<Team>.CollectionsHaveSameElements(lasLeonas.Teams, fromRepo.Teams));
-        }
-
-        [TestMethod]
-        public void RemoveTeamUpdateTest()
-        {
-            rugby.AddTeam(boca);
-            repo.Update(rugby);
-
-            Assert.IsTrue(repo.GetAll().Any(s => s.Teams.Contains(boca)));
         }
 
         [TestInitialize]
@@ -118,9 +88,7 @@ namespace EirinDuran.DataAccessTest
 
         private Sport CreateFutbolTeam()
         {
-            Sport futbol = new Sport("Futbol");
-            futbol.AddTeam(boca);
-            futbol.AddTeam(river);
+            Sport futbol = new Sport("Futbol");;
             return futbol;
         }
 
@@ -146,7 +114,7 @@ namespace EirinDuran.DataAccessTest
         {
             string name = "Boca Juniors";
             Image image = Image.FromFile(GetResourcePath("Boca.jpg"));
-            return new Team(name, image);
+            return new Team(name, futbol,image);
 
         }
 
@@ -154,13 +122,13 @@ namespace EirinDuran.DataAccessTest
         {
             string name = "River Plate";
             Image image = Image.FromFile(GetResourcePath("River.jpg"));
-            return new Team(name, image);
+            return new Team(name, futbol,image);
         }
 
         private User CreateUserMacri()
         {
             User user = new User(Role.Administrator, "Gato", "Mauricio", "Macri", "gato123", "macri@gmail.com");
-            user.AddFollowedTeam(new Team("River"));
+            user.AddFollowedTeam(new Team("River", futbol));
             return user;
         }
 

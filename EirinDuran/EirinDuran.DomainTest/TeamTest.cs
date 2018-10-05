@@ -14,6 +14,10 @@ namespace EirinDuran.DomainTest
     [TestClass]
     public class TeamTest
     {
+        private Team boca;
+        private Team river;
+        private Sport futbol;
+
         [TestMethod]
         public void CreateTeamTest()
         {
@@ -35,7 +39,7 @@ namespace EirinDuran.DomainTest
             Team boca = CreateBocaTeam();
             string path = GetResourcePath("Boca.jpeg");
             Image image = Image.FromFile(path);
-            Team anotherBoca = new Team("Boca Juniors", image);
+            Team anotherBoca = new Team("Boca Juniors", futbol, image);
             Assert.IsTrue(boca.Equals(anotherBoca));
         }
 
@@ -53,12 +57,33 @@ namespace EirinDuran.DomainTest
             Team team = new Team("                  ", null);
         }
 
+        [TestMethod]
+        public void AddTeamTest()
+        {
+            Team tomba = new Team("GodoyCruz", futbol);
+
+            Assert.AreEqual(futbol, tomba.Sport);
+        }
+
+        [TestInitialize]
+        public void TestInit()
+        {
+            futbol = CreateFutbolSport();
+            river = CreateTeamThatBelongsInTheB();
+            boca = CreateBocaTeam();
+        }
+
+        private Sport CreateFutbolSport()
+        {
+            return new Sport("Futbol");
+        }
+
         private Team CreateBocaTeam()
         {
             string name = "Boca Juniors";
             string path = GetResourcePath("Boca.jpeg");
             Image image = Image.FromFile(path);
-            return new Team(name, image);
+            return new Team(name, futbol, image);
         }
 
         private Team CreateTeamThatBelongsInTheB()
@@ -66,7 +91,7 @@ namespace EirinDuran.DomainTest
             string name = "River Plate";
             string path = GetResourcePath("River.jpg");
             Image image = Image.FromFile(path);
-            return new Team(name, image);
+            return new Team(name, futbol, image);
         }
 
         private string GetResourcePath(string resourceName)

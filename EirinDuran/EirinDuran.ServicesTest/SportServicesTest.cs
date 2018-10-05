@@ -72,70 +72,19 @@ namespace EirinDuran.ServicesTest
             service.Create(sport);
         }
 
-        [TestMethod]
-        public void ModifyExistingSportTest()
-        {
-            SportServices service = new SportServices(login, sportRepo, teamRepo, encounterRepo);
-            futbol.TeamsNames.Remove(boca.Name);
-            service.Modify(futbol);
-
-            Sport fromRepo = sportRepo.Get(futbol.Name);
-            Assert.IsFalse(fromRepo.Teams.Contains(new Team("Boca")));
-        }
-
-        [TestMethod]
-        public void ModifyNonExistingSportTest()
-        {
-            SportServices service = new SportServices(login, sportRepo, teamRepo, encounterRepo);
-            rugby.TeamsNames.Add(boca.Name);
-            service.Modify(rugby);
-
-            Assert.IsTrue(sportRepo.Get(rugby.Name).Teams.Contains(new Team(boca.Name)));
-        }
-
-        [TestMethod]
-        public void ListAllEncountersOfASpecificSport()
-        {
-            SportServices service = new SportServices(login, sportRepo, teamRepo, encounterRepo);
-            IRepository<Encounter> encounterRepository = new EncounterRepository(contextFactory);
-            EncounterMapper mapper = new EncounterMapper(sportRepo, teamRepo);
-
-            TeamMapper teamMapper = new TeamMapper();
-            SportMapper sportMapper = new SportMapper(teamRepo);
-
-            Sport sport = sportMapper.Map(CreateFutbolTeam());
-
-            Team boca = teamMapper.Map(CreateBocaTeam());
-            Team river = teamMapper.Map(CreateTeamThatBelongsInTheB());
-
-            List<Team> teams = new List<Team>() { boca, river };
-
-            DateTime encounterDate = new DateTime(2020, 12, 12);
-
-            Encounter encounter = new Encounter(sport, teams, encounterDate);
-
-            encounterRepository.Add(encounter);
-
-            IEnumerable<EncounterDTO> recovered = service.GetAllEncountersOfASpecificSport("Futbol");
-
-            Assert.AreEqual(1, recovered.ToList().Count);
-            Assert.AreEqual(boca.Name, recovered.ToList()[0].HomeTeamName);
-            Assert.AreEqual(river.Name, recovered.ToList()[0].AwayTeamName);
-        }
-
         [TestInitialize]
         public void TestInit()
         {
             contextFactory = GetContextFactory();
             sportRepo = new SportRepository(contextFactory);
             teamRepo = new TeamRepository(contextFactory);
-            encounterRepo = new EncounterRepository(contextFactory);
+            futbol = CreateFutbol();
+            rugby = CreateRugby();
             boca = CreateBocaTeam();
             river = CreateTeamThatBelongsInTheB();
-            futbol = CreateFutbolTeam();
-            rugby = CreateRugbyTeam();
-            sportRepo.Add(new Sport(futbol.Name, new List<Team>() { new Team(boca.Name, boca.Logo), new Team(river.Name, river.Logo) }));
-            var a = sportRepo.GetAll();
+            sportRepo.Add(new Sport("Futbol"));
+            teamRepo.Add(new Team(boca.Name, new Sport("Futbol")));
+            teamRepo.Add(new Team(river.Name, new Sport("Futbol")));
             login = CreateLoginServices();
         }
 
@@ -181,22 +130,19 @@ namespace EirinDuran.ServicesTest
             };
         }
 
-        private SportDTO CreateFutbolTeam()
-        {
-            SportDTO futbol = new SportDTO()
-            {
-                Name = "Futbol",
-                TeamsNames = new List<string> { boca.Name, river.Name }
-            };
-            return futbol;
-        }
-
-        private SportDTO CreateRugbyTeam()
+        private SportDTO CreateFutbol()
         {
             return new SportDTO()
             {
-                Name = "Rugby",
-                TeamsNames = new List<string>()
+                Name = "Futbol"
+            };
+        }
+
+        private SportDTO CreateRugby()
+        {
+            return new SportDTO()
+            {
+                Name = "Rugby"
             };
         }
 

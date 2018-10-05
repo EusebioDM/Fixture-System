@@ -14,22 +14,34 @@ namespace EirinDuran.Entities.Mappers
     {
         public UserEntity Map(User user)
         {
-            return new UserEntity()
+            UserEntity userEntity = new UserEntity()
             {
                 UserName = user.UserName,
                 Name = user.Name,
                 Surname = user.Surname,
                 Password = user.Password,
                 Mail = user.Mail,
-                Role = user.Role,
-                FollowedTeams = user.FollowedTeams.Select(t => new TeamEntity(t)).ToList()
+                Role = user.Role
             };
+            List<TeamUserEntity> teamUsersRelations = user.FollowedTeams.ToList().ConvertAll(t => new TeamUserEntity(
+                team: new TeamEntity(t),
+                user: userEntity
+            ));
+            userEntity.TeamUsers = teamUsersRelations;
+            return userEntity;
         }
 
         public User Map(UserEntity entity)
         {
-            ICollection<Team> teams = entity.FollowedTeams.Select(t => t.ToModel()).ToList();
-            return new User(role: entity.Role, userName: entity.UserName, name: entity.Name, surname: entity.Surname, password: entity.Password, mail: entity.Mail, followedTeams: teams);
+            return new User(
+                role: entity.Role,
+                userName: entity.UserName,
+                name: entity.Name,
+                surname: entity.Surname,
+                password: entity.Password,
+                mail: entity.Mail,
+                followedTeams: entity.TeamUsers.Select(eu => eu.Team.ToModel()).ToList()
+            );
         }
 
         public void Update(User source, UserEntity destination)
@@ -40,7 +52,13 @@ namespace EirinDuran.Entities.Mappers
             destination.Password = source.Password;
             destination.Mail = source.Mail;
             destination.Role = source.Role;
-            destination.FollowedTeams = source.FollowedTeams.Select(t => new TeamEntity(t)).ToList();
+            destination.TeamUsers = source.FollowedTeams.Select(t => new TeamUserEntity()
+            {
+                Team = new TeamEntity(t),
+                TeamName = t.Name,
+                User = Map(source),
+                UserName = source.UserName
+            }).ToList();
         }
     }
 }

@@ -114,8 +114,9 @@ namespace EirinDuran.DomainTest
         [TestMethod]
         public void AddFollowedTeamsTest()
         {
-            Team boca = new Team("Boca");
-            Team river = new Team("River");
+            Sport futbol = new Sport("Futbol");
+            Team boca = new Team("Boca",futbol);
+            Team river = new Team("River", futbol);
             IEnumerable<Team> expected = new List<Team>() { boca, river };
 
             foreach (Team team in expected)
@@ -131,8 +132,9 @@ namespace EirinDuran.DomainTest
         [TestMethod]
         public void RemoveFollowedTeamsTest()
         {
-            Team boca = new Team("Boca");
-            Team river = new Team("River");
+            Sport futbol = new Sport("Futbol");
+            Team boca = new Team("Boca",futbol);
+            Team river = new Team("River", futbol);
             IEnumerable<Team> expected = new List<Team>() { boca };
 
             user.AddFollowedTeam(boca);

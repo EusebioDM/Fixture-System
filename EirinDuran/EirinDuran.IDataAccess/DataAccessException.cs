@@ -8,11 +8,11 @@ namespace EirinDuran.IDataAccess
         {
         }
 
-        public DataAccessException(string message) : base()
+        public DataAccessException(string message) : base(message)
         {
         }
 
-        public DataAccessException(string message, Exception innerException) : base()
+        public DataAccessException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }
