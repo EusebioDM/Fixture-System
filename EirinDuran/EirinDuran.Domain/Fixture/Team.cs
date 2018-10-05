@@ -45,9 +45,10 @@ namespace EirinDuran.Domain.Fixture
 
         public override bool Equals(object obj)
         {
-            var team = obj as Team;
-            return team != null &&
-                   Name == team.Name;
+            Team other = obj as Team;
+            return other != null &&
+                   Name == other.Name &&
+                   Sport.Equals(other.Sport);
         }
 
         public override int GetHashCode()

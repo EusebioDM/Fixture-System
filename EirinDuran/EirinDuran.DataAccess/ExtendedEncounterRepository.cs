@@ -4,12 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using EirinDuran.Entities;
 
 namespace EirinDuran.DataAccess
 {
     public class ExtendedEncounterRepository : EncounterRepository
     {
-        IDesignTimeDbContextFactory<Context> contextFactory;
+        private IDesignTimeDbContextFactory<Context> contextFactory;
+        private Func<EncounterEntity, Encounter> mapEntity = t => { return t.ToModel(); };
 
         public ExtendedEncounterRepository(IDesignTimeDbContextFactory<Context> contextFactory) : base(contextFactory)
         {
@@ -18,10 +21,11 @@ namespace EirinDuran.DataAccess
 
         public IEnumerable<Encounter> GetByTeam(Team river)
         {
-            using(Context context = contextFactory.CreateDbContext(new string[0]))
+            Func<EncounterEntity, bool> encounterHasTeam = e => e.AwayTeam.Name.Equals(river.Name) || e.HomeTeam.Name.Equals(river.Name);
+            
+            using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
-                IEnumerable<Entities.EncounterEntity> entities = context.Encounters.Where(e => e.AwayTeam.Equals(river) || e.HomeTeam.Equals(river));
-                return entities.Select(e => e.ToModel());
+                return context.Encounters.Where(encounterHasTeam).Select(mapEntity).ToList();
             }
         }
     }

@@ -1,6 +1,8 @@
 ﻿using EirinDuran.DataAccess;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
+using EirinDuran.IDataAccess;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -26,7 +28,7 @@ namespace EirinDuran.DataAccessTest
         private User macri;
 
         [TestMethod]
-        private void GetSingleEncountersByTeamTest()
+        public void GetSingleEncountersByTeamTest()
         {
             IEnumerable<Encounter> encounters = repo.GetByTeam(boca);
 
@@ -35,7 +37,7 @@ namespace EirinDuran.DataAccessTest
         }
 
         [TestMethod]
-        private void GetMultipleEncountersByTeamTest()
+        public void GetMultipleEncountersByTeamTest()
         {
             IEnumerable<Encounter> encounters = repo.GetByTeam(river);
 
@@ -45,7 +47,7 @@ namespace EirinDuran.DataAccessTest
         }
 
         [TestMethod]
-        private void GetNoEncountersByTeamTest()
+        public void GetNoEncountersByTeamTest()
         {
             IEnumerable<Encounter> encounters = repo.GetByTeam(river);
 
@@ -140,3 +142,4 @@ namespace EirinDuran.DataAccessTest
         }
     }
 }
+
