@@ -172,14 +172,14 @@ namespace EirinDuran.DataAccessTest
 
         private Encounter CreateBocaRiverEncounter()
         {
-            Encounter encounter = new Encounter(football, new List<Team>() { boca, river }, new DateTime(3001, 10, 10));
+            Encounter encounter = new Encounter(football, new List<Team>() { boca, river }, new DateTime(3000, 10, 10));
             encounter.AddComment(macri, "Meow");
             return encounter;
         }
 
         private Encounter CreateTombaRiverEncounter()
         {
-            Encounter encounter = new Encounter(football, new List<Team>() { tomba, river }, new DateTime(3001, 10, 5));
+            Encounter encounter = new Encounter(football, new List<Team>() { tomba, river }, new DateTime(3000, 10, 5));
             encounter.AddComment(macri, "Meow");
             return encounter;
         }

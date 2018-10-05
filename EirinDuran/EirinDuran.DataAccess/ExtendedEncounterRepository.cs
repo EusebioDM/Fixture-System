@@ -38,5 +38,16 @@ namespace EirinDuran.DataAccess
                 return context.Encounters.Where(encounterHasTeam).Select(mapEntity).ToList();
             }
         }
+
+        public IEnumerable<Encounter> GetByDate(DateTime startDate, DateTime endDate)
+        {
+            Func<EncounterEntity, bool> encounterHasTeam = e => e.DateTime >= startDate && e.DateTime <= endDate;
+
+            bool a = new DateTime(3000,10,5) >= startDate && new DateTime(3000, 10, 5) <= endDate;
+            using (Context context = contextFactory.CreateDbContext(new string[0]))
+            {
+                return context.Encounters.Where(encounterHasTeam).Select(mapEntity).ToList();
+            }
+        }
     }
 }
