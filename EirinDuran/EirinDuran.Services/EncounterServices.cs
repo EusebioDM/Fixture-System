@@ -16,14 +16,14 @@ namespace EirinDuran.Services
     {
 
         private ILoginServices loginServices;
-        private IRepository<Encounter> encounterRepository;
+        private IExtendedEncounterRepository encounterRepository;
         private IRepository<Sport> sportRepo;
         private IRepository<Team> teamRepo;
         private IRepository<User> userRepo;
         private PermissionValidator adminValidator;
         private EncounterMapper mapper;
 
-        public EncounterServices(ILoginServices loginServices, IRepository<Encounter> encounterRepo, IRepository<Sport> sportRepo, IRepository<Team> teamRepo, IRepository<User> userRepo)
+        public EncounterServices(ILoginServices loginServices, IExtendedEncounterRepository encounterRepo, IRepository<Sport> sportRepo, IRepository<Team> teamRepo, IRepository<User> userRepo)
         {
             this.loginServices = loginServices;
             this.userRepo = userRepo;
@@ -110,6 +110,36 @@ namespace EirinDuran.Services
             catch (DataAccessException e)
             {
                 throw new ServicesException("Failure to try to get all encounters.", e);
+            }
+        }
+
+        public IEnumerable<EncounterDTO> GetEncountersBySport(string sportName)
+        {
+            IEnumerable<Encounter> allEncounters;
+            try
+            {
+                allEncounters = encounterRepository.GetAll();
+            }
+            catch (DataAccessException e)
+            {
+                throw new ServicesException("Failure to try to recover encounter with specific sport.", e);
+            }
+
+            IEnumerable<Encounter> filteredEncounters = allEncounters.Where(e => e.Sport.Name.Equals(sportName));
+            IEnumerable<EncounterDTO> filteredEncountersDTO = filteredEncounters.Select(e => mapper.Map(e));
+
+            return filteredEncountersDTO;
+        }
+
+        public IEnumerable<EncounterDTO> GetEncountersByTeam(Team team)
+        {
+            try
+            {
+                return encounterRepository.GetByTeam(team).Select(e => mapper.Map(e));
+            }
+            catch (DataAccessException e)
+            {
+                throw new ServicesException("Failure to try to get all teams of a team.", e);
             }
         }
 

@@ -36,7 +36,7 @@ namespace EirinDuran.WebApi.Controllers
 
             try
             {
-                return teamServices.GetAll().ToList();
+                return teamServices.GetAllTeams().ToList();
             }
             catch (ServicesException)
             {

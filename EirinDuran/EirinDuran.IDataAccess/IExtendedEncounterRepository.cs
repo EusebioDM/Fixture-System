@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EirinDuran.IDataAccess
 {
-    public interface IExtendedEncounterRepository
+    public interface IExtendedEncounterRepository : IRepository<Encounter>
     {
         IEnumerable<Encounter> GetByTeam(Team river);
     }

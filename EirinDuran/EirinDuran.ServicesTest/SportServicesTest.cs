@@ -1,22 +1,16 @@
 ﻿using EirinDuran.DataAccess;
 using EirinDuran.DataAccessTest;
 using EirinDuran.Domain.Fixture;
-using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
-using EirinDuran.IServices;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.Interfaces;
 using EirinDuran.Services;
-using EirinDuran.Services.DTO_Mappers;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace EirinDuran.ServicesTest
 {
@@ -27,7 +21,6 @@ namespace EirinDuran.ServicesTest
         private ILoginServices login;
         private IRepository<Sport> sportRepo;
         private IRepository<Team> teamRepo;
-        private IRepository<Encounter> encounterRepo;
         private SportDTO futbol;
         private SportDTO rugby;
         private TeamDTO boca;
@@ -37,8 +30,8 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void CreatedSportTest()
         {
-            SportServices service = new SportServices(login, sportRepo, teamRepo, encounterRepo);
-            service.Create(rugby);
+            SportServices service = new SportServices(login, sportRepo);
+            service.CreateSport(rugby);
 
             Assert.IsTrue(sportRepo.GetAll().Any(s => s.Name.Equals(rugby.Name)));
         }
@@ -47,29 +40,29 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(ServicesException))]
         public void CreateAlreadyExistingSport()
         {
-            SportServices service = new SportServices(login, sportRepo, teamRepo, encounterRepo);
-            service.Create(futbol);
+            SportServices service = new SportServices(login, sportRepo);
+            service.CreateSport(futbol);
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidaDataException))]
         public void CreateInvalidNullSportTest()
         {
-            SportServices service = new SportServices(login, sportRepo, teamRepo, encounterRepo);
+            SportServices service = new SportServices(login, sportRepo);
             SportDTO sport = new SportDTO();
-            service.Create(sport);
+            service.CreateSport(sport);
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidaDataException))]
         public void CreateInvalidNameSportTest()
         {
-            SportServices service = new SportServices(login, sportRepo, teamRepo, encounterRepo);
+            SportServices service = new SportServices(login, sportRepo);
             SportDTO sport = new SportDTO()
             {
                 Name = "                  "
             };
-            service.Create(sport);
+            service.CreateSport(sport);
         }
 
         [TestInitialize]

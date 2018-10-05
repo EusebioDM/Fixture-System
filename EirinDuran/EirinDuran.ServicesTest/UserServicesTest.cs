@@ -5,12 +5,9 @@ using EirinDuran.DataAccessTest;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
-using EirinDuran.IServices;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
 using EirinDuran.Services;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -205,7 +202,7 @@ namespace EirinDuran.ServicesTest
         {
             ILoginServices login = new LoginServicesMock(pepe);
 
-            ITeamServices teamServices = new TeamServices(login, teamRepo, encounterRepo,sportRepo);
+            ITeamServices teamServices = new TeamServices(login, teamRepo, sportRepo);
 
             TeamDTO team = new TeamDTO()
             {
@@ -213,7 +210,7 @@ namespace EirinDuran.ServicesTest
                 Logo = Image.FromFile(GetResourcePath("Cavaliers.jpg")),
                 SportName = "Baskteball"
             };
-            teamServices.AddTeam(team);
+            teamServices.CreateTeam(team);
 
             login = new LoginServicesMock(pablo);
             IUserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
@@ -242,7 +239,7 @@ namespace EirinDuran.ServicesTest
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);
             UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
-            ITeamServices teamServices = new TeamServices(login, teamRepo, encounterRepo, sportRepo);
+            ITeamServices teamServices = new TeamServices(login, teamRepo, sportRepo);
 
             login.CreateSession("sSanchez", "user");
 
@@ -263,7 +260,7 @@ namespace EirinDuran.ServicesTest
                 Logo = Image.FromFile(GetResourcePath("Cavaliers.jpg")),
                 SportName = "Baskteball"
             };
-            teamServices.AddTeam(team);
+            teamServices.CreateTeam(team);
             services.AddFollowedTeam("Cavaliers");
 
             IEnumerable<TeamDTO> followedTeams = services.GetAllFollowedTeams();

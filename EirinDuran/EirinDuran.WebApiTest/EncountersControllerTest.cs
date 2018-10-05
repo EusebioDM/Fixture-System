@@ -15,7 +15,7 @@ using System.Linq;
 
 namespace EirinDuran.WebApiTest
 {
-    /* 
+
     [TestClass]
     public class EnconuntersControllerTest
     {
@@ -26,12 +26,7 @@ namespace EirinDuran.WebApiTest
         [TestInitialize]
         public void SetUp()
         {
-            river = new Team("River");
-            boca = new Team("Boca");
-
             football = new Sport("Futbol");
-            football.AddTeam(river);
-            football.AddTeam(boca);
         }
 
         [TestMethod]
@@ -124,8 +119,8 @@ namespace EirinDuran.WebApiTest
             return new Guid(bytes);
         }
     }
-    */
 }
+
 
 
 

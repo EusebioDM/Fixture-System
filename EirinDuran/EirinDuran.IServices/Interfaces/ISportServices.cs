@@ -6,14 +6,12 @@ namespace EirinDuran.IServices.Interfaces
 {
     public interface ISportServices
     {
-        void Create(SportDTO sportDTO);
+        void CreateSport(SportDTO sportDTO);
 
-        void Modify(SportDTO sportDTO);
+        void ModifySport(SportDTO sportDTO);
 
         IEnumerable<SportDTO> GetAllSports();
 
-        IEnumerable<EncounterDTO> GetAllEncountersOfASpecificSport(string sportName);
-
-        void DeleteSport(string id);
+        void DeleteSport(string sportId);
     }
 }

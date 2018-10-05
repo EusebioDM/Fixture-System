@@ -13,24 +13,20 @@ namespace EirinDuran.Services
     {
         private readonly ILoginServices loginServices;
         private readonly IRepository<Team> teamRepository;
-        private readonly IRepository<Encounter> encounterRepository;
         private readonly IRepository<Sport> sportRepository;
         private readonly PermissionValidator validator;
         private TeamMapper teamMapper;
-        private EncounterMapper encounterMapper;
 
-        public TeamServices(ILoginServices loginServices, IRepository<Team> teamRepository, IRepository<Encounter> encounterRepository, IRepository<Sport> sportRepository)
+        public TeamServices(ILoginServices loginServices, IRepository<Team> teamRepository, IRepository<Sport> sportRepository)
         {
             this.loginServices = loginServices;
             this.sportRepository = sportRepository;
             this.teamRepository = teamRepository;
-            this.encounterRepository = encounterRepository;
             validator = new PermissionValidator(Domain.User.Role.Administrator, loginServices);
-            encounterMapper = new EncounterMapper(sportRepository, teamRepository);
             teamMapper = new TeamMapper(sportRepository);
         }
 
-        public void AddTeam(TeamDTO team)
+        public void CreateTeam(TeamDTO team)
         {
             validator.ValidatePermissions();
             try
@@ -44,11 +40,11 @@ namespace EirinDuran.Services
             }
         }
 
-        public TeamDTO GetTeam(string teamName)
+        public TeamDTO GetTeam(string teamId)
         {
             try
             {
-                return teamMapper.Map(teamRepository.Get(teamName));
+                return teamMapper.Map(teamRepository.Get(teamId));
             }
             catch (DataAccessException e)
             {
@@ -56,7 +52,7 @@ namespace EirinDuran.Services
             }
         }
 
-        public IEnumerable<TeamDTO> GetAll()
+        public IEnumerable<TeamDTO> GetAllTeams()
         {
             try
             {
@@ -68,29 +64,12 @@ namespace EirinDuran.Services
             }
         }
 
-        public IEnumerable<EncounterDTO> GetAllEncounters(Team team)
-        {
-            IEnumerable<Encounter> allEncounters = encounterRepository.GetAll();
-            try
-            {
-                allEncounters = encounterRepository.GetAll();
-            }
-            catch(DataAccessException e)
-            {
-                throw new ServicesException("Failure to try to get all teams of a team.", e);
-            }
-
-            IEnumerable<Encounter> encountersWhereTeamIs = allEncounters.Where(e => e.Teams.Contains(team));
-            IEnumerable<EncounterDTO> encountersWhereTeamIsDTO = encountersWhereTeamIs.Select(e => encounterMapper.Map(e));
-            return encountersWhereTeamIsDTO;
-        }
-
-        public void DeleteTeam(string id)
+        public void DeleteTeam(string teamId)
         {
             validator.ValidatePermissions();
             try
             {
-                teamRepository.Delete(id);
+                teamRepository.Delete(teamId);
             }
             catch (DataAccessException e)
             {

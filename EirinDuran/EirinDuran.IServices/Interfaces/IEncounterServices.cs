@@ -19,5 +19,9 @@ namespace EirinDuran.IServices.Interfaces
         IEnumerable<Encounter> GetAllEncountersWithFollowedTeams();
 
         IEnumerable<Comment> GetAllCommentsToOneEncounter(string encounterId);
+
+        IEnumerable<EncounterDTO> GetEncountersBySport(string sportName);
+
+        IEnumerable<EncounterDTO> GetEncountersByTeam(Team team);
     }
 }

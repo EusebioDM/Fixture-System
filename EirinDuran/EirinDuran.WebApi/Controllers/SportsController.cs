@@ -15,11 +15,13 @@ namespace EirinDuran.WebApi.Controllers
     {
         private readonly ILoginServices loginServices;
         private readonly ISportServices sportServices;
+        private readonly IEncounterServices encounterServices;
 
-        public SportsController(ILoginServices loginServices, ISportServices sportServices)
+        public SportsController(ILoginServices loginServices, ISportServices sportServices, IEncounterServices encounterServices)
         {
             this.loginServices = loginServices;
             this.sportServices = sportServices;
+            this.encounterServices = encounterServices;
         }
 
         [HttpGet]
@@ -41,7 +43,7 @@ namespace EirinDuran.WebApi.Controllers
         {
             try
             {
-                return sportServices.GetAllEncountersOfASpecificSport(sportId).ToList();
+                return encounterServices.GetEncountersBySport(sportId).ToList();
             }
             catch (ServicesException)
             {
@@ -62,7 +64,7 @@ namespace EirinDuran.WebApi.Controllers
             CreateSession();
             try
             {
-                sportServices.Create(sport);
+                sportServices.CreateSport(sport);
                 return CreatedAtRoute("GetSport", new { id = sport.Name }, sport);
             }
             catch (ServicesException)

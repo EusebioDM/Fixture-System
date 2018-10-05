@@ -1,21 +1,16 @@
-﻿using EirinDuran.Domain.Fixture;
-using EirinDuran.IServices.DTOs;
-using System;
+﻿using EirinDuran.IServices.DTOs;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EirinDuran.IServices.Interfaces
 {
     public interface ITeamServices
     {
-        void AddTeam(TeamDTO team);
+        void CreateTeam(TeamDTO team);
 
-        TeamDTO GetTeam(string teamName);
+        TeamDTO GetTeam(string teamId);
 
-        IEnumerable<TeamDTO> GetAll();
+        IEnumerable<TeamDTO> GetAllTeams();
 
-        IEnumerable<EncounterDTO> GetAllEncounters(Team teamId);
-
-        void DeleteTeam(string teamName);
+        void DeleteTeam(string teamId);
     }
 }
