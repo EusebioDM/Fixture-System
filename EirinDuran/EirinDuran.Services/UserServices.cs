@@ -20,15 +20,14 @@ namespace EirinDuran.Services
         private UserMapper userMapper;
         private TeamMapper teamMapper;
 
-        public UserServices(ILoginServices loginServices, IRepository<User> userRepository, IRepository<Team> teamRepository)
-
+        public UserServices(ILoginServices loginServices, IRepository<User> userRepository, IRepository<Team> teamRepository, IRepository<Sport> sportRepo)
         {
             this.userRepository = userRepository;
             this.teamRepository = teamRepository;
             this.login = loginServices;
             adminValidator = new PermissionValidator(Role.Administrator, login);
             userMapper = new UserMapper(teamRepository);
-            teamMapper = new TeamMapper();
+            teamMapper = new TeamMapper(sportRepo);
         }
 
         public void CreateUser(UserDTO userDTO)

@@ -1,8 +1,6 @@
 ﻿using EirinDuran.DataAccess;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
-using EirinDuran.IDataAccess;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -14,11 +12,10 @@ using System.Text;
 
 namespace EirinDuran.DataAccessTest
 {
-    using Helper = HelperFunctions<Encounter>;
     [TestClass]
-    public class EncounterRepositoryTest
+    public class EncounterExtendedRepositoryTest
     {
-        private EncounterRepository repo;
+        private ExtendedEncounterRepository repo;
         private Sport futbol;
         private Sport rugby;
         private Team boca;
@@ -29,40 +26,38 @@ namespace EirinDuran.DataAccessTest
         private User macri;
 
         [TestMethod]
-        public void AddEncounterTest()
+        private void GetSingleEncountersByTeamTest()
         {
-            IEnumerable<Encounter> actual = repo.GetAll();
+            IEnumerable<Encounter> encounters = repo.GetByTeam(boca);
 
-            Assert.IsTrue(actual.Any(e => e.Teams.Contains(boca) && e.Teams.Contains(river) && e.Sport.Equals(futbol)));
-            Assert.IsTrue(actual.Any(e => e.Comments.Any(m => m.Message.Equals("Meow"))));
-            Assert.IsTrue(actual.Any(e => e.Teams.Contains(tomba) && e.Teams.Contains(river) && e.Sport.Equals(futbol)));
-            Assert.AreEqual(2, actual.Count());
+            Assert.IsTrue(encounters.Contains(bocaRiver));
+            Assert.AreEqual(1, encounters.Count());
         }
 
         [TestMethod]
-        public void UpdateNonExistantEncounterTest()
+        private void GetMultipleEncountersByTeamTest()
         {
-            Encounter tombaBoca = new Encounter(futbol, new List<Team> { boca, river }, new DateTime(3001, 10, 1));
-            repo.Update(tombaBoca);
+            IEnumerable<Encounter> encounters = repo.GetByTeam(river);
 
-            Assert.AreEqual(3, repo.GetAll().Count());
+            Assert.IsTrue(encounters.Contains(bocaRiver));
+            Assert.IsTrue(encounters.Contains(tombaRiver));
+            Assert.AreEqual(2, encounters.Count());
         }
 
         [TestMethod]
-        public void UpdateEncounterTest()
+        private void GetNoEncountersByTeamTest()
         {
-            Encounter encounter = repo.GetAll().First(e => e.Teams.Contains(boca));
-            encounter.AddComment(macri, "msj");
-            repo.Update(encounter);
+            IEnumerable<Encounter> encounters = repo.GetByTeam(river);
 
-            Encounter updated = repo.GetAll().First(e => e.Teams.Contains(boca));
-            Assert.IsTrue(updated.Comments.Any(c => c.Message.Equals("msj")));
+            Assert.IsTrue(encounters.Contains(bocaRiver));
+            Assert.IsTrue(encounters.Contains(tombaRiver));
+            Assert.AreEqual(2, encounters.Count());
         }
 
         [TestInitialize]
         public void TestInit()
         {
-            repo = new EncounterRepository(GetContextFactory());
+            repo = new ExtendedEncounterRepository(GetContextFactory());
             futbol = CreateFutbolTeam();
             rugby = CreateRugbyTeam();
             macri = CreateMacriUser();

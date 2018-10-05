@@ -8,5 +8,6 @@ namespace EirinDuran.IServices.DTOs
 
         public Image Logo { get; set; }
 
+        public string SportName { get; set; }
     }
 }

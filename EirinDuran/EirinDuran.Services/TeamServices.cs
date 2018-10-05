@@ -26,16 +26,17 @@ namespace EirinDuran.Services
             this.teamRepository = teamRepository;
             this.encounterRepository = encounterRepository;
             validator = new PermissionValidator(Domain.User.Role.Administrator, loginServices);
-            teamMapper = new TeamMapper();
             encounterMapper = new EncounterMapper(sportRepository, teamRepository);
+            teamMapper = new TeamMapper(sportRepository);
         }
 
-        public void AddTeam(Team team)
+        public void AddTeam(TeamDTO team)
         {
             validator.ValidatePermissions();
             try
             {
-                teamRepository.Add(team);
+                Team domianTeam = teamMapper.Map(team);
+                teamRepository.Add(domianTeam);
             }
             catch (DataAccessException e)
             {

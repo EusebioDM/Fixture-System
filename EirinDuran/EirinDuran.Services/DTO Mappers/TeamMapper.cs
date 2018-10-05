@@ -1,4 +1,5 @@
 ﻿using EirinDuran.Domain.Fixture;
+using EirinDuran.IDataAccess;
 using EirinDuran.IServices;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.Services;
@@ -10,18 +11,28 @@ namespace EirinDuran.Services.DTO_Mappers
 {
     internal class TeamMapper : DTOMapper<Team, TeamDTO>
     {
+        private IRepository<Sport> repo;
+
+        public TeamMapper(IRepository<Sport> sportRepo){
+            repo = sportRepo;
+        }
         public override TeamDTO Map(Team team)
         {
             return new TeamDTO()
             {
                 Name = team.Name,
-                Logo = team.Logo
+                Logo = team.Logo,
+                SportName = team.Sport.Name
             };
         }
 
         protected override Team TryToMapModel(TeamDTO teamDTO)
         {
-            return new Team(name: teamDTO.Name, logo: teamDTO.Logo);
+            Sport sport = repo.Get(teamDTO.SportName);
+            Team team = new Team(name: teamDTO.Name, sport: sport);
+            if (teamDTO.Logo != null)
+                team.Logo = teamDTO.Logo;
+            return team;
         }
     }
 }

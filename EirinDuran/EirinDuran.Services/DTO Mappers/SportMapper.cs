@@ -12,25 +12,17 @@ namespace EirinDuran.Services.DTO_Mappers
 {
     internal class SportMapper : DTOMapper<Sport, SportDTO>
     {
-        private IRepository<Team> teamRepo;
-
-        public SportMapper(IRepository<Team> teamRepo){
-            this.teamRepo = teamRepo;
-        }
         public override SportDTO Map(Sport sport)
         {
             return new SportDTO()
             {
-                Name = sport.Name,
-                TeamsNames = sport.Teams.Select(team => team.Name).ToList()
+                Name = sport.Name
             };
         }
 
         protected override Sport TryToMapModel(SportDTO sportDTO)
         {
-            return new Sport(name: sportDTO.Name, 
-                teams: sportDTO.TeamsNames.ConvertAll(name => teamRepo.Get(name))
-            );
+            return new Sport(name: sportDTO.Name);
         }
     }
 }

@@ -8,18 +8,20 @@ namespace EirinDuran.DataAccess
 {
     internal static class HelperFunctions<Entity> where Entity : class
     {
-        public static object GetKey(EntityEntry entry)
+        public static EntityKeys GetKeys(EntityEntry entry)
         {
-            object keyValue = null;
+            EntityKeys keys = new EntityKeys();
             foreach (var propety in entry.Properties)
             {
                 if (propety.Metadata.IsPrimaryKey())
                 {
-                    return propety.CurrentValue;
+                    keys.AddKey(propety.CurrentValue);
                 }
             }
-            return keyValue;
+            return keys;
         }
+
+
 
         public static bool EntriesAreEqual(Context context, Entity first, Entity second)
         {
@@ -31,8 +33,8 @@ namespace EirinDuran.DataAccess
 
         public static bool EntriesAreEqual(EntityEntry first, EntityEntry second)
         {
-            var firstKey = GetKey(first);
-            var secondKey = GetKey(second);
+            EntityKeys firstKey = GetKeys(first);
+            EntityKeys secondKey = GetKeys(second);
 
             return firstKey.Equals(secondKey);
         }

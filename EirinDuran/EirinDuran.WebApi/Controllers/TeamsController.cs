@@ -7,6 +7,7 @@ using EirinDuran.IServices.DTOs;
 using System.Security.Claims;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.IServices.Exceptions;
+using System;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -16,17 +17,24 @@ namespace EirinDuran.WebApi.Controllers
     {
         private readonly ILoginServices loginServices;
         private readonly ITeamServices teamServices;
+        private ISportServices sportServices;
+        private IUserServices userServices;
 
-        public TeamsController(ILoginServices loginServices, ITeamServices teamServices)
+        public TeamsController(ILoginServices loginServices, ITeamServices teamServices, ISportServices sportServices, IUserServices userServices)
         {
             this.loginServices = loginServices;
             this.teamServices = teamServices;
+            this.sportServices = sportServices;
+            this.userServices = userServices;
         }
 
         // GET api/values
         [HttpGet]
         public ActionResult<List<TeamDTO>> Get()
         {
+            CreateSession();
+            userServices.AddFollowedTeam("Boca,Futbol");
+
             try
             {
                 return teamServices.GetAll().ToList();
@@ -49,7 +57,7 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return BadRequest();
             }
-            
+
         }
 
         [HttpPost]
@@ -61,15 +69,16 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return TryToCreate(team);
             }
-            catch(InsufficientPermissionException)
+            catch (InsufficientPermissionException)
             {
                 return Unauthorized();
-            }            
+            }
         }
 
         private IActionResult TryToCreate(TeamDTO team)
         {
-            Team teamReal = new Team(team.Name);
+            /* 
+            Team teamReal = new Team(team.Name
             try
             {
                 teamServices.AddTeam(teamReal);
@@ -79,6 +88,8 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return BadRequest();
             }
+            */
+            throw new NotImplementedException();
         }
 
         // PUT api/values/5
@@ -115,6 +126,9 @@ namespace EirinDuran.WebApi.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpPost]
+        [Route("/follower")]
 
         private void CreateSession()
         {

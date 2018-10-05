@@ -16,7 +16,11 @@ namespace EirinDuran.DataAccessTest
 
         public Context CreateDbContext(string[] args)
         {
-            DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase(guid.ToString()).EnableSensitiveDataLogging().UseLazyLoadingProxies().Options;
+            DbContextOptions<Context> options = new DbContextOptionsBuilder<Context>()
+                .UseInMemoryDatabase(guid.ToString())
+                .EnableSensitiveDataLogging()
+                .UseLazyLoadingProxies()
+                .Options;
             return new Context(options);
         }
     }

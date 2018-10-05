@@ -27,30 +27,6 @@ namespace EirinDuran.DomainTest
         }
 
         [TestMethod]
-        public void AddTeamTest()
-        {
-            Sport sport = new Sport("Futbol");
-            Team boca = new Team("Boca", null);
-            Team river = new Team("River", null);
-            sport.AddTeam(boca);
-            sport.AddTeam(river);
-
-            IEnumerable<Team> actual = sport.Teams;
-            Assert.IsTrue(actual.Contains(boca) && actual.Contains(river));
-        }
-
-        [TestMethod]
-        public void RemoveTeamTest()
-        {
-            Sport sport = new Sport("Futbol");
-            Team boca = new Team("Boca", null);
-            sport.RemoveTeam(boca);
-
-            IEnumerable<Team> actual = sport.Teams;
-            Assert.IsFalse(actual.Contains(boca));
-        }
-
-        [TestMethod]
         public void EqualsTrueTest()
         {
             Sport futboll = new Sport("Futbol");

@@ -15,6 +15,7 @@ using System.Linq;
 
 namespace EirinDuran.WebApiTest
 {
+    /* 
     [TestClass]
     public class EnconuntersControllerTest
     {
@@ -103,7 +104,7 @@ namespace EirinDuran.WebApiTest
                 HttpContext = httpContext,
             };
 
-            EncounterDTO encounter = new EncounterDTO() { Id = IntToGuid(4), SportName = "Futbol", AwayTeamName = "Peñarol", HomeTeamName = "Nacional" };
+            EncounterDTO encounter = new EncounterDTO() { Id = IntToGuid(4), SportName = "Futbol", AwayTeamName = "Peï¿½arol", HomeTeamName = "Nacional" };
             IEnumerable<EncounterDTO> encounters = new List<EncounterDTO>() { encounter };
             enconunterServices.Setup(e => e.GetAllEncounters()).Returns(encounters);
 
@@ -123,6 +124,7 @@ namespace EirinDuran.WebApiTest
             return new Guid(bytes);
         }
     }
+    */
 }
 
 

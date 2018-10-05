@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EirinDuran.WebApi.Migrations
 {
-    public partial class Migrations_Without_DB_generated_ID : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,11 +11,11 @@ namespace EirinDuran.WebApi.Migrations
                 name: "Sports",
                 columns: table => new
                 {
-                    Name = table.Column<string>(nullable: false)
+                    TeamName = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sports", x => x.Name);
+                    table.PrimaryKey("PK_Sports", x => x.TeamName);
                 });
 
             migrationBuilder.CreateTable(
@@ -39,24 +39,18 @@ namespace EirinDuran.WebApi.Migrations
                 columns: table => new
                 {
                     Name = table.Column<string>(nullable: false),
+                    SportName = table.Column<string>(nullable: false),
                     Logo = table.Column<byte[]>(nullable: true),
-                    SportEntityName = table.Column<string>(nullable: true),
-                    UserEntityUserName = table.Column<string>(nullable: true)
+                    SportTeamName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Teams", x => x.Name);
+                    table.PrimaryKey("PK_Teams", x => new { x.Name, x.SportName });
                     table.ForeignKey(
-                        name: "FK_Teams_Sports_SportEntityName",
-                        column: x => x.SportEntityName,
+                        name: "FK_Teams_Sports_SportTeamName",
+                        column: x => x.SportTeamName,
                         principalTable: "Sports",
-                        principalColumn: "Name",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Teams_Users_UserEntityUserName",
-                        column: x => x.UserEntityUserName,
-                        principalTable: "Users",
-                        principalColumn: "UserName",
+                        principalColumn: "TeamName",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -66,30 +60,58 @@ namespace EirinDuran.WebApi.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     DateTime = table.Column<DateTime>(nullable: false),
-                    SportName = table.Column<string>(nullable: true),
+                    SportTeamName = table.Column<string>(nullable: true),
                     HomeTeamName = table.Column<string>(nullable: true),
-                    AwayTeamName = table.Column<string>(nullable: true)
+                    HomeTeamSportName = table.Column<string>(nullable: true),
+                    AwayTeamName = table.Column<string>(nullable: true),
+                    AwayTeamSportName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Encounters", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Encounters_Teams_AwayTeamName",
-                        column: x => x.AwayTeamName,
-                        principalTable: "Teams",
-                        principalColumn: "Name",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Encounters_Teams_HomeTeamName",
-                        column: x => x.HomeTeamName,
-                        principalTable: "Teams",
-                        principalColumn: "Name",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Encounters_Sports_SportName",
-                        column: x => x.SportName,
+                        name: "FK_Encounters_Sports_SportTeamName",
+                        column: x => x.SportTeamName,
                         principalTable: "Sports",
-                        principalColumn: "Name",
+                        principalColumn: "TeamName",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Encounters_Teams_AwayTeamName_AwayTeamSportName",
+                        columns: x => new { x.AwayTeamName, x.AwayTeamSportName },
+                        principalTable: "Teams",
+                        principalColumns: new[] { "Name", "SportName" },
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Encounters_Teams_HomeTeamName_HomeTeamSportName",
+                        columns: x => new { x.HomeTeamName, x.HomeTeamSportName },
+                        principalTable: "Teams",
+                        principalColumns: new[] { "Name", "SportName" },
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TeamUsers",
+                columns: table => new
+                {
+                    TeamName = table.Column<string>(nullable: false),
+                    TeamName1 = table.Column<string>(nullable: true),
+                    TeamSportName = table.Column<string>(nullable: true),
+                    UserName = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TeamUsers", x => new { x.TeamName, x.UserName });
+                    table.ForeignKey(
+                        name: "FK_TeamUsers_Users_UserName",
+                        column: x => x.UserName,
+                        principalTable: "Users",
+                        principalColumn: "UserName",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TeamUsers_Teams_TeamName1_TeamSportName",
+                        columns: x => new { x.TeamName1, x.TeamSportName },
+                        principalTable: "Teams",
+                        principalColumns: new[] { "Name", "SportName" },
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -131,29 +153,34 @@ namespace EirinDuran.WebApi.Migrations
                 column: "UserName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Encounters_AwayTeamName",
+                name: "IX_Encounters_SportTeamName",
                 table: "Encounters",
-                column: "AwayTeamName");
+                column: "SportTeamName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Encounters_HomeTeamName",
+                name: "IX_Encounters_AwayTeamName_AwayTeamSportName",
                 table: "Encounters",
-                column: "HomeTeamName");
+                columns: new[] { "AwayTeamName", "AwayTeamSportName" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Encounters_SportName",
+                name: "IX_Encounters_HomeTeamName_HomeTeamSportName",
                 table: "Encounters",
-                column: "SportName");
+                columns: new[] { "HomeTeamName", "HomeTeamSportName" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Teams_SportEntityName",
+                name: "IX_Teams_SportTeamName",
                 table: "Teams",
-                column: "SportEntityName");
+                column: "SportTeamName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Teams_UserEntityUserName",
-                table: "Teams",
-                column: "UserEntityUserName");
+                name: "IX_TeamUsers_UserName",
+                table: "TeamUsers",
+                column: "UserName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TeamUsers_TeamName1_TeamSportName",
+                table: "TeamUsers",
+                columns: new[] { "TeamName1", "TeamSportName" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -162,16 +189,19 @@ namespace EirinDuran.WebApi.Migrations
                 name: "CommentEntity");
 
             migrationBuilder.DropTable(
+                name: "TeamUsers");
+
+            migrationBuilder.DropTable(
                 name: "Encounters");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Teams");
 
             migrationBuilder.DropTable(
                 name: "Sports");
-
-            migrationBuilder.DropTable(
-                name: "Users");
         }
     }
 }
