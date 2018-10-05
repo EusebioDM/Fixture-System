@@ -28,9 +28,17 @@ namespace EirinDuran.DataAccess
 
         public void Add(Team team) => repo.Add(team);
 
-        public void Delete(string i) => repo.Delete(i);
+        public void Delete(string ids)
+        {
+            string[] keys = ids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            repo.Delete(keys);
+        }
 
-        public Team Get(string id) => repo.Get(id);
+        public Team Get(string id)
+        {
+            string[] keys = id.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            return repo.Get(keys);
+        }
 
         public IEnumerable<Team> GetAll() => repo.GetAll();
 

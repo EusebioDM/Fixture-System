@@ -43,7 +43,7 @@ namespace EirinDuran.DataAccessTest
             [TestMethod]
             public void RemoveTeamTest()
             {
-                repo.Delete(GetRiverTeam().Name);
+                repo.Delete(GetRiverTeam().Name + "," + "Football");
 
                 IEnumerable<Team> actual = repo.GetAll();
                 IEnumerable<Team> expected = new List<Team>() { CreateBocaTeam() };
@@ -55,14 +55,14 @@ namespace EirinDuran.DataAccessTest
             [ExpectedException(typeof(DataAccessException))]
             public void RemoveNonExistingTeamTest()
             {
-                repo.Delete(CreateBocaTeam().Name);
-                repo.Delete(CreateBocaTeam().Name);
+                repo.Delete(CreateBocaTeam().Name + "," + "Football");
+                repo.Delete(CreateBocaTeam().Name + "," + "Football");
             }
 
             [TestMethod]
             public void GetTeamTest()
             {
-                Team fromRepo = repo.Get("Boca Juniors");
+                Team fromRepo = repo.Get("Boca Juniors,Football");
 
                 Assert.AreEqual("Boca Juniors", fromRepo.Name);
                 Assert.IsTrue(ImagesAreTheSame(Image.FromFile(bocaImagePath), fromRepo.Logo));
@@ -72,7 +72,7 @@ namespace EirinDuran.DataAccessTest
             [ExpectedException(typeof(DataAccessException))]
             public void GetNonExistantTeamTest()
             {
-                repo.Get("Godoy Cruz");
+                repo.Get("Godoy Cruz"+ "," + "Football");
             }
 
             [TestMethod]
@@ -82,7 +82,7 @@ namespace EirinDuran.DataAccessTest
                 boca.Logo = GetRiverTeam().Logo;
                 repo.Update(boca);
 
-                Team fromRepo = repo.Get(boca.Name);
+                Team fromRepo = repo.Get(boca.Name + "," + "Football");
                 Assert.IsFalse(ImagesAreTheSame(Image.FromFile(bocaImagePath), fromRepo.Logo));
             }
 
@@ -91,23 +91,22 @@ namespace EirinDuran.DataAccessTest
             {
                 Team godoyCruz = new Team("Godoy Cruz", football, Image.FromFile(tombaImagePath));
                 repo.Update(godoyCruz);
-                Team fromRepo = repo.Get("Godoy Cruz");
-
+                Team fromRepo = repo.Get("Godoy Cruz,Football");
                 Assert.IsTrue(ImagesAreTheSame(Image.FromFile(tombaImagePath), fromRepo.Logo));
             }
 
             [TestMethod]
             public void AddMultipleTeamsWithSameNameTest()
             {
-                Team team = new Team("Boca", new Sport("NotFootball"));
+                Team team = new Team("Boca Juniors", new Sport("NotFootball"));
                 repo.Add(team);
 
-                Team firstFromRepo = repo.Get("Boca,NotFootball");
-                Team secondFromRepo = repo.Get("Boca,Football");
-                Assert.AreEqual("Boca", firstFromRepo.Name);
-                Assert.AreEqual("NotFootBall", firstFromRepo.Sport.Name);
-                Assert.AreEqual("Boca", secondFromRepo.Name);
-                Assert.AreEqual("FootBall", secondFromRepo.Sport.Name);
+                Team firstFromRepo = repo.Get("Boca Juniors,NotFootball");
+                Team secondFromRepo = repo.Get("Boca Juniors,Football");
+                Assert.AreEqual("Boca Juniors", firstFromRepo.Name);
+                Assert.AreEqual("NotFootball", firstFromRepo.Sport.Name);
+                Assert.AreEqual("Boca Juniors", secondFromRepo.Name);
+                Assert.AreEqual("Football", secondFromRepo.Sport.Name);
             }
 
             private bool ImagesAreTheSame(Image first, Image second)
@@ -166,8 +165,8 @@ namespace EirinDuran.DataAccessTest
                     repo.Delete(team.Name);
             }
 
-            private Team GetBocaTeam() => repo.Get("Boca Juniors");
-            private Team GetRiverTeam() => repo.Get("River Plate");
+            private Team GetBocaTeam() => repo.Get("Boca Juniors,Football");
+            private Team GetRiverTeam() => repo.Get("River Plate,Football");
 
             private string GetResourcePath(string resourceName)
             {

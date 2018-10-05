@@ -30,7 +30,7 @@ namespace EirinDuran.DataAccess
         {
             base.OnModelCreating(builder);
             builder.Entity<UserEntity>().HasKey(u => u.UserName);
-            builder.Entity<TeamEntity>().HasKey(t => t.Name);
+            builder.Entity<TeamEntity>().HasKey(t => new { t.Name, t.SportName });
             builder.Entity<SportEntity>().HasKey(s => s.TeamName);
             builder.Entity<EncounterEntity>().HasKey(e => e.Id);
             builder.Entity<CommentEntity>().HasKey(e => e.Id);

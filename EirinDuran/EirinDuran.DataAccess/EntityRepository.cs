@@ -64,11 +64,11 @@ namespace EirinDuran.DataAccess
         {
             try
             {
-                TryToDelete(id);
+                TryToDelete(new object[] { id });
             }
             catch (ArgumentException e)
             {
-                throw new DataAccessException("Object does not exists in database.", e);
+                throw new DataAccessException($"Object with id {id} does not exists in database.", e);
             }
             catch (SqlException e)
             {
@@ -76,13 +76,29 @@ namespace EirinDuran.DataAccess
             }
         }
 
-        private void TryToDelete(object id)
+        public void Delete(object[] ids)
+        {
+            try
+            {
+                TryToDelete(ids);
+            }
+            catch (ArgumentException e)
+            {
+                throw new DataAccessException($"Object with ids {GetKeysToString(ids)} not exists in database.", e);
+            }
+            catch (SqlException e)
+            {
+                throw new DataAccessException("Connection to database failed.", e);
+            }
+        }
+
+        private void TryToDelete(object[] ids)
         {
             using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
-                Entity toDelete = context.Find<Entity>(id);
-                if(toDelete == null)
-                    throw new DataAccessException($"Object of id {id} does not exists in database.");
+                Entity toDelete = context.Find<Entity>(ids);
+                if (toDelete == null)
+                    throw new DataAccessException($"Object of id {GetKeysToString(ids)} does not exists in database.");
                 context.Entry(toDelete).State = EntityState.Deleted;
                 context.SaveChanges();
             }
@@ -92,7 +108,7 @@ namespace EirinDuran.DataAccess
         {
             try
             {
-                return TryToGet(id);
+                return TryToGet(new object[] { id });
             }
             catch (ArgumentException e)
             {
@@ -104,17 +120,38 @@ namespace EirinDuran.DataAccess
             }
         }
 
-        private Model TryToGet(object id)
+        public Model Get(object[] ids)
+        {
+            try
+            {
+                return TryToGet(ids);
+            }
+            catch (ArgumentException e)
+            {
+                throw new DataAccessException($"Object with id {GetKeysToString(ids)} does not exists in database.", e);
+            }
+            catch (SqlException e)
+            {
+                throw new DataAccessException("Connection to database failed.", e);
+            }
+        }
+
+        private Model TryToGet(object[] ids)
         {
             using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
-                Entity toReturn = context.Find<Entity>(id);
+                Entity toReturn = context.Find<Entity>(ids);
                 if (toReturn == null)
                 {
-                    throw new DataAccessException($"Object of id { id } does not exists in database.");
+                    throw new DataAccessException($"Object of id { GetKeysToString(ids) } does not exists in database.");
                 }
                 return toReturn.ToModel();
             }
+        }
+
+        private string GetKeysToString(object[] ids)
+        {
+            return string.Join(",", ids.Select(i => i.ToString()));
         }
 
         public IEnumerable<Model> GetAll()

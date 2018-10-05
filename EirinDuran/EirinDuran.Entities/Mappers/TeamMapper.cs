@@ -17,7 +17,8 @@ namespace EirinDuran.Entities.Mappers
             {
                 Name = team.Name,
                 Logo = ImageToByteArray(team.Logo),
-                Sport = new SportEntity(team.Sport)
+                Sport = new SportEntity(team.Sport),
+                SportName = team.Sport.Name
             };
         }
 
@@ -35,6 +36,7 @@ namespace EirinDuran.Entities.Mappers
             desination.Name = source.Name;
             desination.Logo = ImageToByteArray(source.Logo);
             desination.Sport = new SportEntity(source.Sport);
+            desination.SportName = source.Sport.Name;
         }
 
         private byte[] ImageToByteArray(Image imageIn)
