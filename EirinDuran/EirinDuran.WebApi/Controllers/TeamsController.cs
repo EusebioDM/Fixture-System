@@ -87,9 +87,9 @@ namespace EirinDuran.WebApi.Controllers
                 teamServices.AddTeam(teamReal);
                 return CreatedAtRoute("GetTeam", new { id = team.Name }, team);
             }
-            catch (ServicesException)
+            catch (ServicesException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 
@@ -122,9 +122,9 @@ namespace EirinDuran.WebApi.Controllers
                 teamServices.DeleteTeam(id);
                 return Ok();
             }
-            catch (ServicesException)
+            catch (ServicesException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 
