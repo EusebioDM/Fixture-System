@@ -44,7 +44,15 @@ namespace EirinDuran.DataAccessTest
             Assert.AreEqual(2, encounters.Count());
         }
 
+        [TestMethod]
+        private void GetNoEncountersByTeamTest()
+        {
+            IEnumerable<Encounter> encounters = repo.GetByTeam(river);
 
+            Assert.IsTrue(encounters.Contains(bocaRiver));
+            Assert.IsTrue(encounters.Contains(tombaRiver));
+            Assert.AreEqual(2, encounters.Count());
+        }
 
         [TestInitialize]
         public void TestInit()
