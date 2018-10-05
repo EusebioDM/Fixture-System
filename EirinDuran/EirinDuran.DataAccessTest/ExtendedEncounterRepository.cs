@@ -86,6 +86,33 @@ namespace EirinDuran.DataAccessTest
             Assert.AreEqual(0, encounters.Count());
         }
 
+        [TestMethod]
+        public void GetSingleEncountersByDateTest()
+        {
+            IEnumerable<Encounter> encounters = repo.GetByDate(new DateTime(3000, 10, 1), new DateTime(3000, 10, 8));
+
+            Assert.IsTrue(encounters.Contains(tombaRiver));
+            Assert.AreEqual(1, encounters.Count());
+        }
+
+        [TestMethod]
+        public void GetMultipleEncountersByDateTest()
+        {
+            IEnumerable<Encounter> encounters = repo.GetByDate(new DateTime(3000, 10, 1), new DateTime(3000, 10, 29));
+
+            Assert.IsTrue(encounters.Contains(bocaRiver));
+            Assert.IsTrue(encounters.Contains(tombaRiver));
+            Assert.AreEqual(2, encounters.Count());
+        }
+
+        [TestMethod]
+        public void GetNoEncountersByDateTest()
+        {
+            IEnumerable<Encounter> encounters = repo.GetByDate(new DateTime(3000, 10, 6), new DateTime(3000, 10, 9));
+
+            Assert.AreEqual(0, encounters.Count());
+        }
+
         [TestInitialize]
         public void TestInit()
         {
@@ -152,7 +179,7 @@ namespace EirinDuran.DataAccessTest
 
         private Encounter CreateTombaRiverEncounter()
         {
-            Encounter encounter = new Encounter(football, new List<Team>() { tomba, river }, new DateTime(3001, 10, 11));
+            Encounter encounter = new Encounter(football, new List<Team>() { tomba, river }, new DateTime(3001, 10, 5));
             encounter.AddComment(macri, "Meow");
             return encounter;
         }
