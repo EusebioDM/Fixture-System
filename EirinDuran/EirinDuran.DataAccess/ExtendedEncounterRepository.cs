@@ -22,31 +22,29 @@ namespace EirinDuran.DataAccess
         public IEnumerable<Encounter> GetByTeam(Team river)
         {
             Func<EncounterEntity, bool> encounterHasTeam = e => e.AwayTeam.Name.Equals(river.Name) || e.HomeTeam.Name.Equals(river.Name);
-            
-            using (Context context = contextFactory.CreateDbContext(new string[0]))
-            {
-                return context.Encounters.Where(encounterHasTeam).Select(mapEntity).ToList();
-            }
+
+            return GetFilteredEncounters(encounterHasTeam);
         }
 
         public IEnumerable<Encounter> GetBySport(Sport sport)
         {
-            Func<EncounterEntity, bool> encounterHasTeam = e => e.Sport.SportName.Equals(sport.Name);
+            Func<EncounterEntity, bool> encounterHasSport = e => e.Sport.SportName.Equals(sport.Name);
 
-            using (Context context = contextFactory.CreateDbContext(new string[0]))
-            {
-                return context.Encounters.Where(encounterHasTeam).Select(mapEntity).ToList();
-            }
+            return GetFilteredEncounters(encounterHasSport);
         }
 
         public IEnumerable<Encounter> GetByDate(DateTime startDate, DateTime endDate)
         {
-            Func<EncounterEntity, bool> encounterHasTeam = e => e.DateTime >= startDate && e.DateTime <= endDate;
+            Func<EncounterEntity, bool> encounterIsInBetweenDates = e => e.DateTime >= startDate && e.DateTime <= endDate;
 
-            bool a = new DateTime(3000,10,5) >= startDate && new DateTime(3000, 10, 5) <= endDate;
+            return GetFilteredEncounters(encounterIsInBetweenDates);
+        }
+
+        private IEnumerable<Encounter> GetFilteredEncounters(Func<EncounterEntity, bool> predicate)
+        {
             using (Context context = contextFactory.CreateDbContext(new string[0]))
             {
-                return context.Encounters.Where(encounterHasTeam).Select(mapEntity).ToList();
+                return context.Encounters.Where(predicate).Select(mapEntity).ToList();
             }
         }
     }
