@@ -96,6 +96,20 @@ namespace EirinDuran.DataAccessTest
                 Assert.IsTrue(ImagesAreTheSame(Image.FromFile(tombaImagePath), fromRepo.Logo));
             }
 
+            [TestMethod]
+            public void AddMultipleTeamsWithSameNameTest()
+            {
+                Team team = new Team("Boca", new Sport("NotFootball"));
+                repo.Add(team);
+
+                Team firstFromRepo = repo.Get("Boca,NotFootball");
+                Team secondFromRepo = repo.Get("Boca,Football");
+                Assert.AreEqual("Boca", firstFromRepo.Name);
+                Assert.AreEqual("NotFootBall", firstFromRepo.Sport.Name);
+                Assert.AreEqual("Boca", secondFromRepo.Name);
+                Assert.AreEqual("FootBall", secondFromRepo.Sport.Name);
+            }
+
             private bool ImagesAreTheSame(Image first, Image second)
             {
                 byte[] firstImageBytes = GetImageBytes(first);

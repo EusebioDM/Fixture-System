@@ -9,7 +9,6 @@ namespace EirinDuran.Entities
         public string Name { get; set; }
         public byte[] Logo { get; set; }
         public virtual SportEntity Sport { get; set; }
-        //public virtual ICollection<TeamUserEntity> TeamUsers { get; set; }
         private TeamMapper mapper;
 
         public TeamEntity()
