@@ -56,6 +56,35 @@ namespace EirinDuran.DataAccessTest
             Assert.AreEqual(2, encounters.Count());
         }
 
+        [TestMethod]
+        public void GetSingleEncountersBySportTest()
+        {
+            IEnumerable<Encounter> encounters = repo.GetBySport(boca);
+
+            Assert.IsTrue(encounters.Contains(bocaRiver));
+            Assert.AreEqual(1, encounters.Count());
+        }
+
+        [TestMethod]
+        public void GetMultipleEncountersBySportTest()
+        {
+            IEnumerable<Encounter> encounters = repo.GetBySport(river);
+
+            Assert.IsTrue(encounters.Contains(bocaRiver));
+            Assert.IsTrue(encounters.Contains(tombaRiver));
+            Assert.AreEqual(2, encounters.Count());
+        }
+
+        [TestMethod]
+        public void GetNoEncountersBySportTest()
+        {
+            IEnumerable<Encounter> encounters = repo.GetBySport(river);
+
+            Assert.IsTrue(encounters.Contains(bocaRiver));
+            Assert.IsTrue(encounters.Contains(tombaRiver));
+            Assert.AreEqual(2, encounters.Count());
+        }
+
         [TestInitialize]
         public void TestInit()
         {
