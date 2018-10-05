@@ -1,7 +1,6 @@
 using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
-using EirinDuran.IServices;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.Interfaces;
@@ -115,27 +114,21 @@ namespace EirinDuran.Services
 
         public IEnumerable<EncounterDTO> GetEncountersBySport(string sportName)
         {
-            IEnumerable<Encounter> allEncounters;
             try
             {
-                allEncounters = encounterRepository.GetAll();
+                return encounterRepository.GetBySport(sportName).Select(e => mapper.Map(e)); 
             }
             catch (DataAccessException e)
             {
                 throw new ServicesException("Failure to try to recover encounter with specific sport.", e);
             }
-
-            IEnumerable<Encounter> filteredEncounters = allEncounters.Where(e => e.Sport.Name.Equals(sportName));
-            IEnumerable<EncounterDTO> filteredEncountersDTO = filteredEncounters.Select(e => mapper.Map(e));
-
-            return filteredEncountersDTO;
         }
 
-        public IEnumerable<EncounterDTO> GetEncountersByTeam(Team team)
+        public IEnumerable<EncounterDTO> GetEncountersByTeam(string sportId_teamName)
         {
             try
             {
-                return encounterRepository.GetByTeam(team).Select(e => mapper.Map(e));
+                return encounterRepository.GetByTeam(sportId_teamName).Select(e => mapper.Map(e));
             }
             catch (DataAccessException e)
             {

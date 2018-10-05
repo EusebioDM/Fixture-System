@@ -62,7 +62,7 @@ namespace EirinDuran.DataAccessTest
             Team someTeam = new Team("SomeTeam", rugby);
             Encounter encounter = new Encounter(rugby, new List<Team>(){ allBlacks, someTeam }, new DateTime(3000, 1, 1));
             repo.Add(encounter);
-            IEnumerable<Encounter> encounters = repo.GetBySport(rugby);
+            IEnumerable<Encounter> encounters = repo.GetBySport("Rugby");
 
             Assert.IsTrue(encounters.Contains(encounter));
             Assert.AreEqual(1, encounters.Count());
@@ -71,7 +71,7 @@ namespace EirinDuran.DataAccessTest
         [TestMethod]
         public void GetMultipleEncountersBySportTest()
         {
-            IEnumerable<Encounter> encounters = repo.GetBySport(football);
+            IEnumerable<Encounter> encounters = repo.GetBySport("Futbol");
 
             Assert.IsTrue(encounters.Contains(bocaRiver));
             Assert.IsTrue(encounters.Contains(tombaRiver));
@@ -81,7 +81,7 @@ namespace EirinDuran.DataAccessTest
         [TestMethod]
         public void GetNoEncountersBySportTest()
         {
-            IEnumerable<Encounter> encounters = repo.GetBySport(new Sport("Rugby"));
+            IEnumerable<Encounter> encounters = repo.GetBySport("Rugby");
 
             Assert.AreEqual(0, encounters.Count());
         }

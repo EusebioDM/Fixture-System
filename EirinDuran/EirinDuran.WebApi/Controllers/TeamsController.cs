@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using EirinDuran.IServices.DTOs;
 using System.Security.Claims;
-using EirinDuran.Domain.Fixture;
 using EirinDuran.IServices.Exceptions;
 using System;
 
@@ -17,59 +16,53 @@ namespace EirinDuran.WebApi.Controllers
     {
         private readonly ILoginServices loginServices;
         private readonly ITeamServices teamServices;
-        private ISportServices sportServices;
-        private IUserServices userServices;
+        private readonly IEncounterServices encounterServices;
 
-        public TeamsController(ILoginServices loginServices, ITeamServices teamServices, ISportServices sportServices, IUserServices userServices)
+        public TeamsController(ILoginServices loginServices, ITeamServices teamServices, IEncounterServices encounterServices)
         {
             this.loginServices = loginServices;
             this.teamServices = teamServices;
-            this.sportServices = sportServices;
-            this.userServices = userServices;
+            this.encounterServices = encounterServices;
         }
 
         [HttpGet]
         public ActionResult<List<TeamDTO>> Get()
         {
             CreateSession();
-            userServices.AddFollowedTeam("Boca,Futbol");
-
             try
             {
                 return teamServices.GetAllTeams().ToList();
             }
-            catch (ServicesException)
+            catch (ServicesException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<TeamDTO> Get(string id)
+        [HttpGet("{sportId_teamName}")]
+        public ActionResult<TeamDTO> Get(string sportId_teamName)
         {
             try
             {
-                return teamServices.GetTeam(id);
+                return teamServices.GetTeam(sportId_teamName);
             }
-            catch (ServicesException)
+            catch (ServicesException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
-
         }
 
         [HttpGet]
-        [Route("{teamId}/encounters")]
-        public ActionResult<List<EncounterDTO>> GetEncounters(string teamId)
+        [Route("{sportId_teamName}/encounters")]
+        public ActionResult<List<EncounterDTO>> GetEncounters(string sportId_teamName)
         {
             try
             {
-                //return teamServices.GetAllEncounters(new Team(teamId)).ToList();
-                return BadRequest();
+                return encounterServices.GetEncountersByTeam(sportId_teamName);
             }
-            catch (ServicesException)
+            catch (ServicesException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 

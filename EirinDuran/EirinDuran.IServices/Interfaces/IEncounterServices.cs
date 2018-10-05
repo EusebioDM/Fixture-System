@@ -20,8 +20,8 @@ namespace EirinDuran.IServices.Interfaces
 
         IEnumerable<Comment> GetAllCommentsToOneEncounter(string encounterId);
 
-        IEnumerable<EncounterDTO> GetEncountersBySport(string sportName);
+        IEnumerable<EncounterDTO> GetEncountersBySport(string sportId);
 
-        IEnumerable<EncounterDTO> GetEncountersByTeam(Team team);
+        IEnumerable<EncounterDTO> GetEncountersByTeam(string sportId_Team);
     }
 }
