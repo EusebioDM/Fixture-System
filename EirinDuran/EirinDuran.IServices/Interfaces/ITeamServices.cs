@@ -14,6 +14,8 @@ namespace EirinDuran.IServices.Interfaces
 
         IEnumerable<TeamDTO> GetAll();
 
+        IEnumerable<EncounterDTO> GetAllEncounters(Team teamId);
+
         void DeleteTeam(string teamName);
     }
 }

@@ -23,7 +23,6 @@ namespace EirinDuran.WebApi.Controllers
             this.teamServices = teamServices;
         }
 
-        // GET api/values
         [HttpGet]
         public ActionResult<List<TeamDTO>> Get()
         {
@@ -37,7 +36,6 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        // GET api/values/5
         [HttpGet("{id}")]
         public ActionResult<TeamDTO> Get(string id)
         {
@@ -50,6 +48,20 @@ namespace EirinDuran.WebApi.Controllers
                 return BadRequest();
             }
             
+        }
+
+        [HttpGet]
+        [Route("{teamId}/encounters")]
+        public ActionResult<List<EncounterDTO>> GetEncounters(string teamId)
+        {
+            try
+            {
+                return teamServices.GetAllEncounters(new Team(teamId)).ToList();
+            }
+            catch (ServicesException)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]
