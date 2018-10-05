@@ -55,6 +55,18 @@ namespace EirinDuran.Services
 
         }
 
+        public SportDTO GetSport(string sportId)
+        {
+            try
+            {
+                return sportMapper.Map(sportRepository.Get(sportId));
+            }
+            catch(DataAccessException e)
+            {
+                throw new ServicesException("Failure to try to recover sport.", e);
+            }
+        }
+
         public IEnumerable<SportDTO> GetAllSports()
         {
             try

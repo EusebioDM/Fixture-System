@@ -31,9 +31,22 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return sportServices.GetAllSports().ToList();
             }
-            catch(ServicesException)
+            catch (ServicesException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult<SportDTO> GetById(string sportId)
+        {
+            try
+            {
+                return sportServices.GetSport(sportId);
+            }
+            catch(ServicesException e)
+            {
+                return BadRequest(e.Message);
             }
         }
 
@@ -51,12 +64,6 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetSport")]
-        public ActionResult<SportDTO> GetById(string id)
-        {
-            return BadRequest();
-        }
-
         [HttpPost]
         [Authorize(Roles = "Administrator")]
         public IActionResult Create(SportDTO sport)
@@ -64,23 +71,53 @@ namespace EirinDuran.WebApi.Controllers
             CreateSession();
             try
             {
+                return TryToCreate(sport);
+            }
+            catch (InsufficientPermissionException)
+            {
+                return Unauthorized();
+            }
+        }
+
+        private IActionResult TryToCreate(SportDTO sport)
+        {
+            try
+            {
                 sportServices.CreateSport(sport);
                 return CreatedAtRoute("GetSport", new { id = sport.Name }, sport);
             }
-            catch (ServicesException)
+            catch (ServicesException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
-            
         }
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(string sportId)
         {
             CreateSession();
-            sportServices.DeleteSport(id);
-            return Ok();
+            try
+            {
+                return TryToDelete(sportId);
+            }
+            catch (InsufficientPermissionException)
+            {
+                return Unauthorized();
+            }
+        }
+
+        private IActionResult TryToDelete(string sportId)
+        {
+            try
+            {
+                sportServices.DeleteSport(sportId);
+                return Ok();
+            }
+            catch(ServicesException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         private void CreateSession()

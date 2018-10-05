@@ -12,6 +12,8 @@ namespace EirinDuran.IServices.Interfaces
 
         IEnumerable<SportDTO> GetAllSports();
 
+        SportDTO GetSport(string sportId);
+
         void DeleteSport(string sportId);
     }
 }
