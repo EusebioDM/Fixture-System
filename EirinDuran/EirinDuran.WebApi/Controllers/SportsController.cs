@@ -92,14 +92,14 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{sportName}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Delete(string sportId)
+        public IActionResult Delete(string sportName)
         {
             CreateSession();
             try
             {
-                return TryToDelete(sportId);
+                return TryToDelete(sportName);
             }
             catch (InsufficientPermissionException)
             {

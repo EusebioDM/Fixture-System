@@ -42,5 +42,6 @@ namespace EirinDuran.Services.DTO_Mappers
                 sport: sportRepo.Get(encounterDTO.SportName)
             );
         }
+
     }
 }

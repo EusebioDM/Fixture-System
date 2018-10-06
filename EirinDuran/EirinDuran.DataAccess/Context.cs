@@ -33,18 +33,17 @@ namespace EirinDuran.DataAccess
             builder.Entity<TeamEntity>().HasKey(t => new { t.Name, t.SportName });
             builder.Entity<SportEntity>().HasKey(s => s.SportName);
             builder.Entity<EncounterEntity>().HasKey(e => e.Id);
+            //builder.Entity<EncounterEntity>().OwnsOne(e => e.Sport).OnDelete(DeleteBehavior.ClientSetNull);
+            //builder.Entity<EncounterEntity>().OwnsOne(e => e.HomeTeam).OnDelete(DeleteBehavior.ClientSetNull);
+            //builder.Entity<EncounterEntity>().OwnsOne(e => e.AwayTeam).OnDelete(DeleteBehavior.ClientSetNull);
             builder.Entity<CommentEntity>().HasKey(e => e.Id);
+            builder.Entity<CommentEntity>().HasOne(c => c.User).WithMany().OnDelete(DeleteBehavior.Cascade);
             builder.Entity<TeamUserEntity>().HasKey(tu => new { tu.TeamName, tu.UserName });
+            builder.Entity<TeamUserEntity>().HasOne(tu => tu.User).WithMany(u => u.TeamUsers);
+            builder.Entity<TeamUserEntity>().HasOne(t => t.Team).WithOne().HasForeignKey<TeamUserEntity>(new string[] { "TeamName", "SportName" }).OnDelete(DeleteBehavior.ClientSetNull);
 
-            // builder.Entity<TeamUserEntity>()
-            //     .HasOne(tu => tu.User)
-            //     .WithMany(u => u.TeamUsers)
-            //     .HasForeignKey(tu => tu.UserName);
 
-            //            builder.Entity<TeamUserEntity>()
-            //                .HasOne(tu => tu.Team)
-            //                .WithMany(t => t.TeamUsers)
-            //                .HasForeignKey(tu => tu.TeamName);
+
         }
 
     }
