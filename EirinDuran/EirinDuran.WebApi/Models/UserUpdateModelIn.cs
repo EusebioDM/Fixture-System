@@ -1,4 +1,5 @@
 using EirinDuran.Domain.User;
+using EirinDuran.IServices.DTOs;
 using System.ComponentModel.DataAnnotations;
 
 namespace EirinDuran.WebApi.Models
@@ -13,6 +14,20 @@ namespace EirinDuran.WebApi.Models
 
         public string Password { get; set; }
 
-        public Role Role { get; set; }
+        public bool IsAdmin { get; set; }
+
+        public UserUpdateModelIn() { }
+
+        public UserDTO Map()
+        {
+            return new UserDTO()
+            {
+                IsAdmin = IsAdmin,
+                Name = Name,
+                Surname = Surname,
+                Password = Password,
+                Mail = Mail
+            };
+        }
     }
 }

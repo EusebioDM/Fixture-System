@@ -1,5 +1,3 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.EntityFrameworkCore.Design;
 using EirinDuran.DataAccess;
 using EirinDuran.DataAccessTest;
 using EirinDuran.Domain.Fixture;
@@ -7,12 +5,15 @@ using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
+using EirinDuran.IServices.Interfaces;
 using EirinDuran.Services;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using EirinDuran.IServices.Interfaces;
 
 namespace EirinDuran.ServicesTest
 {
@@ -207,7 +208,7 @@ namespace EirinDuran.ServicesTest
             TeamDTO team = new TeamDTO()
             {
                 Name = "Cavaliers",
-                Logo = Image.FromFile(GetResourcePath("Cavaliers.jpg")),
+                Logo = EncondeImage(Image.FromFile(GetResourcePath("Cavaliers.jpg"))),
                 SportName = "Baskteball"
             };
             teamServices.CreateTeam(team);
@@ -218,7 +219,7 @@ namespace EirinDuran.ServicesTest
             TeamDTO cavaliers = new TeamDTO()
             {
                 Name = "Cavaliers",
-                Logo = Image.FromFile(GetResourcePath("Cavaliers.jpg")),
+                Logo = EncondeImage(Image.FromFile(GetResourcePath("Cavaliers.jpg"))),
                 SportName = "Baskteball"
             };
 
@@ -246,7 +247,7 @@ namespace EirinDuran.ServicesTest
             TeamDTO cavaliers = new TeamDTO()
             {
                 Name = "Cavaliers",
-                Logo = Image.FromFile(GetResourcePath("Cavaliers.jpg")),
+                Logo = EncondeImage(Image.FromFile(GetResourcePath("Cavaliers.jpg"))),
                 SportName = "Baskteball"
             };
             SportDTO basketball = new SportDTO()
@@ -257,7 +258,7 @@ namespace EirinDuran.ServicesTest
             TeamDTO team = new TeamDTO()
             {
                 Name = "Cavaliers",
-                Logo = Image.FromFile(GetResourcePath("Cavaliers.jpg")),
+                Logo = EncondeImage(Image.FromFile(GetResourcePath("Cavaliers.jpg"))),
                 SportName = "Baskteball"
             };
             teamServices.CreateTeam(team);
@@ -272,6 +273,14 @@ namespace EirinDuran.ServicesTest
             string current = Directory.GetCurrentDirectory();
             string resourcesFolder = Directory.EnumerateDirectories(current).First(d => d.EndsWith("Resources"));
             return Directory.EnumerateFiles(resourcesFolder).First(f => f.EndsWith(resourceName));
+        }
+
+        private string EncondeImage(Image image)
+        {
+            MemoryStream stream = new MemoryStream();
+            image.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+            byte[] imageBytes = stream.ToArray();
+            return Convert.ToBase64String(imageBytes);
         }
     }
 }

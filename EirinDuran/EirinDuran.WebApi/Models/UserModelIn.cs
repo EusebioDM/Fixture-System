@@ -1,11 +1,11 @@
 using EirinDuran.Domain.User;
+using EirinDuran.IServices.DTOs;
 using System.ComponentModel.DataAnnotations;
 
 namespace EirinDuran.WebApi.Models
 {
     public class UserModelIn
     {
-
         [Required]
         public string UserName { get; set; }
 
@@ -23,5 +23,32 @@ namespace EirinDuran.WebApi.Models
 
         [Required]
         public bool IsAdmin { get; set; }
+
+        public UserModelIn()
+        {
+        }
+
+        public UserModelIn(UserDTO user)
+        {
+            UserName = user.UserName;
+            Name = user.Name;
+            Surname = user.Surname;
+            Mail = user.Mail;
+            Password = user.Password;
+            IsAdmin = user.IsAdmin;
+        }
+
+        public UserDTO Map( )
+        {
+            return new UserDTO()
+            {
+                UserName = UserName,
+                IsAdmin = IsAdmin,
+                Name = Name,
+                Surname = Surname,
+                Password = Password,
+                Mail = Mail
+            };
+        }
     }
 }

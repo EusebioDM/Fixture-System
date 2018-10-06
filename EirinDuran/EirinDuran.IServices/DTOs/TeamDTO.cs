@@ -6,7 +6,7 @@ namespace EirinDuran.IServices.DTOs
     {
         public string Name { get; set; }
 
-        public Image Logo { get; set; }
+        public string Logo { get; set; }
 
         public string SportName { get; set; }
     }

@@ -79,7 +79,7 @@ namespace EirinDuran.ServicesTest
 
             teamServices.CreateTeam(boca);
 
-            teamServices.DeleteTeam("Futbol,Boca");
+            teamServices.DeleteTeam("Boca_Futbol");
 
             IEnumerable<Team> recovered = teamRepository.GetAll();
             Assert.AreEqual(0, recovered.ToList().Count);
@@ -111,7 +111,7 @@ namespace EirinDuran.ServicesTest
             Team boca = new Team("Boca", new Sport("Futbol"));
             teamRepository.Add(boca);
 
-            TeamDTO recovered = services.GetTeam("Boca");
+            TeamDTO recovered = services.GetTeam("Boca_Futbol");
 
             Assert.AreEqual(boca.Name, recovered.Name);
         }
