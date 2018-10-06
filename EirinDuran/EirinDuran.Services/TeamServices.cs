@@ -80,9 +80,9 @@ namespace EirinDuran.Services
             }
         }
 
-        public void AddFollowedTeam(string sportId_teamName)
+        public void AddFollowedTeam(string teamId)
         {
-            Team team = teamRepository.Get(sportId_teamName);
+            Team team = teamRepository.Get(teamId);
             User user = userRepository.Get(loginServices.LoggedUser.UserName);
             user.AddFollowedTeam(team);
             try

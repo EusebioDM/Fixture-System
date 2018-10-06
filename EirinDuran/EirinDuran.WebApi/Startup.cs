@@ -16,6 +16,7 @@ using System.Text;
 
 namespace EirinDuran.WebApi
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IConfiguration configuration)

@@ -219,13 +219,30 @@ namespace EirinDuran.ServicesTest
                 SportName = "Basketball"
             };
             teamServices.CreateTeam(cavaliers);
-
+            userRepo.Add(new User()
+            {
+                UserName = pepe.UserName,
+                Name = pepe.Name,
+                Surname = pepe.Surname,
+                Mail = pepe.Mail,
+                Password = pepe.Password,
+                Role = pepe.IsAdmin ? Role.Administrator : Role.Follower
+            });
+            userRepo.Add(new User()
+            {
+                UserName = pablo.UserName,
+                Name = pablo.Name,
+                Surname = pablo.Surname,
+                Mail = pablo.Mail,
+                Password = pablo.Password,
+                Role = pablo.IsAdmin ? Role.Administrator : Role.Follower
+            });
             loginServices = new LoginServicesMock(pablo);
-            teamServices.AddFollowedTeam("Baskteball_Cavaliers");
+            teamServices.AddFollowedTeam("Cavaliers_Basketball");
 
-            User recovered = userRepo.Get("pablo");
+            User recovered = userRepo.Get(pepe.UserName);
             List<Team> followedTeams = recovered.FollowedTeams.ToList();
-            Assert.IsTrue(followedTeams[0].Name == "Cavaliers");
+            Assert.IsTrue(followedTeams.First().Name == "Cavaliers");
         }
 
         [TestMethod]
@@ -258,7 +275,7 @@ namespace EirinDuran.ServicesTest
 
             sportServices.CreateSport(basketball);
             teamServices.CreateTeam(team);
-            teamServices.AddFollowedTeam("Baskteball_Cavaliers");
+            teamServices.AddFollowedTeam("Cavaliers_Baskteball");
 
             IEnumerable<TeamDTO> followedTeams = userServices.GetFollowedTeams();
             Assert.AreEqual(cavaliers.Name, followedTeams.First().Name);
