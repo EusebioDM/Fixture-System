@@ -109,7 +109,6 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-
         [HttpDelete("{sportId_teamName}")]
         [Authorize(Roles = "Administrator")]
         public IActionResult Delete(string sportId_teamName)
@@ -130,6 +129,22 @@ namespace EirinDuran.WebApi.Controllers
             try
             {
                 teamServices.DeleteTeam(sportId_teamName);
+                return Ok();
+            }
+            catch (ServicesException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("{sportId_teamName}/follower")]
+        [Authorize(Roles = "Administrator, Follower")]
+        public IActionResult AddFollowedTeamToLogedUser(string sportId_teamName)
+        {
+            CreateSession();
+            try
+            {
+                teamServices.AddFollowedTeam(sportId_teamName);
                 return Ok();
             }
             catch (ServicesException e)

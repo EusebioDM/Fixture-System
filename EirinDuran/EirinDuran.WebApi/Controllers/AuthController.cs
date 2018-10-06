@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using EirinDuran.IServices;
 using EirinDuran.WebApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;

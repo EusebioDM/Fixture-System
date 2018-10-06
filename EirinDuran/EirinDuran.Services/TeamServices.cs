@@ -1,4 +1,5 @@
 using EirinDuran.Domain.Fixture;
+using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
@@ -14,15 +15,17 @@ namespace EirinDuran.Services
         private readonly ILoginServices loginServices;
         private readonly IRepository<Team> teamRepository;
         private readonly IRepository<Sport> sportRepository;
+        private readonly IRepository<User> userRepository;
         private readonly PermissionValidator validator;
         private TeamMapper teamMapper;
 
-        public TeamServices(ILoginServices loginServices, IRepository<Team> teamRepository, IRepository<Sport> sportRepository)
+        public TeamServices(ILoginServices loginServices, IRepository<Team> teamRepository, IRepository<Sport> sportRepository, IRepository<User> userRepository)
         {
             this.loginServices = loginServices;
             this.sportRepository = sportRepository;
             this.teamRepository = teamRepository;
-            validator = new PermissionValidator(Domain.User.Role.Administrator, loginServices);
+            this.userRepository = userRepository;
+            validator = new PermissionValidator(Role.Administrator, loginServices);
             teamMapper = new TeamMapper(sportRepository);
         }
 
@@ -74,6 +77,21 @@ namespace EirinDuran.Services
             catch (DataAccessException e)
             {
                 throw new ServicesException("Failure to try to delete team.", e);
+            }
+        }
+
+        public void AddFollowedTeam(string sportId_teamName)
+        {
+            Team team = teamRepository.Get(sportId_teamName);
+            User user = userRepository.Get(loginServices.LoggedUser.UserName);
+            user.AddFollowedTeam(team);
+            try
+            {
+                userRepository.Update(user);
+            }
+            catch (DataAccessException e)
+            {
+                throw new ServicesException("Failure to try to add followed sport to user.", e);
             }
         }
     }

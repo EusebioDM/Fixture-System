@@ -190,22 +190,6 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        [HttpPut("followers/{id}")]
-        [Authorize(Roles = "Administrator, Follower")]
-        public IActionResult AddFollowedTeamToLogedUser(string id)
-        {
-            CreateSession();
-            try
-            {
-                userServices.AddFollowedTeam(id);
-                return Ok();
-            }
-            catch (ServicesException e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
         private void CreateSession()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
