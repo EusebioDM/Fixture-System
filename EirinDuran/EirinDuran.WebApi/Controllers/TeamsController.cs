@@ -83,35 +83,25 @@ namespace EirinDuran.WebApi.Controllers
 
         private IActionResult TryToCreate(TeamDTO team)
         {
-            /* 
-            Team teamReal = new Team(team.Name
             try
             {
-                teamServices.AddTeam(teamReal);
+                teamServices.CreateTeam(team);
                 return CreatedAtRoute("GetTeam", new { id = team.Name }, team);
             }
             catch (ServicesException e)
             {
                 return BadRequest(e.Message);
             }
-            */
-            throw new NotImplementedException();
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(string id, [FromBody] TeamDTO team)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Delete(string id)
+        public IActionResult Put(string id, [FromBody] TeamDTO team)
         {
             try
             {
-                return TryToDelete(id);
+                throw new NotImplementedException();
             }
             catch (InsufficientPermissionException)
             {
@@ -119,12 +109,27 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        private IActionResult TryToDelete(string id)
+
+        [HttpDelete("{sportId_teamName}")]
+        [Authorize(Roles = "Administrator")]
+        public IActionResult Delete(string sportId_teamName)
+        {
+            try
+            {
+                return TryToDelete(sportId_teamName);
+            }
+            catch (InsufficientPermissionException)
+            {
+                return Unauthorized();
+            }
+        }
+
+        private IActionResult TryToDelete(string sportId_teamName)
         {
             CreateSession();
             try
             {
-                teamServices.DeleteTeam(id);
+                teamServices.DeleteTeam(sportId_teamName);
                 return Ok();
             }
             catch (ServicesException e)
@@ -132,9 +137,6 @@ namespace EirinDuran.WebApi.Controllers
                 return BadRequest(e.Message);
             }
         }
-
-        [HttpPost]
-        [Route("/follower")]
 
         private void CreateSession()
         {

@@ -38,9 +38,9 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return TryToLogin(loginModel);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return Unauthorized();
+                return BadRequest(e.Message);
             }
         }
 
