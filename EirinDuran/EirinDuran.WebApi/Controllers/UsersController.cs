@@ -8,7 +8,6 @@ using EirinDuran.IServices.Interfaces;
 using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.WebApi.Mappers;
-using EirinDuran.IServices;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -26,7 +25,7 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator, Follower")]
         public ActionResult<List<UserDTO>> Get()
         {
             CreateSession();
@@ -53,7 +52,7 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet("{userId}", Name = "GetUser")]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator, Follower")]
         public ActionResult<UserDTO> GetById(string userId)
         {
             CreateSession();
@@ -106,7 +105,7 @@ namespace EirinDuran.WebApi.Controllers
                 UserDTO user = UserMapper.Map(userModel);
                 userServices.CreateUser(user);
 
-                var addedUser = new UserModelOut() { UserName = user.UserName, Name = user.Name, Surname = user.Surname, Mail = user.Mail, IsAdmin = user.IsAdmin };
+                var addedUser = new UserModelOut(user);
                 return CreatedAtRoute("GetUser", new { id = addedUser.UserName }, addedUser);
             }
             catch (ServicesException e)

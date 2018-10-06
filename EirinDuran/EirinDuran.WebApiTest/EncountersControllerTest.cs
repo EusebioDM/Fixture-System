@@ -19,14 +19,16 @@ namespace EirinDuran.WebApiTest
     [TestClass]
     public class EnconuntersControllerTest
     {
-        private Team river;
-        private Team boca;
-        private Sport football;
+        private TeamDTO river;
+        private TeamDTO boca;
+        private SportDTO football;
 
         [TestInitialize]
         public void SetUp()
         {
-            football = new Sport("Futbol");
+            football = new SportDTO() { Name = "Futbol" };
+            river = new TeamDTO() { Name = "River", SportName = "Futbol" };
+            boca = new TeamDTO() { Name = "Boca", SportName = "Futbol" };
         }
 
         [TestMethod]
@@ -45,20 +47,19 @@ namespace EirinDuran.WebApiTest
             });
 
             var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiVXNlck5hbWUiOiJGcmFuY28iLCJQYXNzd29yZCI6InVzZXIiLCJleHAiOjE1Mzc5MTkxNTEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.t2Tm_mvehwOv20p8Wc1yFUeBa2yS-jfYKfiurNLawhc";
+            httpContext.Request.Headers["Authorization"] = "";
 
             var controllerContext = new ControllerContext()
             {
                 HttpContext = httpContext,
             };
 
-            List<Team> teams = new List<Team>() { river, boca };
             DateTime encounterDate = new DateTime(2018, 12, 10);
 
             EncounterDTO enc = new EncounterDTO();
             enc.SportName = football.Name;
-            enc.AwayTeamName = teams[0].Name;
-            enc.AwayTeamName = teams[1].Name;
+            enc.AwayTeamName = river.Name;
+            enc.HomeTeamName = boca.Name;
             enc.DateTime = encounterDate;
 
             List<EncounterDTO> encs = new List<EncounterDTO>() { enc };
@@ -92,7 +93,7 @@ namespace EirinDuran.WebApiTest
             });
 
             var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiVXNlck5hbWUiOiJGcmFuY28iLCJQYXNzd29yZCI6InVzZXIiLCJleHAiOjE1Mzc5MTkxNTEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.t2Tm_mvehwOv20p8Wc1yFUeBa2yS-jfYKfiurNLawhc";
+            httpContext.Request.Headers["Authorization"] = "";
 
             var controllerContext = new ControllerContext()
             {

@@ -201,33 +201,26 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void FollowTeam()
         {
-            ILoginServices login = new LoginServicesMock(pepe);
+            ILoginServices loginServices = new LoginServicesMock(pepe);
+            ITeamServices teamServices = new TeamServices(loginServices, teamRepo, sportRepo, userRepo);
+            ISportServices sportServices = new SportServices(loginServices, sportRepo);
 
-            ITeamServices teamServices = new TeamServices(login, teamRepo, sportRepo, userRepo);
-
-            TeamDTO team = new TeamDTO()
+            SportDTO basketball = new SportDTO()
             {
-                Name = "Cavaliers",
-                Logo = EncondeImage(Image.FromFile(GetResourcePath("Cavaliers.jpg"))),
-                SportName = "Baskteball"
+                Name = "Basketball"
             };
-            teamServices.CreateTeam(team);
 
-            login = new LoginServicesMock(pablo);
-            IUserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
+            sportServices.CreateSport(basketball);
 
             TeamDTO cavaliers = new TeamDTO()
             {
                 Name = "Cavaliers",
                 Logo = EncondeImage(Image.FromFile(GetResourcePath("Cavaliers.jpg"))),
-                SportName = "Baskteball"
+                SportName = "Basketball"
             };
+            teamServices.CreateTeam(cavaliers);
 
-            SportDTO basketball = new SportDTO()
-            {
-                Name = "Baskteball"
-            };
-            userRepo.Add(new User(Role.Follower, "pablo", "pablo", "pablo", "user", "pepeavila@mymail.com"));
+            loginServices = new LoginServicesMock(pablo);
             teamServices.AddFollowedTeam("Baskteball_Cavaliers");
 
             User recovered = userRepo.Get("pablo");
@@ -238,11 +231,12 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void RecoverAllFollowedTeams()
         {
-            LoginServices login = new LoginServices(userRepo, teamRepo);
-            UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
-            ITeamServices teamServices = new TeamServices(login, teamRepo, sportRepo, userRepo);
+            ILoginServices loginServices = new LoginServices(userRepo, teamRepo);
+            IUserServices userServices = new UserServices(loginServices, userRepo, teamRepo, sportRepo);
+            ITeamServices teamServices = new TeamServices(loginServices, teamRepo, sportRepo, userRepo);
+            ISportServices sportServices = new SportServices(loginServices, sportRepo);
 
-            login.CreateSession("sSanchez", "user");
+            loginServices.CreateSession("sSanchez", "user");
 
             TeamDTO cavaliers = new TeamDTO()
             {
@@ -261,10 +255,12 @@ namespace EirinDuran.ServicesTest
                 Logo = EncondeImage(Image.FromFile(GetResourcePath("Cavaliers.jpg"))),
                 SportName = "Baskteball"
             };
-            teamServices.CreateTeam(team);
-            teamServices.AddFollowedTeam("Cavaliers");
 
-            IEnumerable<TeamDTO> followedTeams = services.GetFollowedTeams();
+            sportServices.CreateSport(basketball);
+            teamServices.CreateTeam(team);
+            teamServices.AddFollowedTeam("Baskteball_Cavaliers");
+
+            IEnumerable<TeamDTO> followedTeams = userServices.GetFollowedTeams();
             Assert.AreEqual(cavaliers.Name, followedTeams.First().Name);
         }
 

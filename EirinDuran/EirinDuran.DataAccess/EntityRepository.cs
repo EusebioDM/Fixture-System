@@ -151,7 +151,7 @@ namespace EirinDuran.DataAccess
 
         private string GetKeysToString(object[] ids)
         {
-            return string.Join(",", ids.Select(i => i.ToString()));
+            return string.Join("_", ids.Select(i => i.ToString()));
         }
 
         public IEnumerable<Model> GetAll()

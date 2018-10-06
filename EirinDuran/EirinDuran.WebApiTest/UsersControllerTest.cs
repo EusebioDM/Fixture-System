@@ -1,4 +1,3 @@
-using EirinDuran.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using Moq;
@@ -10,7 +9,6 @@ using Microsoft.AspNetCore.Http;
 using EirinDuran.IServices.Interfaces;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
-using EirinDuran.IServices;
 
 namespace EirinDuran.WebApiTest
 {
@@ -19,81 +17,138 @@ namespace EirinDuran.WebApiTest
     {
         private UserDTO juan;
         private UserDTO roberto;
-        private UserDTO macri;
+        private UserDTO pablo;
+
+        [TestInitialize]
+        public void SetUp()
+        {
+            CreateUserJuan();
+            CreateUserRoberto();
+            CreateUserPablo();
+        }
+
+        private void CreateUserJuan()
+        {
+            juan = new UserDTO()
+            {
+                UserName = "juanandres",
+                Name = "Juan",
+                Surname = "Perez",
+                Password = "user",
+                Mail = "juan@perez.org",
+                IsAdmin = true
+            };
+        }
+
+        private void CreateUserRoberto()
+        {
+            roberto = new UserDTO()
+            {
+                UserName = "robertoj",
+                Name = "roberto",
+                Surname = "juarez",
+                Password = "mypass123",
+                Mail = "rj@rj.com",
+                IsAdmin = false
+            };
+        }
+
+        private void CreateUserPablo()
+        {
+            pablo = new UserDTO()
+            {
+                UserName = "Pablo",
+                Name = "Pablo",
+                Surname = "Montero",
+                Password = "cat123",
+                Mail = "pm@gmail.com",
+                IsAdmin = true,
+                FollowedTeamsNames = new List<string>() { "Atletics", "Yankees" }
+            };
+        }
 
         [TestMethod]
-        public void GetAllUsersOkController()
+        public void GetAllUsersOkUsersController()
         {
             var expectedUsers = new List<UserDTO> { juan, roberto };
 
-            var userService = new Mock<IUserServices>();
-            ILoginServices loginServices = new LoginServicesMock(macri);
+            var userServicesMock = new Mock<IUserServices>();
+            userServicesMock.Setup(us => us.GetAllUsers()).Returns(expectedUsers);
+            ILoginServices loginServices = new LoginServicesMock(pablo);
 
             var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiVXNlck5hbWUiOiJGcmFuY28iLCJQYXNzd29yZCI6InVzZXIiLCJleHAiOjE1Mzc5MTkxNTEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.t2Tm_mvehwOv20p8Wc1yFUeBa2yS-jfYKfiurNLawhc";
-
+            httpContext.Request.Headers["Authorization"] = "";
             var controllerContext = new ControllerContext()
             {
                 HttpContext = httpContext,
             };
-
-            var controller = new UsersController(loginServices, userService.Object) { ControllerContext = controllerContext, }; 
+            var controller = new UsersController(loginServices, userServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            }; 
 
             var obtainedResult = controller.Get() as ActionResult<List<UserDTO>>;
-            var val = obtainedResult.Value;
+            var value = obtainedResult.Value;
 
-            userService.VerifyAll();
+            userServicesMock.Verify(us => us.GetAllUsers(), Times.AtMostOnce);
+
             Assert.IsNotNull(obtainedResult);
-            Assert.IsNotNull(obtainedResult.Value);
-
-            IEnumerable<UserDTO> userList = obtainedResult.Value.ToList().Union(expectedUsers.ToList());
-
-            Assert.IsTrue(userList.ToList().Count == 2);
+            Assert.IsNotNull(value);
+            Assert.AreEqual(2, value.Count);
+            Assert.AreEqual(juan.Name, value.ElementAt(0).Name);
+            Assert.AreEqual(roberto.Name, value.ElementAt(1).Name);
         }
 
         [TestMethod]
-        public void GetUserOkController()
+        public void GetUserOkUsersController()
         {
             var expectedUser = juan;
             var mockUserService = new Mock<IUserServices>();
 
             mockUserService.Setup(bl => bl.GetUser(expectedUser.UserName)).Returns(expectedUser);
-            ILoginServices loginServices = new LoginServicesMock(macri);
+            ILoginServices loginServices = new LoginServicesMock(pablo);
 
             var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiVXNlck5hbWUiOiJGcmFuY28iLCJQYXNzd29yZCI6InVzZXIiLCJleHAiOjE1Mzc5MTkxNTEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.t2Tm_mvehwOv20p8Wc1yFUeBa2yS-jfYKfiurNLawhc";
-
-            var controllerContext = new ControllerContext() { HttpContext = httpContext, };
-
-
-            var controller = new UsersController(loginServices, mockUserService.Object) { ControllerContext = controllerContext, }; 
-
-            var obtainedResult = controller.GetById(expectedUser.UserName) as ActionResult<UserDTO>;
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new UsersController(loginServices, mockUserService.Object)
+            {
+                ControllerContext = controllerContext,
+            };
 
             mockUserService.Verify(m => m.GetUser(expectedUser.UserName), Times.AtMostOnce());
+            var obtainedResult = controller.GetById(expectedUser.UserName) as ActionResult<UserDTO>;
+
             Assert.IsNotNull(obtainedResult);
             Assert.IsNotNull(obtainedResult.Value);
             Assert.AreEqual(obtainedResult.Value, expectedUser);
         }
 
         [TestMethod]
-        public void CreateUserOkController()
+        public void CreateUserOkUsersController()
         {
             var modelIn = new UserModelIn() { UserName = "Alberto", Name = "Alberto", Surname = "Lacaze", Mail = "albertito@mail.com", Password = "pass", IsAdmin = true };
-            var fakeUser = new UserDTO() { UserName = "pepeAvila", Surname = "�vila", Name = "Pepe", Password = "user", Mail = "pepeavila@mymail.com", IsAdmin = true };
+            var fakeUser = new UserDTO() { UserName = "pepeAvila", Surname = "Avila", Name = "Pepe", Password = "user", Mail = "pepeavila@mymail.com", IsAdmin = true };
 
-            var userServiceMock = new Mock<IUserServices>();
-
-            userServiceMock.Setup(userService => userService.CreateUser(fakeUser));
-            ILoginServices loginServices = new LoginServicesMock(macri);
+            var userServicesMock = new Mock<IUserServices>();
+            userServicesMock.Setup(userService => userService.CreateUser(fakeUser));
+            ILoginServices loginServices = new LoginServicesMock(pablo);
 
             var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiVXNlck5hbWUiOiJGcmFuY28iLCJQYXNzd29yZCI6InVzZXIiLCJleHAiOjE1Mzc5MTkxNTEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.t2Tm_mvehwOv20p8Wc1yFUeBa2yS-jfYKfiurNLawhc"; 
-                                                                                                                                                                                                                                                                                                                                                                                                                           
-            var controllerContext = new ControllerContext() { HttpContext = httpContext, };
+            httpContext.Request.Headers["Authorization"] ="";                                                                                                                                                                                                                                                                                                                                                              
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new UsersController(loginServices, userServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
 
-            var controller = new UsersController(loginServices, userServiceMock.Object) { ControllerContext = controllerContext, }; 
-
+            userServicesMock.Verify(m => m.CreateUser(fakeUser), Times.AtMostOnce());
             var result = controller.Create(modelIn);
             var createdResult = result as CreatedAtRouteResult;
             var modelOut = createdResult.Value as UserModelOut;
@@ -105,48 +160,52 @@ namespace EirinDuran.WebApiTest
         }
 
         [TestMethod]
-        public void CreateUserWithoutPermissionController()
+        public void CreateUserWithoutPermissionUsersController()
         {
             var modelIn = new UserModelIn() { UserName = "Alberto", Name = "Alberto", Surname = "Lacaze", Mail = "albertito@mail.com", Password = "pass", IsAdmin = false };
 
-            var userServiceMock = new Mock<IUserServices>();
+            var userServicesMock = new Mock<IUserServices>();
 
-            userServiceMock.Setup(userService => userService.CreateUser(It.IsAny<UserDTO>())).Throws(new InsufficientPermissionException());
+            userServicesMock.Setup(userService => userService.CreateUser(It.IsAny<UserDTO>())).Throws(new InsufficientPermissionException());
             ILoginServices loginServices = new LoginServicesMock(roberto);
 
             var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJGb2xsb3dlciIsIlVzZXJOYW1lIjoianVhbmNhcmxvc3MiLCJQYXNzd29yZCI6InVzZXIiLCJleHAiOjE1MzgwNzg0OTYsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.t0LDLnYGnD-eDM9xvc_CJkzyDzFAoGJZYivDzKGrjeM";
-
-            var controllerContext = new ControllerContext() { HttpContext = httpContext, };
-
-            var controller = new UsersController(loginServices, userServiceMock.Object) { ControllerContext = controllerContext, };
-
-            var result = controller.Create(modelIn);
-            var createdResult = result as UnauthorizedResult;
-
-            Assert.IsNotNull(createdResult);
-            
-            Assert.AreEqual(401, createdResult.StatusCode);
-        }
-
-        [TestMethod]
-
-        public void CreateFailedUserController()
-        {
-            var modelIn = new UserModelIn();
-
-            var userService = new Mock<IUserServices>();
-            ILoginServices loginServices = new LoginServicesMock(macri);
-
-            var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiVXNlck5hbWUiOiJGcmFuY28iLCJQYXNzd29yZCI6InVzZXIiLCJleHAiOjE1Mzc5MTkxNTEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.t2Tm_mvehwOv20p8Wc1yFUeBa2yS-jfYKfiurNLawhc";
+            httpContext.Request.Headers["Authorization"] = "";
 
             var controllerContext = new ControllerContext()
             {
                 HttpContext = httpContext,
             };
+            var controller = new UsersController(loginServices, userServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
 
-            var controller = new UsersController(loginServices, userService.Object) { ControllerContext = controllerContext, };
+            var result = controller.Create(modelIn);
+            var createdResult = result as UnauthorizedResult;
+
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual(401, createdResult.StatusCode);
+        }
+
+        [TestMethod]
+        public void CreateBadModelInUsersController()
+        {
+            var modelIn = new UserModelIn();
+
+            var userService = new Mock<IUserServices>();
+            ILoginServices loginServices = new LoginServicesMock(pablo);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new UsersController(loginServices, userService.Object)
+            {
+                ControllerContext = controllerContext,
+            };
 
             controller.ModelState.AddModelError("", "Error");
             var result = controller.Create(modelIn);
@@ -158,30 +217,29 @@ namespace EirinDuran.WebApiTest
         }
 
         [TestMethod]
-        public void DeleteUserOkUserController()
+        public void DeleteUserOkUsersController()
         {
             var modelIn = new UserModelIn();
-
-            var userService = new Mock<IUserServices>();
+            var userServicesMock = new Mock<IUserServices>();
 
             string id = "pepe";
 
-            userService.Setup(us => us.DeleteUser(id));
-
-            ILoginServices loginServices = new LoginServicesMock(macri);
+            userServicesMock.Setup(us => us.DeleteUser(id));
+            ILoginServices loginServices = new LoginServicesMock(pablo);
 
             var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiVXNlck5hbWUiOiJGcmFuY28iLCJQYXNzd29yZCI6InVzZXIiLCJleHAiOjE1Mzc5MTkxNTEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.t2Tm_mvehwOv20p8Wc1yFUeBa2yS-jfYKfiurNLawhc";
-
+            httpContext.Request.Headers["Authorization"] = "";
             var controllerContext = new ControllerContext()
             {
                 HttpContext = httpContext,
             };
+            var controller = new UsersController(loginServices, userServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
 
-            var controller = new UsersController(loginServices, userService.Object) { ControllerContext = controllerContext, };
-
+            userServicesMock.Verify(m => m.DeleteUser(id), Times.AtMostOnce());
             var result = controller.Delete(id);
-
             var createdResult = result as OkResult;
 
             Assert.IsNotNull(createdResult);
@@ -189,30 +247,30 @@ namespace EirinDuran.WebApiTest
         }
 
         [TestMethod]
-        public void DeleteUserDoesNotExistsUserController()
+        public void DeleteUserDoesNotExistsUsersController()
         {
             var modelIn = new UserModelIn();
 
-            var userService = new Mock<IUserServices>();
+            var userServicesMock = new Mock<IUserServices>();
 
             string id = "pepe";
 
-            userService.Setup(us => us.DeleteUser(id)).Throws(new ServicesException());
-
-            ILoginServices loginServices = new LoginServicesMock(macri);
+            userServicesMock.Setup(us => us.DeleteUser(id)).Throws(new ServicesException());
+            ILoginServices loginServices = new LoginServicesMock(pablo);
 
             var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiVXNlck5hbWUiOiJGcmFuY28iLCJQYXNzd29yZCI6InVzZXIiLCJleHAiOjE1Mzc5MTkxNTEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.t2Tm_mvehwOv20p8Wc1yFUeBa2yS-jfYKfiurNLawhc";
-
+            httpContext.Request.Headers["Authorization"] = "";
             var controllerContext = new ControllerContext()
             {
                 HttpContext = httpContext,
             };
+            var controller = new UsersController(loginServices, userServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
 
-            var controller = new UsersController(loginServices, userService.Object) { ControllerContext = controllerContext, };
-
+            userServicesMock.Verify(m => m.DeleteUser(id), Times.AtMostOnce());
             var result = controller.Delete(id);
-
             var createdResult = result as BadRequestResult;
 
             Assert.IsNotNull(createdResult);
@@ -220,73 +278,101 @@ namespace EirinDuran.WebApiTest
         }
 
         [TestMethod]
-        public void UpdateUserDataUserController()
+        public void UpdateUserDataUsersController()
         {
             var modelIn = new UserModelIn();
+            var userServicesMock = new Mock<IUserServices>();
 
-            var userService = new Mock<IUserServices>();
+            string id = "Pablo";
 
-            string id = "Macri";
+            userServicesMock.Setup(us => us.ModifyUser(pablo));
 
-            userService.Setup(us => us.ModifyUser(macri));
-
-            ILoginServices loginServices = new LoginServicesMock(macri);
+            ILoginServices loginServices = new LoginServicesMock(pablo);
 
             var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiVXNlck5hbWUiOiJGcmFuY28iLCJQYXNzd29yZCI6InVzZXIiLCJleHAiOjE1Mzc5MTkxNTEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.t2Tm_mvehwOv20p8Wc1yFUeBa2yS-jfYKfiurNLawhc";
-
+            httpContext.Request.Headers["Authorization"] = "";
             var controllerContext = new ControllerContext()
             {
                 HttpContext = httpContext,
             };
-
-            var controller = new UsersController(loginServices, userService.Object) { ControllerContext = controllerContext, };
+            var controller = new UsersController(loginServices, userServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
 
             var result = controller.Modify(id, new UserUpdateModelIn(){
                 Name = "UserTest",
                 Surname = "UserTest",
                 Password = "user",
-                Mail = "mail@gmail.com"
+                Mail = "user@gmail.com"
             } );
 
+            userServicesMock.Verify(m => m.ModifyUser(pablo), Times.AtMostOnce());
             var createdResult = result as OkResult;
 
             Assert.IsNotNull(createdResult);
             Assert.AreEqual(200, createdResult.StatusCode);
         }
 
-        [TestInitialize]
-        public void Init()
+        [TestMethod]
+        public void UpdateUserDataWithoutExistsUsersController()
         {
-            juan = new UserDTO()
+            var modelIn = new UserModelIn();
+            var userServicesMock = new Mock<IUserServices>();
+
+            string id = "Pablo";
+     
+            userServicesMock.Setup(us => us.ModifyUser(It.IsAny<UserDTO>())).Throws(new ServicesException());
+
+            ILoginServices loginServices = new LoginServicesMock(pablo);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
             {
-                UserName = "juanandres",
-                Name = "Juan",
-                Surname = "Perez",
+                HttpContext = httpContext,
+            };
+            var controller = new UsersController(loginServices, userServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            var result = controller.Modify(id, new UserUpdateModelIn()
+            {
+                Name = "UserTest",
+                Surname = "UserTest",
                 Password = "user",
-                Mail = "juan@perez.org",
-                IsAdmin = true
+                Mail = "user@gmail.com"
+            });
+
+            userServicesMock.Verify(m => m.ModifyUser(It.IsAny<UserDTO>()), Times.AtMostOnce());
+            var createdResult = result as BadRequestObjectResult;
+
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual(400, createdResult.StatusCode);
+        }
+
+        [TestMethod]
+        public void GetLogedUserFollowedTeams()
+        {
+            var userServicesMock = new Mock<IUserServices>();
+
+            ILoginServices loginServices = new LoginServicesMock(pablo);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new UsersController(loginServices, userServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
             };
 
-            roberto = new UserDTO()
-            {
-                UserName = "robertoj",
-                Name = "roberto",
-                Surname = "juarez",
-                Password = "mypass123",
-                Mail = "rj@rj.com",
-                IsAdmin = false
-            };
-            macri = new UserDTO()
-            {
-                UserName = "Macri",
-                Name = "Mauricio",
-                Surname = "Macri",
-                Password = "cat123",
-                Mail = "mail@gmail.com",
-                IsAdmin = true
-            };
-
+            List<string> result = controller.GetFollowedTeams().Value;
+            Assert.AreEqual("Atletics", result[0]);
+            Assert.AreEqual("Yankees", result[1]);
         }
     }
 }
