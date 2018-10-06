@@ -36,7 +36,7 @@ namespace EirinDuran.Services.DTO_Mappers
         protected override Encounter TryToMapModel(EncounterDTO encounterDTO)
         {
             return new Encounter(id: encounterDTO.Id,
-                teams: new List<Team>() { teamRepo.Get(encounterDTO.HomeTeamName + "_" + encounterDTO.SportName), teamRepo.Get(encounterDTO.AwayTeamName + "_" + encounterDTO.SportName) },
+                teams: new List<Team>() { teamRepo.Get(encounterDTO.HomeTeamName), teamRepo.Get(encounterDTO.AwayTeamName) },
                 comments: encounterDTO.CommentsIds.ConvertAll(comment => commentRepo.Get(comment.ToString())),
                 dateTime: encounterDTO.DateTime,
                 sport: sportRepo.Get(encounterDTO.SportName)
