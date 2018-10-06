@@ -8,7 +8,7 @@ using System.Text;
 
 namespace EirinDuran.Entities.Mappers
 {
-    internal class TeamMapper 
+    internal class TeamMapper
     {
 
         public TeamEntity Map(Team team)
@@ -24,11 +24,15 @@ namespace EirinDuran.Entities.Mappers
 
         public Team Map(TeamEntity entity)
         {
-            return new Team(
+            Team team = new Team(
                 name: entity.Name,
-                sport: entity.Sport.ToModel() ,
-                logo: ByteArrayToImage(entity.Logo)
+                sport: entity.Sport.ToModel()
             );
+            if (entity.Logo != null)
+            {
+                team.Logo = ByteArrayToImage(entity.Logo);
+            }
+            return team;
         }
 
         public void Update(Team source, TeamEntity desination)

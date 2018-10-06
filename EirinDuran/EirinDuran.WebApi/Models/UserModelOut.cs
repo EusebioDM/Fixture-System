@@ -15,6 +15,10 @@ namespace EirinDuran.WebApi.Models
 
         public bool IsAdmin { get; set; }
 
+        public UserModelOut()
+        {
+        }
+
         public UserModelOut(UserDTO user)
         {
             UserName = user.UserName;
