@@ -14,35 +14,44 @@ namespace EirinDuran.Services
     public class UserServices : IUserServices
     {
         private PermissionValidator adminValidator;
-        private ILoginServices login;
+        private ILoginServices loginServices;
         private IRepository<User> userRepository;
         private IRepository<Team> teamRepository;
         private UserMapper userMapper;
         private TeamMapper teamMapper;
 
-        public UserServices(ILoginServices loginServices, IRepository<User> userRepository, IRepository<Team> teamRepository, IRepository<Sport> sportRepo)
+        public UserServices(ILoginServices loginServices, IRepository<User> userRepository, IRepository<Team> teamRepository, IRepository<Sport> sportRepository)
         {
             this.userRepository = userRepository;
             this.teamRepository = teamRepository;
-            this.login = loginServices;
-            adminValidator = new PermissionValidator(Role.Administrator, login);
+            this.loginServices = loginServices;
+            adminValidator = new PermissionValidator(Role.Administrator, loginServices);
             userMapper = new UserMapper(teamRepository);
-            teamMapper = new TeamMapper(sportRepo);
+            teamMapper = new TeamMapper(sportRepository);
         }
 
         public void CreateUser(UserDTO userDTO)
         {
             adminValidator.ValidatePermissions();
             User user = userMapper.Map(userDTO);
-            userRepository.Add(user);
+
+            try
+            {
+                userRepository.Add(user);
+            }
+            catch(DataAccessException e)
+            {
+                throw new ServicesException("Failure to try to create user.", e);
+            }
+            
         }
 
-        public UserDTO GetUser(string id)
+        public UserDTO GetUser(string userId)
         {
             adminValidator.ValidatePermissions();
             try
             {
-                return userMapper.Map(userRepository.Get(id));
+                return userMapper.Map(userRepository.Get(userId));
             }
             catch (DataAccessException e)
             {
@@ -91,32 +100,17 @@ namespace EirinDuran.Services
             }
         }
 
-        public void AddFollowedTeam(string id)
-        {
-            Team team = teamRepository.Get(id);
-            User user = userRepository.Get(login.LoggedUser.UserName);
-            user.AddFollowedTeam(team);
-            try
-            {
-                userRepository.Update(user);
-            }
-            catch(DataAccessException e)
-            {
-                throw new ServicesException("Failure to try to modify user.", e);
-            }
-        }
-
-        public IEnumerable<TeamDTO> GetAllFollowedTeams()
+        public IEnumerable<TeamDTO> GetFollowedTeams()
         {
             try
             {
-                User recovered = userRepository.Get(login.LoggedUser.UserName);
+                User recovered = userRepository.Get(loginServices.LoggedUser.UserName);
                 Func<Team, TeamDTO> mapDTOs = team => teamMapper.Map(team);
                 return recovered.FollowedTeams.Select(mapDTOs);
             }
             catch(DataAccessException e)
             {
-                throw new ServicesException("Failure to try to recover user logged in followes teams exception.", e);
+                throw new ServicesException("Failure to try to recover user logged in followed teams.", e);
             }
         }
     }

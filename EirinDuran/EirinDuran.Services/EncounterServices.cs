@@ -132,7 +132,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to get all teams of a team.", e);
+                throw new ServicesException("Failure to try to get all encounters of a team.", e);
             }
         }
 

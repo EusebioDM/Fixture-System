@@ -10,6 +10,7 @@ using System.Linq;
 using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.Interfaces;
 using EirinDuran.IServices.DTOs;
+using EirinDuran.Domain.User;
 
 namespace EirinDuran.ServicesTest
 {
@@ -17,9 +18,9 @@ namespace EirinDuran.ServicesTest
     public class TeamServicesTest
     {
         private ILoginServices login;
+        private IRepository<User> userRepository;
         private IRepository<Sport> sportRepository;
         private IRepository<Team> teamRepository;
-        private IRepository<Sport> sportRepo;
         private IRepository<Encounter> encounterRepository;
         private UserDTO macri;
         private UserDTO christina;
@@ -32,7 +33,7 @@ namespace EirinDuran.ServicesTest
                 Name = "Boca",
                 SportName = "Futbol"
             };
-            TeamServices services = new TeamServices(login, teamRepository, sportRepo);
+            TeamServices services = new TeamServices(login, teamRepository, sportRepository, userRepository);
             services.CreateTeam(boca);
             IEnumerable<Team> recovered = teamRepository.GetAll();
             Assert.AreEqual(1, recovered.ToList().Count);
@@ -47,7 +48,7 @@ namespace EirinDuran.ServicesTest
                 Name = "Boca",
                 SportName = "Futbol"
             };
-            TeamServices services = new TeamServices(login, teamRepository, sportRepo);
+            TeamServices services = new TeamServices(login, teamRepository, sportRepository, userRepository);
 
             services.CreateTeam(boca);
             services.CreateTeam(boca);
@@ -64,7 +65,7 @@ namespace EirinDuran.ServicesTest
                 Name = "Boca",
                 SportName = "Futbol"
             };
-            TeamServices services = new TeamServices(login, teamRepository, sportRepo);
+            TeamServices services = new TeamServices(login, teamRepository, sportRepository, userRepository);
             services.CreateTeam(boca);
         }
 
@@ -73,8 +74,8 @@ namespace EirinDuran.ServicesTest
         {
             TeamDTO boca = new TeamDTO() { Name = "Boca", SportName = "Futbol" };
 
-            SportServices sportServices = new SportServices(login, sportRepo);
-            TeamServices teamServices = new TeamServices(login, teamRepository, sportRepo);
+            SportServices sportServices = new SportServices(login, sportRepository);
+            TeamServices teamServices = new TeamServices(login, teamRepository, sportRepository, userRepository);
 
             teamServices.CreateTeam(boca);
 
@@ -88,7 +89,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(ServicesException))]
         public void DeleteTeamDoesNotExists()
         {
-            TeamServices services = new TeamServices(login, teamRepository, sportRepo);
+            TeamServices services = new TeamServices(login, teamRepository, sportRepository, userRepository);
             services.DeleteTeam("Boca");
         }
 
@@ -97,7 +98,7 @@ namespace EirinDuran.ServicesTest
         public void DeleteTeamWithoutSufficientPermission()
         {
             login = new LoginServicesMock(christina);
-            TeamServices services = new TeamServices(login, teamRepository, sportRepo);
+            TeamServices services = new TeamServices(login, teamRepository, sportRepository, userRepository);
             TeamDTO boca = new TeamDTO() { Name = "Boca" , SportName = "Futbol" };
             services.CreateTeam(boca);
             services.DeleteTeam("Boca");
@@ -106,7 +107,7 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void GetTeamOk()
         {
-            TeamServices services = new TeamServices(login, teamRepository, sportRepo);
+            TeamServices services = new TeamServices(login, teamRepository, sportRepository, userRepository);
             Team boca = new Team("Boca", new Sport("Futbol"));
             teamRepository.Add(boca);
 
@@ -119,14 +120,14 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(ServicesException))]
         public void GetTeamDoesNotExists()
         {
-            TeamServices services = new TeamServices(login, teamRepository, sportRepo);
+            TeamServices services = new TeamServices(login, teamRepository, sportRepository, userRepository);
             TeamDTO recovered = services.GetTeam("Boca");
         }
 
         [TestMethod]
         public void GetAllTeams()
         {
-            TeamServices services = new TeamServices(login, teamRepository, sportRepo);
+            TeamServices services = new TeamServices(login, teamRepository, sportRepository, userRepository);
             Team boca = new Team("Boca", new Sport("Futbol"));
             Team river = new Team("River", new Sport("Futbol"));
 
@@ -153,9 +154,10 @@ namespace EirinDuran.ServicesTest
         {
             sportRepository = new SportRepository(GetContextFactory());
             teamRepository = new TeamRepository(GetContextFactory());
-            sportRepo = new SportRepository(GetContextFactory());
+            sportRepository = new SportRepository(GetContextFactory());
             encounterRepository = new EncounterRepository(GetContextFactory());
-            sportRepo.Add(new Sport("Futbol"));
+            userRepository = new UserRepository(GetContextFactory());
+            sportRepository.Add(new Sport("Futbol"));
 
             macri = new UserDTO()
             {

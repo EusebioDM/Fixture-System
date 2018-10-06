@@ -1,7 +1,5 @@
 ﻿using EirinDuran.IServices.DTOs;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EirinDuran.IServices.Interfaces
 {
@@ -9,7 +7,7 @@ namespace EirinDuran.IServices.Interfaces
     {
         void CreateUser(UserDTO userDTO);
 
-        UserDTO GetUser(string username);
+        UserDTO GetUser(string userName);
 
         IEnumerable<UserDTO> GetAllUsers();
 
@@ -17,9 +15,6 @@ namespace EirinDuran.IServices.Interfaces
 
         void ModifyUser(UserDTO userDTO);
 
-        void AddFollowedTeam(string id);
-
-        IEnumerable<TeamDTO> GetAllFollowedTeams();
-
+        IEnumerable<TeamDTO> GetFollowedTeams();
     }
 }

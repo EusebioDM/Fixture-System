@@ -27,7 +27,7 @@ namespace EirinDuran.DataAccess
             return GetFilteredEncounters(encounterHasTeam);
         }
 
-        private bool TeamHasId(TeamEntity team ,string id)
+        private bool TeamHasId(TeamEntity team, string id)
         {
             string teamId = team.Name + "_" + team.SportName;
             return teamId == id;

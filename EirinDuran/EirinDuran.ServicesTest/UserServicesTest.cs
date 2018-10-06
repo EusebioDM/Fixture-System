@@ -203,7 +203,7 @@ namespace EirinDuran.ServicesTest
         {
             ILoginServices login = new LoginServicesMock(pepe);
 
-            ITeamServices teamServices = new TeamServices(login, teamRepo, sportRepo);
+            ITeamServices teamServices = new TeamServices(login, teamRepo, sportRepo, userRepo);
 
             TeamDTO team = new TeamDTO()
             {
@@ -228,7 +228,7 @@ namespace EirinDuran.ServicesTest
                 Name = "Baskteball"
             };
             userRepo.Add(new User(Role.Follower, "pablo", "pablo", "pablo", "user", "pepeavila@mymail.com"));
-            services.AddFollowedTeam("Cavaliers");
+            teamServices.AddFollowedTeam("Baskteball_Cavaliers");
 
             User recovered = userRepo.Get("pablo");
             List<Team> followedTeams = recovered.FollowedTeams.ToList();
@@ -240,7 +240,7 @@ namespace EirinDuran.ServicesTest
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);
             UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
-            ITeamServices teamServices = new TeamServices(login, teamRepo, sportRepo);
+            ITeamServices teamServices = new TeamServices(login, teamRepo, sportRepo, userRepo);
 
             login.CreateSession("sSanchez", "user");
 
@@ -262,9 +262,9 @@ namespace EirinDuran.ServicesTest
                 SportName = "Baskteball"
             };
             teamServices.CreateTeam(team);
-            services.AddFollowedTeam("Cavaliers");
+            teamServices.AddFollowedTeam("Cavaliers");
 
-            IEnumerable<TeamDTO> followedTeams = services.GetAllFollowedTeams();
+            IEnumerable<TeamDTO> followedTeams = services.GetFollowedTeams();
             Assert.AreEqual(cavaliers.Name, followedTeams.First().Name);
         }
 
