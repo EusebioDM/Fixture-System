@@ -17,7 +17,7 @@ namespace EirinDuran.IServices.Interfaces
 
         IEnumerable<EncounterDTO> GetAllEncounters();
 
-        IEnumerable<Encounter> GetAllEncountersWithFollowedTeams();
+        IEnumerable<EncounterDTO> GetAllEncountersWithFollowedTeams();
 
         IEnumerable<CommentDTO> GetAllCommentsToOneEncounter(string encounterId);
 

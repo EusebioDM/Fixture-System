@@ -35,7 +35,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to create sport.", e);
+                throw new ServicesException("Failure to create sport.", e);
             }
         }
 
@@ -50,7 +50,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to modify sport.", e);
+                throw new ServicesException("Failure to modify sport.", e);
             }
 
         }
@@ -63,7 +63,7 @@ namespace EirinDuran.Services
             }
             catch(DataAccessException e)
             {
-                throw new ServicesException("Failure to try to recover sport.", e);
+                throw new ServicesException("Failure to recover sport.", e);
             }
         }
 
@@ -75,7 +75,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to get all sports.", e);
+                throw new ServicesException("Failure to get all sports.", e);
             }
         }
 
@@ -88,7 +88,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to delete sport.", e);
+                throw new ServicesException("Failure to delete sport.", e);
             }
         }
     }

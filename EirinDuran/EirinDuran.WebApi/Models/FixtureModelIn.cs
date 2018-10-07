@@ -8,6 +8,7 @@ namespace EirinDuran.WebApi.Models
     public class FixtureModelIn
     {
         public string CreationAlgorithmName { get; set; }
+        public string SportName { get; set; }
         public DateTime StartingDate { get; set; }
     }
 }

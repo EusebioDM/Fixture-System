@@ -41,7 +41,7 @@ namespace EirinDuran.Services
             }
             catch(DataAccessException e)
             {
-                throw new ServicesException("Failure to try to create user.", e);
+                throw new ServicesException("Failure to create user.", e);
             }
             
         }
@@ -54,7 +54,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to recover user.", e);
+                throw new ServicesException("Failure to recover user.", e);
             }
         }
 
@@ -66,7 +66,7 @@ namespace EirinDuran.Services
             }
             catch(DataAccessException e)
             {
-                throw new ServicesException("Failure to try to get all users.", e);
+                throw new ServicesException("Failure to get all users.", e);
             }
         }
 
@@ -79,7 +79,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to delete user.", e);
+                throw new ServicesException("Failure to delete user.", e);
             }
             
         }
@@ -94,7 +94,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to modify user.", e);
+                throw new ServicesException("Failure to modify user.", e);
             }
         }
 
@@ -108,7 +108,7 @@ namespace EirinDuran.Services
             }
             catch(DataAccessException e)
             {
-                throw new ServicesException("Failure to try to recover user logged in followed teams.", e);
+                throw new ServicesException("Failure to recover user logged in followed teams.", e);
             }
         }
     }

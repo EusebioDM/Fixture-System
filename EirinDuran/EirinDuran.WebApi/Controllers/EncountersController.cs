@@ -1,12 +1,13 @@
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using EirinDuran.Domain.Fixture;
-using EirinDuran.IServices.Interfaces;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
+using EirinDuran.IServices.Interfaces;
+using EirinDuran.WebApi.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -25,29 +26,30 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Administrator")]
-        public ActionResult<List<EncounterDTO>> Get()
+        public ActionResult<List<EncounterDTO>> Get([FromQuery] DateTime start, [FromQuery] DateTime end)
         {
             CreateSession();
             try
             {
-                return TryToGetAllEncounters();
+                return TryToGetAllEncounters(start, end);
             }
             catch (InsufficientPermissionException)
             {
                 return Unauthorized();
             }
-        }
-
-        private ActionResult<List<EncounterDTO>> TryToGetAllEncounters()
-        {
-            try
-            {
-                return encounterServices.GetAllEncounters().ToList();
-            }
             catch (ServicesException e)
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        private ActionResult<List<EncounterDTO>> TryToGetAllEncounters(DateTime start, DateTime end)
+        {
+            if (start.Equals(new DateTime()) || end.Equals(new DateTime()))
+                return encounterServices.GetAllEncounters().ToList();
+            else
+                return encounterServices.GetEncountersByDate(start, end).ToList();
+
         }
 
         [HttpGet("{id}", Name = "GetEncounter")]
@@ -121,7 +123,7 @@ namespace EirinDuran.WebApi.Controllers
                 encounterServices.DeleteEncounter(id);
                 return Ok();
             }
-            catch(ServicesException e)
+            catch (ServicesException e)
             {
                 return BadRequest(e.Message);
             }
@@ -155,6 +157,35 @@ namespace EirinDuran.WebApi.Controllers
             catch (ServicesException e)
             {
                 return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("fixture")]
+        public ActionResult<List<string>> GetAvailableFixtureGenerators()
+        {
+            CreateSession();
+            return encounterServices.GetAvailableFixtureGenerators().ToList();
+        }
+
+        [HttpPost]
+        [Route("fixture")]
+        public IActionResult CreateFixture(FixtureModelIn fixtureModelIn)
+        {
+            CreateSession();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var encounters = encounterServices.CreateFixture(fixtureModelIn.CreationAlgorithmName, fixtureModelIn.SportName, fixtureModelIn.StartingDate);
+                return Ok(encounters);
+            }
+            catch (ServicesException ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 

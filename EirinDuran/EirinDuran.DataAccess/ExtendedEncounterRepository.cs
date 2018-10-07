@@ -30,7 +30,7 @@ namespace EirinDuran.DataAccess
         private bool TeamHasId(TeamEntity team, string id)
         {
             string teamId = team.Name + "_" + team.SportName;
-            return teamId == id;
+            return teamId.Equals(id, StringComparison.OrdinalIgnoreCase);
         }
 
         public IEnumerable<Encounter> GetBySport(string sportId)
