@@ -80,6 +80,31 @@ namespace EirinDuran.WebApiTest
         }
 
         [TestMethod]
+        public void CatchServicesExceptionTryToGetAllEncounters()
+        {
+            var enconunterServicesMock = new Mock<IEncounterServices>();
+            ILoginServices loginServices = new LoginServicesMock(santiago);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
+            enconunterServicesMock.Setup(m => m.GetAllEncounters()).Throws(new ServicesException());
+
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+
+            var obtainedResult = controller.Get() as ActionResult<List<EncounterDTO>>;
+            enconunterServicesMock.Verify(e => e.GetAllEncounters(), Times.AtMostOnce());
+            var result = obtainedResult.Result as BadRequestObjectResult;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(400, result.StatusCode);
+        }
+
+        [TestMethod]
         public void CreateEncounterOkEncountersController()
         {
             var enconunterServicesMock = new Mock<IEncounterServices>();
@@ -230,6 +255,131 @@ namespace EirinDuran.WebApiTest
 
             Assert.IsNotNull(obtainedResult);
             Assert.AreEqual(400, obtainedResult.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteEncounterOkEncountersController()
+        {
+            var enconunterServicesMock = new Mock<IEncounterServices>();
+            ILoginServices loginServices = new LoginServicesMock(santiago);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
+            enconunterServicesMock.Setup(m => m.DeleteEncounter("1"));
+
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+
+            var obtainedResult = controller.Delete("1") as OkResult;
+            enconunterServicesMock.Verify(e => e.DeleteEncounter("1"), Times.AtMostOnce());
+            
+            Assert.IsNotNull(obtainedResult);
+            Assert.AreEqual(200, obtainedResult.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteEncounterWithoutPermissionEncountersController()
+        {
+            var enconunterServicesMock = new Mock<IEncounterServices>();
+            ILoginServices loginServices = new LoginServicesMock(santiago);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
+            enconunterServicesMock.Setup(m => m.DeleteEncounter("1")).Throws(new InsufficientPermissionException());
+
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+
+            var obtainedResult = controller.Delete("1") as UnauthorizedResult;
+            enconunterServicesMock.Verify(e => e.DeleteEncounter("1"), Times.AtMostOnce());
+
+            Assert.IsNotNull(obtainedResult);
+            Assert.AreEqual(401, obtainedResult.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteEncounterWithoutExistsEncountersController()
+        {
+            var enconunterServicesMock = new Mock<IEncounterServices>();
+            ILoginServices loginServices = new LoginServicesMock(santiago);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
+            enconunterServicesMock.Setup(m => m.DeleteEncounter("1")).Throws(new ServicesException());
+
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+
+            var obtainedResult = controller.Delete("1") as BadRequestObjectResult;
+            enconunterServicesMock.Verify(e => e.DeleteEncounter("1"), Times.AtMostOnce());
+
+            Assert.IsNotNull(obtainedResult);
+            Assert.AreEqual(400, obtainedResult.StatusCode);
+        }
+
+        [TestMethod]
+        public void GetCommentsOfEncounterOkEncountersController()
+        {
+            var enconunterServicesMock = new Mock<IEncounterServices>();
+            ILoginServices loginServices = new LoginServicesMock(santiago);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
+            CommentDTO comment = new CommentDTO() { UserName = santiago.UserName, Message = "Hi! This is a test comment." };
+            List<CommentDTO> comments = new List<CommentDTO>() { comment };
+
+            enconunterServicesMock.Setup(m => m.GetAllCommentsToOneEncounter("1")).Returns(comments);
+
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+
+            var obtainedResult = controller.GetEncounterComments("1") as ActionResult<IEnumerable<CommentDTO>>;
+            enconunterServicesMock.Verify(e => e.GetAllCommentsToOneEncounter("1"), Times.AtMostOnce());
+
+            Assert.IsNotNull(obtainedResult);
+            Assert.AreEqual(comment.UserName, obtainedResult.Value.ToList()[0].UserName);
+            Assert.AreEqual(comment.Message, obtainedResult.Value.ToList()[0].Message);
+        }
+
+        [TestMethod]
+        public void GetCommentsOfEncounterWithoutExistsEncountersController()
+        {
+            var enconunterServicesMock = new Mock<IEncounterServices>();
+            ILoginServices loginServices = new LoginServicesMock(santiago);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
+            enconunterServicesMock.Setup(m => m.GetAllCommentsToOneEncounter("1")).Throws(new ServicesException());
+
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+
+            var obtainedResult = controller.GetEncounterComments("1") as ActionResult<IEnumerable<CommentDTO>>;
+            enconunterServicesMock.Verify(e => e.GetAllCommentsToOneEncounter("1"), Times.AtMostOnce());
+            var result = obtainedResult.Result as BadRequestObjectResult;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(400, result.StatusCode);
         }
 
         public Guid IntToGuid(int value)

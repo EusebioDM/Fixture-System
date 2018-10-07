@@ -129,7 +129,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Route("{encounterId}/commentaries")]
-        public ActionResult<IEnumerable<Comment>> GetEncounterComments(string encounterId)
+        public ActionResult<IEnumerable<CommentDTO>> GetEncounterComments(string encounterId)
         {
             CreateSession();
             try

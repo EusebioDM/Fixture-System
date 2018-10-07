@@ -156,7 +156,6 @@ namespace EirinDuran.ServicesTest
             login.CreateSession("sSanchez", "user");
             EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             encounterServices.CreateFixture("RoundRobinFixture", "Futbol", new DateTime(3000, 10, 10));
-            sportRepo.Delete(river.Name);
 
             IEnumerable<Encounter> expected = new RoundRobinFixture(futbol).GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
             IEnumerable<Encounter> actual = encounterRepo.GetAll();
