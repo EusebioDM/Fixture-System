@@ -158,6 +158,14 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("fixture")]
+        public ActionResult<List<string>> GetAvailableFixtureGenerators()
+        {
+            CreateSession();
+            return encounterServices.GetAvailableFixtureGenerators().ToList();
+        }
+
         private void CreateSession()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;

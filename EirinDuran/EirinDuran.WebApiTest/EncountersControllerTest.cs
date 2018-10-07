@@ -383,7 +383,7 @@ namespace EirinDuran.WebApiTest
         }
 
         [TestMethod]
-        public void GetAvailableFixtureGenerators()
+        public void GetAvailableFixtureGeneratorsTest()
         {
             var encounterServicesMock = new Mock<IEncounterServices>();
             ILoginServices loginServices = new LoginServicesMock(santiago);
