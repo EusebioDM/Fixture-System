@@ -117,7 +117,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -175,7 +175,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, mockUserService.Object)
+            var controller = new UsersController(loginServices, mockUserService.Object, encounterServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -293,7 +293,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -385,7 +385,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -492,7 +492,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
             {
                 ControllerContext = controllerContext,
             };
