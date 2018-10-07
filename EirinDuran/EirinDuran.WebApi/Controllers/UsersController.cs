@@ -5,7 +5,6 @@ using EirinDuran.WebApi.Mappers;
 using EirinDuran.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -36,13 +35,9 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return TryToGetAllUsers();
             }
-            catch (InsufficientPermissionException)
-            {
-                return Unauthorized();
-            }
             catch (ServicesException e)
             {
-                return BadRequest(e);
+                return BadRequest(e.Message);
             }
         }
 
@@ -62,16 +57,11 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return TryToGetById(userId);
             }
-            catch (InsufficientPermissionException)
-            {
-                return Unauthorized();
-            }
             catch (ServicesException e)
             {
                 return BadRequest(e.Message);
             }
         }
-
 
         private ActionResult<UserModelOut> TryToGetById(string userId)
         {

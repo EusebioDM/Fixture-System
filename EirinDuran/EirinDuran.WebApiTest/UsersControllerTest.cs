@@ -1,14 +1,12 @@
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.Interfaces;
-using EirinDuran.Services;
 using EirinDuran.WebApi.Controllers;
 using EirinDuran.WebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -514,7 +512,7 @@ namespace EirinDuran.WebApiTest
         }
 
         [TestMethod]
-        public void GetLogedUserFollowedTeams()
+        public void GetLogedUserFollowedTeamsOk()
         {
             var userServicesMock = new Mock<IUserServices>();
 
