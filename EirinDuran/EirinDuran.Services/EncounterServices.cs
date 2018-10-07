@@ -111,7 +111,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to get all encounters.", e);
+                throw new ServicesException($"Failure to get all encounters.", e);
             }
         }
 
@@ -123,19 +123,19 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to recover encounter with specific sport.", e);
+                throw new ServicesException($"Failure to recover encounter with {sportName} sport name.", e);
             }
         }
 
-        public IEnumerable<EncounterDTO> GetEncountersByTeam(string sportId_teamName)
+        public IEnumerable<EncounterDTO> GetEncountersByTeam(string teamId)
         {
             try
             {
-                return encounterRepository.GetByTeam(sportId_teamName).Select(e => mapper.Map(e));
+                return encounterRepository.GetByTeam(teamId).Select(e => mapper.Map(e));
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to get all encounters of a team.", e);
+                throw new ServicesException($"Failure to get all encounters of a team with id {teamId}.", e);
             }
         }
 
@@ -153,7 +153,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to recover all commentaries to encounter " + encounterId, e);
+                throw new ServicesException("Failure to recover all commentaries from encounter with id " + encounterId, e);
             }
         }
 
@@ -166,7 +166,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to delete encounter.", e);
+                throw new ServicesException($"Failure to delete encounter with id {id}.", e);
             }
         }
 
