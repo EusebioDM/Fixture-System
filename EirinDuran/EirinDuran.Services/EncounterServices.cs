@@ -48,7 +48,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to create encounter.", e);
+                throw new ServicesException("Failure to create encounter.", e);
             }
         }
 
@@ -65,7 +65,7 @@ namespace EirinDuran.Services
                 }
                 catch (DataAccessException e)
                 {
-                    throw new ServicesException("Failure to try to create encounter.", e);
+                    throw new ServicesException("Failure to create encounter.", e);
                 }
             }
         }

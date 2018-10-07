@@ -39,12 +39,12 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        [HttpGet("{sportId_teamName}")]
-        public ActionResult<TeamDTO> Get(string sportId_teamName)
+        [HttpGet("{teamId}", Name = "GetTeam")]
+        public ActionResult<TeamDTO> Get(string teamId)
         {
             try
             {
-                return teamServices.GetTeam(sportId_teamName);
+                return teamServices.GetTeam(teamId);
             }
             catch (ServicesException e)
             {
@@ -53,12 +53,12 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("{sportId_teamName}/encounters")]
-        public ActionResult<List<EncounterDTO>> GetEncounters(string sportId_teamName)
+        [Route("{teamId}/encounters")]
+        public ActionResult<List<EncounterDTO>> GetEncounters(string teamId)
         {
             try
             {
-                return encounterServices.GetEncountersByTeam(sportId_teamName).ToList();
+                return encounterServices.GetEncountersByTeam(teamId).ToList();
             }
             catch (ServicesException e)
             {
@@ -86,7 +86,7 @@ namespace EirinDuran.WebApi.Controllers
             try
             {
                 teamServices.CreateTeam(team);
-                return CreatedAtRoute("GetTeam", new { id = team.Name }, team);
+                return CreatedAtRoute("GetTeam", new { teamId = team.Name + "_" + team.SportName } , team);
             }
             catch (ServicesException e)
             {
@@ -122,13 +122,13 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        [HttpDelete("{sportId_teamName}")]
+        [HttpDelete("{teamId}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Delete(string sportId_teamName)
+        public IActionResult Delete(string teamId)
         {
             try
             {
-                return TryToDelete(sportId_teamName);
+                return TryToDelete(teamId);
             }
             catch (InsufficientPermissionException)
             {
@@ -136,12 +136,12 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        private IActionResult TryToDelete(string sportId_teamName)
+        private IActionResult TryToDelete(string teamId)
         {
             CreateSession();
             try
             {
-                teamServices.DeleteTeam(sportId_teamName);
+                teamServices.DeleteTeam(teamId);
                 return Ok();
             }
             catch (ServicesException e)
@@ -150,14 +150,14 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        [HttpPut("{sportId_teamName}/follower")]
+        [HttpPut("{teamId}/follower")]
         [Authorize(Roles = "Administrator, Follower")]
-        public IActionResult AddFollowedTeamToLogedUser(string sportId_teamName)
+        public IActionResult AddFollowedTeamToLogedUser(string teamId)
         {
             CreateSession();
             try
             {
-                teamServices.AddFollowedTeam(sportId_teamName);
+                teamServices.AddFollowedTeam(teamId);
                 return Ok();
             }
             catch (ServicesException e)

@@ -39,7 +39,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to add team.", e);
+                throw new ServicesException("Failure to add team.", e);
             }
         }
 
@@ -51,7 +51,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to recover team.", e);
+                throw new ServicesException("Failure to recover team.", e);
             }
         }
 
@@ -63,7 +63,7 @@ namespace EirinDuran.Services
             }
             catch(DataAccessException e)
             {
-                throw new ServicesException("Failure to try to get all teams.", e);
+                throw new ServicesException("Failure to get all teams.", e);
             }
         }
 
@@ -76,7 +76,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to update team.", e);
+                throw new ServicesException("Failure to update team.", e);
             }
         }
 
@@ -89,7 +89,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to delete team.", e);
+                throw new ServicesException("Failure to delete team.", e);
             }
         }
 
@@ -104,7 +104,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to try to add followed sport to user.", e);
+                throw new ServicesException("Failure to add followed sport to user.", e);
             }
         }
     }
