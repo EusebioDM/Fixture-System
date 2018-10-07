@@ -31,18 +31,6 @@ namespace EirinDuran.WebApi.Controllers
             CreateSession();
             try
             {
-                return TryToGet();
-            }
-            catch (InsufficientPermissionException)
-            {
-                return Unauthorized();
-            }
-        }
-
-        private ActionResult<List<UserDTO>> TryToGet()
-        {
-            try
-            {
                 return userServices.GetAllUsers().ToList();
             }
             catch (ServicesException e)
@@ -51,23 +39,12 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
+
         [HttpGet("{userId}", Name = "GetUser")]
         [Authorize(Roles = "Administrator, Follower")]
         public ActionResult<UserDTO> GetById(string userId)
         {
             CreateSession();
-            try
-            {
-                return TryToGetById(userId);
-            }
-            catch (InsufficientPermissionException)
-            {
-                return Unauthorized();
-            }
-        }
-
-        private ActionResult<UserDTO> TryToGetById(string userId)
-        {
             try
             {
                 return userServices.GetUser(userId);
@@ -77,6 +54,7 @@ namespace EirinDuran.WebApi.Controllers
                 return BadRequest(e.Message);
             }
         }
+
 
         [HttpPost]
         [Authorize(Roles = "Administrator")]

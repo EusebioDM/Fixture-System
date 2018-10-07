@@ -151,6 +151,35 @@ namespace EirinDuran.WebApiTest
         }
 
         [TestMethod]
+        public void ServicesExceptionWhenTryToGetAllTeamsOkTeamsController()
+        {
+            var teamServicesMock = new Mock<ITeamServices>();
+            var encounterServicesMock = new Mock<IEncounterServices>();
+
+            teamServicesMock.Setup(t => t.GetAllTeams()).Throws(new ServicesException());
+            ILoginServices login = new LoginServicesMock(mariano);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new TeamsController(login, teamServicesMock.Object, encounterServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            var result = controller.Get();
+            teamServicesMock.Verify(t => t.GetAllTeams(), Times.AtMostOnce);
+            var value = result as ActionResult<List<TeamDTO>>;
+            var resultRequest = result.Result as BadRequestObjectResult;
+
+            Assert.IsNotNull(resultRequest);
+            Assert.AreEqual(400, resultRequest.StatusCode);
+        }
+
+        [TestMethod]
         public void GetTeamOkTeamsController()
         {
             var teamServicesMock = new Mock<ITeamServices>();
@@ -340,6 +369,36 @@ namespace EirinDuran.WebApiTest
             Assert.AreEqual(encounter.SportName, obtaniedEncounters[0].SportName);
             Assert.AreEqual(encounter.AwayTeamName, obtaniedEncounters[0].AwayTeamName);
             Assert.AreEqual(encounter.HomeTeamName, obtaniedEncounters[0].HomeTeamName);
+        }
+
+        [TestMethod]
+        public void GetEncountersByTeamWithoutExistsTeamTeamsController()
+        {
+            var teamServicesMock = new Mock<ITeamServices>();
+            var encounterServicesMock = new Mock<IEncounterServices>();
+
+            string teamName = "Team_Sport";
+            encounterServicesMock.Setup(e => e.GetEncountersByTeam(teamName)).Throws(new ServicesException());
+            ILoginServices login = new LoginServicesMock(mariano);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new TeamsController(login, teamServicesMock.Object, encounterServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            var result = controller.GetEncounters(teamName);
+            encounterServicesMock.Verify(e => e.GetEncountersByTeam(teamName), Times.AtMostOnce);
+            var value = result as ActionResult<List<EncounterDTO>>;
+            var requestResult = value.Result as BadRequestObjectResult;
+
+            Assert.IsNotNull(requestResult);
+            Assert.AreEqual(400, requestResult.StatusCode);
         }
 
         [TestMethod]
