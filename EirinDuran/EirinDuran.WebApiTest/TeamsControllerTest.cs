@@ -149,5 +149,261 @@ namespace EirinDuran.WebApiTest
             IEnumerable<TeamDTO> sportList = resultRequest.Value.ToList().Union(teams);
             Assert.IsTrue(sportList.ToList().Count == 2);
         }
+
+        [TestMethod]
+        public void GetTeamOkTeamsController()
+        {
+            var teamServicesMock = new Mock<ITeamServices>();
+            var encounterServicesMock = new Mock<IEncounterServices>();
+
+            TeamDTO team1 = new TeamDTO() { Name = "Team1", SportName = "Futbol" };
+
+            string teamId = "Team1_Futbol";
+
+            teamServicesMock.Setup(t => t.GetTeam(teamId)).Returns(team1);
+            ILoginServices login = new LoginServicesMock(mariano);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new TeamsController(login, teamServicesMock.Object, encounterServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            var result = controller.Get(teamId);
+            teamServicesMock.Verify(t => t.GetTeam(teamId), Times.AtMostOnce);
+            var resultRequest = result as ActionResult<TeamDTO>;
+
+            Assert.IsNotNull(resultRequest);
+            Assert.IsNotNull(resultRequest.Value);
+            TeamDTO teamRecover = resultRequest.Value;
+            Assert.AreEqual(team1.Name, teamRecover.Name);
+            Assert.AreEqual(team1.SportName, teamRecover.SportName);
+        }
+
+        [TestMethod]
+        public void TryToGetWithoutExistsTeamsController()
+        {
+            var teamServicesMock = new Mock<ITeamServices>();
+            var encounterServicesMock = new Mock<IEncounterServices>();
+
+            TeamDTO team1 = new TeamDTO() { Name = "Team1", SportName = "Futbol" };
+
+            string teamId = "Team1_Futbol";
+
+            teamServicesMock.Setup(t => t.GetTeam(teamId)).Throws(new ServicesException());
+            ILoginServices login = new LoginServicesMock(mariano);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new TeamsController(login, teamServicesMock.Object, encounterServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            var result = controller.Get(teamId);
+            teamServicesMock.Verify(t => t.GetTeam(teamId), Times.AtMostOnce);
+            var resultRequest = result.Result as BadRequestObjectResult;
+
+            Assert.IsNotNull(resultRequest);
+            Assert.AreEqual(400, resultRequest.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteTeamOkTeamsController()
+        {
+            var teamServicesMock = new Mock<ITeamServices>();
+            var encounterServicesMock = new Mock<IEncounterServices>();
+
+            string teamName = "Team_Sport";
+
+            teamServicesMock.Setup(t => t.DeleteTeam(teamName));
+            ILoginServices login = new LoginServicesMock(mariano);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new TeamsController(login, teamServicesMock.Object, encounterServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            var result = controller.Delete(teamName);
+            teamServicesMock.Verify(t => t.DeleteTeam(teamName), Times.AtMostOnce);
+            var resultRequest = result as OkResult;
+
+            Assert.IsNotNull(resultRequest);
+            Assert.AreEqual(200, resultRequest.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteTeamWithoutPermissionTeamsController()
+        {
+            var teamServicesMock = new Mock<ITeamServices>();
+            var encounterServicesMock = new Mock<IEncounterServices>();
+
+            string teamName = "Team_Sport";
+
+            teamServicesMock.Setup(t => t.DeleteTeam(teamName)).Throws(new InsufficientPermissionException());
+            ILoginServices login = new LoginServicesMock(mariano);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new TeamsController(login, teamServicesMock.Object, encounterServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            var result = controller.Delete(teamName);
+            teamServicesMock.Verify(t => t.DeleteTeam(teamName), Times.AtMostOnce);
+            var resultRequest = result as UnauthorizedResult;
+
+            Assert.IsNotNull(resultRequest);
+            Assert.AreEqual(401, resultRequest.StatusCode);
+        }
+
+        [TestMethod]
+        public void TryToDeleteTeamWithoutExistsTeamsController()
+        {
+            var teamServicesMock = new Mock<ITeamServices>();
+            var encounterServicesMock = new Mock<IEncounterServices>();
+
+            string teamName = "Team_Sport";
+
+            teamServicesMock.Setup(t => t.DeleteTeam(teamName)).Throws(new ServicesException());
+            ILoginServices login = new LoginServicesMock(mariano);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new TeamsController(login, teamServicesMock.Object, encounterServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            var result = controller.Delete(teamName);
+            teamServicesMock.Verify(t => t.DeleteTeam(teamName), Times.AtMostOnce);
+            var resultRequest = result as BadRequestObjectResult;
+
+            Assert.IsNotNull(resultRequest);
+            Assert.AreEqual(400, resultRequest.StatusCode);
+        }
+
+        [TestMethod]
+        public void GetEncountersByTeamOkTeamsController()
+        {
+            var teamServicesMock = new Mock<ITeamServices>();
+            var encounterServicesMock = new Mock<IEncounterServices>();
+
+            EncounterDTO encounter = new EncounterDTO() { AwayTeamName = "Team", HomeTeamName = "Team2", SportName = "Sport" };
+            string teamName = "Team_Sport";
+            List<EncounterDTO> encounters = new List<EncounterDTO>() { encounter };
+            encounterServicesMock.Setup(e => e.GetEncountersByTeam(teamName)).Returns(encounters);
+            ILoginServices login = new LoginServicesMock(mariano);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new TeamsController(login, teamServicesMock.Object, encounterServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            var result = controller.GetEncounters(teamName);
+            encounterServicesMock.Verify(e => e.GetEncountersByTeam(teamName), Times.AtMostOnce);
+            var resultRequest = result as ActionResult<List<EncounterDTO>>;
+            List<EncounterDTO> obtaniedEncounters = resultRequest.Value;
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(resultRequest);
+            Assert.AreEqual(encounter.SportName, obtaniedEncounters[0].SportName);
+            Assert.AreEqual(encounter.AwayTeamName, obtaniedEncounters[0].AwayTeamName);
+            Assert.AreEqual(encounter.HomeTeamName, obtaniedEncounters[0].HomeTeamName);
+        }
+
+        [TestMethod]
+        public void AddFollowerToLoggedUserTeamsController()
+        {
+            var teamServicesMock = new Mock<ITeamServices>();
+            var encounterServicesMock = new Mock<IEncounterServices>();
+
+            EncounterDTO encounter = new EncounterDTO() { AwayTeamName = "Team", HomeTeamName = "Team2", SportName = "Sport" };
+            string teamName = "Team_Sport";
+            List<EncounterDTO> encounters = new List<EncounterDTO>() { encounter };
+            teamServicesMock.Setup(e => e.AddFollowedTeam(teamName));
+            ILoginServices login = new LoginServicesMock(mariano);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new TeamsController(login, teamServicesMock.Object, encounterServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            var result = controller.AddFollowedTeamToLogedUser(teamName);
+            teamServicesMock.Verify(e => e.AddFollowedTeam(teamName), Times.AtMostOnce);
+            var resultRequest = result as OkResult;
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(resultRequest);
+            Assert.AreEqual(200, resultRequest.StatusCode);
+        }
+
+        [TestMethod]
+        public void TryToAddFollowerWihoutExistsToLoggedUser()
+        {
+            var teamServicesMock = new Mock<ITeamServices>();
+            var encounterServicesMock = new Mock<IEncounterServices>();
+
+            EncounterDTO encounter = new EncounterDTO() { AwayTeamName = "Team", HomeTeamName = "Team2", SportName = "Sport" };
+            string teamName = "Team_Sport";
+            List<EncounterDTO> encounters = new List<EncounterDTO>() { encounter };
+            teamServicesMock.Setup(e => e.AddFollowedTeam(teamName)).Throws(new ServicesException());
+            ILoginServices login = new LoginServicesMock(mariano);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new TeamsController(login, teamServicesMock.Object, encounterServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            var result = controller.AddFollowedTeamToLogedUser(teamName);
+            teamServicesMock.Verify(e => e.AddFollowedTeam(teamName), Times.AtMostOnce);
+            var resultRequest = result as BadRequestObjectResult;
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(resultRequest);
+            Assert.AreEqual(400, resultRequest.StatusCode);
+        }
     }
 }

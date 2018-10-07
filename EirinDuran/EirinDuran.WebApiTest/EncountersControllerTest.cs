@@ -2,6 +2,7 @@ using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
 using EirinDuran.IServices;
 using EirinDuran.IServices.DTOs;
+using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.Interfaces;
 using EirinDuran.Services;
 using EirinDuran.WebApi.Controllers;
@@ -22,6 +23,7 @@ namespace EirinDuran.WebApiTest
         private TeamDTO river;
         private TeamDTO boca;
         private SportDTO football;
+        private UserDTO santiago;
 
         [TestInitialize]
         public void SetUp()
@@ -29,26 +31,26 @@ namespace EirinDuran.WebApiTest
             football = new SportDTO() { Name = "Futbol" };
             river = new TeamDTO() { Name = "River", SportName = "Futbol" };
             boca = new TeamDTO() { Name = "Boca", SportName = "Futbol" };
+
+            santiago = new UserDTO()
+            {
+                UserName = "SMauricio",
+                Name = "Mauricio",
+                Surname = "Santiago",
+                Password = "cat123",
+                Mail = "sm@gmail.com",
+                IsAdmin = true
+            };
         }
 
         [TestMethod]
         public void GetAllEncountersOkEncountersController()
         {
-            var enconunterServices = new Mock<IEncounterServices>();
-
-            ILoginServices loginServices = new LoginServicesMock(new UserDTO()
-            {
-                UserName = "Macri",
-                Name = "Mauricio",
-                Surname = "Macri",
-                Password = "cat123",
-                Mail = "mail@gmail.com",
-                IsAdmin = true
-            });
+            var enconunterServicesMock = new Mock<IEncounterServices>();
+            ILoginServices loginServices = new LoginServicesMock(santiago);
 
             var httpContext = new DefaultHttpContext();
             httpContext.Request.Headers["Authorization"] = "";
-
             var controllerContext = new ControllerContext()
             {
                 HttpContext = httpContext,
@@ -63,12 +65,12 @@ namespace EirinDuran.WebApiTest
             enc.DateTime = encounterDate;
 
             List<EncounterDTO> encs = new List<EncounterDTO>() { enc };
-            enconunterServices.Setup(m => m.GetAllEncounters()).Returns(encs);
+            enconunterServicesMock.Setup(m => m.GetAllEncounters()).Returns(encs);
 
-            var controller = new EncountersController(loginServices, enconunterServices.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
 
             var obtainedResult = controller.Get() as ActionResult<List<EncounterDTO>>;
-            enconunterServices.Verify(m => m.GetAllEncounters(), Times.AtMostOnce());
+            enconunterServicesMock.Verify(e => e.GetAllEncounters(), Times.AtMostOnce());
 
             bool areEqual = obtainedResult.Value.ToList().All(encs.Contains);
 
@@ -78,19 +80,108 @@ namespace EirinDuran.WebApiTest
         }
 
         [TestMethod]
-        public void AddCommentToEncounter()
+        public void CreateEncounterOkEncountersController()
+        {
+            var enconunterServicesMock = new Mock<IEncounterServices>();
+            ILoginServices loginServices = new LoginServicesMock(santiago);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
+            DateTime encounterDate = new DateTime(2018, 12, 10);
+
+            EncounterDTO enc = new EncounterDTO();
+            enc.SportName = football.Name;
+            enc.AwayTeamName = river.Name;
+            enc.HomeTeamName = boca.Name;
+            enc.DateTime = encounterDate;
+            
+            enconunterServicesMock.Setup(m => m.CreateEncounter(enc));
+
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+
+            var obtainedResult = controller.Create(enc) as CreatedAtRouteResult;
+            enconunterServicesMock.Verify(e => e.CreateEncounter(enc), Times.AtMostOnce());
+
+            Assert.IsNotNull(obtainedResult);
+            Assert.IsNotNull(obtainedResult.Value);
+            Assert.AreEqual(201, obtainedResult.StatusCode);
+        }
+
+        [TestMethod]
+        public void CreateEncounterWithoutPermissionEncountersController()
+        {
+            var enconunterServicesMock = new Mock<IEncounterServices>();
+            ILoginServices loginServices = new LoginServicesMock(santiago);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
+            DateTime encounterDate = new DateTime(2018, 12, 10);
+
+            EncounterDTO enc = new EncounterDTO();
+            enc.SportName = football.Name;
+            enc.AwayTeamName = river.Name;
+            enc.HomeTeamName = boca.Name;
+            enc.DateTime = encounterDate;
+
+            enconunterServicesMock.Setup(m => m.CreateEncounter(enc)).Throws(new InsufficientPermissionException());
+
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+
+            var obtainedResult = controller.Create(enc) as UnauthorizedResult;
+            enconunterServicesMock.Verify(e => e.CreateEncounter(enc), Times.AtMostOnce());
+
+            Assert.IsNotNull(obtainedResult);
+            Assert.AreEqual(401, obtainedResult.StatusCode);
+        }
+
+        [TestMethod]
+        public void TryToCreateEncounterWithInvalidTeamsEncountersControllers()
+        {
+            var enconunterServicesMock = new Mock<IEncounterServices>();
+            ILoginServices loginServices = new LoginServicesMock(santiago);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
+            DateTime encounterDate = new DateTime(2018, 12, 10);
+
+            EncounterDTO enc = new EncounterDTO();
+            enc.SportName = football.Name;
+            enc.AwayTeamName = river.Name;
+            enc.HomeTeamName = boca.Name;
+            enc.DateTime = encounterDate;
+
+            enconunterServicesMock.Setup(m => m.CreateEncounter(enc)).Throws(new ServicesException());
+
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+
+            var obtainedResult = controller.Create(enc) as BadRequestObjectResult;
+            enconunterServicesMock.Verify(e => e.CreateEncounter(enc), Times.AtMostOnce());
+
+            Assert.IsNotNull(obtainedResult);
+            Assert.AreEqual(400, obtainedResult.StatusCode);
+        }
+
+        [TestMethod]
+        public void AddCommentToEncounterEncountersController()
         {
             var enconunterServices = new Mock<IEncounterServices>();
 
-            ILoginServices loginServices = new LoginServicesMock(new UserDTO()
-            {
-                UserName = "Macri",
-                Name = "Mauricio",
-                Surname = "Macri",
-                Password = "cat123",
-                Mail = "mail@gmail.com",
-                IsAdmin = true
-            });
+            ILoginServices loginServices = new LoginServicesMock(santiago);
 
             var httpContext = new DefaultHttpContext();
             httpContext.Request.Headers["Authorization"] = "";
@@ -111,6 +202,34 @@ namespace EirinDuran.WebApiTest
 
             Assert.IsNotNull(obtainedResult);
             Assert.AreEqual(200, obtainedResult.StatusCode);
+        }
+
+        [TestMethod]
+        public void AddCommentToEncounterDoesNotExistsEncountersController()
+        {
+            var enconunterServices = new Mock<IEncounterServices>();
+
+            ILoginServices loginServices = new LoginServicesMock(santiago);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
+            EncounterDTO encounter = new EncounterDTO() { Id = IntToGuid(4), SportName = "Futbol", AwayTeamName = "Pe�arol", HomeTeamName = "Nacional" };
+            IEnumerable<EncounterDTO> encounters = new List<EncounterDTO>() { encounter };
+            enconunterServices.Setup(e => e.AddComment(4 + "", "This is a test comment in a mock!")).Throws(new ServicesException());
+
+            var controller = new EncountersController(loginServices, enconunterServices.Object) { ControllerContext = controllerContext, };
+
+            var obtainedResult = controller.AddComment(4 + "", "This is a test comment in a mock!") as BadRequestObjectResult;
+            enconunterServices.Verify(m => m.AddComment(4 + "", "This is a test comment in a mock!"), Times.AtMostOnce());
+
+            Assert.IsNotNull(obtainedResult);
+            Assert.AreEqual(400, obtainedResult.StatusCode);
         }
 
         public Guid IntToGuid(int value)

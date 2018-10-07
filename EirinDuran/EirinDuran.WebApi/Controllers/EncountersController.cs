@@ -28,13 +28,6 @@ namespace EirinDuran.WebApi.Controllers
         public ActionResult<List<EncounterDTO>> Get()
         {
             CreateSession();
-            encounterServices.CreateEncounter(new EncounterDTO()
-            {
-                SportName = "Football",
-                AwayTeamName = "Boca_Football",
-                HomeTeamName = "River_Football",
-                DateTime = new System.DateTime(3000, 10, 10)
-            });
             try
             {
                 return TryToGetAllEncounters();
@@ -51,9 +44,9 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return encounterServices.GetAllEncounters().ToList();
             }
-            catch (ServicesException)
+            catch (ServicesException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 
@@ -92,9 +85,9 @@ namespace EirinDuran.WebApi.Controllers
                 encounterServices.CreateEncounter(encounter);
                 return CreatedAtRoute("GetEncounter", new { id = encounter.Id }, encounter);
             }
-            catch (ServicesException)
+            catch (ServicesException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 
@@ -111,8 +104,27 @@ namespace EirinDuran.WebApi.Controllers
         public IActionResult Delete(string id)
         {
             CreateSession();
-            encounterServices.DeleteEncounter(id);
-            return BadRequest();
+            try
+            {
+                return TryToDelete(id);
+            }
+            catch (InsufficientPermissionException)
+            {
+                return Unauthorized();
+            }
+        }
+
+        private IActionResult TryToDelete(string id)
+        {
+            try
+            {
+                encounterServices.DeleteEncounter(id);
+                return Ok();
+            }
+            catch(ServicesException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet]
@@ -120,15 +132,13 @@ namespace EirinDuran.WebApi.Controllers
         public ActionResult<IEnumerable<Comment>> GetEncounterComments(string encounterId)
         {
             CreateSession();
-            encounterServices.AddComment(encounterId, "Meow");
             try
             {
-                //return encounterServices.GetAllCommentsToOneEncounter(encounterId);
-                return BadRequest();
+                return encounterServices.GetAllCommentsToOneEncounter(encounterId).ToList();
             }
-            catch (ServicesException)
+            catch (ServicesException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 
@@ -142,9 +152,9 @@ namespace EirinDuran.WebApi.Controllers
                 encounterServices.AddComment(encounterId, menssage);
                 return Ok();
             }
-            catch (ServicesException)
+            catch (ServicesException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 

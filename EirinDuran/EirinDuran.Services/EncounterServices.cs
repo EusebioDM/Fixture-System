@@ -151,7 +151,6 @@ namespace EirinDuran.Services
         public void DeleteEncounter(string id)
         {
             adminValidator.ValidatePermissions();
-
             try
             {
                 encounterRepository.Delete(id);
