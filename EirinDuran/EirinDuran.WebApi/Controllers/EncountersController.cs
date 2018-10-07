@@ -3,10 +3,10 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using EirinDuran.Domain.Fixture;
 using EirinDuran.IServices.Interfaces;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
+using EirinDuran.WebApi.Models;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -164,6 +164,21 @@ namespace EirinDuran.WebApi.Controllers
         {
             CreateSession();
             return encounterServices.GetAvailableFixtureGenerators().ToList();
+        }
+
+        [HttpPost]
+        [Route("fixture")]
+        public ActionResult<List<EncounterDTO>> CreateFixture(FixtureModelIn fixtureModelIn)
+        {
+            CreateSession();
+            try
+            {
+                return encounterServices.CreateFixture(fixtureModelIn.CreationAlgorithmName, fixtureModelIn.SportName, fixtureModelIn.StartingDate).ToList();
+            }
+            catch(ServicesException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         private void CreateSession()
