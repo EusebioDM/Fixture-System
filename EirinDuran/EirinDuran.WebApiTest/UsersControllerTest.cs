@@ -90,7 +90,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var obtainedResult = controller.Get() as ActionResult<List<UserDTO>>;
+            var obtainedResult = controller.GetAllUsers() as ActionResult<List<UserModelOut>>;
             var value = obtainedResult.Value;
 
             userServicesMock.Verify(us => us.GetAllUsers(), Times.AtMostOnce);
@@ -123,11 +123,11 @@ namespace EirinDuran.WebApiTest
             };
 
             mockUserService.Verify(m => m.GetUser(expectedUser.UserName), Times.AtMostOnce());
-            var obtainedResult = controller.GetById(expectedUser.UserName) as ActionResult<UserDTO>;
+            var obtainedResult = controller.GetById(expectedUser.UserName) as ActionResult<UserModelOut>;
 
             Assert.IsNotNull(obtainedResult);
             Assert.IsNotNull(obtainedResult.Value);
-            Assert.AreEqual(obtainedResult.Value, expectedUser);
+            Assert.AreEqual(obtainedResult.Value, new UserModelOut(expectedUser));
         }
 
         [TestMethod]

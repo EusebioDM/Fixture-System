@@ -1,5 +1,6 @@
 
 using EirinDuran.IServices.DTOs;
+using System;
 
 namespace EirinDuran.WebApi.Models
 {
@@ -26,6 +27,18 @@ namespace EirinDuran.WebApi.Models
             Surname = user.Surname;
             Mail = user.Mail;
             IsAdmin = user.IsAdmin;
+        }
+
+        public override bool Equals(object obj)
+        {
+            var @out = obj as UserModelOut;
+            return @out != null &&
+                   UserName == @out.UserName;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(UserName);
         }
     }
 }

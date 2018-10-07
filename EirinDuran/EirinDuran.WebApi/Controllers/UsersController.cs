@@ -1,14 +1,14 @@
+using EirinDuran.IServices.DTOs;
+using EirinDuran.IServices.Exceptions;
+using EirinDuran.IServices.Interfaces;
+using EirinDuran.WebApi.Mappers;
+using EirinDuran.WebApi.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using EirinDuran.WebApi.Models;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using EirinDuran.IServices.Interfaces;
-using EirinDuran.IServices.Exceptions;
-using EirinDuran.IServices.DTOs;
-using EirinDuran.WebApi.Mappers;
-using System;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -29,24 +29,16 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Administrator, Follower")]
-        public ActionResult<List<UserDTO>> Get()
+        public ActionResult<List<UserModelOut>> GetAllUsers()
         {
             CreateSession();
             try
             {
-                return TryToGet();
+                return TryToGetAllUsers();
             }
             catch (InsufficientPermissionException)
             {
                 return Unauthorized();
-            }
-        }
-
-        private ActionResult<List<UserDTO>> TryToGet()
-        {
-            try
-            {
-                return userServices.GetAllUsers().ToList();
             }
             catch (ServicesException e)
             {
@@ -54,9 +46,14 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
+        private ActionResult<List<UserModelOut>> TryToGetAllUsers()
+        {
+            return userServices.GetAllUsers().Select(u => new UserModelOut(u)).ToList();
+        }
+
         [HttpGet("{userId}", Name = "GetUser")]
         [Authorize(Roles = "Administrator, Follower")]
-        public ActionResult<UserDTO> GetById(string userId)
+        public ActionResult<UserModelOut> GetById(string userId)
         {
             CreateSession();
             try
@@ -67,18 +64,16 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return Unauthorized();
             }
-        }
-
-        private ActionResult<UserDTO> TryToGetById(string userId)
-        {
-            try
-            {
-                return userServices.GetUser(userId);
-            }
             catch (ServicesException e)
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        private ActionResult<UserModelOut> TryToGetById(string userId)
+        {
+            UserDTO user = userServices.GetUser(userId);
+            return new UserModelOut(user);
         }
 
         [HttpPost]
@@ -90,7 +85,6 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return BadRequest();
             }
-
             try
             {
                 return TryToAddUser(userModel);
@@ -99,22 +93,19 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return Unauthorized();
             }
-        }
-
-        private IActionResult TryToAddUser(UserModelIn userModel)
-        {
-            try
-            {
-                UserDTO user = UserMapper.Map(userModel);
-                userServices.CreateUser(user);
-
-                var addedUser = new UserModelOut(user);
-                return CreatedAtRoute("GetUser", new { id = addedUser.UserName }, addedUser);
-            }
             catch (ServicesException e)
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        private IActionResult TryToAddUser(UserModelIn userModel)
+        {
+            UserDTO user = UserMapper.Map(userModel);
+            userServices.CreateUser(user);
+
+            var addedUser = new UserModelOut(user);
+            return CreatedAtRoute("GetUser", new { id = addedUser.UserName }, addedUser);
         }
 
         [HttpPut("{userId}")]
@@ -130,22 +121,20 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return Unauthorized();
             }
-        }
-
-        private IActionResult TryToModify(string userId, UserUpdateModelIn userModel)
-        {
-            try
-            {
-                UserDTO user = UserMapper.Map(userModel);
-                user.UserName = userId;
-
-                userServices.ModifyUser(user);
-                return Ok();
-            }
             catch (ServicesException e)
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        private IActionResult TryToModify(string userId, UserUpdateModelIn userModel)
+        {
+            UserDTO user = UserMapper.Map(userModel);
+            user.UserName = userId;
+
+            userServices.ModifyUser(user);
+            return Ok();
+
         }
 
         [HttpDelete("{userId}")]
@@ -161,19 +150,16 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return Unauthorized();
             }
-        }
-
-        private IActionResult TryToDelete(string userId)
-        {
-            try
-            {
-                userServices.DeleteUser(userId);
-                return Ok();
-            }
             catch (ServicesException)
             {
                 return BadRequest();
             }
+        }
+
+        private IActionResult TryToDelete(string userId)
+        {
+            userServices.DeleteUser(userId);
+            return Ok();
         }
 
         [HttpGet]
@@ -202,7 +188,7 @@ namespace EirinDuran.WebApi.Controllers
                 UserDTO user = userServices.GetUser(loginServices.LoggedUser.UserName);
                 IEnumerable<EncounterDTO> encounters = encounterServices.GetAllEncountersWithFollowedTeams();
                 List<CommentDTO> comments = new List<CommentDTO>();
-                foreach(var encounter in encounters)
+                foreach (var encounter in encounters)
                 {
                     comments.AddRange(encounterServices.GetAllCommentsToOneEncounter(encounter.Id.ToString()));
                 }
