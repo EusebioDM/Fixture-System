@@ -408,7 +408,7 @@ namespace EirinDuran.WebApiTest
         }
 
         [TestMethod]
-        public void GenerateFixtureTest()
+        public void GenerateFixtureOkTest()
         {
             var encounterServicesMock = new Mock<IEncounterServices>();
             ILoginServices loginServices = new LoginServicesMock(santiago);
@@ -422,11 +422,31 @@ namespace EirinDuran.WebApiTest
             List<EncounterDTO> expected = new List<EncounterDTO>() { new EncounterDTO() { Id = IntToGuid(1) }, new EncounterDTO() { Id = IntToGuid(2) } };
             encounterServicesMock.Setup(s => s.CreateFixture("RoundRobinFixture", "Futbol", new DateTime(3000, 10, 10))).Returns(expected);
             var controller = new EncountersController(loginServices, encounterServicesMock.Object) { ControllerContext = controllerContext, };
+            IActionResult actual = controller.CreateFixture(new FixtureModelIn() { CreationAlgorithmName = "RoundRobinFixture", SportName = "Futbol", StartingDate = new DateTime(3000, 10, 10) });
+
+            Assert.IsInstanceOfType(actual, typeof(OkObjectResult));
+        }
+
+        [TestMethod]
+        public void GenerateFixtureNotOkTest()
+        {
+            var encounterServicesMock = new Mock<IEncounterServices>();
+            ILoginServices loginServices = new LoginServicesMock(santiago);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            List<EncounterDTO> expected = new List<EncounterDTO>() { new EncounterDTO() { Id = IntToGuid(1) }, new EncounterDTO() { Id = IntToGuid(2) } };
+            encounterServicesMock.Setup(s => s.CreateFixture("RoundRobinFixture", "Futbol", new DateTime(3000, 10, 10))).Returns(expected);
+            var controller = new EncountersController(loginServices, encounterServicesMock.Object) { ControllerContext = controllerContext, };
+            controller.CreateFixture(new FixtureModelIn() { CreationAlgorithmName = "RoundRobinFixture", SportName = "Futbol", StartingDate = new DateTime(3000, 10, 10) });
+            encounterServicesMock.Setup(s => s.CreateFixture("RoundRobinFixture", "Futbol", new DateTime(3000, 10, 10))).Throws(new ServicesException());
             var actual = controller.CreateFixture(new FixtureModelIn() { CreationAlgorithmName = "RoundRobinFixture", SportName = "Futbol", StartingDate = new DateTime(3000, 10, 10) });
 
-            Assert.IsTrue(expected.Count() == actual.Value.Count);
-            Assert.IsTrue(actual.Value.Any(e => e.Id.Equals(IntToGuid(1))));
-            Assert.IsTrue(actual.Value.Any(e => e.Id.Equals(IntToGuid(2))));
+            Assert.IsInstanceOfType(actual, typeof(BadRequestObjectResult));
         }
 
         public Guid IntToGuid(int value)

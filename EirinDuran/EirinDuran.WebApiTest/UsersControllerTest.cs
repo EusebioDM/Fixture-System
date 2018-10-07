@@ -85,7 +85,7 @@ namespace EirinDuran.WebApiTest
             var controller = new UsersController(loginServices, userServicesMock.Object)
             {
                 ControllerContext = controllerContext,
-            }; 
+            };
 
             var obtainedResult = controller.Get() as ActionResult<List<UserDTO>>;
             var value = obtainedResult.Value;

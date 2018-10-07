@@ -168,12 +168,18 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPost]
         [Route("fixture")]
-        public ActionResult<List<EncounterDTO>> CreateFixture(FixtureModelIn fixtureModelIn)
+        public IActionResult CreateFixture(FixtureModelIn fixtureModelIn)
         {
             CreateSession();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             try
             {
-                return encounterServices.CreateFixture(fixtureModelIn.CreationAlgorithmName, fixtureModelIn.SportName, fixtureModelIn.StartingDate).ToList();
+                var encounters = encounterServices.CreateFixture(fixtureModelIn.CreationAlgorithmName, fixtureModelIn.SportName, fixtureModelIn.StartingDate);
+                return Ok(encounters);
             }
             catch(ServicesException ex)
             {
