@@ -26,6 +26,7 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult<List<TeamDTO>> Get()
         {
             CreateSession();
@@ -40,6 +41,7 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet("{teamId}", Name = "GetTeam")]
+        [Authorize]
         public ActionResult<TeamDTO> Get(string teamId)
         {
             try
@@ -53,6 +55,7 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("{teamId}/encounters")]
         public ActionResult<List<EncounterDTO>> GetEncounters(string teamId)
         {

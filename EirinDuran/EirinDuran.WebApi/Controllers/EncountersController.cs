@@ -128,6 +128,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Route("{encounterId}/commentaries")]
+        [Authorize]
         public ActionResult<IEnumerable<CommentDTO>> GetEncounterComments(string encounterId)
         {
             CreateSession();
@@ -143,6 +144,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPost]
         [Route("{encounterId}/commentaries")]
+        [Authorize]
         public IActionResult AddComment(string encounterId, [FromBody] string menssage)
         {
             CreateSession();
@@ -159,6 +161,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Route("fixture")]
+        [Authorize]
         public ActionResult<List<string>> GetAvailableFixtureGenerators()
         {
             CreateSession();
@@ -167,6 +170,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPost]
         [Route("fixture")]
+        [Authorize]
         public IActionResult CreateFixture(FixtureModelIn fixtureModelIn)
         {
             CreateSession();

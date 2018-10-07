@@ -180,6 +180,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Route("commentaries")]
+        [Authorize]
         public ActionResult<List<CommentDTO>> GetFollowedTeamCommentaries()
         {
             CreateSession();

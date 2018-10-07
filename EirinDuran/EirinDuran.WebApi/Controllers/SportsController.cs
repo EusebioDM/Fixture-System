@@ -26,6 +26,7 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult<List<SportDTO>> GetAll()
         {
             try
@@ -39,6 +40,7 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult<SportDTO> GetById(string sportId)
         {
             try
@@ -53,6 +55,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Route("{sportId}/encounters")]
+        [Authorize]
         public ActionResult<List<EncounterDTO>> GetEncounters(string sportId)
         {
             try
