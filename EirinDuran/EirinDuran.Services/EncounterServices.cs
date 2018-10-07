@@ -115,6 +115,18 @@ namespace EirinDuran.Services
             }
         }
 
+        public EncounterDTO GetEncounter(string encounterId)
+        {
+            try
+            {
+                return mapper.Map(encounterRepository.Get(encounterId));
+            }
+            catch(DataAccessException e)
+            {
+                throw new ServicesException($"Failure to recover encounter with id = {encounterId}.", e);
+            }
+        }
+
         public IEnumerable<EncounterDTO> GetEncountersBySport(string sportName)
         {
             try
@@ -154,6 +166,21 @@ namespace EirinDuran.Services
             catch (DataAccessException e)
             {
                 throw new ServicesException("Failure to recover all commentaries from encounter with id " + encounterId, e);
+            }
+        }
+
+        public void UpdateEncounter(EncounterDTO encounterModel)
+        {
+            adminValidator.ValidatePermissions();
+
+            Encounter encounter = mapper.Map(encounterModel);
+            try
+            {
+                encounterRepository.Update(encounter);
+            }
+            catch(DataAccessException e)
+            {
+                throw new ServicesException($"Failure to try to update encounter id = {encounterModel.Id}", e);
             }
         }
 

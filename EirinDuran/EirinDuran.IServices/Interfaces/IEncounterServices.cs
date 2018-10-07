@@ -1,5 +1,4 @@
-﻿using EirinDuran.Domain.Fixture;
-using EirinDuran.IServices.DTOs;
+﻿using EirinDuran.IServices.DTOs;
 using System;
 using System.Collections.Generic;
 
@@ -13,9 +12,13 @@ namespace EirinDuran.IServices.Interfaces
 
         void CreateEncounter(IEnumerable<EncounterDTO> encounterDTOs);
 
+        void UpdateEncounter(EncounterDTO encounterModel);
+
         void DeleteEncounter(string id);
 
         IEnumerable<EncounterDTO> GetAllEncounters();
+
+        EncounterDTO GetEncounter(string encounterId);
 
         IEnumerable<EncounterDTO> GetAllEncountersWithFollowedTeams();
 

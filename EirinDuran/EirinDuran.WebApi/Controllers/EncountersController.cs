@@ -53,11 +53,18 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet("{id}", Name = "GetEncounter")]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator, Follower")]
         public ActionResult<EncounterDTO> GetById(string id)
         {
             CreateSession();
-            return BadRequest();
+            try
+            {
+                return encounterServices.GetEncounter(id);
+            }
+            catch(ServicesException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost]
@@ -98,7 +105,27 @@ namespace EirinDuran.WebApi.Controllers
         public IActionResult Put(string id, [FromBody] EncounterDTO encounterModel)
         {
             CreateSession();
-            return BadRequest();
+            try
+            {
+                return TryToPut(id, encounterModel);
+            }
+            catch(InsufficientPermissionException)
+            {
+                return Unauthorized();
+            }
+        }
+
+        private IActionResult TryToPut(string id, EncounterDTO encounterModel)
+        {
+            try
+            {
+                encounterServices.UpdateEncounter(encounterModel);
+                return Ok();
+            }
+            catch (ServicesException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpDelete("{id}")]

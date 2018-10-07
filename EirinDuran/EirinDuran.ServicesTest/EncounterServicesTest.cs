@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 
@@ -101,7 +100,7 @@ namespace EirinDuran.ServicesTest
             Encounter expected = new Encounter(futbol, teams, date);
             encounterServices.CreateEncounter(mapper.Map(expected));
 
-            List<Encounter> recovered = (List<Encounter>)encounterRepo.GetAll();
+            List<Encounter> recovered = encounterRepo.GetAll().ToList();
 
             Assert.IsTrue(recovered.Contains(expected));
         }
@@ -137,6 +136,47 @@ namespace EirinDuran.ServicesTest
             Encounter encounterOverlappingDates = new Encounter(futbol, teamsSecondEncounter, date);
             encounterServices.CreateEncounter(mapper.Map(encounter));
             encounterServices.CreateEncounter(mapper.Map(encounterOverlappingDates));
+        }
+
+        [TestMethod]
+        public void UpdateEncounterOk()
+        {
+            login.CreateSession("sSanchez", "user");
+
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            IEnumerable<Team> teams = new List<Team> { atenas, wanderers };
+            DateTime date = new DateTime(3018, 10, 07);
+
+            Encounter expected = new Encounter(futbol, teams, date);
+            encounterRepo.Add(expected);
+            
+            expected.DateTime = new DateTime(3021, 10, 07);
+
+            encounterServices.UpdateEncounter(mapper.Map(expected));
+
+            List<Encounter> recovered = encounterRepo.GetAll().ToList();
+            Assert.AreEqual(expected.Sport, recovered[0].Sport);
+            Assert.AreEqual(expected.DateTime, recovered[0].DateTime);
+        }
+
+        [TestMethod]
+        public void GetEncounterByIdOk()
+        {
+            login.CreateSession("sSanchez", "user");
+
+            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            IEnumerable<Team> teams = new List<Team> { atenas, wanderers };
+            DateTime date = new DateTime(3018, 10, 07);
+
+            Encounter expected = new Encounter(futbol, teams, date);
+            EncounterDTO expectedDTO = mapper.Map(expected);
+            expectedDTO.Id = IntToGuid(2);
+            Encounter expectedWithId = mapper.Map(expectedDTO);
+
+            encounterRepo.Add(expectedWithId);
+
+            EncounterDTO recovered = encounterServices.GetEncounter(IntToGuid(2) + "");
+            Assert.AreEqual(expectedWithId.Id, recovered.Id);
         }
 
         [TestMethod]
@@ -399,14 +439,18 @@ namespace EirinDuran.ServicesTest
             encounterServices.CreateFixture("A non existant fixture generator", "Futbol", new DateTime(3000, 10, 10));
         }
 
-
         private string GetResourcePath(string resourceName)
         {
             string current = Directory.GetCurrentDirectory();
             string resourcesFolder = Directory.EnumerateDirectories(current).First(d => d.EndsWith("Resources"));
             return Directory.EnumerateFiles(resourcesFolder).First(f => f.EndsWith(resourceName));
         }
-        
+
+        public Guid IntToGuid(int value)
+        {
+            byte[] bytes = new byte[16];
+            BitConverter.GetBytes(value).CopyTo(bytes, 0);
+            return new Guid(bytes);
+        }
     }
-    
 }
