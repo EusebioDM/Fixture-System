@@ -29,7 +29,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Administrator, Follower")]
-        public ActionResult<List<UserModelOut>> GetAllUsers()
+        public ActionResult<List<UserModelOut>> GetAll()
         {
             CreateSession();
             try
@@ -46,10 +46,12 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
+
         private ActionResult<List<UserModelOut>> TryToGetAllUsers()
         {
             return userServices.GetAllUsers().Select(u => new UserModelOut(u)).ToList();
         }
+
 
         [HttpGet("{userId}", Name = "GetUser")]
         [Authorize(Roles = "Administrator, Follower")]
@@ -70,11 +72,13 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
+
         private ActionResult<UserModelOut> TryToGetById(string userId)
         {
             UserDTO user = userServices.GetUser(userId);
             return new UserModelOut(user);
         }
+
 
         [HttpPost]
         [Authorize(Roles = "Administrator")]

@@ -48,7 +48,6 @@ namespace EirinDuran.Services
 
         public UserDTO GetUser(string userId)
         {
-            adminValidator.ValidatePermissions();
             try
             {
                 return userMapper.Map(userRepository.Get(userId));
@@ -61,7 +60,6 @@ namespace EirinDuran.Services
 
         public virtual IEnumerable<UserDTO> GetAllUsers()
         {
-            adminValidator.ValidatePermissions();
             try
             {
                 return userRepository.GetAll().Select(u => userMapper.Map(u));

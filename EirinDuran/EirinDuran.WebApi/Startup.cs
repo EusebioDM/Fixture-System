@@ -30,14 +30,16 @@ namespace EirinDuran.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IDesignTimeDbContextFactory<Context>, DbContextFactory>();
+            
+         
             services.AddScoped<IRepository<User>, UserRepository>();
+            services.AddScoped<IRepository<Sport>, SportRepository>();
+            services.AddScoped<IRepository<Team>, TeamRepository>();
+            services.AddScoped<IRepository<Encounter>, EncounterRepository>();
+            services.AddScoped<IExtendedEncounterRepository, ExtendedEncounterRepository>();
             services.AddScoped<ILoginServices, LoginServices>();
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<ISportServices, SportServices>();
-            services.AddScoped<IRepository<Team>, TeamRepository>();
-            services.AddScoped<IRepository<Sport>, SportRepository>();
-            services.AddScoped<IRepository<Encounter>, EncounterRepository>();
-            services.AddScoped<IExtendedEncounterRepository, ExtendedEncounterRepository>();
             services.AddScoped<ITeamServices, TeamServices>();
             services.AddScoped<IEncounterServices, EncounterServices>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

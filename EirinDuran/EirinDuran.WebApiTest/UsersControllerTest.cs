@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -90,7 +91,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var obtainedResult = controller.GetAllUsers() as ActionResult<List<UserModelOut>>;
+            var obtainedResult = controller.GetAll() as ActionResult<List<UserModelOut>>;
             var value = obtainedResult.Value;
 
             userServicesMock.Verify(us => us.GetAllUsers(), Times.AtMostOnce);
@@ -100,6 +101,36 @@ namespace EirinDuran.WebApiTest
             Assert.AreEqual(2, value.Count);
             Assert.AreEqual(juan.Name, value.ElementAt(0).Name);
             Assert.AreEqual(roberto.Name, value.ElementAt(1).Name);
+        }
+
+        [TestMethod]
+        public void ServicesExceptionGetAllUsersUsersController()
+        {
+            var expectedUsers = new List<UserDTO> { juan, roberto };
+
+            var userServicesMock = new Mock<IUserServices>();
+            userServicesMock.Setup(us => us.GetAllUsers()).Throws(new ServicesException());
+            ILoginServices loginServices = new LoginServicesMock(pablo);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            var obtainedResult = controller.GetAll() as ActionResult<List<UserModelOut>>;
+            var value = obtainedResult.Result as BadRequestObjectResult;
+
+            userServicesMock.Verify(us => us.GetAllUsers(), Times.AtMostOnce);
+
+            Assert.IsNotNull(obtainedResult);
+            Assert.AreEqual(400, value.StatusCode);
+
         }
 
         [TestMethod]
@@ -128,6 +159,34 @@ namespace EirinDuran.WebApiTest
             Assert.IsNotNull(obtainedResult);
             Assert.IsNotNull(obtainedResult.Value);
             Assert.AreEqual(obtainedResult.Value, new UserModelOut(expectedUser));
+        }
+
+        [TestMethod]
+        public void GetUserOkUsersWithoutExistsController()
+        {
+            var expectedUser = juan;
+            var mockUserService = new Mock<IUserServices>();
+
+            mockUserService.Setup(bl => bl.GetUser(expectedUser.UserName)).Throws(new ServicesException());
+            ILoginServices loginServices = new LoginServicesMock(pablo);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new UsersController(loginServices, mockUserService.Object, encounterServices.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            mockUserService.Verify(m => m.GetUser(expectedUser.UserName), Times.AtMostOnce());
+            var obtainedResult = controller.GetById(expectedUser.UserName);
+            var result = obtainedResult.Result as BadRequestObjectResult;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(400, result.StatusCode);
         }
 
         [TestMethod]
@@ -220,6 +279,35 @@ namespace EirinDuran.WebApiTest
         }
 
         [TestMethod]
+        public void CreateUserAllreadyExistsUsersController()
+        {
+            var modelIn = new UserModelIn() { UserName = "Alberto", Name = "Alberto", Surname = "Lacaze", Mail = "albertito@mail.com", Password = "pass", IsAdmin = true };
+            var fakeUser = new UserDTO() { UserName = "pepeAvila", Surname = "Avila", Name = "Pepe", Password = "user", Mail = "pepeavila@mymail.com", IsAdmin = true };
+
+            var userServicesMock = new Mock<IUserServices>();
+            userServicesMock.Setup(userService => userService.CreateUser(It.IsAny<UserDTO>())).Throws(new ServicesException());
+            ILoginServices loginServices = new LoginServicesMock(pablo);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            userServicesMock.Verify(m => m.CreateUser(It.IsAny<UserDTO>()), Times.AtMostOnce());
+            var result = controller.Create(modelIn);
+            var createdResult = result as BadRequestObjectResult;
+            
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual(400, createdResult.StatusCode);
+        }
+
+        [TestMethod]
         public void DeleteUserOkUsersController()
         {
             var modelIn = new UserModelIn();
@@ -278,6 +366,37 @@ namespace EirinDuran.WebApiTest
 
             Assert.IsNotNull(createdResult);
             Assert.AreEqual(400, createdResult.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteUserWithoutPermissionUsersController()
+        {
+            var modelIn = new UserModelIn();
+
+            var userServicesMock = new Mock<IUserServices>();
+
+            string id = "pepe";
+
+            userServicesMock.Setup(us => us.DeleteUser(id)).Throws(new InsufficientPermissionException());
+            ILoginServices loginServices = new LoginServicesMock(pablo);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            userServicesMock.Verify(m => m.DeleteUser(id), Times.AtMostOnce());
+            var result = controller.Delete(id);
+            var createdResult = result as UnauthorizedResult;
+
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual(401, createdResult.StatusCode);
         }
 
         [TestMethod]
@@ -354,6 +473,44 @@ namespace EirinDuran.WebApiTest
 
             Assert.IsNotNull(createdResult);
             Assert.AreEqual(400, createdResult.StatusCode);
+        }
+
+        [TestMethod]
+        public void UpdateUserDataWithoutPermissionUsersController()
+        {
+            var modelIn = new UserModelIn();
+            var userServicesMock = new Mock<IUserServices>();
+
+            string id = "Pablo";
+
+            userServicesMock.Setup(us => us.ModifyUser(It.IsAny<UserDTO>())).Throws(new InsufficientPermissionException());
+
+            ILoginServices loginServices = new LoginServicesMock(pablo);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            var result = controller.Modify(id, new UserUpdateModelIn()
+            {
+                Name = "UserTest",
+                Surname = "UserTest",
+                Password = "user",
+                Mail = "user@gmail.com"
+            });
+
+            userServicesMock.Verify(m => m.ModifyUser(It.IsAny<UserDTO>()), Times.AtMostOnce());
+            var createdResult = result as UnauthorizedResult;
+
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual(401, createdResult.StatusCode);
         }
 
         [TestMethod]
