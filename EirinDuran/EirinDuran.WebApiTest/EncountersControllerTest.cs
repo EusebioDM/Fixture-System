@@ -70,7 +70,7 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.Get() as ActionResult<List<EncounterDTO>>;
+            var obtainedResult = controller.Get(new DateTime(), new DateTime()) as ActionResult<List<EncounterDTO>>;
             enconunterServicesMock.Verify(e => e.GetAllEncounters(), Times.AtMostOnce());
 
             bool areEqual = obtainedResult.Value.ToList().All(encs.Contains);
@@ -97,7 +97,7 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.Get() as ActionResult<List<EncounterDTO>>;
+            var obtainedResult = controller.Get(new DateTime(), new DateTime()) as ActionResult<List<EncounterDTO>>;
             enconunterServicesMock.Verify(e => e.GetAllEncounters(), Times.AtMostOnce());
             var result = obtainedResult.Result as BadRequestObjectResult;
 

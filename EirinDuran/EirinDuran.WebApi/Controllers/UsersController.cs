@@ -18,11 +18,13 @@ namespace EirinDuran.WebApi.Controllers
     {
         private readonly ILoginServices loginServices;
         private readonly IUserServices userServices;
+        private readonly IEncounterServices encounterServices;
 
-        public UsersController(ILoginServices loginServices, IUserServices userServices)
+        public UsersController(ILoginServices loginServices, IUserServices userServices, IEncounterServices encounterServices)
         {
             this.userServices = userServices;
             this.loginServices = loginServices;
+            this.encounterServices = encounterServices;
         }
 
         [HttpGet]
@@ -175,7 +177,7 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("/followers")]
+        [Route("followers")]
         [Authorize(Roles = "Administrator, Follower")]
         public ActionResult<List<string>> GetFollowedTeams()
         {
@@ -187,6 +189,28 @@ namespace EirinDuran.WebApi.Controllers
             catch (ServicesException e)
             {
                 return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("commentaries")]
+        public ActionResult<List<CommentDTO>> GetFollowedTeamCommentaries()
+        {
+            CreateSession();
+            try
+            {
+                UserDTO user = userServices.GetUser(loginServices.LoggedUser.UserName);
+                IEnumerable<EncounterDTO> encounters = encounterServices.GetAllEncountersWithFollowedTeams();
+                List<CommentDTO> comments = new List<CommentDTO>();
+                foreach(var encounter in encounters)
+                {
+                    comments.AddRange(encounterServices.GetAllCommentsToOneEncounter(encounter.Id.ToString()));
+                }
+                return comments;
+            }
+            catch (ServicesException ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 

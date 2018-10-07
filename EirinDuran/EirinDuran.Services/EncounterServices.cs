@@ -170,7 +170,7 @@ namespace EirinDuran.Services
             }
         }
 
-        public IEnumerable<Encounter> GetAllEncountersWithFollowedTeams()
+        public IEnumerable<EncounterDTO> GetAllEncountersWithFollowedTeams()
         {
             List<Encounter> encountersWithComment = new List<Encounter>();
             IEnumerable<Encounter> allEncounters = encounterRepository.GetAll();
@@ -184,7 +184,7 @@ namespace EirinDuran.Services
                     encountersWithComment.Add(encounter);
                 }
             }
-            return encountersWithComment;
+            return encountersWithComment.Select(e => mapper.Map(e));
         }
 
         public IEnumerable<EncounterDTO> CreateFixture(string fixtureGeneratorName, string sportName, DateTime startDate)
