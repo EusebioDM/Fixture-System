@@ -124,7 +124,7 @@ namespace EirinDuran.WebApiTest
             enc.AwayTeamName = river.Name;
             enc.HomeTeamName = boca.Name;
             enc.DateTime = encounterDate;
-            
+
             enconunterServicesMock.Setup(m => m.CreateEncounter(enc));
 
             var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
@@ -276,7 +276,7 @@ namespace EirinDuran.WebApiTest
 
             var obtainedResult = controller.Delete("1") as OkResult;
             enconunterServicesMock.Verify(e => e.DeleteEncounter("1"), Times.AtMostOnce());
-            
+
             Assert.IsNotNull(obtainedResult);
             Assert.AreEqual(200, obtainedResult.StatusCode);
         }
@@ -380,6 +380,28 @@ namespace EirinDuran.WebApiTest
 
             Assert.IsNotNull(result);
             Assert.AreEqual(400, result.StatusCode);
+        }
+
+        [TestMethod]
+        public void GetAvailableFixtureGenerators()
+        {
+            var encounterServicesMock = new Mock<IEncounterServices>();
+            ILoginServices loginServices = new LoginServicesMock(santiago);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            List<string> expected = new List<string>() { "RoundRobinFixture", "AllOnceFixture" };
+            encounterServicesMock.Setup(s => s.GetAvailableFixtureGenerators()).Returns(expected);
+            var controller = new EncountersController(loginServices, encounterServicesMock.Object) { ControllerContext = controllerContext, };
+            IEnumerable<string> actual = controller.GetAvailableFixtureGenerators();
+
+            Assert.IsTrue(expected.Count() == actual.Count());
+            Assert.IsTrue(actual.Contains("RoundRobinFixture"));
+            Assert.IsTrue(actual.Contains("AllOnceFixture"));
         }
 
         public Guid IntToGuid(int value)
