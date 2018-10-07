@@ -11,6 +11,8 @@ namespace EirinDuran.IServices.Interfaces
 
         IEnumerable<TeamDTO> GetAllTeams();
 
+        void UpdateTeam(TeamDTO teamToUpdate);
+
         void DeleteTeam(string teamId);
 
         void AddFollowedTeam(string sportId_teamName);

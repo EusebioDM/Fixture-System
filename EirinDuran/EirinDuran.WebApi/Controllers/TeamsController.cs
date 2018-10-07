@@ -101,11 +101,24 @@ namespace EirinDuran.WebApi.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                return TryToUpdate(team);
             }
             catch (InsufficientPermissionException)
             {
                 return Unauthorized();
+            }
+        }
+
+        private IActionResult TryToUpdate(TeamDTO team)
+        {
+            try
+            {
+                teamServices.UpdateTeam(team);
+                return Ok();
+            }
+            catch(ServicesException e)
+            {
+                return BadRequest(e.Message);
             }
         }
 

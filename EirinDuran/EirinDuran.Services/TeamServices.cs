@@ -67,6 +67,19 @@ namespace EirinDuran.Services
             }
         }
 
+        public void UpdateTeam(TeamDTO teamToUpdate)
+        {
+            try
+            {
+                Team team = teamMapper.Map(teamToUpdate);
+                teamRepository.Update(team);
+            }
+            catch (DataAccessException e)
+            {
+                throw new ServicesException("Failure to try to update team.", e);
+            }
+        }
+
         public void DeleteTeam(string teamId)
         {
             validator.ValidatePermissions();
