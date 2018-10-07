@@ -8,12 +8,12 @@ using EirinDuran.Services.DTO_Mappers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace EirinDuran.Services
 {
     public class EncounterServices : IEncounterServices
     {
-
         private ILoginServices loginServices;
         private IExtendedEncounterRepository encounterRepository;
         private IRepository<Sport> sportRepo;
@@ -21,16 +21,19 @@ namespace EirinDuran.Services
         private IRepository<User> userRepo;
         private PermissionValidator adminValidator;
         private EncounterMapper mapper;
+        private CommentMapper commentMapper;
+        private const string FixtureGeneratorsAssembly = "EirinDuran.Domain";
 
         public EncounterServices(ILoginServices loginServices, IExtendedEncounterRepository encounterRepo, IRepository<Sport> sportRepo, IRepository<Team> teamRepo, IRepository<User> userRepo)
         {
             this.loginServices = loginServices;
             this.userRepo = userRepo;
-            this.encounterRepository = encounterRepo;
+            encounterRepository = encounterRepo;
             this.sportRepo = sportRepo;
             this.teamRepo = teamRepo;
             adminValidator = new PermissionValidator(Role.Administrator, loginServices);
             mapper = new EncounterMapper(sportRepo, teamRepo);
+            commentMapper = new CommentMapper(userRepo);
         }
 
         public void CreateEncounter(EncounterDTO encounterDTO)
@@ -52,7 +55,7 @@ namespace EirinDuran.Services
         public void CreateEncounter(IEnumerable<EncounterDTO> encounterDTOs)
         {
             adminValidator.ValidatePermissions();
-            foreach(EncounterDTO encounterDTO in encounterDTOs)
+            foreach (EncounterDTO encounterDTO in encounterDTOs)
             {
                 Encounter encounter = mapper.Map(encounterDTO);
                 ValidateNonOverlappingOfDates(encounter);
@@ -116,7 +119,7 @@ namespace EirinDuran.Services
         {
             try
             {
-                return encounterRepository.GetBySport(sportName).Select(e => mapper.Map(e)); 
+                return encounterRepository.GetBySport(sportName).Select(e => mapper.Map(e));
             }
             catch (DataAccessException e)
             {
@@ -136,11 +139,17 @@ namespace EirinDuran.Services
             }
         }
 
-        public IEnumerable<Comment> GetAllCommentsToOneEncounter(string encounterId)
+        public IEnumerable<EncounterDTO> GetEncountersByDate(DateTime start, DateTime end)
+        {
+            IEnumerable<Encounter> encounters = encounterRepository.GetByDate(start, end);
+            return encounters.Select(e => mapper.Map(e));
+        }
+
+        public IEnumerable<CommentDTO> GetAllCommentsToOneEncounter(string encounterId)
         {
             try
             {
-                return encounterRepository.Get(encounterId).Comments;
+                return encounterRepository.Get(encounterId).Comments.Select(c => commentMapper.Map(c));
             }
             catch (DataAccessException e)
             {
@@ -174,9 +183,61 @@ namespace EirinDuran.Services
                 if (intersect && hasComments)
                 {
                     encountersWithComment.Add(encounter);
-                }    
+                }
             }
             return encountersWithComment;
+        }
+
+        public IEnumerable<EncounterDTO> CreateFixture(string fixtureGeneratorName, string sportName, DateTime startDate)
+        {
+            adminValidator.ValidatePermissions();
+            IFixtureGenerator generator = GetFixtureGenerator(fixtureGeneratorName, sportName);
+            IEnumerable<Team> teamsInSport = teamRepo.GetAll().Where(t => t.Sport.Name == sportName);
+            ICollection<Encounter> encounters = generator.GenerateFixture(teamsInSport, startDate);
+            ValidateFixture(encounters);
+            SaveEncounters(encounters);
+            return encounters.Select(e => mapper.Map(e));
+        }
+
+        private void ValidateFixture(ICollection<Encounter> encounters)
+        {
+            foreach (var encounter in encounters)
+            {
+                ValidateNonOverlappingOfDates(encounter);
+            }
+        }
+
+        private void SaveEncounters(ICollection<Encounter> encounters)
+        {
+            foreach (var encounter in encounters)
+            {
+                encounterRepository.Add(encounter);
+            }
+        }
+
+        private IFixtureGenerator GetFixtureGenerator(string fixtureGeneratorName, string sportName)
+        {
+            Sport sport = sportRepo.Get(sportName);
+            Assembly domainAssembly = Assembly.Load(FixtureGeneratorsAssembly);
+            return GetFixtureGeneratorFromAssembly(fixtureGeneratorName, sport, domainAssembly);
+        }
+
+        private static IFixtureGenerator GetFixtureGeneratorFromAssembly(string fixtureGeneratorName, Sport sport, Assembly domainAssembly)
+        {
+            Type generatorType = domainAssembly.GetTypes().FirstOrDefault(t => t.FullName.EndsWith(fixtureGeneratorName));
+            if (generatorType == null)
+            {
+                throw new ServicesException($"{fixtureGeneratorName} was not a valid fixture generator");
+            }
+            return Activator.CreateInstance(generatorType, sport) as IFixtureGenerator;
+        }
+
+        public IEnumerable<string> GetAvailableFixtureGenerators()
+        {
+            Assembly domainAssembly = Assembly.Load(FixtureGeneratorsAssembly);
+            IEnumerable<Type> generatorTypes = domainAssembly.GetTypes().Where(t => typeof(IFixtureGenerator).IsAssignableFrom(t) && !t.IsInterface);
+            Func<Type, string> getGeneratorTypeName = t => t.FullName.Split('.').Last();
+            return generatorTypes.Select(getGeneratorTypeName);
         }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using EirinDuran.IServices.Exceptions;
+using EirinDuran.WebApi.Models;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -44,7 +45,7 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return sportServices.GetSport(sportId);
             }
-            catch(ServicesException e)
+            catch (ServicesException e)
             {
                 return BadRequest(e.Message);
             }
@@ -114,11 +115,19 @@ namespace EirinDuran.WebApi.Controllers
                 sportServices.DeleteSport(sportId);
                 return Ok();
             }
-            catch(ServicesException e)
+            catch (ServicesException e)
             {
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        public ActionResult<List<EncounterDTO>> CreateFixture(FixtureModelIn fixture)
+        {
+            throw new System.NotImplementedException();
+        }
+
 
         private void CreateSession()
         {

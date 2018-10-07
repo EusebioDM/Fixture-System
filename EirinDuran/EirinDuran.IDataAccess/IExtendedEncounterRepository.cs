@@ -10,5 +10,7 @@ namespace EirinDuran.IDataAccess
         IEnumerable<Encounter> GetByTeam(string sportId_TeamName);
 
         IEnumerable<Encounter> GetBySport(string sportId);
+
+        IEnumerable<Encounter> GetByDate(DateTime startDate, DateTime endDate);
     }
 }

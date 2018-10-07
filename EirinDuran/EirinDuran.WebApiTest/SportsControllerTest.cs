@@ -338,5 +338,11 @@ namespace EirinDuran.WebApiTest
             List<EncounterDTO> encounterResult = obtainedResult.Value;
             Assert.AreEqual(encounter, encounterResult[0]);
         }
+
+        [TestMethod]
+        public void CreateFixtureTest()
+        {
+
+        }
     }
 }
