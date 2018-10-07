@@ -46,10 +46,13 @@ namespace EirinDuran.WebApi.Controllers
         private ActionResult<List<EncounterDTO>> TryToGetAllEncounters(DateTime start, DateTime end)
         {
             if (start.Equals(new DateTime()) || end.Equals(new DateTime()))
+            {
                 return encounterServices.GetAllEncounters().ToList();
+            }
             else
+            {
                 return encounterServices.GetEncountersByDate(start, end).ToList();
-
+            }
         }
 
         [HttpGet("{id}", Name = "GetEncounter")]
@@ -62,7 +65,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Create(EncounterDTO encounter)
+        public IActionResult Create(EncounterModelIn encounter)
         {
             CreateSession();
             if (!ModelState.IsValid)
@@ -78,24 +81,21 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return Unauthorized();
             }
-        }
-
-        private IActionResult TryToAddEncounter(EncounterDTO encounter)
-        {
-            try
-            {
-                encounterServices.CreateEncounter(encounter);
-                return CreatedAtRoute("GetEncounter", new { id = encounter.Id }, encounter);
-            }
             catch (ServicesException e)
             {
                 return BadRequest(e.Message);
             }
         }
 
+        private IActionResult TryToAddEncounter(EncounterModelIn encounter)
+        {
+            encounterServices.CreateEncounter(encounter.ToServicesDTO());
+            return CreatedAtRoute("GetEncounter", new { id = encounter.Id }, encounter);
+        }
+
         [HttpPut("{id}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Put(string id, [FromBody] EncounterDTO encounterModel)
+        public IActionResult Put(string id, [FromBody] EncounterModelIn encounterModel)
         {
             CreateSession();
             return BadRequest();
@@ -114,19 +114,16 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return Unauthorized();
             }
-        }
-
-        private IActionResult TryToDelete(string id)
-        {
-            try
-            {
-                encounterServices.DeleteEncounter(id);
-                return Ok();
-            }
             catch (ServicesException e)
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        private IActionResult TryToDelete(string id)
+        {
+            encounterServices.DeleteEncounter(id);
+            return Ok();
         }
 
         [HttpGet]
@@ -177,7 +174,6 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return BadRequest();
             }
-
             try
             {
                 var encounters = encounterServices.CreateFixture(fixtureModelIn.CreationAlgorithmName, fixtureModelIn.SportName, fixtureModelIn.StartingDate);

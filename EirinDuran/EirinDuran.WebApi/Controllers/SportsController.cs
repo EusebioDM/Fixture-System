@@ -1,12 +1,12 @@
+using EirinDuran.IServices.DTOs;
+using EirinDuran.IServices.Exceptions;
+using EirinDuran.IServices.Interfaces;
+using EirinDuran.WebApi.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using EirinDuran.IServices.DTOs;
-using EirinDuran.IServices.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using EirinDuran.IServices.Exceptions;
-using EirinDuran.WebApi.Models;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -26,7 +26,7 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<SportDTO>> Get()
+        public ActionResult<List<SportDTO>> GetAll()
         {
             try
             {
@@ -78,19 +78,16 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return Unauthorized();
             }
-        }
-
-        private IActionResult TryToCreate(SportDTO sport)
-        {
-            try
-            {
-                sportServices.CreateSport(sport);
-                return CreatedAtRoute("GetSport", new { id = sport.Name }, sport);
-            }
             catch (ServicesException e)
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        private IActionResult TryToCreate(SportDTO sport)
+        {
+            sportServices.CreateSport(sport);
+            return CreatedAtRoute("GetSport", new { id = sport.Name }, sport);
         }
 
         [HttpDelete("{sportName}")]
@@ -106,19 +103,16 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return Unauthorized();
             }
-        }
-
-        private IActionResult TryToDelete(string sportId)
-        {
-            try
-            {
-                sportServices.DeleteSport(sportId);
-                return Ok();
-            }
             catch (ServicesException e)
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        private IActionResult TryToDelete(string sportId)
+        {
+            sportServices.DeleteSport(sportId);
+            return Ok();
         }
 
         [HttpPost]

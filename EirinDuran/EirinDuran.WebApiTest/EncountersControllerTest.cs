@@ -132,7 +132,13 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.Create(enc) as CreatedAtRouteResult;
+            var obtainedResult = controller.Create(new EncounterModelIn()
+            {
+                AwayTeamName = enc.AwayTeamName,
+                DateTime = enc.DateTime,
+                HomeTeamName = enc.HomeTeamName,
+                SportName = enc.SportName
+            }) as CreatedAtRouteResult;
             enconunterServicesMock.Verify(e => e.CreateEncounter(enc), Times.AtMostOnce());
 
             Assert.IsNotNull(obtainedResult);
@@ -155,17 +161,25 @@ namespace EirinDuran.WebApiTest
 
             DateTime encounterDate = new DateTime(2018, 12, 10);
 
-            EncounterDTO enc = new EncounterDTO();
-            enc.SportName = football.Name;
-            enc.AwayTeamName = river.Name;
-            enc.HomeTeamName = boca.Name;
-            enc.DateTime = encounterDate;
+            EncounterDTO enc = new EncounterDTO
+            {
+                SportName = football.Name,
+                AwayTeamName = river.Name,
+                HomeTeamName = boca.Name,
+                DateTime = encounterDate
+            };
 
             enconunterServicesMock.Setup(m => m.CreateEncounter(enc)).Throws(new InsufficientPermissionException());
 
             var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.Create(enc) as UnauthorizedResult;
+            var obtainedResult = controller.Create(new EncounterModelIn()
+            {
+                AwayTeamName = enc.AwayTeamName,
+                DateTime = enc.DateTime,
+                HomeTeamName=enc.HomeTeamName,
+                SportName = enc.SportName
+            }) as UnauthorizedResult;
             enconunterServicesMock.Verify(e => e.CreateEncounter(enc), Times.AtMostOnce());
 
             Assert.IsNotNull(obtainedResult);
@@ -197,7 +211,13 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.Create(enc) as BadRequestObjectResult;
+            var obtainedResult = controller.Create(new EncounterModelIn()
+            {
+                AwayTeamName = enc.AwayTeamName,
+                DateTime = enc.DateTime,
+                HomeTeamName = enc.HomeTeamName,
+                SportName = enc.SportName
+            }) as BadRequestObjectResult;
             enconunterServicesMock.Verify(e => e.CreateEncounter(enc), Times.AtMostOnce());
 
             Assert.IsNotNull(obtainedResult);

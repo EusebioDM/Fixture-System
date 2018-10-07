@@ -17,5 +17,17 @@ namespace EirinDuran.IServices.DTOs
         public List<Guid> CommentsIds { get; set; } = new List<Guid>();
 
         public string SportName { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var dTO = obj as EncounterDTO;
+            return dTO != null &&
+                   Id.Equals(dTO.Id);
+        }
+
+        public override int GetHashCode()
+        {
+            return 2108858624 + EqualityComparer<Guid>.Default.GetHashCode(Id);
+        }
     }
 }

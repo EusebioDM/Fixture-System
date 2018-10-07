@@ -200,7 +200,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var obtainedResult = controller.Get() as ActionResult<List<SportDTO>>;
+            var obtainedResult = controller.GetAll() as ActionResult<List<SportDTO>>;
             var val = obtainedResult.Value;
 
             sportServicesMock.Verify(s=>s.GetAllSports(), Times.AtMostOnce);
