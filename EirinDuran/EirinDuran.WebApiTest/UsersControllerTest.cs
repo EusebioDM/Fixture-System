@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -300,7 +301,7 @@ namespace EirinDuran.WebApiTest
             userServicesMock.Verify(m => m.CreateUser(It.IsAny<UserDTO>()), Times.AtMostOnce());
             var result = controller.Create(modelIn);
             var createdResult = result as BadRequestObjectResult;
-            
+
             Assert.IsNotNull(createdResult);
             Assert.AreEqual(400, createdResult.StatusCode);
         }
@@ -360,7 +361,7 @@ namespace EirinDuran.WebApiTest
 
             userServicesMock.Verify(m => m.DeleteUser(id), Times.AtMostOnce());
             var result = controller.Delete(id);
-            var createdResult = result as BadRequestResult;
+            var createdResult = result as BadRequestObjectResult;
 
             Assert.IsNotNull(createdResult);
             Assert.AreEqual(400, createdResult.StatusCode);
@@ -474,6 +475,46 @@ namespace EirinDuran.WebApiTest
         }
 
         [TestMethod]
+        public void UpdateUserDataInvalidModelInUsersController()
+        {
+            var modelIn = new UserModelIn();
+            var userServicesMock = new Mock<IUserServices>();
+
+            string id = "Pablo";
+
+            userServicesMock.Setup(us => us.ModifyUser(It.IsAny<UserDTO>())).Throws(new ServicesException());
+
+            ILoginServices loginServices = new LoginServicesMock(pablo);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            controller.ModelState.AddModelError("", "");
+
+            var result = controller.Modify(id, new UserUpdateModelIn()
+            {
+                Name = "",
+                Surname = "UserTest",
+                Password = "",
+                Mail = "user@gmail.com"
+            });
+
+            userServicesMock.Verify(m => m.ModifyUser(It.IsAny<UserDTO>()), Times.AtMostOnce());
+            var createdResult = result as BadRequestResult;
+
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual(400, createdResult.StatusCode);
+        }
+
+        [TestMethod]
         public void UpdateUserDataWithoutPermissionUsersController()
         {
             var modelIn = new UserModelIn();
@@ -512,7 +553,7 @@ namespace EirinDuran.WebApiTest
         }
 
         [TestMethod]
-        public void GetLogedUserFollowedTeamsOk()
+        public void GetLogedUserFollowedTeamsOkUsersController()
         {
             var userServicesMock = new Mock<IUserServices>();
 
@@ -532,6 +573,72 @@ namespace EirinDuran.WebApiTest
             List<string> result = controller.GetFollowedTeams().Value;
             Assert.AreEqual("Atletics", result[0]);
             Assert.AreEqual("Yankees", result[1]);
+        }
+
+        [TestMethod]
+        public void GetCommentariesOfLoggedUserUsersController()
+        {
+            var userServicesMock = new Mock<IUserServices>();
+            var encounterServicesMock = new Mock<IEncounterServices>();
+            ILoginServices loginServices = new LoginServicesMock(pablo);
+
+            EncounterDTO encounter = new EncounterDTO() { SportName = "Futbol", DateTime = new DateTime(3018 / 08 / 08), AwayTeamName = "Team1", HomeTeamName = "Team2" };
+            List<EncounterDTO> encounters = new List<EncounterDTO>() { encounter };
+            CommentDTO comment = new CommentDTO() { Message = "This is a test comment!", UserName = pablo.UserName, TimeStamp = new DateTime(2019 / 03 / 03) };
+            List<CommentDTO> comments = new List<CommentDTO>() { comment };
+
+            encounterServicesMock.Setup(e => e.GetAllEncountersWithFollowedTeams()).Returns(encounters);
+            encounterServicesMock.Setup(e => e.GetAllCommentsToOneEncounter(It.IsAny<string>())).Returns(comments);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            encounterServicesMock.Verify(u => u.GetAllEncountersWithFollowedTeams(), Times.AtMostOnce);
+            encounterServicesMock.Verify(u => u.GetAllCommentsToOneEncounter(It.IsAny<string>()), Times.AtMostOnce);
+            var obtainedResult = controller.GetFollowedTeamCommentaries();
+            var commentaries = obtainedResult.Value as List<CommentDTO>;
+
+            Assert.IsNotNull(commentaries);
+            Assert.AreEqual(comment.Message, commentaries[0].Message);
+            Assert.AreEqual(comment.UserName, commentaries[0].UserName);
+            Assert.AreEqual(comment.TimeStamp, commentaries[0].TimeStamp);
+        }
+
+        [TestMethod]
+        public void ServicesExceptionTryToGetCommentariesOfLoggedUserUsersController()
+        {
+            var userServicesMock = new Mock<IUserServices>();
+            var encounterServicesMock = new Mock<IEncounterServices>();
+            ILoginServices loginServices = new LoginServicesMock(pablo);
+
+            encounterServicesMock.Setup(e => e.GetAllEncountersWithFollowedTeams()).Throws(new ServicesException());
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            encounterServicesMock.Verify(u => u.GetAllEncountersWithFollowedTeams(), Times.AtMostOnce);
+          
+            var obtainedResult = controller.GetFollowedTeamCommentaries();
+            var resultRequest = obtainedResult.Result as BadRequestObjectResult;
+
+            Assert.IsNotNull(resultRequest);
+            Assert.AreEqual(400, resultRequest.StatusCode);
         }
     }
 }

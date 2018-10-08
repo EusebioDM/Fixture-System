@@ -4,6 +4,7 @@ using EirinDuran.IServices.Interfaces;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.Services.DTO_Mappers;
 using EirinDuran.Domain.Fixture;
+using EirinDuran.IServices.Exceptions;
 
 namespace EirinDuran.Services
 {
@@ -36,9 +37,9 @@ namespace EirinDuran.Services
                 }
 
             }
-            catch (DataAccessException)
+            catch (DataAccessException e)
             {
-                throw new IServices.Exceptions.InvalidaDataException(userName);
+                throw new ServicesException("Failure to try to login", e);
             }
         }
 

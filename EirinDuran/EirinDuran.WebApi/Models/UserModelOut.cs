@@ -7,7 +7,7 @@ namespace EirinDuran.WebApi.Models
     public class UserModelOut
     {
         public string UserName { get; set; }
-      
+
         public string Name { get; set; }
 
         public string Surname { get; set; }
@@ -16,9 +16,7 @@ namespace EirinDuran.WebApi.Models
 
         public bool IsAdmin { get; set; }
 
-        public UserModelOut()
-        {
-        }
+        public string CommentariesUrl { get; set; }
 
         public UserModelOut(UserDTO user)
         {
@@ -26,6 +24,7 @@ namespace EirinDuran.WebApi.Models
             Name = user.Name;
             Surname = user.Surname;
             Mail = user.Mail;
+            CommentariesUrl = Name + "/commentaries";
             IsAdmin = user.IsAdmin;
         }
 

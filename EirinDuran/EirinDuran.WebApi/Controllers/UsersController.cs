@@ -41,12 +41,10 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-
         private ActionResult<List<UserModelOut>> TryToGetAllUsers()
         {
             return userServices.GetAllUsers().Select(u => new UserModelOut(u)).ToList();
         }
-
 
         [HttpGet("{userId}", Name = "GetUser")]
         [Authorize(Roles = "Administrator, Follower")]
@@ -68,7 +66,6 @@ namespace EirinDuran.WebApi.Controllers
             UserDTO user = userServices.GetUser(userId);
             return new UserModelOut(user);
         }
-
 
         [HttpPost]
         [Authorize(Roles = "Administrator")]
@@ -107,6 +104,10 @@ namespace EirinDuran.WebApi.Controllers
         public IActionResult Modify(string userId, [FromBody] UserUpdateModelIn userModel)
         {
             CreateSession();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             try
             {
                 return TryToModify(userId, userModel);
@@ -128,7 +129,6 @@ namespace EirinDuran.WebApi.Controllers
 
             userServices.ModifyUser(user);
             return Ok();
-
         }
 
         [HttpDelete("{userId}")]
@@ -144,9 +144,9 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return Unauthorized();
             }
-            catch (ServicesException)
+            catch (ServicesException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 
@@ -174,7 +174,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Route("commentaries")]
-        [Authorize]
+        [Authorize(Roles = "Administrator, Follower")]
         public ActionResult<List<CommentDTO>> GetFollowedTeamCommentaries()
         {
             CreateSession();
@@ -189,9 +189,9 @@ namespace EirinDuran.WebApi.Controllers
                 }
                 return comments;
             }
-            catch (ServicesException ex)
+            catch (ServicesException e)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(e.Message);
             }
         }
 
