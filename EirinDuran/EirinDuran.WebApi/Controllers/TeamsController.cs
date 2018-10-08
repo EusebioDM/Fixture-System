@@ -28,12 +28,12 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Authorize]
-        public ActionResult<List<TeamDTO>> Get()
+        public ActionResult<List<TeamModelOut>> Get()
         {
             CreateSession();
             try
             {
-                return teamServices.GetAllTeams().ToList();
+                return teamServices.GetAllTeams().Select(t => new TeamModelOut(t)).ToList();
             }
             catch (ServicesException e)
             {
@@ -43,11 +43,11 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet("{teamId}", Name = "GetTeam")]
         [Authorize]
-        public ActionResult<TeamDTO> Get(string teamId)
+        public ActionResult<TeamModelOut> Get(string teamId)
         {
             try
             {
-                return teamServices.GetTeam(teamId);
+                return new TeamModelOut(teamServices.GetTeam(teamId));
             }
             catch (ServicesException e)
             {

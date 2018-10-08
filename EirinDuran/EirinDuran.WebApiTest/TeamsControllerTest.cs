@@ -143,12 +143,14 @@ namespace EirinDuran.WebApiTest
 
             var result = controller.Get();
             teamServicesMock.Verify(t => t.GetAllTeams(), Times.AtMostOnce);
-            var resultRequest = result as ActionResult<List<TeamDTO>>;
+            var resultRequest = result as ActionResult<List<TeamModelOut>>;
 
             Assert.IsNotNull(resultRequest);
             Assert.IsNotNull(resultRequest.Value);
-            IEnumerable<TeamDTO> sportList = resultRequest.Value.ToList().Union(teams);
-            Assert.IsTrue(sportList.ToList().Count == 2);
+            Assert.AreEqual(team1.SportName, resultRequest.Value[0].SportName);
+            Assert.AreEqual(team1.Name, resultRequest.Value[0].Name);
+            Assert.AreEqual(team2.SportName, resultRequest.Value[1].SportName);
+            Assert.AreEqual(team2.Name, resultRequest.Value[1].Name);
         }
 
         [TestMethod]
@@ -173,7 +175,7 @@ namespace EirinDuran.WebApiTest
 
             var result = controller.Get();
             teamServicesMock.Verify(t => t.GetAllTeams(), Times.AtMostOnce);
-            var value = result as ActionResult<List<TeamDTO>>;
+            var value = result as ActionResult<List<TeamModelOut>>;
             var resultRequest = result.Result as BadRequestObjectResult;
 
             Assert.IsNotNull(resultRequest);
@@ -206,11 +208,11 @@ namespace EirinDuran.WebApiTest
 
             var result = controller.Get(teamId);
             teamServicesMock.Verify(t => t.GetTeam(teamId), Times.AtMostOnce);
-            var resultRequest = result as ActionResult<TeamDTO>;
+            var resultRequest = result as ActionResult<TeamModelOut>;
 
             Assert.IsNotNull(resultRequest);
             Assert.IsNotNull(resultRequest.Value);
-            TeamDTO teamRecover = resultRequest.Value;
+            TeamModelOut teamRecover = resultRequest.Value;
             Assert.AreEqual(team1.Name, teamRecover.Name);
             Assert.AreEqual(team1.SportName, teamRecover.SportName);
         }
