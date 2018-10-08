@@ -27,11 +27,11 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Administrator, Follower")]
-        public ActionResult<List<SportDTO>> GetAll()
+        public ActionResult<List<SportModelOut>> GetAll()
         {
             try
             {
-                return sportServices.GetAllSports().ToList();
+                return sportServices.GetAllSports().Select(s => new SportModelOut(s)).ToList();
             }
             catch (ServicesException e)
             {
@@ -56,15 +56,15 @@ namespace EirinDuran.WebApi.Controllers
         [HttpGet]
         [Route("{sportId}/encounters")]
         [Authorize]
-        public ActionResult<List<EncounterDTO>> GetEncounters(string sportId)
+        public ActionResult<List<EncounterModelOut>> GetEncounters(string sportId)
         {
             try
             {
-                return encounterServices.GetEncountersBySport(sportId).ToList();
+                return encounterServices.GetEncountersBySport(sportId).Select(e => new EncounterModelOut(e)).ToList();
             }
-            catch (ServicesException)
+            catch (ServicesException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 

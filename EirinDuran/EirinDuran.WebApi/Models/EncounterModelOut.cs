@@ -30,7 +30,7 @@ namespace EirinDuran.WebApi.Models
 
         public override bool Equals(object obj)
         {
-            var @in = obj as EncounterModelIn;
+            var @in = obj as EncounterModelOut;
             return @in != null &&
                    Id.Equals(@in.Id);
         }

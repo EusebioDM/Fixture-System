@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using EirinDuran.IServices.Exceptions;
+using EirinDuran.WebApi.Models;
 
 namespace EirinDuran.WebApiTest
 {
@@ -260,15 +261,14 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var obtainedResult = controller.GetAll() as ActionResult<List<SportDTO>>;
+            var obtainedResult = controller.GetAll() as ActionResult<List<SportModelOut>>;
             var val = obtainedResult.Value;
 
             sportServicesMock.Verify(s=>s.GetAllSports(), Times.AtMostOnce);
 
             Assert.IsNotNull(obtainedResult);
             Assert.IsNotNull(obtainedResult.Value);
-            IEnumerable<SportDTO> sportList = obtainedResult.Value.ToList().Union(expectedSports.ToList());
-            Assert.IsTrue(sportList.ToList().Count == 2);
+            Assert.AreEqual(expectedSports[0].Name, obtainedResult.Value[0].Name);
         }
 
         [TestMethod]
@@ -293,14 +293,17 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var obtainedResult = controller.GetEncounters(sportName) as ActionResult<List<EncounterDTO>>;
+            var obtainedResult = controller.GetEncounters(sportName) as ActionResult<List<EncounterModelOut>>;
             var val = obtainedResult.Value;
 
             encounterServicesMock.Verify(e => e.GetEncountersBySport(sportName), Times.AtMostOnce);
             Assert.IsNotNull(obtainedResult);
             Assert.IsNotNull(obtainedResult.Value);
-            IEnumerable<EncounterDTO> sportList = obtainedResult.Value.ToList().Union(expectedEncounters.ToList());
-            Assert.IsTrue(sportList.ToList().Count == 1);
+            Assert.AreEqual(encounter.Id, obtainedResult.Value[0].Id);
+            Assert.AreEqual(encounter.SportName, obtainedResult.Value[0].SportName);
+            Assert.AreEqual(encounter.HomeTeamName, obtainedResult.Value[0].HomeTeamName);
+            Assert.AreEqual(encounter.AwayTeamName, obtainedResult.Value[0].AwayTeamName);
+            Assert.AreEqual(encounter.DateTime, obtainedResult.Value[0].DateTime);
         }
 
         private EncounterDTO CreateAEncounter(string sportId)
@@ -330,7 +333,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var obtainedResult = controller.GetEncounters("Tennis") as ActionResult<List<EncounterDTO>>;
+            var obtainedResult = controller.GetEncounters("Tennis") as ActionResult<List<EncounterModelOut>>;
             var value = obtainedResult.Result;
 
             encounterServicesMock.VerifyAll();
@@ -390,13 +393,17 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var obtainedResult = controller.GetEncounters(football.Name) as ActionResult<List<EncounterDTO>>;
+            var obtainedResult = controller.GetEncounters(football.Name) as ActionResult<List<EncounterModelOut>>;
             encounterServicesMock.Verify(e => e.GetEncountersBySport(football.Name), Times.AtMostOnce);
 
             Assert.IsNotNull(obtainedResult);
             Assert.IsNotNull(obtainedResult.Value);
-            List<EncounterDTO> encounterResult = obtainedResult.Value;
-            Assert.AreEqual(encounter, encounterResult[0]);
+            List<EncounterModelOut> encounterResult = obtainedResult.Value;
+            Assert.AreEqual(encounter.Id, encounterResult[0].Id);
+            Assert.AreEqual(encounter.SportName, encounterResult[0].SportName);
+            Assert.AreEqual(encounter.HomeTeamName, encounterResult[0].HomeTeamName);
+            Assert.AreEqual(encounter.AwayTeamName, encounterResult[0].AwayTeamName);
+            Assert.AreEqual(encounter.DateTime, encounterResult[0].DateTime);
         }
 
         [TestMethod]
