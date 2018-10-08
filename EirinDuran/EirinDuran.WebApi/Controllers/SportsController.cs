@@ -41,11 +41,11 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet("{sportId}")]
         [Authorize(Roles = "Administrator, Follower")]
-        public ActionResult<SportDTO> GetById(string sportId)
+        public ActionResult<SportModelOut> GetById(string sportId)
         {
             try
             {
-                return sportServices.GetSport(sportId);
+                return new SportModelOut(sportServices.GetSport(sportId));
             }
             catch (ServicesException e)
             {

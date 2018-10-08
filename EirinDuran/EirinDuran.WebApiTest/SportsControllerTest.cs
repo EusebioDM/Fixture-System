@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Interfaces;
 using EirinDuran.WebApi.Controllers;
@@ -360,14 +359,14 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var obtainedResult = controller.GetById(football.Name) as ActionResult<SportDTO>;
+            var obtainedResult = controller.GetById(football.Name) as ActionResult<SportModelOut>;
             var val = obtainedResult.Value;
 
             sportServicesMock.Verify(s => s.GetSport(football.Name), Times.AtMostOnce);
 
             Assert.IsNotNull(obtainedResult);
             Assert.IsNotNull(obtainedResult.Value);
-            SportDTO sport = obtainedResult.Value;
+            SportModelOut sport = obtainedResult.Value;
             Assert.AreEqual(football.Name, sport.Name);
         }
 
@@ -404,12 +403,6 @@ namespace EirinDuran.WebApiTest
             Assert.AreEqual(encounter.HomeTeamName, encounterResult[0].HomeTeamName);
             Assert.AreEqual(encounter.AwayTeamName, encounterResult[0].AwayTeamName);
             Assert.AreEqual(encounter.DateTime, encounterResult[0].DateTime);
-        }
-
-        [TestMethod]
-        public void CreateFixtureTest()
-        {
-
         }
     }
 }
