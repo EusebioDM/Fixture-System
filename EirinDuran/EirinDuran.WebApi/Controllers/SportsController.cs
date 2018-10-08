@@ -26,7 +26,7 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Administrator, Follower")]
         public ActionResult<List<SportDTO>> GetAll()
         {
             try
@@ -39,8 +39,8 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        [HttpGet]
-        [Authorize]
+        [HttpGet("{sportId}")]
+        [Authorize(Roles = "Administrator, Follower")]
         public ActionResult<SportDTO> GetById(string sportId)
         {
             try

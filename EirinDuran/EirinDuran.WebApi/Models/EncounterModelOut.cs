@@ -48,10 +48,10 @@ namespace EirinDuran.WebApi.Models
             AwayTeamName = encounter.AwayTeamName;
             SportName = encounter.SportName;
            
-            CommentariesUrl = Id + "/commentaries";
-            AddCommentariesUrl = Id + "/commentaries";
-            GetAvailableFixturesGeneratorsUrl = "fixture";
-            SetAvailableFixturesGeneratorsUrl = "fixture";
+            CommentariesUrl = "/api/encounters/" + Id + "/commentaries";
+            AddCommentariesUrl = "/api/encounters/" + Id + "/commentaries";
+            GetAvailableFixturesGeneratorsUrl = "/api/encounters/fixture";
+            SetAvailableFixturesGeneratorsUrl = "/api/encounters/fixture";
         }
     }
 }

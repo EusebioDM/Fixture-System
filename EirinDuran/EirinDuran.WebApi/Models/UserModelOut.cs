@@ -25,7 +25,7 @@ namespace EirinDuran.WebApi.Models
             Surname = user.Surname;
             Mail = user.Mail;
             IsAdmin = user.IsAdmin;
-            CommentariesUrl = UserName + "/commentaries";
+            CommentariesUrl = "/api/users/" + UserName + "/commentaries";
         }
 
         public override bool Equals(object obj)
