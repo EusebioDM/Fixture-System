@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using EirinDuran.IServices.Exceptions;
+using EirinDuran.WebApi.Models;
 
 namespace EirinDuran.WebApiTest
 {
@@ -361,8 +362,8 @@ namespace EirinDuran.WebApiTest
 
             var result = controller.GetEncounters(teamName);
             encounterServicesMock.Verify(e => e.GetEncountersByTeam(teamName), Times.AtMostOnce);
-            var resultRequest = result as ActionResult<List<EncounterDTO>>;
-            List<EncounterDTO> obtaniedEncounters = resultRequest.Value;
+            var resultRequest = result as ActionResult<List<EncounterModelOut>>;
+            List<EncounterModelOut> obtaniedEncounters = resultRequest.Value;
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(resultRequest);
@@ -394,7 +395,7 @@ namespace EirinDuran.WebApiTest
 
             var result = controller.GetEncounters(teamName);
             encounterServicesMock.Verify(e => e.GetEncountersByTeam(teamName), Times.AtMostOnce);
-            var value = result as ActionResult<List<EncounterDTO>>;
+            var value = result as ActionResult<List<EncounterModelOut>>;
             var requestResult = value.Result as BadRequestObjectResult;
 
             Assert.IsNotNull(requestResult);

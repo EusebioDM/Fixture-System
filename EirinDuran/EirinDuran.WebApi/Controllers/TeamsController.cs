@@ -7,6 +7,7 @@ using EirinDuran.IServices.DTOs;
 using System.Security.Claims;
 using EirinDuran.IServices.Exceptions;
 using System;
+using EirinDuran.WebApi.Models;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -57,11 +58,11 @@ namespace EirinDuran.WebApi.Controllers
         [HttpGet]
         [Authorize]
         [Route("{teamId}/encounters")]
-        public ActionResult<List<EncounterDTO>> GetEncounters(string teamId)
+        public ActionResult<List<EncounterModelOut>> GetEncounters(string teamId)
         {
             try
             {
-                return encounterServices.GetEncountersByTeam(teamId).ToList();
+                return encounterServices.GetEncountersByTeam(teamId).Select(e => new EncounterModelOut(e)).ToList();
             }
             catch (ServicesException e)
             {
@@ -97,7 +98,6 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        // PUT api/values/5
         [HttpPut("{id}")]
         [Authorize(Roles = "Administrator")]
         public IActionResult Put(string id, [FromBody] TeamDTO team)
