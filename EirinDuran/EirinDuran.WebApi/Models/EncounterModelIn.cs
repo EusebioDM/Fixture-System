@@ -43,8 +43,5 @@ namespace EirinDuran.WebApi.Models
                 SportName = SportName
             };
         }
-
-
     }
-
 }

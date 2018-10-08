@@ -8,6 +8,7 @@ using EirinDuran.DataAccessTest;
 using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
 using EirinDuran.Domain.Fixture;
+using EirinDuran.IServices.Exceptions;
 
 namespace EirinDuran.ServicesTest
 {
@@ -39,7 +40,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(IServices.Exceptions.InvalidaDataException))]
+        [ExpectedException(typeof(ServicesException))]
         public void UserTryToLogginDoesNotExists()
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);

@@ -117,6 +117,35 @@ namespace EirinDuran.WebApiTest
         }
 
         [TestMethod]
+        public void CreateSportAlreadyExistsSportsController()
+        {
+            var sportServicesMock = new Mock<ISportServices>();
+            sportServicesMock.Setup(s => s.CreateSport(It.IsAny<SportDTO>())).Throws(new ServicesException());
+            var encounterServicesMock = new Mock<IEncounterServices>();
+            ILoginServices login = new LoginServicesMock(rodolfo);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            SportDTO footballIn = new SportDTO() { Name = "Futbol" };
+            var result = controller.Create(footballIn);
+            sportServicesMock.Verify(s => s.CreateSport(It.IsAny<SportDTO>()), Times.AtMostOnce);
+            var createdResult = result as BadRequestObjectResult;
+
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual(400, createdResult.StatusCode);
+        }
+
+        [TestMethod]
         public void DeleteSportOkSportsController()
         {
             string name = "Tennis";
@@ -177,6 +206,37 @@ namespace EirinDuran.WebApiTest
             var badRequestResult = result as BadRequestObjectResult;
 
             Assert.AreEqual(400, badRequestResult.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteSportWithoutPermissionSportsController()
+        {
+            string name = "Futbol";
+            var modelIn = new SportDTO() { Name = name };
+
+            var sportServicesMock = new Mock<ISportServices>();
+            sportServicesMock.Setup(s => s.DeleteSport(name)).Throws(new InsufficientPermissionException());
+            var encounterServicesMock = new Mock<IEncounterServices>();
+
+            ILoginServices loginServices = new LoginServicesMock(mariano);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var controller = new SportsController(loginServices, sportServicesMock.Object, encounterServicesMock.Object)
+            {
+                ControllerContext = controllerContext,
+            };
+
+            var result = controller.Delete(name);
+            sportServicesMock.Verify(s => s.DeleteSport(name), Times.AtMostOnce);
+            var badRequestResult = result as UnauthorizedResult;
+
+            Assert.AreEqual(401, badRequestResult.StatusCode);
         }
 
         [TestMethod]

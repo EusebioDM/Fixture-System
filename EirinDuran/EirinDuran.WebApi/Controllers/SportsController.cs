@@ -118,14 +118,6 @@ namespace EirinDuran.WebApi.Controllers
             return Ok();
         }
 
-        [HttpPost]
-        [Authorize(Roles = "Administrator")]
-        public ActionResult<List<EncounterDTO>> CreateFixture(FixtureModelIn fixture)
-        {
-            throw new System.NotImplementedException();
-        }
-
-
         private void CreateSession()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
