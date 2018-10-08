@@ -15,7 +15,7 @@ namespace EirinDuran.WebApi.Models
 
         public bool IsAdmin { get; set; }
 
-        public string CommentariesUrl { get; set; }
+        public string CommentariesUrl { get; }
 
         public UserModelOut(UserDTO user)
         {

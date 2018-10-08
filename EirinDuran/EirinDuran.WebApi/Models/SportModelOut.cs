@@ -7,7 +7,7 @@ namespace EirinDuran.WebApi.Models
     {
         public string Name { get; set; }
 
-        public string GetEncounters { get; set; }
+        public string GetEncounters { get; }
 
         public SportModelOut(SportDTO sport)
         {

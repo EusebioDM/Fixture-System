@@ -21,11 +21,11 @@ namespace EirinDuran.WebApi.Models
 
         public string CommentariesUrl { get; set; }
 
-        public string AddCommentariesUrl { get; set; }
+        public string AddCommentariesUrl { get; }
 
-        public string GetAvailableFixturesGeneratorsUrl { get; set; }
+        public string GetAvailableFixturesGeneratorsUrl { get; }
 
-        public string SetAvailableFixturesGeneratorsUrl { get; set; }
+        public string SetAvailableFixturesGeneratorsUrl { get; }
 
 
         public override bool Equals(object obj)
