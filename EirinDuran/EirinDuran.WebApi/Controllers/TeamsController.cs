@@ -29,9 +29,9 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize]
         public ActionResult<List<TeamDTO>> Get()
         {
-            CreateSession();
             try
             {
+                CreateSession();
                 return teamServices.GetAllTeams().ToList();
             }
             catch (ServicesException e)
@@ -73,9 +73,9 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize(Roles = "Administrator")]
         public IActionResult Create(TeamDTO team)
         {
-            CreateSession();
             try
             {
+                CreateSession();
                 return TryToCreate(team);
             }
             catch (InsufficientPermissionException)
@@ -88,8 +88,8 @@ namespace EirinDuran.WebApi.Controllers
         {
             try
             {
-                teamServices.CreateTeam(team);
-                return CreatedAtRoute("GetTeam", new { teamId = team.Name + "_" + team.SportName } , team);
+                TeamDTO created = teamServices.CreateTeam(team);
+                return CreatedAtRoute("GetTeam", new { teamId = created.Name + "_" + team.SportName } , created);
             }
             catch (ServicesException e)
             {
@@ -141,9 +141,9 @@ namespace EirinDuran.WebApi.Controllers
 
         private IActionResult TryToDelete(string teamId)
         {
-            CreateSession();
             try
             {
+                CreateSession();
                 teamServices.DeleteTeam(teamId);
                 return Ok();
             }
@@ -153,13 +153,13 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        [HttpPut("{teamId}/follower")]
+        [HttpPost("{teamId}/follower")]
         [Authorize(Roles = "Administrator, Follower")]
         public IActionResult AddFollowedTeamToLogedUser(string teamId)
         {
-            CreateSession();
             try
             {
+                CreateSession();
                 teamServices.AddFollowedTeam(teamId);
                 return Ok();
             }

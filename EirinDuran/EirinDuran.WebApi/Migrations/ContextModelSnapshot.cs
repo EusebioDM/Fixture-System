@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EirinDuran.WebApi.Migrations
 {
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     [DbContext(typeof(Context))]
     partial class ContextModelSnapshot : ModelSnapshot
     {
@@ -99,11 +98,13 @@ namespace EirinDuran.WebApi.Migrations
                 {
                     b.Property<string>("TeamName");
 
-                    b.Property<string>("UserName");
+                    b.Property<string>("UserNamee");
 
                     b.Property<string>("SportName");
 
-                    b.HasKey("TeamName", "UserName");
+                    b.Property<string>("UserName");
+
+                    b.HasKey("TeamName", "UserNamee");
 
                     b.HasIndex("UserName");
 
@@ -138,7 +139,8 @@ namespace EirinDuran.WebApi.Migrations
                 {
                     b.HasOne("EirinDuran.Entities.EncounterEntity")
                         .WithMany("Comments")
-                        .HasForeignKey("EncounterEntityId");
+                        .HasForeignKey("EncounterEntityId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("EirinDuran.Entities.UserEntity", "User")
                         .WithMany()
@@ -150,7 +152,8 @@ namespace EirinDuran.WebApi.Migrations
                 {
                     b.HasOne("EirinDuran.Entities.SportEntity", "Sport")
                         .WithMany()
-                        .HasForeignKey("SportName");
+                        .HasForeignKey("SportName")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("EirinDuran.Entities.TeamEntity", "AwayTeam")
                         .WithMany()
@@ -173,8 +176,7 @@ namespace EirinDuran.WebApi.Migrations
                 {
                     b.HasOne("EirinDuran.Entities.UserEntity", "User")
                         .WithMany("TeamUsers")
-                        .HasForeignKey("UserName")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserName");
 
                     b.HasOne("EirinDuran.Entities.TeamEntity", "Team")
                         .WithOne()

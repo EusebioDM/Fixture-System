@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EirinDuran.DataAccess;
+﻿using EirinDuran.DataAccess;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Design;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -16,12 +16,12 @@ namespace EirinDuran.WebApi.Controllers
         private readonly IDesignTimeDbContextFactory<Context> contextFactory;
         private readonly IUserServices userServices;
         private const string ResetDataBaseConfirmationKey = "ConfirmDeleteDataBase";
-        private readonly UserDTO InitialUser = new UserDTO()
+        private readonly Entities.UserEntity InitialUser = new Entities.UserEntity()
         {
             UserName = "Admin",
             Name = "Admin",
             Password = "Admin",
-            IsAdmin = true,
+            Role = Domain.User.Role.Administrator,
             Surname = "Admin",
             Mail = "Admin@admin.com"
         };
@@ -40,13 +40,19 @@ namespace EirinDuran.WebApi.Controllers
                 using (Context context = contextFactory.CreateDbContext(new string[0]))
                 {
                     context.DeleteDataBase();
-                    userServices.CreateUser(InitialUser);
+                }
+                using (Context context = contextFactory.CreateDbContext(new string[0]))
+                {
+                    context.Users.Add(InitialUser);
+                    context.SaveChanges();
                 }
 
                 return Ok();
             }
             else
+            {
                 return Unauthorized();
+            }
         }
     }
 }

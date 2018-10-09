@@ -5,7 +5,7 @@ namespace EirinDuran.IServices.Interfaces
 {
     public interface IUserServices
     {
-        void CreateUser(UserDTO userDTO);
+        UserDTO CreateUser(UserDTO userDTO);
 
         UserDTO GetUser(string userName);
 

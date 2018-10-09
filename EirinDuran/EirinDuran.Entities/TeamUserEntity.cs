@@ -13,7 +13,7 @@ namespace EirinDuran.Entities
         public string SportName { get; set; }
         public virtual TeamEntity Team { get; set; }
         public virtual UserEntity User { get; set; }
-        public string UserName { get; set; }
+        public string UserNamee { get; set; }
 
         public TeamUserEntity()
         {
@@ -25,7 +25,7 @@ namespace EirinDuran.Entities
             Team = team;
             User = user;
             TeamName = Team.Name;
-            UserName = User.UserName;
+            UserNamee = User.UserName;
         }
 
         //public TeamUserEntity(Team team, User user)

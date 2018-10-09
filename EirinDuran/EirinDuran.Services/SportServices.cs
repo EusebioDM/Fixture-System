@@ -24,7 +24,7 @@ namespace EirinDuran.Services
             sportMapper = new SportMapper();
         }
 
-        public void CreateSport(SportDTO sportDTO)
+        public SportDTO CreateSport(SportDTO sportDTO)
         {
             validator.ValidatePermissions();
             Sport sport = sportMapper.Map(sportDTO);
@@ -32,10 +32,11 @@ namespace EirinDuran.Services
             try
             {
                 sportRepository.Add(sport);
+                return sportMapper.Map(sport);
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to create sport.", e);
+                throw new ServicesException($"Failure to create sport with name {sportDTO.Name}.", e);
             }
         }
 
@@ -50,7 +51,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to modify sport.", e);
+                throw new ServicesException($"Failure to modify sport with name {sportDTO.Name}.", e);
             }
 
         }
@@ -63,7 +64,7 @@ namespace EirinDuran.Services
             }
             catch(DataAccessException e)
             {
-                throw new ServicesException("Failure to recover sport.", e);
+                throw new ServicesException($"Failure to recover sport with id {sportId}.", e);
             }
         }
 
@@ -91,5 +92,6 @@ namespace EirinDuran.Services
                 throw new ServicesException("Failure to delete sport.", e);
             }
         }
+
     }
 }

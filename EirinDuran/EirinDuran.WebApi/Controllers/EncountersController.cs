@@ -28,9 +28,9 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize(Roles = "Administrator")]
         public ActionResult<List<EncounterDTO>> Get([FromQuery] DateTime start, [FromQuery] DateTime end)
         {
-            CreateSession();
             try
             {
+                CreateSession();
                 return TryToGetAllEncounters(start, end);
             }
             catch (InsufficientPermissionException)
@@ -59,9 +59,9 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize(Roles = "Administrator, Follower")]
         public ActionResult<EncounterDTO> GetById(string id)
         {
-            CreateSession();
             try
             {
+                CreateSession();
                 return encounterServices.GetEncounter(id);
             }
             catch(ServicesException e)
@@ -79,7 +79,6 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             try
             {
                 return TryToAddEncounter(encounter);
@@ -96,17 +95,17 @@ namespace EirinDuran.WebApi.Controllers
 
         private IActionResult TryToAddEncounter(EncounterModelIn encounter)
         {
-            encounterServices.CreateEncounter(encounter.ToServicesDTO());
-            return CreatedAtRoute("GetEncounter", new { id = encounter.Id }, encounter);
+            EncounterDTO createdEncounter = encounterServices.CreateEncounter(encounter.ToServicesDTO());
+            return CreatedAtRoute("GetEncounter", new { id = createdEncounter.Id }, createdEncounter);
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Administrator")]
         public IActionResult Put(string id, [FromBody] EncounterModelIn encounterModel)
         {
-            CreateSession();
             try
             {
+                CreateSession();
                 return TryToPut(id, encounterModel.ToServicesDTO());
             }
             catch(InsufficientPermissionException)
@@ -132,9 +131,9 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize(Roles = "Administrator")]
         public IActionResult Delete(string id)
         {
-            CreateSession();
             try
             {
+                CreateSession();
                 return TryToDelete(id);
             }
             catch (InsufficientPermissionException)
@@ -174,9 +173,9 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize]
         public IActionResult AddComment(string encounterId, [FromBody] string menssage)
         {
-            CreateSession();
             try
             {
+                CreateSession();
                 encounterServices.AddComment(encounterId, menssage);
                 return Ok();
             }
@@ -200,13 +199,13 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize]
         public IActionResult CreateFixture(FixtureModelIn fixtureModelIn)
         {
-            CreateSession();
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
             try
             {
+                CreateSession();
                 var encounters = encounterServices.CreateFixture(fixtureModelIn.CreationAlgorithmName, fixtureModelIn.SportName, fixtureModelIn.StartingDate);
                 return Ok(encounters);
             }

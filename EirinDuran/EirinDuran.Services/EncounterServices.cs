@@ -36,7 +36,7 @@ namespace EirinDuran.Services
             commentMapper = new CommentMapper(userRepo);
         }
 
-        public void CreateEncounter(EncounterDTO encounterDTO)
+        public EncounterDTO CreateEncounter(EncounterDTO encounterDTO)
         {
             adminValidator.ValidatePermissions();
             Encounter encounter = mapper.Map(encounterDTO);
@@ -45,6 +45,7 @@ namespace EirinDuran.Services
             try
             {
                 encounterRepository.Add(encounter);
+                return mapper.Map(encounter);
             }
             catch (DataAccessException e)
             {
@@ -98,9 +99,21 @@ namespace EirinDuran.Services
         public void AddComment(string encounterId, string comment)
         {
             User user = userRepo.Get(loginServices.LoggedUser.UserName);
-            Encounter encounterToComment = encounterRepository.Get(encounterId);
+            Encounter encounterToComment = TryToGetEncounter(encounterId);
             encounterToComment.AddComment(user, comment);
             encounterRepository.Update(encounterToComment);
+        }
+
+        private Encounter TryToGetEncounter(string encounterId)
+        {
+            try
+            {
+                return encounterRepository.Get(encounterId);
+            }
+            catch(DataAccessException ex)
+            {
+                throw new ServicesException($"Encounter with id {encounterId} not found");
+            }
         }
 
         public IEnumerable<EncounterDTO> GetAllEncounters()
@@ -180,7 +193,7 @@ namespace EirinDuran.Services
             }
             catch(DataAccessException e)
             {
-                throw new ServicesException($"Failure to try to update encounter id = {encounterModel.Id}", e);
+                throw new ServicesException($"Failure to update encounter id = {encounterModel.Id}", e);
             }
         }
 
@@ -243,9 +256,21 @@ namespace EirinDuran.Services
 
         private IFixtureGenerator GetFixtureGenerator(string fixtureGeneratorName, string sportName)
         {
-            Sport sport = sportRepo.Get(sportName);
+            Sport sport = GetSport(sportName);
             Assembly domainAssembly = Assembly.Load(FixtureGeneratorsAssembly);
             return GetFixtureGeneratorFromAssembly(fixtureGeneratorName, sport, domainAssembly);
+        }
+
+        private Sport GetSport(string sportName)
+        {
+            try
+            {
+                return sportRepo.Get(sportName);
+            }
+            catch(DataAccessException ex)
+            {
+                throw new ServicesException($"Sport with name {sportName} doesnt exists");
+            }
         }
 
         private static IFixtureGenerator GetFixtureGeneratorFromAssembly(string fixtureGeneratorName, Sport sport, Assembly domainAssembly)

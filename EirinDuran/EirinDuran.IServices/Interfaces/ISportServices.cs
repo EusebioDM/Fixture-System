@@ -6,7 +6,7 @@ namespace EirinDuran.IServices.Interfaces
 {
     public interface ISportServices
     {
-        void CreateSport(SportDTO sportDTO);
+        SportDTO CreateSport(SportDTO sportDTO);
 
         void ModifySport(SportDTO sportDTO);
 

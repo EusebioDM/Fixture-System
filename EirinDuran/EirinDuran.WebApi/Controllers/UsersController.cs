@@ -30,9 +30,9 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize(Roles = "Administrator, Follower")]
         public ActionResult<List<UserModelOut>> GetAll()
         {
-            CreateSession();
             try
             {
+                CreateSession();
                 return TryToGetAllUsers();
             }
             catch (ServicesException e)
@@ -50,9 +50,9 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize(Roles = "Administrator, Follower")]
         public ActionResult<UserModelOut> GetById(string userId)
         {
-            CreateSession();
             try
             {
+                CreateSession();
                 return TryToGetById(userId);
             }
             catch (ServicesException e)
@@ -71,13 +71,13 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize(Roles = "Administrator")]
         public IActionResult Create(UserModelIn userModel)
         {
-            CreateSession();
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
             try
             {
+                CreateSession();
                 return TryToAddUser(userModel);
             }
             catch (InsufficientPermissionException)
@@ -96,20 +96,20 @@ namespace EirinDuran.WebApi.Controllers
             userServices.CreateUser(user);
 
             var addedUser = new UserModelOut(user);
-            return CreatedAtRoute("GetUser", new { id = addedUser.UserName }, addedUser);
+            return CreatedAtRoute("GetUser", new { userId = addedUser.UserName }, addedUser);
         }
 
         [HttpPut("{userId}")]
         [Authorize(Roles = "Administrator")]
         public IActionResult Modify(string userId, [FromBody] UserUpdateModelIn userModel)
         {
-            CreateSession();
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
             try
             {
+                CreateSession();
                 return TryToModify(userId, userModel);
             }
             catch (InsufficientPermissionException)
@@ -135,9 +135,9 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize(Roles = "Administrator")]
         public IActionResult Delete(string userId)
         {
-            CreateSession();
             try
             {
+                CreateSession();
                 return TryToDelete(userId);
             }
             catch (InsufficientPermissionException)
@@ -161,9 +161,9 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize(Roles = "Administrator, Follower")]
         public ActionResult<List<string>> GetFollowedTeams()
         {
-            CreateSession();
             try
             {
+                CreateSession();
                 return loginServices.LoggedUser.FollowedTeamsNames;
             }
             catch (ServicesException e)
@@ -177,9 +177,9 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize(Roles = "Administrator, Follower")]
         public ActionResult<List<CommentDTO>> GetFollowedTeamCommentaries()
         {
-            CreateSession();
             try
             {
+                CreateSession();
                 UserDTO user = userServices.GetUser(loginServices.LoggedUser.UserName);
                 IEnumerable<EncounterDTO> encounters = encounterServices.GetAllEncountersWithFollowedTeams();
                 List<CommentDTO> comments = new List<CommentDTO>();

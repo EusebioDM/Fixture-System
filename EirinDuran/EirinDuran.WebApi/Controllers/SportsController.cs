@@ -40,6 +40,7 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet]
+        [Route("{sportId}", Name = "GetSport")]
         [Authorize]
         public ActionResult<SportDTO> GetById(string sportId)
         {
@@ -72,9 +73,9 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize(Roles = "Administrator")]
         public IActionResult Create(SportDTO sport)
         {
-            CreateSession();
             try
             {
+                CreateSession();
                 return TryToCreate(sport);
             }
             catch (InsufficientPermissionException)
@@ -90,16 +91,17 @@ namespace EirinDuran.WebApi.Controllers
         private IActionResult TryToCreate(SportDTO sport)
         {
             sportServices.CreateSport(sport);
-            return CreatedAtRoute("GetSport", new { id = sport.Name }, sport);
+            return CreatedAtRoute("GetSport", new { sportId = sport.Name }, sport);
         }
 
         [HttpDelete("{sportName}")]
         [Authorize(Roles = "Administrator")]
         public IActionResult Delete(string sportName)
         {
-            CreateSession();
+            
             try
             {
+                CreateSession();
                 return TryToDelete(sportName);
             }
             catch (InsufficientPermissionException)
@@ -116,13 +118,6 @@ namespace EirinDuran.WebApi.Controllers
         {
             sportServices.DeleteSport(sportId);
             return Ok();
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Administrator")]
-        public ActionResult<List<EncounterDTO>> CreateFixture(FixtureModelIn fixture)
-        {
-            throw new System.NotImplementedException();
         }
 
 

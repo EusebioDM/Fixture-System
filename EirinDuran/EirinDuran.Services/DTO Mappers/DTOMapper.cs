@@ -16,7 +16,7 @@ namespace EirinDuran.Services.DTO_Mappers
             }
             catch (Exception ex ) when (ex is Domain.DomainException  || ex is ArgumentNullException || ex is IDataAccess.DataAccessException)
             {
-                throw new IServices.Exceptions.InvalidaDataException(dto, ex);
+                throw new IServices.Exceptions.ServicesException($"DTO had invalid data", ex);
             }
         }
 

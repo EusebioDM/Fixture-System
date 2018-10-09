@@ -5,7 +5,7 @@ namespace EirinDuran.IServices.Interfaces
 {
     public interface ITeamServices
     {
-        void CreateTeam(TeamDTO team);
+        TeamDTO CreateTeam(TeamDTO team);
 
         TeamDTO GetTeam(string teamId);
 

@@ -8,7 +8,7 @@ namespace EirinDuran.IServices.Interfaces
     {
         void AddComment(string encounterId, string comment);
 
-        void CreateEncounter(EncounterDTO encounterDTO);
+        EncounterDTO CreateEncounter(EncounterDTO encounterDTO);
 
         void CreateEncounter(IEnumerable<EncounterDTO> encounterDTOs);
 

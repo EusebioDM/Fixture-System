@@ -29,17 +29,18 @@ namespace EirinDuran.Services
             teamMapper = new TeamMapper(sportRepository);
         }
 
-        public void CreateTeam(TeamDTO team)
+        public TeamDTO CreateTeam(TeamDTO team)
         {
             validator.ValidatePermissions();
             try
             {
-                Team domianTeam = teamMapper.Map(team);
-                teamRepository.Add(domianTeam);
+                Team domainTeam = teamMapper.Map(team);
+                teamRepository.Add(domainTeam);
+                return teamMapper.Map(domainTeam);
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to add team.", e);
+                throw new ServicesException($"Failure to add team with name {team.Name}.", e);
             }
         }
 
@@ -51,7 +52,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to recover team.", e);
+                throw new ServicesException($"Failure to recover team. with id {teamId}", e);
             }
         }
 
@@ -76,7 +77,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to update team.", e);
+                throw new ServicesException($"Failure to update team with name {teamToUpdate.Name}.", e);
             }
         }
 
@@ -89,7 +90,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to delete team.", e);
+                throw new ServicesException($"Failure to delete team with id {teamId}.", e);
             }
         }
 

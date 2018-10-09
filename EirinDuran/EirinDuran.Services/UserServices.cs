@@ -1,13 +1,13 @@
+using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
-using EirinDuran.Domain.Fixture;
-using System.Collections.Generic;
-using EirinDuran.Services.DTO_Mappers;
-using System.Linq;
 using EirinDuran.IServices.DTOs;
-using EirinDuran.IServices.Interfaces;
-using System;
 using EirinDuran.IServices.Exceptions;
+using EirinDuran.IServices.Interfaces;
+using EirinDuran.Services.DTO_Mappers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EirinDuran.Services
 {
@@ -30,7 +30,7 @@ namespace EirinDuran.Services
             teamMapper = new TeamMapper(sportRepository);
         }
 
-        public void CreateUser(UserDTO userDTO)
+        public UserDTO CreateUser(UserDTO userDTO)
         {
             adminValidator.ValidatePermissions();
             User user = userMapper.Map(userDTO);
@@ -38,12 +38,13 @@ namespace EirinDuran.Services
             try
             {
                 userRepository.Add(user);
+                return userMapper.Map(user);
             }
-            catch(DataAccessException e)
+            catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to create user.", e);
+                throw new ServicesException($"User with name {user.Name} already exists.", e);
             }
-            
+
         }
 
         public UserDTO GetUser(string userId)
@@ -54,7 +55,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to recover user.", e);
+                throw new ServicesException($"User with name {userId} doesnt exists.", e);
             }
         }
 
@@ -64,7 +65,7 @@ namespace EirinDuran.Services
             {
                 return userRepository.GetAll().Select(u => userMapper.Map(u));
             }
-            catch(DataAccessException e)
+            catch (DataAccessException e)
             {
                 throw new ServicesException("Failure to get all users.", e);
             }
@@ -79,9 +80,9 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to delete user.", e);
+                throw new ServicesException($"User with name {id} doesnt exists.", e);
             }
-            
+
         }
 
         public void ModifyUser(UserDTO userDTO)
@@ -94,7 +95,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to modify user.", e);
+                throw new ServicesException($"User with name {user.Name} doesnt exists.", e);
             }
         }
 
@@ -106,9 +107,9 @@ namespace EirinDuran.Services
                 Func<Team, TeamDTO> mapDTOs = team => teamMapper.Map(team);
                 return recovered.FollowedTeams.Select(mapDTOs);
             }
-            catch(DataAccessException e)
+            catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to recover user logged in followed teams.", e);
+                throw new ServicesException($"Failed to get {loginServices.LoggedUser} followed teams.", e);
             }
         }
     }
