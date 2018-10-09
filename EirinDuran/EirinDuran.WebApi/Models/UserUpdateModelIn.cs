@@ -18,7 +18,7 @@ namespace EirinDuran.WebApi.Models
 
         public UserUpdateModelIn() { }
 
-        public UserDTO Map()
+        public UserDTO ToServicesDTO()
         {
             return new UserDTO()
             {

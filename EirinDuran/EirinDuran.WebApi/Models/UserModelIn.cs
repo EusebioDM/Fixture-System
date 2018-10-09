@@ -38,7 +38,7 @@ namespace EirinDuran.WebApi.Models
             IsAdmin = user.IsAdmin;
         }
 
-        public UserDTO Map( )
+        public UserDTO ToServicesDTO( )
         {
             return new UserDTO()
             {

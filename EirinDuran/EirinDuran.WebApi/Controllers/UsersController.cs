@@ -1,7 +1,6 @@
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.Interfaces;
-using EirinDuran.WebApi.Mappers;
 using EirinDuran.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -92,7 +91,7 @@ namespace EirinDuran.WebApi.Controllers
 
         private IActionResult TryToAddUser(UserModelIn userModel)
         {
-            UserDTO user = UserMapper.Map(userModel);
+            UserDTO user = userModel.ToServicesDTO();
             userServices.CreateUser(user);
 
             var addedUser = new UserModelOut(user);
@@ -124,7 +123,7 @@ namespace EirinDuran.WebApi.Controllers
 
         private IActionResult TryToModify(string userId, UserUpdateModelIn userModel)
         {
-            UserDTO user = UserMapper.Map(userModel);
+            UserDTO user = userModel.ToServicesDTO();
             user.UserName = userId;
 
             userServices.ModifyUser(user);
