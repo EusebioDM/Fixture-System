@@ -72,12 +72,16 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Create(TeamDTO team)
+        public IActionResult Create(TeamModelIn team)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             CreateSession();
             try
             {
-                return TryToCreate(team);
+                return TryToCreate(team.Map());
             }
             catch (InsufficientPermissionException)
             {
@@ -100,11 +104,15 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Put(string id, [FromBody] TeamDTO team)
+        public IActionResult Put(string id, [FromBody] TeamModelIn team)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             try
             {
-                return TryToUpdate(team);
+                return TryToUpdate(team.Map());
             }
             catch (InsufficientPermissionException)
             {

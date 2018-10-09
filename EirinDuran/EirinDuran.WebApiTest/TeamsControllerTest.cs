@@ -36,8 +36,8 @@ namespace EirinDuran.WebApiTest
         {
             var teamServicesMock = new Mock<ITeamServices>();
             var encounterServicesMock = new Mock<IEncounterServices>();
-            TeamDTO teamIn = new TeamDTO() { Name = "Cavaliers", SportName = "Futbol" };
-            teamServicesMock.Setup(t => t.CreateTeam(teamIn));
+            TeamModelIn teamIn = new TeamModelIn() { Name = "Cavaliers", SportName = "Futbol" };
+            teamServicesMock.Setup(t => t.CreateTeam(teamIn.Map()));
             ILoginServices login = new LoginServicesMock(mariano);
 
             var httpContext = new DefaultHttpContext();
@@ -52,7 +52,7 @@ namespace EirinDuran.WebApiTest
             };
 
             var result = controller.Create(teamIn);
-            teamServicesMock.Verify(t => t.CreateTeam(teamIn), Times.AtMostOnce);
+            teamServicesMock.Verify(t => t.CreateTeam(teamIn.Map()), Times.AtMostOnce);
             var createdResult = result as CreatedAtRouteResult;
             var teamOut = createdResult.Value as TeamDTO;
 
@@ -67,8 +67,8 @@ namespace EirinDuran.WebApiTest
         {
             var teamServicesMock = new Mock<ITeamServices>();
             var encounterServicesMock = new Mock<IEncounterServices>();
-            TeamDTO teamIn = new TeamDTO() { Name = "Cavaliers", SportName = "Futbol" };
-            teamServicesMock.Setup(t => t.CreateTeam(teamIn)).Throws(new InsufficientPermissionException());
+            TeamModelIn teamIn = new TeamModelIn() { Name = "Cavaliers", SportName = "Futbol" };
+            teamServicesMock.Setup(t => t.CreateTeam(It.IsAny<TeamDTO>())).Throws(new InsufficientPermissionException());
             ILoginServices login = new LoginServicesMock(mariano);
 
             var httpContext = new DefaultHttpContext();
@@ -83,7 +83,7 @@ namespace EirinDuran.WebApiTest
             };
 
             var result = controller.Create(teamIn);
-            teamServicesMock.Verify(t => t.CreateTeam(teamIn), Times.AtMostOnce);
+            teamServicesMock.Verify(t => t.CreateTeam(It.IsAny<TeamDTO>()), Times.AtMostOnce);
             var unauthorizedResult = result as UnauthorizedResult;
 
             Assert.IsNotNull(unauthorizedResult);
@@ -95,8 +95,8 @@ namespace EirinDuran.WebApiTest
         {
             var teamServicesMock = new Mock<ITeamServices>();
             var encounterServicesMock = new Mock<IEncounterServices>();
-            TeamDTO teamIn = new TeamDTO() { Name = "Cavaliers", SportName = "Futbol" };
-            teamServicesMock.Setup(t => t.CreateTeam(teamIn)).Throws(new ServicesException());
+            TeamModelIn teamIn = new TeamModelIn() { Name = "Cavaliers", SportName = "Futbol" };
+            teamServicesMock.Setup(t => t.CreateTeam(It.IsAny<TeamDTO>())).Throws(new ServicesException());
             ILoginServices login = new LoginServicesMock(mariano);
 
             var httpContext = new DefaultHttpContext();
@@ -111,7 +111,7 @@ namespace EirinDuran.WebApiTest
             };
 
             var result = controller.Create(teamIn);
-            teamServicesMock.Verify(t => t.CreateTeam(teamIn), Times.AtMostOnce);
+            teamServicesMock.Verify(t => t.CreateTeam(It.IsAny<TeamDTO>()), Times.AtMostOnce);
             var resultRequest = result as BadRequestObjectResult;
 
             Assert.IsNotNull(resultRequest);
@@ -474,11 +474,11 @@ namespace EirinDuran.WebApiTest
             var teamServicesMock = new Mock<ITeamServices>();
             var encounterServicesMock = new Mock<IEncounterServices>();
 
-            TeamDTO team1 = new TeamDTO() { Name = "Team1", SportName = "Futbol" };
+            TeamModelIn team1 = new TeamModelIn() { Name = "Team1", SportName = "Futbol" };
 
             string teamId = "Team1_Futbol";
 
-            teamServicesMock.Setup(t => t.UpdateTeam(team1));
+            teamServicesMock.Setup(t => t.UpdateTeam(team1.Map()));
             ILoginServices login = new LoginServicesMock(mariano);
 
             var httpContext = new DefaultHttpContext();
@@ -493,7 +493,7 @@ namespace EirinDuran.WebApiTest
             };
 
             var result = controller.Put(teamId, team1);
-            teamServicesMock.Verify(t => t.UpdateTeam(team1), Times.AtMostOnce);
+            teamServicesMock.Verify(t => t.UpdateTeam(team1.Map()), Times.AtMostOnce);
             var resultRequest = result as OkResult;
 
             Assert.IsNotNull(resultRequest);
@@ -506,11 +506,11 @@ namespace EirinDuran.WebApiTest
             var teamServicesMock = new Mock<ITeamServices>();
             var encounterServicesMock = new Mock<IEncounterServices>();
 
-            TeamDTO team1 = new TeamDTO() { Name = "Team1", SportName = "Futbol" };
+            TeamModelIn team1 = new TeamModelIn() { Name = "Team1", SportName = "Futbol" };
 
             string teamId = "Team1_Futbol";
 
-            teamServicesMock.Setup(t => t.UpdateTeam(team1)).Throws(new InsufficientPermissionException());
+            teamServicesMock.Setup(t => t.UpdateTeam(It.IsAny<TeamDTO>())).Throws(new InsufficientPermissionException());
             ILoginServices login = new LoginServicesMock(mariano);
 
             var httpContext = new DefaultHttpContext();
@@ -525,7 +525,7 @@ namespace EirinDuran.WebApiTest
             };
 
             var result = controller.Put(teamId, team1);
-            teamServicesMock.Verify(t => t.UpdateTeam(team1), Times.AtMostOnce);
+            teamServicesMock.Verify(t => t.UpdateTeam(It.IsAny<TeamDTO>()), Times.AtMostOnce);
             var resultRequest = result as UnauthorizedResult;
 
             Assert.IsNotNull(resultRequest);
@@ -538,11 +538,11 @@ namespace EirinDuran.WebApiTest
             var teamServicesMock = new Mock<ITeamServices>();
             var encounterServicesMock = new Mock<IEncounterServices>();
 
-            TeamDTO team1 = new TeamDTO() { Name = "Team1", SportName = "Futbol" };
+            TeamModelIn team1 = new TeamModelIn() { Name = "Team1", SportName = "Futbol" };
 
             string teamId = "Team1_Futbol";
 
-            teamServicesMock.Setup(t => t.UpdateTeam(team1)).Throws(new ServicesException());
+            teamServicesMock.Setup(t => t.UpdateTeam(It.IsAny<TeamDTO>())).Throws(new ServicesException());
             ILoginServices login = new LoginServicesMock(mariano);
 
             var httpContext = new DefaultHttpContext();
@@ -557,7 +557,7 @@ namespace EirinDuran.WebApiTest
             };
 
             var result = controller.Put(teamId, team1);
-            teamServicesMock.Verify(t => t.UpdateTeam(team1), Times.AtMostOnce);
+            teamServicesMock.Verify(t => t.UpdateTeam(It.IsAny<TeamDTO>()), Times.AtMostOnce);
             var resultRequest = result as BadRequestObjectResult;
 
             Assert.IsNotNull(resultRequest);
