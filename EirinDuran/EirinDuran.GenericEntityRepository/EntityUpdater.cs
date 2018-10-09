@@ -11,54 +11,58 @@ namespace EirinDuran.GenericEntityRepository
     internal class EntityUpdater<Entity> where Entity : class
     {
         private readonly IDesignTimeDbContextFactory<DbContext> contextFactory;
+        private Queue<object> entitiesLeftToUpdate;
+        HashSet<EntityKeys> entitiesThatShouldBeInUpdate;
 
         public EntityUpdater(IDesignTimeDbContextFactory<DbContext> contextFactory)
         {
             this.contextFactory = contextFactory;
+            entitiesLeftToUpdate = new Queue<object>();
+            entitiesThatShouldBeInUpdate = new HashSet<EntityKeys>();
         }
 
         public void UpdateGraph(Entity entityToUpdate)
         {
-            Queue<object> entitiesLeftToUpdate = new Queue<object>();
-            HashSet<EntityKeys> entitiesThatShouldBeInUpdate = new HashSet<EntityKeys>();
+            entitiesLeftToUpdate = new Queue<object>();
+            entitiesThatShouldBeInUpdate = new HashSet<EntityKeys>();
             entitiesLeftToUpdate.Enqueue(entityToUpdate);
 
             while (entitiesLeftToUpdate.Count() > 0)
             {
-                UpdateRootEntityAndItsChildrenIfPossible(entitiesLeftToUpdate, entitiesThatShouldBeInUpdate);
+                UpdateRootEntityAndItsChildrenIfPossible();
             }
 
-            RemoveNoLongerPresentEntities(entityToUpdate, entitiesThatShouldBeInUpdate);
+            RemoveNoLongerPresentEntities(entityToUpdate);
         }
 
-        private void UpdateRootEntityAndItsChildrenIfPossible(Queue<object> entitiesLeftToUpdate, HashSet<EntityKeys> entitiesThatShouldBeInUpdate)
+        private void UpdateRootEntityAndItsChildrenIfPossible()
         {
             object rootEntityToUpdate = entitiesLeftToUpdate.Peek();
 
             using (DbContext context = contextFactory.CreateDbContext(new string[0]))
             {
-                TraverseEntityGraphUpdatingWhenPossible(entitiesLeftToUpdate, rootEntityToUpdate, context, entitiesThatShouldBeInUpdate);
+                TraverseEntityGraphUpdatingWhenPossible(rootEntityToUpdate, context);
                 context.SaveChanges();
             }
             entitiesLeftToUpdate.Dequeue();
         }
 
-        private void TraverseEntityGraphUpdatingWhenPossible(Queue<object> entitiesLeftToUpdate, object rootEntityToUpdate, DbContext context, HashSet<EntityKeys> entitiesThatShouldBeInUpdate)
+        private void TraverseEntityGraphUpdatingWhenPossible(object rootEntityToUpdate, DbContext context)
         {
-            Action<EntityEntryGraphNode> updateNodeRecursivelyAction = n => UpdateNodeRecursively(context, entitiesLeftToUpdate, n, entitiesThatShouldBeInUpdate);
+            Action<EntityEntryGraphNode> updateNodeRecursivelyAction = n => UpdateNodeRecursively(context, n);
 
             context.ChangeTracker.TrackGraph(rootEntityToUpdate, updateNodeRecursivelyAction);
         }
 
-        private void UpdateNodeRecursively(DbContext context, Queue<object> toUpdateQueue, EntityEntryGraphNode node, HashSet<EntityKeys> set)
+        private void UpdateNodeRecursively(DbContext context, EntityEntryGraphNode node)
         {
             EntityEntry current = node.Entry;
             EntityEntry fatherNode = node.SourceEntry;
-            set.Add(HelperFunctions<Entity>.GetKeys(current));
+            entitiesThatShouldBeInUpdate.Add(HelperFunctions<Entity>.GetKeys(current));
 
             if (EntryExistsInChangeTracker(context, current)) // Entity is already being tracked in a different node so the current context cant track it
             {
-                EnqueueFatherNodeToLeftToUpdateQueue(toUpdateQueue, fatherNode);
+                EnqueueFatherNodeToLeftToUpdateQueue(fatherNode);
             }
             else
             {
@@ -78,12 +82,12 @@ namespace EirinDuran.GenericEntityRepository
             }
         }
 
-        private void EnqueueFatherNodeToLeftToUpdateQueue(Queue<object> toUpdateQueue, EntityEntry fatherNode)
+        private void EnqueueFatherNodeToLeftToUpdateQueue(EntityEntry fatherNode)
         {
-            bool canEnqueueWithoutGettingStuckInLoop = !toUpdateQueue.Contains(fatherNode.Entity);
+            bool canEnqueueWithoutGettingStuckInLoop = !entitiesLeftToUpdate.Contains(fatherNode.Entity);
             if (canEnqueueWithoutGettingStuckInLoop)
             {
-                toUpdateQueue.Enqueue(fatherNode.Entity); // Entity is added to the queue so it can be added in a different context
+                entitiesLeftToUpdate.Enqueue(fatherNode.Entity); // Entity is added to the queue so it can be added in a different context
             }
         }
 
@@ -102,19 +106,19 @@ namespace EirinDuran.GenericEntityRepository
 
 
 
-        private void RemoveNoLongerPresentEntities(Entity entity, HashSet<EntityKeys> entitiesThatShouldBeInUpdate)
+        private void RemoveNoLongerPresentEntities(Entity entity)
         {
             using (DbContext context = contextFactory.CreateDbContext(new string[0]))
             {
                 EntityEntry entry = context.Entry(entity);
                 EntityKeys key = HelperFunctions<Entity>.GetKeys(entry);
                 Entity root = context.Find<Entity>(key.Keys.ToArray());
-                RemoveEntitiesNotInUpdateRecusively(context, context.Entry(root), entitiesThatShouldBeInUpdate, new HashSet<EntityKeys>());
+                RemoveEntitiesNotInUpdateRecusively(context, context.Entry(root), new HashSet<EntityKeys>());
                 context.SaveChanges();
             }
         }
 
-        private void RemoveEntitiesNotInUpdateRecusively(DbContext context, EntityEntry currentEntry, HashSet<EntityKeys> entitiesThatShouldBeInUpdate, HashSet<EntityKeys> alreadyTraversed)
+        private void RemoveEntitiesNotInUpdateRecusively(DbContext context, EntityEntry currentEntry, HashSet<EntityKeys> alreadyTraversed)
         {
             EntityKeys keys = HelperFunctions<Entity>.GetKeys(currentEntry);
             if (!alreadyTraversed.Contains(keys))
@@ -126,23 +130,23 @@ namespace EirinDuran.GenericEntityRepository
                     dynamic propertyCurrentValue = property.CurrentValue;
                     if (property.Metadata.IsCollection())
                     {
-                        RemoveEntitiesFromCollectionThatWereNotPartOftheUpdateAndCallRecursively(context, entitiesThatShouldBeInUpdate, propertyCurrentValue, alreadyTraversed);
+                        RemoveEntitiesFromCollectionThatWereNotPartOftheUpdateAndCallRecursively(context, propertyCurrentValue, alreadyTraversed);
                     }
                     else
                     {
-                        CallThisMethodRecusivelyWithChildEntity(context, entitiesThatShouldBeInUpdate, property, alreadyTraversed);
+                        CallThisMethodRecusivelyWithChildEntity(context, property, alreadyTraversed);
                     }
                 }
             }
         }
 
-        private void CallThisMethodRecusivelyWithChildEntity(DbContext context, HashSet<EntityKeys> entitiesThatShouldBeInUpdate, NavigationEntry property, HashSet<EntityKeys> alreadyTraversed)
+        private void CallThisMethodRecusivelyWithChildEntity(DbContext context, NavigationEntry property, HashSet<EntityKeys> alreadyTraversed)
         {
             EntityEntry entry = context.Entry(property.CurrentValue);
-            RemoveEntitiesNotInUpdateRecusively(context, entry, entitiesThatShouldBeInUpdate, alreadyTraversed);
+            RemoveEntitiesNotInUpdateRecusively(context, entry, alreadyTraversed);
         }
 
-        private void RemoveEntitiesFromCollectionThatWereNotPartOftheUpdateAndCallRecursively(DbContext context, HashSet<EntityKeys> entitiesThatShouldBeInUpdate, dynamic entitiesThatNeedToBeFiltered, HashSet<EntityKeys> alreadyTraversed)
+        private void RemoveEntitiesFromCollectionThatWereNotPartOftheUpdateAndCallRecursively(DbContext context, dynamic entitiesThatNeedToBeFiltered, HashSet<EntityKeys> alreadyTraversed)
         {
             List<dynamic> toBeDeleted = new List<dynamic>();
             foreach (dynamic entity in entitiesThatNeedToBeFiltered)
@@ -153,7 +157,7 @@ namespace EirinDuran.GenericEntityRepository
                 {
                     toBeDeleted.Add(entity);
                 }
-                RemoveEntitiesNotInUpdateRecusively(context, entry, entitiesThatShouldBeInUpdate, alreadyTraversed);
+                RemoveEntitiesNotInUpdateRecusively(context, entry, alreadyTraversed);
             }
             Action<dynamic> deleteFromCollectionOfEntities = e => entitiesThatNeedToBeFiltered.Remove(e);
             toBeDeleted.ForEach(deleteFromCollectionOfEntities);
