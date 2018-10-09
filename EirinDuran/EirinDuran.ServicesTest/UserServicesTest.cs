@@ -26,8 +26,6 @@ namespace EirinDuran.ServicesTest
         private IRepository<Encounter> encounterRepo;
         private UserDTO pepe;
         private UserDTO pablo;
-        private Sport futbol;
-        private Sport baskteball;
 
         [TestInitialize]
         public void TestInit()

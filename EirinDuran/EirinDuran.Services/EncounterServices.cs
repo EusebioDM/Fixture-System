@@ -112,7 +112,7 @@ namespace EirinDuran.Services
             }
             catch(DataAccessException ex)
             {
-                throw new ServicesException($"Encounter with id {encounterId} not found");
+                throw new ServicesException($"Encounter with id {encounterId} not found", ex);
             }
         }
 
@@ -290,7 +290,7 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException ex)
             {
-                throw new ServicesException($"Sport with name {sportName} doesnt exists");
+                throw new ServicesException($"Sport with name {sportName} doesnt exists", ex);
             }
         }
     }
