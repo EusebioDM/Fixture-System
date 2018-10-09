@@ -51,7 +51,7 @@ namespace EirinDuran.GenericEntityRepository
         {
             Action<EntityEntryGraphNode> updateNodeRecursivelyAction = n => UpdateNodeRecursively(context, n);
 
-            context.ChangeTracker.TrackGraph(rootEntityToUpdate, updateNodeRecursivelyAction);
+            context.ChangeTracker.TrackGraph(rootEntityToUpdate, updateNodeRecursivelyAction); // Runs the updateNodeRecursivelyAction method on all nodes
         }
 
         private void UpdateNodeRecursively(DbContext context, EntityEntryGraphNode node)
@@ -62,7 +62,7 @@ namespace EirinDuran.GenericEntityRepository
 
             if (EntryExistsInChangeTracker(context, current)) // Entity is already being tracked in a different node so the current context cant track it
             {
-                EnqueueFatherNodeToLeftToUpdateQueue(fatherNode);
+                EnqueueFatherNodeToLeftToUpdateQueue(fatherNode); // Entity will be updated in a new Conxtext in the future since it cant be tracked in the current context
             }
             else
             {
@@ -121,7 +121,8 @@ namespace EirinDuran.GenericEntityRepository
         private void RemoveEntitiesNotInUpdateRecusively(DbContext context, EntityEntry currentEntry, HashSet<EntityKeys> alreadyTraversed)
         {
             EntityKeys keys = HelperFunctions<Entity>.GetKeys(currentEntry);
-            if (!alreadyTraversed.Contains(keys))
+            bool haventTraversedThisEntity = !alreadyTraversed.Contains(keys);
+            if (haventTraversedThisEntity)
             {
                 alreadyTraversed.Add(keys);
                 foreach (var property in currentEntry.Navigations)
