@@ -1,4 +1,3 @@
-
 using EirinDuran.IServices.DTOs;
 using System;
 
@@ -16,7 +15,7 @@ namespace EirinDuran.WebApi.Models
 
         public bool IsAdmin { get; set; }
 
-        public string CommentariesUrl { get; set; }
+        public string CommentariesUrl { get; }
 
         public UserModelOut(UserDTO user)
         {
@@ -24,8 +23,8 @@ namespace EirinDuran.WebApi.Models
             Name = user.Name;
             Surname = user.Surname;
             Mail = user.Mail;
-            CommentariesUrl = Name + "/commentaries";
             IsAdmin = user.IsAdmin;
+            CommentariesUrl = "/api/users/" + UserName + "/commentaries";
         }
 
         public override bool Equals(object obj)

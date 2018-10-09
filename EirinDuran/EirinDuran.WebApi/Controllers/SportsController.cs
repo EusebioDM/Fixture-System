@@ -26,12 +26,12 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpGet]
-        [Authorize]
-        public ActionResult<List<SportDTO>> GetAll()
+        [Authorize(Roles = "Administrator, Follower")]
+        public ActionResult<List<SportModelOut>> GetAll()
         {
             try
             {
-                return sportServices.GetAllSports().ToList();
+                return sportServices.GetAllSports().Select(s => new SportModelOut(s)).ToList();
             }
             catch (ServicesException e)
             {
@@ -39,14 +39,14 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("{sportId}", Name = "GetSport")]
-        [Authorize]
-        public ActionResult<SportDTO> GetById(string sportId)
+
+        [HttpGet("{sportId}")]
+        [Authorize(Roles = "Administrator, Follower")]
+        public ActionResult<SportModelOut> GetById(string sportId)
         {
             try
             {
-                return sportServices.GetSport(sportId);
+                return new SportModelOut(sportServices.GetSport(sportId));
             }
             catch (ServicesException e)
             {
@@ -57,15 +57,15 @@ namespace EirinDuran.WebApi.Controllers
         [HttpGet]
         [Route("{sportId}/encounters")]
         [Authorize]
-        public ActionResult<List<EncounterDTO>> GetEncounters(string sportId)
+        public ActionResult<List<EncounterModelOut>> GetEncounters(string sportId)
         {
             try
             {
-                return encounterServices.GetEncountersBySport(sportId).ToList();
+                return encounterServices.GetEncountersBySport(sportId).Select(e => new EncounterModelOut(e)).ToList();
             }
-            catch (ServicesException)
+            catch (ServicesException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 
@@ -119,7 +119,6 @@ namespace EirinDuran.WebApi.Controllers
             sportServices.DeleteSport(sportId);
             return Ok();
         }
-
 
         private void CreateSession()
         {

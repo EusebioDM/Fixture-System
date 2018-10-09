@@ -26,7 +26,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Administrator")]
-        public ActionResult<List<EncounterDTO>> Get([FromQuery] DateTime start, [FromQuery] DateTime end)
+        public ActionResult<List<EncounterModelOut>> Get([FromQuery] DateTime start, [FromQuery] DateTime end)
         {
             try
             {
@@ -43,26 +43,27 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        private ActionResult<List<EncounterDTO>> TryToGetAllEncounters(DateTime start, DateTime end)
+        private ActionResult<List<EncounterModelOut>> TryToGetAllEncounters(DateTime start, DateTime end)
         {
             if (start.Equals(new DateTime()) || end.Equals(new DateTime()))
             {
-                return encounterServices.GetAllEncounters().ToList();
+                return encounterServices.GetAllEncounters().Select(e => new EncounterModelOut(e)).ToList();
             }
             else
             {
-                return encounterServices.GetEncountersByDate(start, end).ToList();
+                return encounterServices.GetEncountersByDate(start, end).Select(e => new EncounterModelOut(e)).ToList();
             }
         }
 
         [HttpGet("{id}", Name = "GetEncounter")]
         [Authorize(Roles = "Administrator, Follower")]
-        public ActionResult<EncounterDTO> GetById(string id)
+        public ActionResult<EncounterModelOut> GetById(string id)
         {
             try
             {
                 CreateSession();
-                return encounterServices.GetEncounter(id);
+                return new EncounterModelOut(encounterServices.GetEncounter(id));
+
             }
             catch(ServicesException e)
             {
@@ -209,9 +210,9 @@ namespace EirinDuran.WebApi.Controllers
                 var encounters = encounterServices.CreateFixture(fixtureModelIn.CreationAlgorithmName, fixtureModelIn.SportName, fixtureModelIn.StartingDate);
                 return Ok(encounters);
             }
-            catch (ServicesException ex)
+            catch (ServicesException e)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(e.Message);
             }
         }
 

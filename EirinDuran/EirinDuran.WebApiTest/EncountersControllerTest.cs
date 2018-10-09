@@ -1,10 +1,6 @@
-using EirinDuran.Domain.Fixture;
-using EirinDuran.Domain.User;
-using EirinDuran.IServices;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.Interfaces;
-using EirinDuran.Services;
 using EirinDuran.WebApi.Controllers;
 using EirinDuran.WebApi.Models;
 using Microsoft.AspNetCore.Http;
@@ -70,14 +66,14 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.Get(new DateTime(), new DateTime()) as ActionResult<List<EncounterDTO>>;
+            var obtainedResult = controller.Get(new DateTime(), new DateTime()) as ActionResult<List<EncounterModelOut>>;
             enconunterServicesMock.Verify(e => e.GetAllEncounters(), Times.AtMostOnce());
 
-            bool areEqual = obtainedResult.Value.ToList().All(encs.Contains);
 
             Assert.IsNotNull(obtainedResult);
-            Assert.IsNotNull(obtainedResult.Value);
-            Assert.IsTrue(areEqual);
+            Assert.AreEqual(enc.Id, obtainedResult.Value[0].Id);
+            Assert.AreEqual(enc.SportName, obtainedResult.Value[0].SportName);
+            Assert.AreEqual(enc.AwayTeamName, obtainedResult.Value[0].AwayTeamName);
         }
 
         [TestMethod]
@@ -97,7 +93,7 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.Get(new DateTime(), new DateTime()) as ActionResult<List<EncounterDTO>>;
+            var obtainedResult = controller.Get(new DateTime(), new DateTime()) as ActionResult<List<EncounterModelOut>>;
             enconunterServicesMock.Verify(e => e.GetAllEncounters(), Times.AtMostOnce());
             var result = obtainedResult.Result as BadRequestObjectResult;
 
@@ -218,6 +214,41 @@ namespace EirinDuran.WebApiTest
                 HomeTeamName = enc.HomeTeamName,
                 SportName = enc.SportName
             }) as BadRequestObjectResult;
+            enconunterServicesMock.Verify(e => e.CreateEncounter(enc), Times.AtMostOnce());
+
+            Assert.IsNotNull(obtainedResult);
+            Assert.AreEqual(400, obtainedResult.StatusCode);
+        }
+
+        [TestMethod]
+        public void CreateEncounterWithInvalidModelInEncountersController()
+        {
+            var enconunterServicesMock = new Mock<IEncounterServices>();
+            ILoginServices loginServices = new LoginServicesMock(santiago);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
+            DateTime encounterDate = new DateTime(2018, 12, 10);
+
+            EncounterDTO enc = new EncounterDTO
+            {
+                SportName = football.Name,
+                AwayTeamName = river.Name,
+                HomeTeamName = boca.Name,
+                DateTime = encounterDate
+            };
+
+            enconunterServicesMock.Setup(m => m.CreateEncounter(enc));
+
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+            controller.ModelState.AddModelError("", "");
+
+            var obtainedResult = controller.Create(new EncounterModelIn()) as BadRequestObjectResult;
             enconunterServicesMock.Verify(e => e.CreateEncounter(enc), Times.AtMostOnce());
 
             Assert.IsNotNull(obtainedResult);
@@ -445,6 +476,27 @@ namespace EirinDuran.WebApiTest
             IActionResult actual = controller.CreateFixture(new FixtureModelIn() { CreationAlgorithmName = "RoundRobinFixture", SportName = "Futbol", StartingDate = new DateTime(3000, 10, 10) });
 
             Assert.IsInstanceOfType(actual, typeof(OkObjectResult));
+        }
+
+        [TestMethod]
+        public void GenerateFixtureBadModelInTest()
+        {
+            var encounterServicesMock = new Mock<IEncounterServices>();
+            ILoginServices loginServices = new LoginServicesMock(santiago);
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "";
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            List<EncounterDTO> expected = new List<EncounterDTO>() { new EncounterDTO() { Id = IntToGuid(1) }, new EncounterDTO() { Id = IntToGuid(2) } };
+            encounterServicesMock.Setup(s => s.CreateFixture("RoundRobinFixture", "Futbol", new DateTime(3000, 10, 10))).Returns(expected);
+            var controller = new EncountersController(loginServices, encounterServicesMock.Object) { ControllerContext = controllerContext, };
+            controller.ModelState.AddModelError("", "");
+            IActionResult actual = controller.CreateFixture(new FixtureModelIn() { CreationAlgorithmName = "RoundRobinFixture", SportName = "Futbol", StartingDate = new DateTime(3000, 10, 10) });
+
+            Assert.IsInstanceOfType(actual, typeof(BadRequestResult));
         }
 
         [TestMethod]

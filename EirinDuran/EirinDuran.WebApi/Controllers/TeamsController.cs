@@ -7,6 +7,7 @@ using EirinDuran.IServices.DTOs;
 using System.Security.Claims;
 using EirinDuran.IServices.Exceptions;
 using System;
+using EirinDuran.WebApi.Models;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -27,12 +28,12 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Authorize]
-        public ActionResult<List<TeamDTO>> Get()
+        public ActionResult<List<TeamModelOut>> Get()
         {
             try
             {
                 CreateSession();
-                return teamServices.GetAllTeams().ToList();
+                return teamServices.GetAllTeams().Select(t => new TeamModelOut(t)).ToList();
             }
             catch (ServicesException e)
             {
@@ -42,11 +43,11 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet("{teamId}", Name = "GetTeam")]
         [Authorize]
-        public ActionResult<TeamDTO> Get(string teamId)
+        public ActionResult<TeamModelOut> Get(string teamId)
         {
             try
             {
-                return teamServices.GetTeam(teamId);
+                return new TeamModelOut(teamServices.GetTeam(teamId));
             }
             catch (ServicesException e)
             {
@@ -57,11 +58,11 @@ namespace EirinDuran.WebApi.Controllers
         [HttpGet]
         [Authorize]
         [Route("{teamId}/encounters")]
-        public ActionResult<List<EncounterDTO>> GetEncounters(string teamId)
+        public ActionResult<List<EncounterModelOut>> GetEncounters(string teamId)
         {
             try
             {
-                return encounterServices.GetEncountersByTeam(teamId).ToList();
+                return encounterServices.GetEncountersByTeam(teamId).Select(e => new EncounterModelOut(e)).ToList();
             }
             catch (ServicesException e)
             {
@@ -71,12 +72,16 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Create(TeamDTO team)
+        public IActionResult Create(TeamModelIn team)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             try
             {
-                CreateSession();
-                return TryToCreate(team);
+                    CreateSession();
+                    return TryToCreate(team.Map());
             }
             catch (InsufficientPermissionException)
             {
@@ -97,14 +102,17 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        // PUT api/values/5
         [HttpPut("{id}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Put(string id, [FromBody] TeamDTO team)
+        public IActionResult Put(string id, [FromBody] TeamModelIn team)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             try
             {
-                return TryToUpdate(team);
+                return TryToUpdate(team.Map());
             }
             catch (InsufficientPermissionException)
             {
