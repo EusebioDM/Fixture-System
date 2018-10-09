@@ -250,7 +250,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidaDataException))]
+        [ExpectedException(typeof(ServicesException))]
         public void CreateEncounterWithInvalidRelationshipTest()
         {
             login.CreateSession("sSanchez", "user");
@@ -266,7 +266,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidaDataException))]
+        [ExpectedException(typeof(ServicesException))]
         public void CreateEncounterWithInvalidDateTest()
         {
             login.CreateSession("sSanchez", "user");

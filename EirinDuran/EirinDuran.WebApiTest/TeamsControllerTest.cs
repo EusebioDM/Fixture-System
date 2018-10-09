@@ -37,7 +37,7 @@ namespace EirinDuran.WebApiTest
             var teamServicesMock = new Mock<ITeamServices>();
             var encounterServicesMock = new Mock<IEncounterServices>();
             TeamModelIn teamIn = new TeamModelIn() { Name = "Cavaliers", SportName = "Futbol" };
-            teamServicesMock.Setup(t => t.CreateTeam(teamIn.Map()));
+            teamServicesMock.Setup(t => t.CreateTeam(teamIn.Map())).Returns(new TeamDTO() { Name = "Cavaliers", SportName = "Futbol" });
             ILoginServices login = new LoginServicesMock(mariano);
 
             var httpContext = new DefaultHttpContext();

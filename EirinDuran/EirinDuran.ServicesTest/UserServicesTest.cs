@@ -93,7 +93,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidaDataException))]
+        [ExpectedException(typeof(ServicesException))]
         public void AddInvalidUserNameTest()
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);
@@ -107,7 +107,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidaDataException))]
+        [ExpectedException(typeof(ServicesException))]
         public void AddInvalidMailTest()
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);

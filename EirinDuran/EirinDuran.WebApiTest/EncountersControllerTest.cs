@@ -124,7 +124,7 @@ namespace EirinDuran.WebApiTest
                 DateTime = encounterDate
             };
 
-            enconunterServicesMock.Setup(m => m.CreateEncounter(enc));
+            enconunterServicesMock.Setup(m => m.CreateEncounter(enc)).Returns(enc);
 
             var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
 

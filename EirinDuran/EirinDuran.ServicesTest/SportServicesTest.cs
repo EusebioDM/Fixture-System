@@ -46,7 +46,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidaDataException))]
+        [ExpectedException(typeof(ServicesException))]
         public void CreateInvalidNullSportTest()
         {
             SportServices service = new SportServices(login, sportRepo);
@@ -55,7 +55,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidaDataException))]
+        [ExpectedException(typeof(ServicesException))]
         public void CreateInvalidNameSportTest()
         {
             SportServices service = new SportServices(login, sportRepo);
