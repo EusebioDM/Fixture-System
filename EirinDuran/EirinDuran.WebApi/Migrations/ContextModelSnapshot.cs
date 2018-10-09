@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EirinDuran.WebApi.Migrations
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     [DbContext(typeof(Context))]
     partial class ContextModelSnapshot : ModelSnapshot
     {

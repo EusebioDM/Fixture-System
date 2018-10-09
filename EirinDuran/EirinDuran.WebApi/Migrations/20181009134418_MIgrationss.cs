@@ -2,6 +2,7 @@
 
 namespace EirinDuran.WebApi.Migrations
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Migrations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
