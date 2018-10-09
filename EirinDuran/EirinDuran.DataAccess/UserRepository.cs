@@ -1,13 +1,15 @@
 using EirinDuran.Domain;
 using EirinDuran.Domain.User;
-using EirinDuran.Entities;
-using EirinDuran.Entities.Mappers;
+using EirinDuran.DataAccess;
+using EirinDuran.DataAccess.Entities.Mappers;
 using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EirinDuran.GenericEntityRepository;
+using EirinDuran.DataAccess.Entities;
 
 namespace EirinDuran.DataAccess
 {
@@ -18,13 +20,13 @@ namespace EirinDuran.DataAccess
         public UserRepository(IDesignTimeDbContextFactory<Context> contextFactory)
         {
             EntityFactory<UserEntity> factory = CreateEntityFactory();
-            Func<Context, DbSet<UserEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
+            Func<DbContext, DbSet<UserEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
             repo = new EntityRepository<User, UserEntity>(factory, dbSet, contextFactory);
         }
 
         private EntityFactory<UserEntity> CreateEntityFactory() => new EntityFactory<UserEntity>(() => new UserEntity());
 
-        private Func<Context, DbSet<UserEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Users;
+        private Func<DbContext, DbSet<UserEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => ((Context)c).Users;
 
         public void Add(User user) => repo.Add(user);
 

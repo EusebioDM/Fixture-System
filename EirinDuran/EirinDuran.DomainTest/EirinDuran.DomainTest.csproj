@@ -19,7 +19,6 @@
     <ProjectReference Include="..\EirinDuran.WebApi\EirinDuran.WebApi.csproj" />
     <ProjectReference Include="..\EirinDuran.IDataAccess\EirinDuran.IDataAccess.csproj" />
     <ProjectReference Include="..\EirinDuran.DataAccess\EirinDuran.DataAccess.csproj" />
-    <ProjectReference Include="..\EirinDuran.Entities\EirinDuran.Entities.csproj" />
   </ItemGroup>
 
   <ItemGroup>

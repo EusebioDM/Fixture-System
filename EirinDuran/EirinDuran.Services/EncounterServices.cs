@@ -261,18 +261,6 @@ namespace EirinDuran.Services
             return GetFixtureGeneratorFromAssembly(fixtureGeneratorName, sport, domainAssembly);
         }
 
-        private Sport GetSport(string sportName)
-        {
-            try
-            {
-                return sportRepo.Get(sportName);
-            }
-            catch(DataAccessException ex)
-            {
-                throw new ServicesException($"Sport with name {sportName} doesnt exists");
-            }
-        }
-
         private static IFixtureGenerator GetFixtureGeneratorFromAssembly(string fixtureGeneratorName, Sport sport, Assembly domainAssembly)
         {
             Type generatorType = domainAssembly.GetTypes().FirstOrDefault(t => t.FullName.EndsWith(fixtureGeneratorName));
@@ -285,10 +273,25 @@ namespace EirinDuran.Services
 
         public IEnumerable<string> GetAvailableFixtureGenerators()
         {
-            Assembly domainAssembly = Assembly.Load(FixtureGeneratorsAssembly);
-            IEnumerable<Type> generatorTypes = domainAssembly.GetTypes().Where(t => typeof(IFixtureGenerator).IsAssignableFrom(t) && !t.IsInterface);
+            Func<Type, bool> typeIsFixtureGenerator = t => typeof(IFixtureGenerator).IsAssignableFrom(t) && !t.IsInterface;
             Func<Type, string> getGeneratorTypeName = t => t.FullName.Split('.').Last();
+
+            Assembly domainAssembly = Assembly.Load(FixtureGeneratorsAssembly);
+            IEnumerable<Type> generatorTypes = domainAssembly.GetTypes().Where(typeIsFixtureGenerator);
+            
             return generatorTypes.Select(getGeneratorTypeName);
+        }
+
+        private Sport GetSport(string sportName)
+        {
+            try
+            {
+                return sportRepo.Get(sportName);
+            }
+            catch (DataAccessException ex)
+            {
+                throw new ServicesException($"Sport with name {sportName} doesnt exists");
+            }
         }
     }
 }

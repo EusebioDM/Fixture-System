@@ -1,5 +1,4 @@
-﻿using EirinDuran.Entities;
-using EirinDuran.IDataAccess;
+﻿using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Design;
@@ -8,16 +7,16 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 
-namespace EirinDuran.DataAccess
+namespace EirinDuran.GenericEntityRepository
 {
-    internal class EntityRepository<Model, Entity> where Entity : class, IEntity<Model>
+    public class EntityRepository<Model, Entity> where Entity : class, IEntity<Model>
     {
         private EntityFactory<Entity> factory;
-        private Func<Context, DbSet<Entity>> getDBSetFunc;
-        private IDesignTimeDbContextFactory<Context> contextFactory;
+        private Func<DbContext, DbSet<Entity>> getDBSetFunc;
+        private IDesignTimeDbContextFactory<DbContext> contextFactory;
         private EntityUpdater<Entity> entityUpdater;
 
-        public EntityRepository(EntityFactory<Entity> factory, Func<Context, DbSet<Entity>> getDBSetFunc, IDesignTimeDbContextFactory<Context> contextFactory)
+        public EntityRepository(EntityFactory<Entity> factory, Func<DbContext, DbSet<Entity>> getDBSetFunc, IDesignTimeDbContextFactory<DbContext> contextFactory)
         {
             this.factory = factory;
             this.getDBSetFunc = getDBSetFunc;
@@ -50,7 +49,7 @@ namespace EirinDuran.DataAccess
 
         private void ValidateEntityDoesntExistInDataBase(Entity entity)
         {
-            using (Context context = contextFactory.CreateDbContext(new string[0]))
+            using (DbContext context = contextFactory.CreateDbContext(new string[0]))
             {
                 Entity fromRepo = GetEntityFromRepo(context, entity);
                 if (fromRepo != null)
@@ -94,7 +93,7 @@ namespace EirinDuran.DataAccess
 
         private void TryToDelete(object[] ids)
         {
-            using (Context context = contextFactory.CreateDbContext(new string[0]))
+            using (DbContext context = contextFactory.CreateDbContext(new string[0]))
             {
                 Entity toDelete = context.Find<Entity>(ids);
                 if (toDelete == null)
@@ -138,7 +137,7 @@ namespace EirinDuran.DataAccess
 
         private Model TryToGet(object[] ids)
         {
-            using (Context context = contextFactory.CreateDbContext(new string[0]))
+            using (DbContext context = contextFactory.CreateDbContext(new string[0]))
             {
                 Entity toReturn = context.Find<Entity>(ids);
                 if (toReturn == null)
@@ -170,7 +169,7 @@ namespace EirinDuran.DataAccess
         {
             Func<Entity, Model> mapEntity = t => { return t.ToModel(); };
             Entity entity = factory.CreateEmptyEntity();
-            using (Context context = contextFactory.CreateDbContext(new string[0]))
+            using (DbContext context = contextFactory.CreateDbContext(new string[0]))
             {
                 return Set(context).Select(mapEntity).ToList();
             }
@@ -205,14 +204,14 @@ namespace EirinDuran.DataAccess
             return entity;
         }
 
-        private Entity GetEntityFromRepo(Context context, Entity localEntity)
+        private Entity GetEntityFromRepo(DbContext context, Entity localEntity)
         {
             EntityEntry entry = context.Entry(localEntity);
             EntityKeys key = HelperFunctions<Entity>.GetKeys(entry);
             return context.Find<Entity>(key.Keys.ToArray());
         }
 
-        private DbSet<Entity> Set(Context context) => getDBSetFunc.Invoke(context);
+        private DbSet<Entity> Set(DbContext context) => getDBSetFunc.Invoke(context);
 
     }
 }

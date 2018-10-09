@@ -27,13 +27,5 @@ namespace EirinDuran.DataAccess.Entities
             TeamName = Team.Name;
             UserNamee = User.UserName;
         }
-
-        //public TeamUserEntity(Team team, User user)
-        //{
-        //    Team = new TeamEntity(team);
-        //    User = new UserEntity(user);
-        //    TeamName = Team.Name;
-        //    UserName = User.UserName;
-        //}
     }
 }

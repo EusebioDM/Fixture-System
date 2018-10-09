@@ -180,7 +180,8 @@ namespace EirinDuran.WebApi.Migrations
 
                     b.HasOne("EirinDuran.Entities.TeamEntity", "Team")
                         .WithOne()
-                        .HasForeignKey("EirinDuran.Entities.TeamUserEntity", "TeamName", "SportName");
+                        .HasForeignKey("EirinDuran.Entities.TeamUserEntity", "TeamName", "SportName")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

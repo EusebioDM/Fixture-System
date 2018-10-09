@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EirinDuran.Entities
+namespace EirinDuran.GenericEntityRepository
 {
     public interface IEntity<Model>
     {

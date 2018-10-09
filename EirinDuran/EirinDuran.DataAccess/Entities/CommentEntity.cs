@@ -1,9 +1,10 @@
 ﻿using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
-using EirinDuran.DataAccess.Mappers;
+using EirinDuran.DataAccess.Entities.Mappers;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using EirinDuran.GenericEntityRepository;
 
 namespace EirinDuran.DataAccess.Entities
 {

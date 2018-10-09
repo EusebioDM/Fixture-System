@@ -88,6 +88,9 @@ namespace EirinDuran.Services
         public void ModifyUser(UserDTO userDTO)
         {
             adminValidator.ValidatePermissions();
+            User fromDB = userRepository.Get(userDTO.UserName);
+            userDTO.Password = fromDB.Password;
+            userDTO.FollowedTeamsNames = fromDB.FollowedTeams.Select(t => t.Name + "_" + t.Sport).ToList();
             User user = userMapper.Map(userDTO);
             try
             {

@@ -1,11 +1,12 @@
 ﻿using EirinDuran.Domain.Fixture;
-using EirinDuran.Entities;
+using EirinDuran.DataAccess;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using EirinDuran.DataAccess.Entities;
 
 namespace EirinDuran.DataAccess
 {
@@ -39,7 +40,7 @@ namespace EirinDuran.DataAccess
             builder.Entity<CommentEntity>().HasOne(c => c.User).WithMany().OnDelete(DeleteBehavior.Cascade);
             builder.Entity<TeamUserEntity>().HasKey(tu => new { tu.TeamName, tu.UserNamee });
             builder.Entity<TeamUserEntity>().HasOne(tu => tu.User).WithMany(u => u.TeamUsers);
-            builder.Entity<TeamUserEntity>().HasOne(t => t.Team).WithOne().HasForeignKey<TeamUserEntity>(new string[] { "TeamName", "SportName" }).OnDelete(DeleteBehavior.ClientSetNull);
+            builder.Entity<TeamUserEntity>().HasOne(t => t.Team).WithOne().HasForeignKey<TeamUserEntity>(new string[] { "TeamName", "SportName" }).OnDelete(DeleteBehavior.Cascade);
         }
 
         public void DeleteDataBase()

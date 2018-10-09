@@ -1,5 +1,5 @@
 ﻿using EirinDuran.Domain.Fixture;
-using EirinDuran.Entities;
+using EirinDuran.DataAccess;
 using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EirinDuran.GenericEntityRepository;
+using EirinDuran.DataAccess.Entities;
 
 namespace EirinDuran.DataAccess
 {
@@ -17,13 +19,13 @@ namespace EirinDuran.DataAccess
         public SportRepository(IDesignTimeDbContextFactory<Context> contextFactory)
         {
             EntityFactory<SportEntity> factory = CreateEntityFactory();
-            Func<Context, DbSet<SportEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
+            Func<DbContext, DbSet<SportEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
             repo = new EntityRepository<Sport, SportEntity>(factory, dbSet, contextFactory);
         }
 
         private EntityFactory<SportEntity> CreateEntityFactory() => new EntityFactory<SportEntity>(() => new SportEntity());
 
-        private Func<Context, DbSet<SportEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Sports;
+        private Func<DbContext, DbSet<SportEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => ((Context)c).Sports;
 
         public void Add(Sport sport) => repo.Add(sport);
 

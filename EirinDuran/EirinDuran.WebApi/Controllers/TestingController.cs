@@ -1,4 +1,5 @@
 ﻿using EirinDuran.DataAccess;
+using EirinDuran.DataAccess.Entities;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ namespace EirinDuran.WebApi.Controllers
         private readonly IDesignTimeDbContextFactory<Context> contextFactory;
         private readonly IUserServices userServices;
         private const string ResetDataBaseConfirmationKey = "ConfirmDeleteDataBase";
-        private readonly Entities.UserEntity InitialUser = new Entities.UserEntity()
+        private readonly UserEntity InitialUser = new UserEntity()
         {
             UserName = "Admin",
             Name = "Admin",

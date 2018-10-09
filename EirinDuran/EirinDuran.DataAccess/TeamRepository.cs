@@ -1,6 +1,4 @@
 ﻿using EirinDuran.Domain.Fixture;
-using EirinDuran.Entities;
-using EirinDuran.Entities.Mappers;
 using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -8,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EirinDuran.GenericEntityRepository;
+using EirinDuran.DataAccess.Entities;
 
 namespace EirinDuran.DataAccess
 {
@@ -18,13 +18,13 @@ namespace EirinDuran.DataAccess
         public TeamRepository(IDesignTimeDbContextFactory<Context> contextFactory)
         {
             EntityFactory<TeamEntity> Entityfactory = CreateEntityFactory();
-            Func<Context, DbSet<TeamEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
+            Func<DbContext, DbSet<TeamEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
             repo = new EntityRepository<Team, TeamEntity>(Entityfactory, dbSet, contextFactory);
         }
 
         private EntityFactory<TeamEntity> CreateEntityFactory() => new EntityFactory<TeamEntity>(() => new TeamEntity());
 
-        private Func<Context, DbSet<TeamEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Teams;
+        private Func<DbContext, DbSet<TeamEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => ((Context)c).Teams;
 
         public void Add(Team team) => repo.Add(team);
 

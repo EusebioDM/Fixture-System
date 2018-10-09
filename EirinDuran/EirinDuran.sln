@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.Services", "Eiri
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.DomainTest", "EirinDuran.DomainTest\EirinDuran.DomainTest.csproj", "{C2B84AAE-122D-41F4-A9CC-4201C73738F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.Entities", "EirinDuran.Entities\EirinDuran.Entities.csproj", "{36119659-F618-46C8-AD17-7EE6CF8A27B0}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.IDataAccess", "EirinDuran.IDataAccess\EirinDuran.IDataAccess.csproj", "{1E6716DF-12A8-47DC-A70F-BA067BAC98B9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.DataAccessTest", "EirinDuran.DataAccessTest\EirinDuran.DataAccessTest.csproj", "{61BF650C-C376-47D9-893B-B4F150359CC1}"
@@ -24,6 +22,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.ServicesTest", "EirinDuran.ServicesTest\EirinDuran.ServicesTest.csproj", "{684BDC7E-9CDC-4192-9FCB-D2C54A76ED49}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.IServices", "EirinDuran.IServices\EirinDuran.IServices.csproj", "{F935DC72-8986-40FB-A762-910484D2424B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EirinDuran.GenericEntityRepository", "EirinDuran.GenericEntityRepository\EirinDuran.GenericEntityRepository.csproj", "{FA16D123-88C7-4DFB-95EA-25D9FA4AFE9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,10 +51,6 @@ Global
 		{C2B84AAE-122D-41F4-A9CC-4201C73738F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2B84AAE-122D-41F4-A9CC-4201C73738F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2B84AAE-122D-41F4-A9CC-4201C73738F0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{36119659-F618-46C8-AD17-7EE6CF8A27B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{36119659-F618-46C8-AD17-7EE6CF8A27B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{36119659-F618-46C8-AD17-7EE6CF8A27B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{36119659-F618-46C8-AD17-7EE6CF8A27B0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1E6716DF-12A8-47DC-A70F-BA067BAC98B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1E6716DF-12A8-47DC-A70F-BA067BAC98B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E6716DF-12A8-47DC-A70F-BA067BAC98B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -75,6 +71,10 @@ Global
 		{F935DC72-8986-40FB-A762-910484D2424B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F935DC72-8986-40FB-A762-910484D2424B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F935DC72-8986-40FB-A762-910484D2424B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA16D123-88C7-4DFB-95EA-25D9FA4AFE9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA16D123-88C7-4DFB-95EA-25D9FA4AFE9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA16D123-88C7-4DFB-95EA-25D9FA4AFE9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA16D123-88C7-4DFB-95EA-25D9FA4AFE9B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

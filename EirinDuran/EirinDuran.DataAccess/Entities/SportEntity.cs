@@ -1,6 +1,7 @@
 ﻿using EirinDuran.Domain.Fixture;
-using EirinDuran.DataAccess.Mappers;
+using EirinDuran.DataAccess.Entities.Mappers;
 using System.Collections.Generic;
+using EirinDuran.GenericEntityRepository;
 
 namespace EirinDuran.DataAccess.Entities
 {

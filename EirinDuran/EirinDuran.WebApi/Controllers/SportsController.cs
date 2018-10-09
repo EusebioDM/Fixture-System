@@ -40,7 +40,7 @@ namespace EirinDuran.WebApi.Controllers
         }
 
 
-        [HttpGet("{sportId}")]
+        [HttpGet("{sportId}", Name = "GetSport")]
         [Authorize(Roles = "Administrator, Follower")]
         public ActionResult<SportModelOut> GetById(string sportId)
         {

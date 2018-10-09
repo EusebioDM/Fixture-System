@@ -6,7 +6,8 @@ using System.Text;
 using System.Linq;
 using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
-using EirinDuran.Entities;
+using EirinDuran.DataAccess;
+using EirinDuran.DataAccess.Entities;
 
 namespace EirinDuran.DataAccess
 {

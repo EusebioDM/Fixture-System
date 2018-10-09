@@ -1,5 +1,5 @@
 ﻿using EirinDuran.Domain.Fixture;
-using EirinDuran.Entities;
+using EirinDuran.DataAccess;
 using EirinDuran.IDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EirinDuran.DataAccess.Entities;
+using EirinDuran.GenericEntityRepository;
 
 namespace EirinDuran.DataAccess
 {
@@ -17,13 +19,13 @@ namespace EirinDuran.DataAccess
         public EncounterRepository(IDesignTimeDbContextFactory<Context> contextFactory)
         {
             EntityFactory<EncounterEntity> factory = CreateEntityFactory();
-            Func<Context, DbSet<EncounterEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
+            Func<DbContext, DbSet<EncounterEntity>> dbSet = CreateFunctionThatReturnsEntityDBSetFromContext();
             repo = new EntityRepository<Encounter, EncounterEntity>(factory, dbSet, contextFactory);
         }
 
         private EntityFactory<EncounterEntity> CreateEntityFactory() => new EntityFactory<EncounterEntity>(() => new EncounterEntity());
 
-        protected Func<Context, DbSet<EncounterEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => c.Encounters;
+        protected Func<DbContext, DbSet<EncounterEntity>> CreateFunctionThatReturnsEntityDBSetFromContext() => c => ((Context)c).Encounters;
 
         public void Add(Encounter encounter) => repo.Add(encounter);
 

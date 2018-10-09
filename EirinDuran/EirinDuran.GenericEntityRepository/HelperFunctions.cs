@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EirinDuran.DataAccess
+namespace EirinDuran.GenericEntityRepository
 {
     internal static class HelperFunctions<Entity> where Entity : class
     {
@@ -21,9 +21,7 @@ namespace EirinDuran.DataAccess
             return keys;
         }
 
-
-
-        public static bool EntriesAreEqual(Context context, Entity first, Entity second)
+        public static bool EntriesAreEqual(DbContext context, Entity first, Entity second)
         {
             EntityEntry firstEntry = context.Entry(first);
             EntityEntry secondEntry = context.Entry(second);

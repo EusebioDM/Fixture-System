@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EirinDuran.WebApi.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20181008225757_Migrationss")]
-    partial class Migrationss
+    [Migration("20181009134418_MIgrationss")]
+    partial class Migrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -182,7 +182,8 @@ namespace EirinDuran.WebApi.Migrations
 
                     b.HasOne("EirinDuran.Entities.TeamEntity", "Team")
                         .WithOne()
-                        .HasForeignKey("EirinDuran.Entities.TeamUserEntity", "TeamName", "SportName");
+                        .HasForeignKey("EirinDuran.Entities.TeamUserEntity", "TeamName", "SportName")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
