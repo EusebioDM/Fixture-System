@@ -38,7 +38,7 @@ namespace EirinDuran.DataAccess
             builder.Entity<EncounterEntity>().HasOne(e => e.Sport).WithMany().OnDelete(DeleteBehavior.Cascade);
             builder.Entity<CommentEntity>().HasKey(e => e.Id);
             builder.Entity<CommentEntity>().HasOne(c => c.User).WithMany().OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<TeamUserEntity>().HasKey(tu => new { tu.TeamName, tu.UserNamee });
+            builder.Entity<TeamUserEntity>().HasKey(tu => new { tu.TeamName, tu.UserName });
             builder.Entity<TeamUserEntity>().HasOne(tu => tu.User).WithMany(u => u.TeamUsers);
             builder.Entity<TeamUserEntity>().HasOne(t => t.Team).WithOne().HasForeignKey<TeamUserEntity>(new string[] { "TeamName", "SportName" }).OnDelete(DeleteBehavior.Cascade);
         }
