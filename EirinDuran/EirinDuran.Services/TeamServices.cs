@@ -96,7 +96,7 @@ namespace EirinDuran.Services
 
         public void AddFollowedTeam(string teamId)
         {
-            Team team = teamRepository.Get(teamId);
+            Team team = GetTeamFromRepo(teamId);
             User user = userRepository.Get(loginServices.LoggedUser.UserName);
             user.AddFollowedTeam(team);
             try
@@ -106,6 +106,18 @@ namespace EirinDuran.Services
             catch (DataAccessException e)
             {
                 throw new ServicesException("Failure to add followed sport to user.", e);
+            }
+        }
+
+        private Team GetTeamFromRepo(string teamId)
+        {
+            try
+            {
+                return teamRepository.Get(teamId);
+            }
+            catch (DataAccessException e)
+            {
+                throw new ServicesException($"Failure to recover team. with id {teamId}", e);
             }
         }
     }
