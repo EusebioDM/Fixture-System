@@ -20,8 +20,6 @@ namespace EirinDuran.DataAccess
 
         public DbSet<EncounterEntity> Encounters { get; set; }
 
-        public DbSet<TeamUserEntity> TeamUsers { get; set; }
-
         public Context(DbContextOptions<Context> options) : base(options)
         {
             Database.EnsureCreated();
