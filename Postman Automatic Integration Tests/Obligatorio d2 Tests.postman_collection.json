@@ -1,0 +1,2190 @@
+{
+	"info": {
+		"_postman_id": "25c160c6-bb99-4b49-86a1-1a50aed274a6",
+		"name": "Obligatorio d2 Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Reset DB ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c85d74c2-22ef-4ef4-bb4f-5066ea73a2ae",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\"ConfirmDeleteDataBase\""
+				},
+				"url": {
+					"raw": "{{domain}}/api/testing",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"testing"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "beeb0dda-e30b-4b84-aabb-754fcc1c02ec",
+						"type": "text/javascript",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"token\", data.token);",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"UserName\" : \"{{loggedUserName}}\",\n\t\"Password\" : \"{{loggedPassword}}\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/auth",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Insertar Bentos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a7bad69d-1d61-40ab-abe8-f5ed478169b6",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"UserName\" : \"PepitoElPistolero\",\n\t\"Name\" : \"Gabriel\",\n\t\"Surname\" : \"Bentos\",\n\t\"Password\" : \"constraseña\",\n\t\"Mail\" : \"ñ@ñ.com\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/users",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Insertar Bentos Again",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "846d282e-065e-47ee-8b68-153ca3e1e46e",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"UserName\" : \"PepitoElPistolero\",\n\t\"Name\" : \"Gabriel\",\n\t\"Surname\" : \"Bentos\",\n\t\"Password\" : \"constraseña\",\n\t\"Mail\" : \"ñ@ñ.com\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/users",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modify Bentos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "16677a4c-c580-408d-ae52-73efad4d1c8f",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"UserName\" : \"PepitoElPistolero\",\n\t\"Name\" : \"Gabriel\",\n\t\"Surname\" : \"Bentos\",\n\t\"Mail\" : \"unMailDeVerdad@gmail.com\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/users/PepitoElPistolero",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"PepitoElPistolero"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Bentos got modified",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a2dc23cb-2893-4dcf-8fb6-ecab688689c6",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Your test name\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.mail).to.eql(\"unMailDeVerdad@gmail.com\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{domain}}/api/users/PepitoElPistolero",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"PepitoElPistolero"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Insertar macri",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "415880f9-b61e-4c1f-bd89-48c5d115fe76",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"UserName\" : \"macri\",\n  \"Name\" : \"Mauricio\",\n  \"Surname\" : \"Macri\",\n  \"Password\" : \"gato123\",\n  \"Mail\" : \"dolar@dolar.com\",\n  \"IsAdmin\" : \"true\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/users",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Users ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "74cd3147-3103-4305-8dce-b091494a803e",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"var schema = {",
+							"    \"type\": \"array\",",
+							"    \"minItems\": 3,",
+							"    \"maxItems\": 3",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var data = JSON.parse(responseBody);",
+							"  pm.expect(tv4.validate(data, schema, false, true)).to.be.true;",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{domain}}/api/users",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Bentos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0756688e-0ff7-4f27-95c8-3f70914ef3b7",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{domain}}/api/users/PepitoElPistolero",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"PepitoElPistolero"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Bentos Again",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5cfbd86a-0ab8-4ed6-a0e0-3ffe828f0c5b",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{domain}}/api/users/PepitoElPistolero",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"PepitoElPistolero"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Macri",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0267ce87-024d-47f1-b589-fdef5a6f7177",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{domain}}/api/users/macri",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"macri"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Users  after deletion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4f04747c-8260-494c-b927-10e198bb7d81",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"var schema = {",
+							"    \"type\": \"array\",",
+							"    \"minItems\": 1,",
+							"    \"maxItems\": 1",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var data = JSON.parse(responseBody);",
+							"  pm.expect(tv4.validate(data, schema, false, true)).to.be.true;",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{domain}}/api/users",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Football",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "486c39ff-e8e3-4a91-b5da-bae9299c9388",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Name\" : \"Football\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/sports",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"sports"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Boca",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dfe9351f-3f9b-47bc-9a6a-79ec11de309c",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Name\" : \"Boca\",\n\t\"SportName\" : \"Football\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/teams",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Boca Again",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "68345660-d24b-47cb-bc74-15a477574129",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Name\" : \"Boca\",\n\t\"SportName\" : \"Football\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/teams",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create River",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "aced8361-6f12-4c76-af89-6e052970b80c",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Name\" : \"River\",\n\t\"SportName\" : \"Football\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/teams",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Tomba",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d5bc7360-8a7a-459d-9b9a-fcc679ad0148",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Name\" : \"Godoy Cruz\",\n\t\"SportName\" : \"Football\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/teams",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Independiente",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e268dd9a-4ff2-4029-826e-48060fa17774",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Name\" : \"Independiente\",\n\t\"SportName\" : \"Football\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/teams",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get teams",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "76154a0f-8dec-45d7-b14c-692754381fd3",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"var schema = {",
+							"    \"type\": \"array\",",
+							"    \"minItems\": 4,",
+							"    \"maxItems\": 4",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var data = JSON.parse(responseBody);",
+							"  pm.expect(tv4.validate(data, schema, false, true)).to.be.true;",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{domain}}/api/teams",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Sports",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0cad42e3-50d8-45cd-a17a-6a047197e255",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"var schema = {",
+							"    \"type\": \"array\",",
+							"    \"minItems\": 1,",
+							"    \"maxItems\": 1",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var data = JSON.parse(responseBody);",
+							"  pm.expect(tv4.validate(data, schema, false, true)).to.be.true;",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{domain}}/api/sports",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"sports"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create manual encounter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "443c301a-9599-45c0-8eb6-37a33ae8a14d",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});",
+							"",
+							"var data = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"encounterId\", data.id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"HomeTeamName\" : \"Boca\",\n\t\"AwayTeamName\" : \"River\",\n\t\"SportName\" : \"Football\",\n\t\"DateTime\" : \"3000-10-10\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/encounters",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"encounters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get encounters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b1a91962-e9d8-4a16-8286-4d445b9076b2",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"var schema = {",
+							"    \"type\": \"array\",",
+							"    \"minItems\": 1,",
+							"    \"maxItems\": 1",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var data = JSON.parse(responseBody);",
+							"  pm.expect(tv4.validate(data, schema, false, true)).to.be.true;",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/encounters/",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"encounters",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c0ec16c6-0287-4890-a73c-a9e11ae57c96",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\"Aguante Boca vieja, no me importa nada\""
+				},
+				"url": {
+					"raw": "{{domain}}/api/encounters/{{encounterId}}/commentaries",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"encounters",
+						"{{encounterId}}",
+						"commentaries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add second comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cef1f3d9-1dbe-4257-a5d5-3374abc78256",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\"Si no gana boca rompemos todo\""
+				},
+				"url": {
+					"raw": "{{domain}}/api/encounters/{{encounterId}}/commentaries",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"encounters",
+						"{{encounterId}}",
+						"commentaries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get encounter comments",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7253d9a2-239c-47ca-a4e8-dfb4db8cdd2b",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"var schema = {",
+							"    \"type\": \"array\",",
+							"    \"minItems\": 2,",
+							"    \"maxItems\": 2",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var data = JSON.parse(responseBody);",
+							"  pm.expect(tv4.validate(data, schema, false, true)).to.be.true;",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{domain}}/api/encounters/{{encounterId}}/commentaries",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"encounters",
+						"{{encounterId}}",
+						"commentaries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add followed Team",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "edb09e1d-ea9a-41bc-8ab9-d6ce4857590e",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Name\" : \"Boca\",\n\t\"SportName\" : \"Football\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/teams/Boca_Football/follower",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"teams",
+						"Boca_Football",
+						"follower"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user comments",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7253d9a2-239c-47ca-a4e8-dfb4db8cdd2b",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"var schema = {",
+							"    \"type\": \"array\",",
+							"    \"minItems\": 2,",
+							"    \"maxItems\": 2",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var data = JSON.parse(responseBody);",
+							"  pm.expect(tv4.validate(data, schema, false, true)).to.be.true;",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{domain}}/api/users/commentaries",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"commentaries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Available Fixture Generators",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "61625eb2-9207-4c84-9c6a-005012cbc2c8",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"var schema = {",
+							"    \"type\": \"array\",",
+							"    \"minItems\": 2,",
+							"    \"maxItems\": 2",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var data = JSON.parse(responseBody);",
+							"  pm.expect(tv4.validate(data, schema, false, true)).to.be.true;",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{domain}}/api/encounters/fixture",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"encounters",
+						"fixture"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Fixture AllOnce",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "11cdd6e7-e808-4dd5-af93-b63b5a126c73",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"CreationAlgorithmName\" : \"AllOnceFixture\",\n\t\"SportName\" : \"Football\",\n\t\"StartingDate\" : \"3001-1-1\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/encounters/fixture",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"encounters",
+						"fixture"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get encounters after fixture",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b28594d0-e891-4b49-82a5-80de13ecbcf0",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"var schema = { ",
+							"    \"type\": \"array\",",
+							"    \"minItems\": 3, // 2 generated from the Fixture and 1 previous one",
+							"    \"maxItems\": 3",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var data = JSON.parse(responseBody);",
+							"  pm.expect(tv4.validate(data, schema, false, true)).to.be.true;",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/encounters/",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"encounters",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Encounter",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{domain}}/api/encounters/{{encounterId}}",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"encounters",
+						"{{encounterId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Boca didnt get deleted when deleting encounter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2846b20e-5467-4c93-bccb-f3d418f75269",
+						"exec": [
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{domain}}/api/teams/Boca_Football",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"teams",
+						"Boca_Football"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Football didnt get deleted when deleting encounter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f33f9770-c7fe-4da9-9b7e-207349100fc4",
+						"exec": [
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{domain}}/api/sports/Football",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"sports",
+						"Football"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify River didnt get deleted when deleting encounter Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "75d457f5-01b3-41da-a02e-afa26fdbc7ed",
+						"exec": [
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{domain}}/api/teams/Boca_Football",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"teams",
+						"Boca_Football"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify encounter comments got deleted",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4fc05dd9-52ed-47b2-bb3e-b22eaf749876",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"var schema = {",
+							"    \"type\": \"array\",",
+							"    \"minItems\": 0,",
+							"    \"maxItems\": 0",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var data = JSON.parse(responseBody);",
+							"  pm.expect(tv4.validate(data, schema, false, true)).to.be.true;",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{domain}}/api/users/commentaries",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"commentaries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify use didnt get deleted when deleting encounter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bdb2bffb-cfbd-4ec2-a9b1-619605f08d38",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{domain}}/api/users/Admin",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"Admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Football",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2631ac26-2eb2-423c-9810-20998a4fb7c8",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{domain}}/api/sports/Football",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"sports",
+						"Football"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Boca was deleted",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dd5e4b6d-ea8b-47a0-b68d-e7a1d1f5dccc",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{domain}}/api/teams/Boca_Football",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"teams",
+						"Boca_Football"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify River was deleted",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dd5e4b6d-ea8b-47a0-b68d-e7a1d1f5dccc",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{domain}}/api/teams/Boca_Football",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"teams",
+						"Boca_Football"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get encounters got deleted",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b28594d0-e891-4b49-82a5-80de13ecbcf0",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"var schema = {",
+							"    \"type\": \"array\",",
+							"    \"minItems\": 0,",
+							"    \"maxItems\": 0",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var data = JSON.parse(responseBody);",
+							"  pm.expect(tv4.validate(data, schema, false, true)).to.be.true;",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/encounters/",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"encounters",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Football",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "486c39ff-e8e3-4a91-b5da-bae9299c9388",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Name\" : \"Football\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/sports",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"sports"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Boca",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dfe9351f-3f9b-47bc-9a6a-79ec11de309c",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Name\" : \"Boca\",\n\t\"SportName\" : \"Football\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/teams",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create River",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "aced8361-6f12-4c76-af89-6e052970b80c",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Name\" : \"River\",\n\t\"SportName\" : \"Football\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/teams",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Tomba",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d5bc7360-8a7a-459d-9b9a-fcc679ad0148",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Name\" : \"Godoy Cruz\",\n\t\"SportName\" : \"Football\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/teams",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Independiente",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e268dd9a-4ff2-4029-826e-48060fa17774",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Name\" : \"Independiente\",\n\t\"SportName\" : \"Football\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/teams",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Fixture RoundRobinFixture",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "11cdd6e7-e808-4dd5-af93-b63b5a126c73",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"CreationAlgorithmName\" : \"RoundRobinFixture\",\n\t\"SportName\" : \"Football\",\n\t\"StartingDate\" : \"3001-1-1\"\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/encounters/fixture",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"encounters",
+						"fixture"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get encounters after fixture",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b28594d0-e891-4b49-82a5-80de13ecbcf0",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"var schema = {",
+							"    \"type\": \"array\",",
+							"    \"minItems\": 6,",
+							"    \"maxItems\": 6",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var data = JSON.parse(responseBody);",
+							"  pm.expect(tv4.validate(data, schema, false, true)).to.be.true;",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/encounters/",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"encounters",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "0a862e27-adab-4fc4-b9c0-feffc375540d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "b1965b29-95f5-4ea0-8f36-b2c75abe4c03",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "47e6754f-4a32-4cfb-b8a3-0402b752c7da",
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "a32e1b1d-3482-4763-8833-6198ff489ff4",
+			"key": "domain",
+			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"id": "0e90fa79-11f3-4d35-845e-4ce70351c46d",
+			"key": "loggedUserName",
+			"value": "Admin",
+			"type": "string"
+		},
+		{
+			"id": "2328899e-d3ca-4e35-9151-a4ee143954c0",
+			"key": "loggedPassword",
+			"value": "Admin",
+			"type": "string"
+		},
+		{
+			"id": "56a88ea7-f381-4a60-adaa-9096694c532a",
+			"key": "encounterId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
