@@ -57,7 +57,7 @@ namespace EirinDuran.DataAccess.Entities.Mappers
                 Team = new TeamEntity(t),
                 TeamName = t.Name,
                 User = Map(source),
-                UserNamee = source.UserName,
+                UserName = source.UserName,
                 SportName = t.Sport.Name
             }).ToList();
         }

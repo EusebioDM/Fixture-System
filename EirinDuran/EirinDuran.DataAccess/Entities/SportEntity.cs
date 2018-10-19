@@ -7,7 +7,7 @@ namespace EirinDuran.DataAccess.Entities
 {
     public class SportEntity : IEntity<Sport>
     {
-        public string SportName { get; set; } // Key cant have the same property name as Team because of EF for no good reason at all
+        public string SportName { get; set; } 
         private SportMapper mapper;
 
         public SportEntity()

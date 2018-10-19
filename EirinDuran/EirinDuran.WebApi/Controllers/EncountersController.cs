@@ -155,7 +155,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Route("{encounterId}/commentaries")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public ActionResult<IEnumerable<CommentDTO>> GetEncounterComments(string encounterId)
         {
             CreateSession();
@@ -171,7 +171,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPost]
         [Route("{encounterId}/commentaries")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public IActionResult AddComment(string encounterId, [FromBody] string menssage)
         {
             try
