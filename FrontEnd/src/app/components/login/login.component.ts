@@ -29,7 +29,7 @@ export class LoginComponent {
 
   // why doesn't work??
   private validateFields(): boolean {
-    if (this.username || this.password) {
+    if (this.username === '' || this.password === '') {
       this.error = 'Debe completar los campos';
       return false;
     }
