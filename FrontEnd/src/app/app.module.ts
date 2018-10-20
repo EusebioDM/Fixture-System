@@ -13,19 +13,22 @@ import { FormsModule } from '@angular/forms';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthGuard } from './services/auth.guard';
 import { HttpClientModule } from '@angular/common/http';
+import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
 }
 
 const appRoutes: Routes = [
-  { path: 'login', component: LoginComponent }
+  { path: 'login', component: LoginComponent },
+  { path: 'administrator', component: AdminNavComponent }
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    AdminNavComponent
   ],
   imports: [
     RouterModule.forRoot(

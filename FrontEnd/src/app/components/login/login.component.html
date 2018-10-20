@@ -8,10 +8,11 @@
             <input class="form-control" name="password" placeholder="Contraseña" required="required" type="password" [(ngModel)]="password">
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block">Inciar Sesión</button>
+            <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
         </div>
-        <div class="clearfix">
-            <label class="pull-left checkbox-inline"><input type="checkbox">Recordarme</label>
+
+        <div class="alert alert-danger" role="alert" *ngIf="error">
+            {{error}}
         </div>
     </form>
 </div>
