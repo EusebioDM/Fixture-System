@@ -10,6 +10,13 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { LoginService } from './services/login/login.service';
 import { FormsModule } from '@angular/forms';
+import { JwtModule } from '@auth0/angular-jwt';
+import { AuthGuard } from './services/auth.guard';
+import { HttpClientModule } from '@angular/common/http';
+
+export function tokenGetter() {
+  return localStorage.getItem('access_token');
+}
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent }
@@ -31,7 +38,15 @@ const appRoutes: Routes = [
     MatButtonModule,
     MatToolbarModule,
     MatCardModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        whitelistedDomains: ['localhost:4000'],
+        blacklistedRoutes: ['localhost:4000/api/auth']
+      }
+    })
   ],
   exports: [
     BrowserModule,
@@ -40,7 +55,10 @@ const appRoutes: Routes = [
     MatButtonModule,
     MatToolbarModule
   ],
-  providers: [LoginService],
+  providers: [
+    LoginService,
+    AuthGuard
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

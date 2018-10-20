@@ -1,24 +1,27 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class LoginService {
+  constructor(private http: HttpClient) { }
 
-  private currentToken: string;
-  constructor() { }
-
-  isAuthenticated(): boolean {
-    return this.currentToken !== null;
+  login(username: string, password: string): Observable<boolean> {
+    return this.http.post<{token: string}>('/api/auth', {username: username, password: password})
+      .pipe(
+        map(result => {
+          localStorage.setItem('access_token', result.token);
+          return true;
+        })
+      );
   }
 
-  setToken(token: string): void {
-    this.currentToken = token;
+  logout() {
+    localStorage.removeItem('access_token');
   }
 
-  removeToken(): void {
-    this.currentToken = undefined;
-  }
-
-  getToken(): string {
-    return this.currentToken;
+  public get loggedIn(): boolean {
+    return (localStorage.getItem('access_token') !== null);
   }
 }
