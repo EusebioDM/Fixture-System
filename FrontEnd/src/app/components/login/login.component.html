@@ -1,17 +1,17 @@
 <div class="login-form">
-        <form action="/examples/actions/confirmation.php" method="post">
-            <h2 class="text-center">Iniciar Sesión</h2>       
-            <div class="form-group">
-                <input class="form-control" placeholder="Nombre de Usuario" required="required" type="text">
-            </div>
-            <div class="form-group">
-                <input class="form-control" placeholder="Contraseña" required="required" type="password">
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block">Inciar Sesión</button>
-            </div>
-            <div class="clearfix">
-                <label class="pull-left checkbox-inline"><input type="checkbox">Recordarme</label>
-            </div>        
-        </form>
-    </div>
+    <form  (ngSubmit)="submit()">
+        <h2 class="text-center">Iniciar Sesión</h2>
+        <div class="form-group">
+            <input class="form-control" name="username" placeholder="Nombre de Usuario" required="required" type="text" [(ngModel)]="username">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="password" placeholder="Contraseña" required="required" type="password" [(ngModel)]="password">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Inciar Sesión</button>
+        </div>
+        <div class="clearfix">
+            <label class="pull-left checkbox-inline"><input type="checkbox">Recordarme</label>
+        </div>
+    </form>
+</div>
