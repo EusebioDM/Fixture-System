@@ -5,19 +5,15 @@ using EirinDuran.Domain.Fixture;
 
 namespace EirinDuran.FixtureGenerators.RoundRobin
 {
-    public class RoundRobinFixture : IFixtureGenerator
+    public class RoundRobin : IFixtureGenerator
     {
         private Sport sport;
-
-        public RoundRobinFixture(Sport sport)
-        {
-            this.sport = sport;
-        }
 
         public ICollection<Encounter> GenerateFixture(IEnumerable<Team> teams, DateTime start)
         {
             List<Encounter> encounters = new List<Encounter>();
             List<Team> teamList = teams.ToList();
+            sport = teams.FirstOrDefault()?.Sport;
 
             bool areRepeatedTeams = teamList.GroupBy(n => n).Any(t => t.Count() > 1);
 

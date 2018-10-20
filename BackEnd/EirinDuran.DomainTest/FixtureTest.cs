@@ -50,7 +50,7 @@ namespace EirinDuran.DomainTest
 
             DateTime start = new DateTime(3018, 10, 07);
 
-            IFixtureGenerator leagueFixture = new RoundRobinFixture(football);
+            IFixtureGenerator leagueFixture = new RoundRobin();
 
             List<Encounter> result = leagueFixture.GenerateFixture(teams, start).ToList();
 
@@ -64,7 +64,7 @@ namespace EirinDuran.DomainTest
 
             DateTime start = new DateTime(3018, 10, 07);
 
-            IFixtureGenerator leagueFixture = new RoundRobinFixture(futbol);
+            IFixtureGenerator leagueFixture = new RoundRobin();
 
             List<Encounter> result = leagueFixture.GenerateFixture(teams, start).ToList();
 
@@ -78,7 +78,7 @@ namespace EirinDuran.DomainTest
 
             DateTime start = new DateTime(3018, 10, 07);
 
-            IFixtureGenerator leagueFixture = new RoundRobinFixture(futbol);
+            IFixtureGenerator leagueFixture = new RoundRobin();
 
             List<Encounter> result = leagueFixture.GenerateFixture(teams, start).ToList();
 
@@ -93,7 +93,7 @@ namespace EirinDuran.DomainTest
 
             DateTime start = new DateTime(3018, 10, 07);
 
-            IFixtureGenerator leagueFixture = new RoundRobinFixture(futbol);
+            IFixtureGenerator leagueFixture = new RoundRobin();
 
             List<Encounter> result = leagueFixture.GenerateFixture(teams, start).ToList();
         }
@@ -106,7 +106,7 @@ namespace EirinDuran.DomainTest
 
             DateTime start = new DateTime(3018, 10, 07);
 
-            IFixtureGenerator allOnceFixture = new AllOnce(futbol);
+            IFixtureGenerator allOnceFixture = new AllOnce();
 
             List<Encounter> result = allOnceFixture.GenerateFixture(teams, start).ToList();
         }
@@ -118,7 +118,7 @@ namespace EirinDuran.DomainTest
 
             DateTime start = new DateTime(3018, 10, 07);
 
-            IFixtureGenerator allOnceFixture = new AllOnce(futbol);
+            IFixtureGenerator allOnceFixture = new AllOnce();
 
             List<Encounter> result = allOnceFixture.GenerateFixture(teams, start).ToList();
             Assert.AreEqual(2, result.Count);

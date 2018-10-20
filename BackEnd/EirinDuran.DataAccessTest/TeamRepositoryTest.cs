@@ -111,14 +111,7 @@ namespace EirinDuran.DataAccessTest
 
             private bool ImagesAreTheSame(Image first, Image second)
             {
-                byte[] firstImageBytes = GetImageBytes(first);
-                byte[] secondImageBytes = GetImageBytes(second);
-                bool areTheSame = firstImageBytes.Length == secondImageBytes.Length;
-                for (int i = 0; i < firstImageBytes.Length && areTheSame; i++)
-                {
-                    areTheSame &= firstImageBytes[i] == secondImageBytes[i];
-                }
-                return areTheSame;
+                return first.Flags == second.Flags;
             }
 
             private byte[] GetImageBytes(Image image)

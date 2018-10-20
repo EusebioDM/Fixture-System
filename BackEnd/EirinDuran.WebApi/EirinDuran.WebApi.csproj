@@ -25,6 +25,8 @@
   <ItemGroup>
     <ProjectReference Include="..\EirinDuran.DataAccess\EirinDuran.DataAccess.csproj" />
     <ProjectReference Include="..\EirinDuran.Services\EirinDuran.Services.csproj" />
+    <ProjectReference Include="..\FixtureGenerators\EirinDuran.FixtureGenerators.AllOnce\EirinDuran.FixtureGenerators.AllOnce.csproj" />
+    <ProjectReference Include="..\FixtureGenerators\EirinDuran.FixtureGenerators.RoundRobin\EirinDuran.FixtureGenerators.RoundRobin.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>

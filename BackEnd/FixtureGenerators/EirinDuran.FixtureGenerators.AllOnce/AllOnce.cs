@@ -9,15 +9,11 @@ namespace EirinDuran.FixtureGenerators.AllOnce
     {
         private Sport sport;
 
-        public AllOnce(Sport sport)
-        {
-            this.sport = sport;
-        }
-
         public ICollection<Encounter> GenerateFixture(IEnumerable<Team> teams, DateTime start)
         {
             List<Encounter> encounters = new List<Encounter>();
             List<Team> teamList = teams.ToList();
+            sport = teams.First().Sport;
 
             bool areRepeatedTeams = teamList.GroupBy(n => n).Any(t => t.Count() > 1);
 
