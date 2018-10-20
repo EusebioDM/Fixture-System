@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EirinDuran.Domain.Fixture;
 
-namespace EirinDuran.Domain.Fixture
+namespace EirinDuran.FixtureGenerators.RoundRobin
 {
     public class RoundRobinFixture : IFixtureGenerator
     {

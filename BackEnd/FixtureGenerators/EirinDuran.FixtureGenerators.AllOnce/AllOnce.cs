@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EirinDuran.Domain.Fixture;
 
-namespace EirinDuran.Domain.Fixture
+namespace EirinDuran.FixtureGenerators.AllOnce
 {
-    public class AllOnceFixture : IFixtureGenerator
+    public class AllOnce : IFixtureGenerator
     {
         private Sport sport;
 
-        public AllOnceFixture(Sport sport)
+        public AllOnce(Sport sport)
         {
             this.sport = sport;
         }
@@ -45,11 +46,11 @@ namespace EirinDuran.Domain.Fixture
 
             for (int i = 0; i < middleTeams; i++)
             {
-                List<Team> teamsInEncounter = new List<Team>();
-
-                teamsInEncounter.Add(local[i]);
-                teamsInEncounter.Add(visitant[i]);
-
+                List<Team> teamsInEncounter = new List<Team>()
+                {
+                    local[i],
+                    visitant[i]
+                };
                 encounters.Add(new Encounter(sport, teamsInEncounter, start));
             }
         }

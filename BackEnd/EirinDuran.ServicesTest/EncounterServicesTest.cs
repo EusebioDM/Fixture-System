@@ -13,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using EirinDuran.FixtureGenerators.AllOnce;
+using EirinDuran.FixtureGenerators.RoundRobin;
 
 namespace EirinDuran.ServicesTest
 {
@@ -223,7 +225,7 @@ namespace EirinDuran.ServicesTest
             EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             encounterServices.CreateFixture("AllOnceFixture", "Futbol", new DateTime(3000, 10, 10));
 
-            IEnumerable<Encounter> expected = new AllOnceFixture(futbol).GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
+            IEnumerable<Encounter> expected = new AllOnce(futbol).GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
             IEnumerable<Encounter> actual = encounterRepo.GetAll();
             Assert.IsTrue(expected.SequenceEqual(actual));
         }
