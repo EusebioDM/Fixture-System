@@ -5,7 +5,6 @@ import { MatButtonModule, MatToolbarModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card';
 import { Routes, RouterModule } from '@angular/router';
-
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { LoginService } from './services/login/login.service';
@@ -15,6 +14,9 @@ import { AuthGuard } from './services/auth.guard';
 import { RoleGuardService } from './services/role.guard.service';
 import { HttpClientModule } from '@angular/common/http';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
+import { UsersListComponent } from './components/users-list/users-list.component';
+import { UsersService } from './services/users.service';
+import { HttpModule } from '@angular/http';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -29,6 +31,14 @@ const appRoutes: Routes = [
     data: {
       expectedRole: 'Administrator'
     }
+  },
+  {
+    path: 'manageUsers',
+    component: UsersListComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      expectedRole: 'Administrator'
+    }
   }
 ];
 
@@ -36,7 +46,8 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     LoginComponent,
-    AdminNavComponent
+    AdminNavComponent,
+    UsersListComponent,
   ],
   imports: [
     RouterModule.forRoot(
@@ -51,6 +62,7 @@ const appRoutes: Routes = [
     MatCardModule,
     FormsModule,
     HttpClientModule,
+    HttpModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -64,12 +76,13 @@ const appRoutes: Routes = [
     MatMenuModule,
     BrowserAnimationsModule,
     MatButtonModule,
-    MatToolbarModule
+    MatToolbarModule,
   ],
   providers: [
     LoginService,
     AuthGuard,
-    RoleGuardService
+    RoleGuardService,
+    UsersService
   ],
   bootstrap: [AppComponent]
 })

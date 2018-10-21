@@ -1,0 +1,58 @@
+<p>
+  users-list works!
+</p>
+
+<div class='panel panel-primary'>
+  <div class='panel-heading'>
+      {{pageTitle}}
+  </div>
+
+  <div class='panel-body'>
+      <!-- Aca filtramos las mascotas  -->
+      <!-- Selector de filtro:  -->
+      <div class='row'>
+          <div class='col-md-2'>Filter by:</div>
+          <div class='col-md-4'>
+              <input type='text' [(ngModel)]='listFilter' />
+          </div>
+      </div>
+      <!-- Muestra filtro:  -->
+      <div class='row' *ngIf='listFilter'>
+          <div class='col-md-6'>
+              <h3>Filtered by: {{listFilter}} </h3>
+          </div>
+      </div>
+
+      <!-- Mensaje de error -->
+      <div class='has-error'> </div>
+
+      <!--Tabla de mascotas -->
+      <div class='table-responsive'>
+          <table class='table'>
+              <!--Cabezal de la tabla -->
+              <thead>
+                  <tr>
+                      <th>Id</th>
+                      <th>Pet</th>
+                      <th>Age</th>
+                      <th>Size</th>
+                  </tr>
+              </thead>
+              <!--Cuerpo de la tabla-->
+              <tbody>
+                  <!-- Aca va todo el contenido de la tabla  -->
+                  <tr *ngFor='let aPet of users'>
+                      <td>
+                              [src]='aPet.userName'
+                              [title]='aPet.name' 
+                      </td>
+                      <td>{{aPet.id }}</td>
+                      <td>{{aPet.name | uppercase}}</td>
+                      <td>{{aPet.userName}}</td>
+                      <td>{{aPet.surname}}</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+  </div>
+</div>
