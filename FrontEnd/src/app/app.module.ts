@@ -12,6 +12,7 @@ import { LoginService } from './services/login/login.service';
 import { FormsModule } from '@angular/forms';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthGuard } from './services/auth.guard';
+import { RoleGuardService } from './services/role.guard.service';
 import { HttpClientModule } from '@angular/common/http';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 
@@ -21,7 +22,14 @@ export function tokenGetter() {
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'administrator', component: AdminNavComponent }
+  {
+    path: 'administrator',
+    component: AdminNavComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      expectedRole: 'Administrator'
+    }
+  }
 ];
 
 @NgModule({
@@ -60,7 +68,8 @@ const appRoutes: Routes = [
   ],
   providers: [
     LoginService,
-    AuthGuard
+    AuthGuard,
+    RoleGuardService
   ],
   bootstrap: [AppComponent]
 })
