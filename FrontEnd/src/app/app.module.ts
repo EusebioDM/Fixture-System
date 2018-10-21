@@ -62,14 +62,6 @@ const appRoutes: Routes = [
     data: {
       expectedRole: 'Administrator'
     }
-  },
-  {
-    path: 'manageUsers',
-    component: UsersListComponent,
-    canActivate: [RoleGuardService],
-    data: {
-      expectedRole: 'Administrator'
-    }
   }
 ];
 
