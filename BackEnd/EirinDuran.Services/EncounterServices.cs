@@ -279,7 +279,8 @@ namespace EirinDuran.Services
         private AssemblyLoader.AssemblyLoader GetAssemblyLoader()
         {
             string currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            return new AssemblyLoader.AssemblyLoader(currentDir);
+            string path = Directory.EnumerateDirectories(currentDir).First(d => d.EndsWith("FixtureGenerators"));
+            return new AssemblyLoader.AssemblyLoader(path);
         }
 
         private Sport GetSport(string sportName)

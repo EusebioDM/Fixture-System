@@ -35,4 +35,8 @@
     </None>
   </ItemGroup>
 
+  <Target Name="AddTestFixtureGenerators" AfterTargets="Build">
+    <Exec Command="$(ProjectDir)/lfs.sh"/>
+  </Target>
+
 </Project>
