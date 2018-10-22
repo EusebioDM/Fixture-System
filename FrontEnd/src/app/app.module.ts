@@ -49,7 +49,10 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { SportsComponent } from './components/sports/sports.component';
 import { TeamsComponent } from './components/teams/teams.component';
+//
 
+import {DialogContentExampleDialog} from './components/users/users.component';
+import { EncountersComponent } from './components/encounters/encounters.component';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -75,6 +78,11 @@ const appRoutes: Routes = [
     UsersListComponent,
     SportsComponent,
     TeamsComponent,
+    DialogContentExampleDialog,
+    EncountersComponent
+  ],
+  entryComponents: [
+    DialogContentExampleDialog
   ],
   imports: [
     BrowserModule,

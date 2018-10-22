@@ -12,7 +12,7 @@ export class UsersService {
   token = localStorage.getItem('access_token');
   constructor(private httpService: Http) { }
   getUsers(): Observable<Array<User>> {
-    const myHeaders = new Headers({ Authorization:  `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -25,7 +25,7 @@ export class UsersService {
   }
 
   getUserById(id: string): Observable<User> {
-    const myHeaders = new Headers();
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -35,6 +35,14 @@ export class UsersService {
         tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
         catchError(this.handleError)
       );
+  }
+
+  deleteUser(id: string) {
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+    console.log('/api/users/' + id);
+    this.httpService.delete('/api/users/' + id, requestOptions).subscribe((ok) => { console.log(ok); });
   }
 
   private handleError(error: Response) {
