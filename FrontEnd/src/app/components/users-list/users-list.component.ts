@@ -22,6 +22,7 @@ export class UsersListComponent implements OnInit {
       ((data: Array<User>) => this.result(data)),
       ((error: any) => console.log(error))
     );
+
     this.dataSource = new MatTableDataSource<User>(this.users);
     this.dataSource.paginator = this.paginator;
   }
@@ -31,4 +32,3 @@ export class UsersListComponent implements OnInit {
     console.log(this.users);
   }
 }
-

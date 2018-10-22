@@ -1,25 +1,5 @@
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th scope="col">Nombre de Usuario</th>
-      <th scope="col">Nombre</th>
-      <th scope="col">Apellido</th>
-      <th scope="col">Mail</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor='let aUser of users'>
-      <th scope="row">{{aUser.userName}}</th>
-      <td>{{aUser.name}}</td>
-      <td>{{aUser.surname}}</td>
-      <td>{{aUser.mail}}</td>
-    </tr>
-  </tbody>
-</table>
-
-
 <div class="mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource">
+  <table mat-table [dataSource]="users">
 
     <ng-container matColumnDef="userName">
       <th mat-header-cell *matHeaderCellDef> Nombre de Usuario </th>
@@ -47,8 +27,6 @@
 
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
-
-
 
 <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
   <mat-button-toggle value="add">Agregar</mat-button-toggle>
