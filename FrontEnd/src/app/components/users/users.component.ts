@@ -5,8 +5,8 @@ import { MatTableDataSource, MatPaginator, MatSnackBar } from '@angular/material
 
 @Component({
   selector: 'app-users-list',
-  templateUrl: './users-list.component.html',
-  styleUrls: ['./users-list.component.css']
+  templateUrl: './users.component.html',
+  styleUrls: ['./users.component.css']
 })
 export class UsersListComponent implements OnInit {
   constructor(private usersService: UsersService) { }

@@ -10,7 +10,7 @@ import { AuthGuard } from './services/auth.guard';
 import { RoleGuardService } from './services/role.guard.service';
 import { HttpClientModule } from '@angular/common/http';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
-import { UsersListComponent } from './components/users-list/users-list.component';
+import { UsersListComponent } from './components/users/users.component';
 import { UsersService } from './services/users.service';
 import { HttpModule } from '@angular/http';
 
@@ -47,6 +47,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { SportsComponent } from './components/sports/sports.component';
+import { TeamsComponent } from './components/teams/teams.component';
 
 
 export function tokenGetter() {
@@ -71,6 +73,8 @@ const appRoutes: Routes = [
     LoginComponent,
     AdminNavComponent,
     UsersListComponent,
+    SportsComponent,
+    TeamsComponent,
   ],
   imports: [
     BrowserModule,
