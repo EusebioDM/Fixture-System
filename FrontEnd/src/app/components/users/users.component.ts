@@ -32,21 +32,32 @@ export class UsersListComponent implements OnInit {
     console.log(this.users);
   }
 
-  deleteUser(id: string) {
-    console.log('User to delete: ' + id);
-    this.usersService.deleteUser(id);
-  }
-
   getUser(id: string) {
     console.log('El usuario es: ' + this.usersService.getUserById(id));
   }
 
-  openDialog() {
-    const dialogRef = this.dialog.open(DialogContentExampleDialog);
+  openDialogAddUser() {
+    const dialogRef = this.dialog.open(DialogAddUser);
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });
+  }
+
+  openDialogConfirmDeleteUser(id: string) {
+    const dialogRef = this.dialog.open(DialogConfirmToDeleteUser);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteUser(id);
+      }
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
+  deleteUser(id: string) {
+    console.log('User to delete: ' + id);
+    this.usersService.deleteUser(id);
   }
 }
 
@@ -56,4 +67,13 @@ export class UsersListComponent implements OnInit {
   styleUrls: ['./users.component.css']
 })
 
-export class DialogContentExampleDialog { }
+export class DialogAddUser { }
+
+@Component({
+  selector: 'app-add-user',
+  templateUrl: 'confirmToDeleteUser.html',
+  styleUrls: ['./users.component.css']
+})
+
+export class DialogConfirmToDeleteUser { }
+
