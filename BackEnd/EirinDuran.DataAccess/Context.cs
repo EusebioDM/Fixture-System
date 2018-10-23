@@ -13,14 +13,11 @@ namespace EirinDuran.DataAccess
     public class Context : DbContext
     {
         public DbSet<UserEntity> Users { get; set; }
-
         public DbSet<TeamEntity> Teams { get; set; }
-
         public DbSet<SportEntity> Sports { get; set; }
-
         public DbSet<EncounterEntity> Encounters { get; set; }
-
         public DbSet<TeamUserEntity> TeamUsers { get; set; }
+        public  DbSet<Log> Logs { get; set; }
 
         public Context(DbContextOptions<Context> options) : base(options)
         {
@@ -30,6 +27,7 @@ namespace EirinDuran.DataAccess
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<Log>().HasKey(l => l.Id);
             builder.Entity<UserEntity>().HasKey(u => u.UserName);
             builder.Entity<TeamEntity>().HasKey(t => new { t.Name, t.SportName });
             builder.Entity<SportEntity>().HasKey(s => s.SportName);

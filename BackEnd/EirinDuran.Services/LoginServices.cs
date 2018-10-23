@@ -11,12 +11,14 @@ namespace EirinDuran.Services
     public class LoginServices : ILoginServices
     {
         private IRepository<User> userRepository;
+        private ILogger logger;
         private readonly UserMapper mapper;
         private User loggedUser;
 
 
-        public LoginServices(IRepository<User> userRepo, IRepository<Team> teamRepo)
+        public LoginServices(IRepository<User> userRepo, IRepository<Team> teamRepo, ILogger logger)
         {
+            this.logger = logger;
             userRepository = userRepo;
             mapper = new UserMapper(teamRepo);
         }
@@ -30,6 +32,7 @@ namespace EirinDuran.Services
                 if (recovered.Password == password)
                 {
                     loggedUser = recovered;
+                    logger.Log(userName, "Logged In");
                 }
                 else
                 {
