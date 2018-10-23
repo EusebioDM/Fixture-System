@@ -5,14 +5,12 @@ namespace EirinDuran.Domain.Fixture
     public class Sport
     {
         private string name;
-        private HashSet<Team> teams;
         private StringValidator validator;
         public string Name { get => name; set => SetNameIfValid(value); }
 
         public Sport(string name)
         {
             validator = new StringValidator();
-            teams = new HashSet<Team>();
             Name = name;
         }
 
@@ -31,8 +29,7 @@ namespace EirinDuran.Domain.Fixture
 
         public override bool Equals(object obj)
         {
-            var sport = obj as Sport;
-            return sport != null &&
+            return obj is Sport sport &&
                    Name == sport.Name;
         }
 
