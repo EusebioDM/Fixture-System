@@ -45,7 +45,15 @@ namespace EirinDuran.DomainTest
         }
 
         [TestMethod]
-        public void EncounterSizeOkTest()
+        public void EncounterSizeTwoPlayersTest()
+        {
+            Sport futbol = new Sport("Futbol", EncounterPlayerCount.TwoPlayers);
+
+            Assert.Equals(EncounterPlayerCount.TwoPlayers, futbol.EncounterPlayerCount);
+        }
+        
+        [TestMethod]
+        public void EncounterSizeMoreThanTwoPlayersTest()
         {
             Sport futbol = new Sport("Futbol", EncounterPlayerCount.TwoPlayers);
 
