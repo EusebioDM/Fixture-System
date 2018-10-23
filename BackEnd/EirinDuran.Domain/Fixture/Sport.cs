@@ -7,11 +7,13 @@ namespace EirinDuran.Domain.Fixture
         private string name;
         private StringValidator validator;
         public string Name { get => name; set => SetNameIfValid(value); }
+        public  EncounterPlayerCount EncounterPlayerCount { get; private set; }
 
-        public Sport(string name)
+        public Sport(string name, EncounterPlayerCount encounterPlayerCount = EncounterPlayerCount.TwoPlayers)
         {
             validator = new StringValidator();
             Name = name;
+            EncounterPlayerCount = encounterPlayerCount;
         }
 
         private void SetNameIfValid(string value)
