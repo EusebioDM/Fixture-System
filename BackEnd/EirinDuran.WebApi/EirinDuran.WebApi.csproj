@@ -28,7 +28,13 @@
   </ItemGroup>
 
   <Target Name="AddTestFixtureGenerators" AfterTargets="Build">
-    <Exec Command="$(ProjectDir)/lfs.sh"/>
+    <MakeDir Directories="$(OutputPath)\FixtureGenerators" ContinueOnError="true"/>
+    <Copy SourceFiles="$(ProjectDir)\..\FixtureGenerators\EirinDuran.FixtureGenerators.AllOnce\bin\Debug\netstandard2.0\EirinDuran.FixtureGenerators.AllOnce.dll"
+          DestinationFolder="$(OutputPath)\FixtureGenerators"
+          ContinueOnError="false"/>
+    <Copy SourceFiles="$(ProjectDir)\..\FixtureGenerators\EirinDuran.FixtureGenerators.RoundRobin\bin\Debug\netstandard2.0\EirinDuran.FixtureGenerators.RoundRobin.dll"
+          DestinationFolder="$(OutputPath)\FixtureGenerators"
+          ContinueOnError="false"/>
   </Target>
   
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>
