@@ -7,8 +7,10 @@ using EirinDuran.IServices.Interfaces;
 using EirinDuran.Services.DTO_Mappers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using Castle.Core.Internal;
 
 namespace EirinDuran.Services
 {
@@ -22,7 +24,7 @@ namespace EirinDuran.Services
         private PermissionValidator adminValidator;
         private EncounterMapper mapper;
         private CommentMapper commentMapper;
-        private const string FixtureGeneratorsAssembly = "EirinDuran.Domain";
+        //private const string FixtureGeneratorsDirectory = "Fixture Generators";
 
         public EncounterServices(ILoginServices loginServices, IExtendedEncounterRepository encounterRepo, IRepository<Sport> sportRepo, IRepository<Team> teamRepo, IRepository<User> userRepo)
         {
@@ -73,7 +75,6 @@ namespace EirinDuran.Services
 
         private void ValidateNonOverlappingOfDates(Encounter encounter)
         {
-
             Team firstTeamToAdd = encounter.Teams.ElementAt(0);
             Team secondTeamToAdd = encounter.Teams.ElementAt(1);
             DateTime encounterDateToAdd = encounter.DateTime;
@@ -86,10 +87,10 @@ namespace EirinDuran.Services
                 DateTime encounterDateInDataBase = aEncounter.DateTime;
 
                 if ((firstTeamInDataBase.Equals(firstTeamToAdd)
-                   || firstTeamInDataBase.Equals(secondTeamToAdd)
-                   || secondTeamInDataBase.Equals(firstTeamToAdd)
-                   || secondTeamInDataBase.Equals(secondTeamToAdd))
-                   && (encounterDateInDataBase == encounterDateToAdd))
+                     || firstTeamInDataBase.Equals(secondTeamToAdd)
+                     || secondTeamInDataBase.Equals(firstTeamToAdd)
+                     || secondTeamInDataBase.Equals(secondTeamToAdd))
+                    && (encounterDateInDataBase == encounterDateToAdd))
                 {
                     throw new EncounterWithOverlappingDatesException();
                 }
@@ -110,7 +111,7 @@ namespace EirinDuran.Services
             {
                 return encounterRepository.Get(encounterId);
             }
-            catch(DataAccessException ex)
+            catch (DataAccessException ex)
             {
                 throw new ServicesException($"Encounter with id {encounterId} not found", ex);
             }
@@ -134,7 +135,7 @@ namespace EirinDuran.Services
             {
                 return mapper.Map(encounterRepository.Get(encounterId));
             }
-            catch(DataAccessException e)
+            catch (DataAccessException e)
             {
                 throw new ServicesException($"Failure to recover encounter with id = {encounterId}.", e);
             }
@@ -191,7 +192,7 @@ namespace EirinDuran.Services
             {
                 encounterRepository.Update(encounter);
             }
-            catch(DataAccessException e)
+            catch (DataAccessException e)
             {
                 throw new ServicesException($"Failure to update encounter id = {encounterModel.Id}", e);
             }
@@ -224,6 +225,7 @@ namespace EirinDuran.Services
                     encountersWithComment.Add(encounter);
                 }
             }
+
             return encountersWithComment.Select(e => mapper.Map(e));
         }
 
@@ -256,30 +258,29 @@ namespace EirinDuran.Services
 
         private IFixtureGenerator GetFixtureGenerator(string fixtureGeneratorName, string sportName)
         {
-            Sport sport = GetSport(sportName);
-            Assembly domainAssembly = Assembly.Load(FixtureGeneratorsAssembly);
-            return GetFixtureGeneratorFromAssembly(fixtureGeneratorName, sport, domainAssembly);
-        }
-
-        private static IFixtureGenerator GetFixtureGeneratorFromAssembly(string fixtureGeneratorName, Sport sport, Assembly domainAssembly)
-        {
-            Type generatorType = domainAssembly.GetTypes().FirstOrDefault(t => t.FullName.EndsWith(fixtureGeneratorName));
-            if (generatorType == null)
+            Func<IFixtureGenerator, bool> isNeededGenerator = g => g.GetType().FullName.EndsWith(fixtureGeneratorName);
+            AssemblyLoader.AssemblyLoader loader = GetAssemblyLoader();
+            IEnumerable<IFixtureGenerator> generators = loader.GetImplementations<IFixtureGenerator>().Where(isNeededGenerator);
+            if (generators.IsNullOrEmpty())
             {
                 throw new ServicesException($"{fixtureGeneratorName} was not a valid fixture generator");
             }
-            return Activator.CreateInstance(generatorType, sport) as IFixtureGenerator;
+
+            return generators.First();
         }
 
         public IEnumerable<string> GetAvailableFixtureGenerators()
         {
-            Func<Type, bool> typeIsFixtureGenerator = t => typeof(IFixtureGenerator).IsAssignableFrom(t) && !t.IsInterface;
-            Func<Type, string> getGeneratorTypeName = t => t.FullName.Split('.').Last();
+            Func<IFixtureGenerator, string> getGeneratorTypeName = t => t.GetType().FullName.Split('.').Last();
+            AssemblyLoader.AssemblyLoader loader = GetAssemblyLoader();
+            return loader.GetImplementations<IFixtureGenerator>().Select(getGeneratorTypeName);
+        }
 
-            Assembly domainAssembly = Assembly.Load(FixtureGeneratorsAssembly);
-            IEnumerable<Type> generatorTypes = domainAssembly.GetTypes().Where(typeIsFixtureGenerator);
-            
-            return generatorTypes.Select(getGeneratorTypeName);
+        private AssemblyLoader.AssemblyLoader GetAssemblyLoader()
+        {
+            string currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string path = Directory.EnumerateDirectories(currentDir).First(d => d.EndsWith("FixtureGenerators"));
+            return new AssemblyLoader.AssemblyLoader(path);
         }
 
         private Sport GetSport(string sportName)

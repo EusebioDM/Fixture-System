@@ -13,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using EirinDuran.FixtureGenerators.AllOnce;
+using EirinDuran.FixtureGenerators.RoundRobin;
 
 namespace EirinDuran.ServicesTest
 {
@@ -184,7 +186,7 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("sSanchez", "user");
             EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
-            encounterServices.CreateFixture("RoundRobinFixture", "Basquetball", new DateTime(3000, 10, 10));
+            encounterServices.CreateFixture("RoundRobin", "Basquetball", new DateTime(3000, 10, 10));
 
             IEnumerable<Encounter> encounters = encounterRepo.GetAll();
             Assert.AreEqual(0, encounters.Count());
@@ -195,9 +197,9 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("sSanchez", "user");
             EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
-            encounterServices.CreateFixture("RoundRobinFixture", "Futbol", new DateTime(3000, 10, 10));
+            encounterServices.CreateFixture("RoundRobin", "Futbol", new DateTime(3000, 10, 10));
 
-            IEnumerable<Encounter> expected = new RoundRobinFixture(futbol).GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
+            IEnumerable<Encounter> expected = new RoundRobin().GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
             IEnumerable<Encounter> actual = encounterRepo.GetAll();
             Assert.IsTrue(expected.SequenceEqual(actual));
         }
@@ -207,9 +209,9 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("sSanchez", "user");
             EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
-            encounterServices.CreateFixture("RoundRobinFixture", "Futbol", new DateTime(3000, 10, 10));
+            encounterServices.CreateFixture("RoundRobin", "Futbol", new DateTime(3000, 10, 10));
 
-            IEnumerable<Encounter> expected = new RoundRobinFixture(futbol).GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
+            IEnumerable<Encounter> expected = new RoundRobin().GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
             IEnumerable<Encounter> actual = encounterRepo.GetAll();
             Assert.IsTrue(expected.SequenceEqual(actual));
         }
@@ -221,9 +223,9 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("sSanchez", "user");
             EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
-            encounterServices.CreateFixture("AllOnceFixture", "Futbol", new DateTime(3000, 10, 10));
+            encounterServices.CreateFixture("AllOnce", "Futbol", new DateTime(3000, 10, 10));
 
-            IEnumerable<Encounter> expected = new AllOnceFixture(futbol).GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
+            IEnumerable<Encounter> expected = new AllOnce().GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
             IEnumerable<Encounter> actual = encounterRepo.GetAll();
             Assert.IsTrue(expected.SequenceEqual(actual));
         }
@@ -235,8 +237,8 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("sSanchez", "user");
             EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
-            encounterServices.CreateFixture("AllOnceFixture", "Futbol", new DateTime(3000, 10, 10));
-            encounterServices.CreateFixture("AllOnceFixture", "Futbol", new DateTime(3000, 10, 10));
+            encounterServices.CreateFixture("AllOnce", "Futbol", new DateTime(3000, 10, 10));
+            encounterServices.CreateFixture("AllOnce", "Futbol", new DateTime(3000, 10, 10));
         }
 
         [TestMethod]
@@ -246,7 +248,7 @@ namespace EirinDuran.ServicesTest
             login.CreateSession("martinFowler", "user");
             EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
 
-            encounterServices.CreateFixture("AllOnceFixture", "Futbol", new DateTime(3000, 10, 10));
+            encounterServices.CreateFixture("AllOnce", "Futbol", new DateTime(3000, 10, 10));
         }
 
         [TestMethod]
@@ -308,7 +310,7 @@ namespace EirinDuran.ServicesTest
             EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             IEnumerable<Team> teams = new List<Team> { felix, river };
             DateTime date = new DateTime(3018, 10, 12);
-            IFixtureGenerator fixture = new RoundRobinFixture(futbol);
+            IFixtureGenerator fixture = new RoundRobin();
             Services.DTO_Mappers.EncounterMapper mapper = new Services.DTO_Mappers.EncounterMapper(sportRepo, teamRepo);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
@@ -326,7 +328,7 @@ namespace EirinDuran.ServicesTest
             IEnumerable<Team> teams = new List<Team> { felix, river };
             DateTime date = new DateTime(3018, 10, 12);
 
-            IFixtureGenerator fixture = new RoundRobinFixture(futbol);
+            IFixtureGenerator fixture = new RoundRobin();
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
@@ -348,7 +350,7 @@ namespace EirinDuran.ServicesTest
 
             DateTime date = new DateTime(3018, 10, 12);
 
-            IFixtureGenerator fixture = new RoundRobinFixture(futbol);
+            IFixtureGenerator fixture = new RoundRobin();
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
             encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
@@ -426,8 +428,8 @@ namespace EirinDuran.ServicesTest
             EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
 
             IEnumerable<string> actual = encounterServices.GetAvailableFixtureGenerators();
-            Assert.IsTrue(actual.Contains("AllOnceFixture"));
-            Assert.IsTrue(actual.Contains("RoundRobinFixture"));
+            Assert.IsTrue(actual.Contains("AllOnce"));
+            Assert.IsTrue(actual.Contains("RoundRobin"));
         }
 
         [TestMethod]
