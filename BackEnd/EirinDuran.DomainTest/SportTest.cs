@@ -43,5 +43,15 @@ namespace EirinDuran.DomainTest
 
             Assert.AreNotEqual(futbol, basquet);
         }
+
+        [TestMethod]
+        public void EncounterSizeOkTest()
+        {
+            Sport futbol = new Sport("Futbol", EncounterPlayerCount.TwoPlayers);
+
+            Assert.Equals(EncounterPlayerCount.TwoPlayers, futbol.EncounterPlayerCount);
+        }
+        
+        
     }
 }
