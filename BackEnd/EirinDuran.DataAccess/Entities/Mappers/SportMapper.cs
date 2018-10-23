@@ -14,18 +14,20 @@ namespace EirinDuran.DataAccess.Entities.Mappers
         {
             return new SportEntity()
             {
-                SportName = sport.Name
+                SportName = sport.Name,
+                EncounterPlayerCount = sport.EncounterPlayerCount
             };
         }
 
         public Sport Map(SportEntity entity)
         {
-            return new Sport( name: entity.SportName);
+            return new Sport( name: entity.SportName, encounterPlayerCount: entity.EncounterPlayerCount);
         }
 
         public void Update(Sport source, SportEntity destination)
         {
             destination.SportName = source.Name;
+            destination.EncounterPlayerCount = source.EncounterPlayerCount;
         }
     }
 }

@@ -49,7 +49,7 @@ namespace EirinDuran.DomainTest
         {
             Sport futbol = new Sport("Futbol", EncounterPlayerCount.TwoPlayers);
 
-            Assert.Equals(EncounterPlayerCount.TwoPlayers, futbol.EncounterPlayerCount);
+            Assert.AreEqual(EncounterPlayerCount.TwoPlayers, futbol.EncounterPlayerCount);
         }
         
         [TestMethod]
@@ -57,7 +57,7 @@ namespace EirinDuran.DomainTest
         {
             Sport futbol = new Sport("Futbol", EncounterPlayerCount.TwoPlayers);
 
-            Assert.Equals(EncounterPlayerCount.TwoPlayers, futbol.EncounterPlayerCount);
+            Assert.AreEqual(EncounterPlayerCount.TwoPlayers, futbol.EncounterPlayerCount);
         }
         
         
