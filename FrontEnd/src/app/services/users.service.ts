@@ -54,7 +54,7 @@ export class UsersService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
     console.log(this.usersUrl + id);
-    this.httpService.delete(this.usersUrl + '/' + id, requestOptions).subscribe((ok) => { console.log(ok); });
+    return this.httpService.delete(this.usersUrl + '/' + id, requestOptions);
   }
 
   private handleError(error: Response) {

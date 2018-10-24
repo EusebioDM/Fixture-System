@@ -22,14 +22,13 @@ export class UsersListComponent implements OnInit {
       ((data: Array<User>) => this.result(data)),
       ((error: any) => console.log(error))
     );
-
-    this.dataSource = new MatTableDataSource<User>(this.users);
-    this.dataSource.paginator = this.paginator;
   }
 
   private result(data: Array<User>): void {
     this.users = data;
     console.log(this.users);
+    this.dataSource = new MatTableDataSource<User>(this.users);
+    this.dataSource.paginator = this.paginator;
   }
 
   getUser(id: string) {
@@ -57,7 +56,17 @@ export class UsersListComponent implements OnInit {
 
   deleteUser(id: string) {
     console.log('User to delete: ' + id);
-    this.usersService.deleteUser(id);
+    let us;
+    this.dataSource.data.forEach(user => {
+      if (user.userName === id) {
+        us = user;
+      }
+    });
+    console.log('Usuario ' + us);
+    this.dataSource.data.splice(this.dataSource.data.indexOf(us), 1);
+    this.dataSource.paginator = this.paginator;
+    console.log('Usuarios ' + this.dataSource.data);
+    this.usersService.deleteUser(id).subscribe();
   }
 }
 
