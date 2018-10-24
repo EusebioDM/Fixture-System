@@ -19,6 +19,7 @@ export class LoginService {
 
   logout() {
     localStorage.removeItem('access_token');
+    console.log('Token ' + localStorage.getItem('access_token'));
   }
 
   public get loggedIn(): boolean {
