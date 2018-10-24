@@ -7,7 +7,7 @@ using System.Text;
 
 namespace EirinDuran.DataAccess.Entities
 {
-    public class TeamUserEntity
+    public class TeamUser
     {
         public string TeamName { get; set; }
         public string SportName { get; set; }
@@ -15,12 +15,12 @@ namespace EirinDuran.DataAccess.Entities
         public virtual UserEntity User { get; set; }
         public string UserName { get; set; }
 
-        public TeamUserEntity()
+        public TeamUser()
         {
 
         }
 
-        public TeamUserEntity(TeamEntity team, UserEntity user)
+        public TeamUser(TeamEntity team, UserEntity user)
         {
             Team = team;
             User = user;

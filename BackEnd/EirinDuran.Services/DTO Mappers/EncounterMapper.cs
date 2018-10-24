@@ -28,15 +28,14 @@ namespace EirinDuran.Services.DTO_Mappers
                 DateTime = encounter.DateTime,
                 CommentsIds = encounter.Comments.Select(comment => comment.Id).ToList(),
                 SportName = encounter.Sport.Name,
-                HomeTeamName = encounter.Teams.First().Name,
-                AwayTeamName = encounter.Teams.Last().Name
+                TeamIds = encounter.Teams.Select(t => t.Name + "_" + t.Sport.Name).ToList()
             };
         }
 
         protected override Encounter TryToMapModel(EncounterDTO encounterDTO)
         {
             return new Encounter(id: encounterDTO.Id,
-                teams: new List<Team>() { teamRepo.Get(encounterDTO.HomeTeamName + "_" + encounterDTO.SportName), teamRepo.Get(encounterDTO.AwayTeamName + "_" + encounterDTO.SportName) },
+                teams: encounterDTO.TeamIds.Select(t => teamRepo.Get(t)),
                 comments: encounterDTO.CommentsIds.ConvertAll(comment => commentRepo.Get(comment.ToString())),
                 dateTime: encounterDTO.DateTime,
                 sport: sportRepo.Get(encounterDTO.SportName)

@@ -57,8 +57,7 @@ namespace EirinDuran.WebApiTest
 
             EncounterDTO enc = new EncounterDTO();
             enc.SportName = football.Name;
-            enc.AwayTeamName = river.Name;
-            enc.HomeTeamName = boca.Name;
+            enc.TeamIds = new List<string>() {river.Name, boca.Name};
             enc.DateTime = encounterDate;
 
             List<EncounterDTO> encs = new List<EncounterDTO>() { enc };
@@ -73,7 +72,7 @@ namespace EirinDuran.WebApiTest
             Assert.IsNotNull(obtainedResult);
             Assert.AreEqual(enc.Id, obtainedResult.Value[0].Id);
             Assert.AreEqual(enc.SportName, obtainedResult.Value[0].SportName);
-            Assert.AreEqual(enc.AwayTeamName, obtainedResult.Value[0].AwayTeamName);
+            Assert.AreEqual(enc.TeamIds.First(), obtainedResult.Value[0].TeamIds.First());
         }
 
         [TestMethod]
@@ -119,8 +118,7 @@ namespace EirinDuran.WebApiTest
             EncounterDTO enc = new EncounterDTO
             {
                 SportName = football.Name,
-                AwayTeamName = river.Name,
-                HomeTeamName = boca.Name,
+                TeamIds =  new List<string>() {river.Name, boca.Name},
                 DateTime = encounterDate
             };
 
@@ -130,9 +128,8 @@ namespace EirinDuran.WebApiTest
 
             var obtainedResult = controller.Create(new EncounterModelIn()
             {
-                AwayTeamName = enc.AwayTeamName,
+                TeamIds =  enc.TeamIds,
                 DateTime = enc.DateTime,
-                HomeTeamName = enc.HomeTeamName,
                 SportName = enc.SportName
             }) as CreatedAtRouteResult;
             enconunterServicesMock.Verify(e => e.CreateEncounter(enc), Times.AtMostOnce());
@@ -160,8 +157,7 @@ namespace EirinDuran.WebApiTest
             EncounterDTO enc = new EncounterDTO
             {
                 SportName = football.Name,
-                AwayTeamName = river.Name,
-                HomeTeamName = boca.Name,
+                TeamIds =  new List<string>() {river.Name, boca.Name},
                 DateTime = encounterDate
             };
 
@@ -171,9 +167,8 @@ namespace EirinDuran.WebApiTest
 
             var obtainedResult = controller.Create(new EncounterModelIn()
             {
-                AwayTeamName = enc.AwayTeamName,
+                TeamIds = enc.TeamIds,
                 DateTime = enc.DateTime,
-                HomeTeamName=enc.HomeTeamName,
                 SportName = enc.SportName
             }) as UnauthorizedResult;
             enconunterServicesMock.Verify(e => e.CreateEncounter(enc), Times.AtMostOnce());
@@ -199,8 +194,7 @@ namespace EirinDuran.WebApiTest
 
             EncounterDTO enc = new EncounterDTO();
             enc.SportName = football.Name;
-            enc.AwayTeamName = river.Name;
-            enc.HomeTeamName = boca.Name;
+            enc.TeamIds = new List<string>() {river.Name, boca.Name};
             enc.DateTime = encounterDate;
 
             enconunterServicesMock.Setup(m => m.CreateEncounter(enc)).Throws(new ServicesException());
@@ -209,9 +203,8 @@ namespace EirinDuran.WebApiTest
 
             var obtainedResult = controller.Create(new EncounterModelIn()
             {
-                AwayTeamName = enc.AwayTeamName,
+                TeamIds =  enc.TeamIds,
                 DateTime = enc.DateTime,
-                HomeTeamName = enc.HomeTeamName,
                 SportName = enc.SportName
             }) as BadRequestObjectResult;
             enconunterServicesMock.Verify(e => e.CreateEncounter(enc), Times.AtMostOnce());
@@ -238,8 +231,7 @@ namespace EirinDuran.WebApiTest
             EncounterDTO enc = new EncounterDTO
             {
                 SportName = football.Name,
-                AwayTeamName = river.Name,
-                HomeTeamName = boca.Name,
+                TeamIds = new List<string>() {river.Name, boca.Name},
                 DateTime = encounterDate
             };
 
@@ -270,7 +262,7 @@ namespace EirinDuran.WebApiTest
                 HttpContext = httpContext,
             };
 
-            EncounterDTO encounter = new EncounterDTO() { Id = IntToGuid(4), SportName = "Futbol", AwayTeamName = "Pe�arol", HomeTeamName = "Nacional" };
+            EncounterDTO encounter = new EncounterDTO() { Id = IntToGuid(4), SportName = "Futbol", TeamIds = new List<string>(){"Peñarol", "Nacional"}};
             IEnumerable<EncounterDTO> encounters = new List<EncounterDTO>() { encounter };
             enconunterServices.Setup(e => e.GetAllEncounters()).Returns(encounters);
 
@@ -298,7 +290,7 @@ namespace EirinDuran.WebApiTest
                 HttpContext = httpContext,
             };
 
-            EncounterDTO encounter = new EncounterDTO() { Id = IntToGuid(4), SportName = "Futbol", AwayTeamName = "Pe�arol", HomeTeamName = "Nacional" };
+            EncounterDTO encounter = new EncounterDTO() { Id = IntToGuid(4), SportName = "Futbol", TeamIds = new List<string>(){"Peñarol", "Nacional"} };
             IEnumerable<EncounterDTO> encounters = new List<EncounterDTO>() { encounter };
             enconunterServices.Setup(e => e.AddComment(4 + "", "This is a test comment in a mock!")).Throws(new ServicesException());
 

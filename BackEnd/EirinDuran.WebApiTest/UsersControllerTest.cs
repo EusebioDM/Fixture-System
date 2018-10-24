@@ -582,7 +582,7 @@ namespace EirinDuran.WebApiTest
             var encounterServicesMock = new Mock<IEncounterServices>();
             ILoginServices loginServices = new LoginServicesMock(pablo);
 
-            EncounterDTO encounter = new EncounterDTO() { SportName = "Futbol", DateTime = new DateTime(3018 / 08 / 08), AwayTeamName = "Team1", HomeTeamName = "Team2" };
+            EncounterDTO encounter = new EncounterDTO() { SportName = "Futbol", DateTime = new DateTime(3018 / 08 / 08), TeamIds = new List<string>() {"team1", "team2"}};
             List<EncounterDTO> encounters = new List<EncounterDTO>() { encounter };
             CommentDTO comment = new CommentDTO() { Message = "This is a test comment!", UserName = pablo.UserName, TimeStamp = new DateTime(2019 / 03 / 03) };
             List<CommentDTO> comments = new List<CommentDTO>() { comment };

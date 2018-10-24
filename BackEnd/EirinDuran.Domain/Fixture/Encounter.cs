@@ -8,10 +8,8 @@ namespace EirinDuran.Domain.Fixture
     public class Encounter
     {
         public Guid Id { get; private set; }
-        private Team[] teams;
-
+        private ICollection<Team> teams;
         private DateTime dateTime;
-
         public DateTime DateTime { get => dateTime; set => SetDateIfValid(value); }
         public IEnumerable<Team> Teams => teams;
         public IEnumerable<Comment> Comments => comments;
@@ -22,21 +20,17 @@ namespace EirinDuran.Domain.Fixture
         public Encounter(Sport sport, IEnumerable<Team> teams, DateTime dateTime)
         {
             comments = new List<Comment>();
-            ValidateNumberOfTeams(teams);
             Sport = sport;
+            ValidateNumberOfTeams(teams);
             this.teams = GetTeamsArray(teams);
             DateTime = dateTime;
             Id = Guid.NewGuid();
         }
 
-        public Encounter(Guid id, Sport sport, IEnumerable<Team> teams, DateTime dateTime, ICollection<Comment> comments)
+        public Encounter(Guid id, Sport sport, IEnumerable<Team> teams, DateTime dateTime, ICollection<Comment> comments) : this(sport, teams,dateTime)
         {
             Id = id == Guid.Empty ? Guid.NewGuid() : id;
-            ValidateNumberOfTeams(teams);
-            Sport = sport;
-            this.teams = GetTeamsArray(teams);
             this.comments = comments;
-            DateTime = dateTime;
         }
 
         public void AddComment(User.User user, string message)
@@ -46,22 +40,17 @@ namespace EirinDuran.Domain.Fixture
 
         private void ValidateNumberOfTeams(IEnumerable<Team> teams)
         {
-            if(teams.Count() != 2)
+            if(Sport.EncounterPlayerCount == EncounterPlayerCount.TwoPlayers && teams.Count() != 2)
             {
                 throw new InvalidNumberOfTeamsException();
             }
         }
 
-        private Team[] GetTeamsArray(IEnumerable<Team> teams)
+        private List<Team> GetTeamsArray(IEnumerable<Team> teams)
         {
-            Team[] array = new Team[2];
-            int i = 0;
-            foreach (Team team in teams)
-            {
-                ValidateTeamIsValid(team);
-                array[i++] = team;
-            }
-            return array;
+            List<Team> teamList = teams.ToList();
+            teamList.ForEach(ValidateTeamIsValid);
+            return teamList;
         }
 
         private void ValidateTeamIsValid(Team team)

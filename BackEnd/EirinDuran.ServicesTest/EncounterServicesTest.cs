@@ -263,8 +263,7 @@ namespace EirinDuran.ServicesTest
             EncounterDTO encounter = new EncounterDTO()
             {
                 SportName = "Football",
-                AwayTeamName = "River Plate",
-                HomeTeamName = "Cerro",
+                TeamIds =  new List<string>() {"River Plate_Futbol", "Cerro"},
                 DateTime = DateTime.UnixEpoch
             };
             encounterServices.CreateEncounter(encounter);
@@ -279,8 +278,7 @@ namespace EirinDuran.ServicesTest
             EncounterDTO encounter = new EncounterDTO()
             {
                 SportName = "Football",
-                AwayTeamName = "River Plate",
-                HomeTeamName = ""
+                TeamIds = new List<string>() {"River Plate_Futbol", ""}
             };
             encounterServices.CreateEncounter(encounter);
         }
@@ -295,8 +293,7 @@ namespace EirinDuran.ServicesTest
             encounterServices.CreateEncounter(new EncounterDTO()
             {
                 SportName = "Futbol",
-                AwayTeamName = "River Plate",
-                HomeTeamName = "Cerro",
+                TeamIds =  new List<string>() {"River Plate_Futbol", "Cerro_Futbol"},
                 DateTime = date,
                 Id = guid
             });

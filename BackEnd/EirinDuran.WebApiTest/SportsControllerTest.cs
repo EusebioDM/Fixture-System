@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Interfaces;
 using EirinDuran.WebApi.Controllers;
@@ -300,14 +301,14 @@ namespace EirinDuran.WebApiTest
             Assert.IsNotNull(obtainedResult.Value);
             Assert.AreEqual(encounter.Id, obtainedResult.Value[0].Id);
             Assert.AreEqual(encounter.SportName, obtainedResult.Value[0].SportName);
-            Assert.AreEqual(encounter.HomeTeamName, obtainedResult.Value[0].HomeTeamName);
-            Assert.AreEqual(encounter.AwayTeamName, obtainedResult.Value[0].AwayTeamName);
+            Assert.AreEqual(encounter.TeamIds.First(), obtainedResult.Value[0].TeamIds.First());
+            Assert.AreEqual(encounter.TeamIds.Last(), obtainedResult.Value[0].TeamIds.Last());
             Assert.AreEqual(encounter.DateTime, obtainedResult.Value[0].DateTime);
         }
 
         private EncounterDTO CreateAEncounter(string sportId)
         {
-            return new EncounterDTO() { SportName = sportId, AwayTeamName = "Manchester", HomeTeamName = "UsAtlanta" };
+            return new EncounterDTO() { SportName = sportId, TeamIds = new List<string>(){"Manchester","UsAtlanta" }};
         }
 
         [TestMethod]
@@ -400,8 +401,8 @@ namespace EirinDuran.WebApiTest
             List<EncounterModelOut> encounterResult = obtainedResult.Value;
             Assert.AreEqual(encounter.Id, encounterResult[0].Id);
             Assert.AreEqual(encounter.SportName, encounterResult[0].SportName);
-            Assert.AreEqual(encounter.HomeTeamName, encounterResult[0].HomeTeamName);
-            Assert.AreEqual(encounter.AwayTeamName, encounterResult[0].AwayTeamName);
+            Assert.AreEqual(encounter.TeamIds.First(), encounterResult[0].TeamIds.First());
+            Assert.AreEqual(encounter.TeamIds.Last(), encounterResult[0].TeamIds.Last());
             Assert.AreEqual(encounter.DateTime, encounterResult[0].DateTime);
         }
     }

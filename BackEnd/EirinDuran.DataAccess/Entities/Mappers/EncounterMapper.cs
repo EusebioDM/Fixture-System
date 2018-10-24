@@ -14,20 +14,21 @@ namespace EirinDuran.DataAccess.Entities.Mappers
         public EncounterEntity Map(Encounter encounter)
         {
             IEnumerable<TeamEntity> teams = encounter.Teams.Select(t => teamMapper.Map(t));
-            return new EncounterEntity()
+            EncounterEntity encounterEntity = new EncounterEntity()
             {
                 DateTime = encounter.DateTime,
                 Sport = sportMapper.Map(encounter.Sport),
-                HomeTeam = new TeamEntity(encounter.Teams.First()),
-                AwayTeam = new TeamEntity(encounter.Teams.Last()),
                 Id = encounter.Id,
                 Comments = encounter.Comments.Select(c => new CommentEntity(c)).ToList()
             };
+            encounterEntity.Teams = encounter.Teams.Select(t => new EncounterTeam(encounterEntity, new TeamEntity(t))).ToList();
+
+            return encounterEntity;
         }
 
         public Encounter Map(EncounterEntity entity)
         {
-            IEnumerable<Team> teams = new List<Team>() { entity.HomeTeam.ToModel(), entity.AwayTeam.ToModel() };
+            IEnumerable<Team> teams = entity.Teams.Select(t => t.Team.ToModel());
             ICollection<Comment> comments = entity.Comments.Select(t => t.ToModel()).ToList();
             Sport sport = sportMapper.Map(entity.Sport);
 
@@ -39,10 +40,9 @@ namespace EirinDuran.DataAccess.Entities.Mappers
             List<TeamEntity> teams = source.Teams.Select(sourcemTeam => new TeamEntity(sourcemTeam)).ToList(); 
             destination.DateTime = source.DateTime;
             destination.Sport = new SportEntity(source.Sport);
-            destination.HomeTeam = teams.First();
-            destination.AwayTeam = teams.Last();
             destination.Id = source.Id;
             destination.Comments = source.Comments.Select(c => new CommentEntity(c)).ToList();
+            destination.Teams = source.Teams.Select(t => new EncounterTeam(destination, new TeamEntity(t))).ToList();
         }
     }
 }

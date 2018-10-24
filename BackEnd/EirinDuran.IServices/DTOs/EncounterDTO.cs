@@ -10,9 +10,7 @@ namespace EirinDuran.IServices.DTOs
 
         public DateTime DateTime { get; set; }
 
-        public string HomeTeamName { get; set; }
-
-        public string AwayTeamName { get; set; }
+        public ICollection<string> TeamIds { get; set; } = new List<string>();
 
         public List<Guid> CommentsIds { get; set; } = new List<Guid>();
 
@@ -20,8 +18,7 @@ namespace EirinDuran.IServices.DTOs
 
         public override bool Equals(object obj)
         {
-            var dTO = obj as EncounterDTO;
-            return dTO != null &&
+            return obj is EncounterDTO dTO &&
                    Id.Equals(dTO.Id);
         }
 

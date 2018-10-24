@@ -345,7 +345,7 @@ namespace EirinDuran.WebApiTest
             var teamServicesMock = new Mock<ITeamServices>();
             var encounterServicesMock = new Mock<IEncounterServices>();
 
-            EncounterDTO encounter = new EncounterDTO() { AwayTeamName = "Team", HomeTeamName = "Team2", SportName = "Sport" };
+            EncounterDTO encounter = new EncounterDTO() { TeamIds = new List<string>() {"team1", "team2"}, SportName = "Sport" };
             string teamName = "Team_Sport";
             List<EncounterDTO> encounters = new List<EncounterDTO>() { encounter };
             encounterServicesMock.Setup(e => e.GetEncountersByTeam(teamName)).Returns(encounters);
@@ -370,8 +370,8 @@ namespace EirinDuran.WebApiTest
             Assert.IsNotNull(result);
             Assert.IsNotNull(resultRequest);
             Assert.AreEqual(encounter.SportName, obtaniedEncounters[0].SportName);
-            Assert.AreEqual(encounter.AwayTeamName, obtaniedEncounters[0].AwayTeamName);
-            Assert.AreEqual(encounter.HomeTeamName, obtaniedEncounters[0].HomeTeamName);
+            Assert.AreEqual(encounter.TeamIds.First(), obtaniedEncounters[0].TeamIds.First());
+            Assert.AreEqual(encounter.TeamIds.Last(), obtaniedEncounters[0].TeamIds.Last());
         }
 
         [TestMethod]
@@ -410,7 +410,7 @@ namespace EirinDuran.WebApiTest
             var teamServicesMock = new Mock<ITeamServices>();
             var encounterServicesMock = new Mock<IEncounterServices>();
 
-            EncounterDTO encounter = new EncounterDTO() { AwayTeamName = "Team", HomeTeamName = "Team2", SportName = "Sport" };
+            EncounterDTO encounter = new EncounterDTO() { TeamIds = new List<string>() {"team1", "team2"}, SportName = "Sport" };
             string teamName = "Team_Sport";
             List<EncounterDTO> encounters = new List<EncounterDTO>() { encounter };
             teamServicesMock.Setup(e => e.AddFollowedTeam(teamName));
@@ -442,7 +442,7 @@ namespace EirinDuran.WebApiTest
             var teamServicesMock = new Mock<ITeamServices>();
             var encounterServicesMock = new Mock<IEncounterServices>();
 
-            EncounterDTO encounter = new EncounterDTO() { AwayTeamName = "Team", HomeTeamName = "Team2", SportName = "Sport" };
+            EncounterDTO encounter = new EncounterDTO() { TeamIds = new List<string>() {"team1", "team2"}, SportName = "Sport" };
             string teamName = "Team_Sport";
             List<EncounterDTO> encounters = new List<EncounterDTO>() { encounter };
             teamServicesMock.Setup(e => e.AddFollowedTeam(teamName)).Throws(new ServicesException());

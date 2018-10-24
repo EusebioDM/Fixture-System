@@ -13,8 +13,7 @@ namespace EirinDuran.DataAccess.Entities
         public Guid Id { get; set; }
         public DateTime DateTime { get; set; }
         public virtual SportEntity Sport { get; set; }
-        public virtual TeamEntity HomeTeam { get; set; }
-        public virtual TeamEntity AwayTeam { get; set; }
+        public virtual ICollection<EncounterTeam> Teams { get; set; }
         public virtual ICollection<CommentEntity> Comments { get; set; }
         private EncounterMapper mapper;
 

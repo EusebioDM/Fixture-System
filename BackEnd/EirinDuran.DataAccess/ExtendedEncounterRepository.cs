@@ -23,7 +23,7 @@ namespace EirinDuran.DataAccess
 
         public IEnumerable<Encounter> GetByTeam(string id)
         {
-            Func<EncounterEntity, bool> encounterHasTeam = e => TeamHasId(e.AwayTeam, id) || TeamHasId(e.HomeTeam, id);
+            Func<EncounterEntity, bool> encounterHasTeam = e => e.Teams.Any(t => TeamHasId(t.Team, id));
 
             return GetFilteredEncounters(encounterHasTeam);
         }
