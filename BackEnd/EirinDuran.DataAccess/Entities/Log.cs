@@ -7,7 +7,7 @@ namespace EirinDuran.DataAccess.Entities
     {
         public Guid Id { get; set; }
         public string UserName { get; set; }
-        public string Action1 { get; set; }
+        public string Action { get; set; }
         public DateTime DateTime { get; private set; }
 
         public Log()
@@ -19,13 +19,13 @@ namespace EirinDuran.DataAccess.Entities
         public Log(string userName, string action) : this()
         {
             this.UserName = userName;
-            Action1 = action;
+            Action = action;
         }
 
         public void UpdateWith(Log model)
         {
             UserName = model.UserName;
-            Action1 = model.Action1;
+            Action = model.Action;
             DateTime = model.DateTime;
             Id = model.Id;
         }

@@ -43,6 +43,7 @@ namespace EirinDuran.WebApi
             services.AddScoped<ITeamServices, TeamServices>();
             services.AddScoped<IEncounterServices, EncounterServices>();
             services.AddScoped<ILogger, DataBaseLogger>();
+            services.AddScoped<ILoggerServices, LoggerServices>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
