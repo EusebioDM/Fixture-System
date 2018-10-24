@@ -12,10 +12,8 @@ namespace EirinDuran.WebApi.Models
         public Guid Id { get; set; }
      
         public DateTime DateTime { get; set; }
-     
-        public string HomeTeamName { get; set; }
-     
-        public string AwayTeamName { get; set; }
+        
+        public ICollection<string> TeamIds { get; set; }
      
         public string SportName { get; set; }
 
@@ -44,8 +42,7 @@ namespace EirinDuran.WebApi.Models
         {
             Id = encounter.Id;
             DateTime = encounter.DateTime;
-            HomeTeamName = encounter.HomeTeamName;
-            AwayTeamName = encounter.AwayTeamName;
+            TeamIds = encounter.TeamIds;
             SportName = encounter.SportName;
            
             CommentariesUrl = "/api/encounters/" + Id + "/commentaries";

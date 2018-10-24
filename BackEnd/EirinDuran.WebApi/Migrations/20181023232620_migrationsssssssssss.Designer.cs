@@ -4,14 +4,16 @@ using EirinDuran.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EirinDuran.WebApi.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20181023232620_migrationsssssssssss")]
+    partial class migrationsssssssssss
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,7 +187,7 @@ namespace EirinDuran.WebApi.Migrations
                     b.HasOne("EirinDuran.DataAccess.Entities.TeamEntity", "Team")
                         .WithMany()
                         .HasForeignKey("TeamName", "SportName")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 
             modelBuilder.Entity("EirinDuran.DataAccess.Entities.TeamEntity", b =>
