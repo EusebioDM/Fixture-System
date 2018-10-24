@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from '../../classes/user';
 import { UsersService } from '../../services/users.service';
 import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
+import { AddUserComponent } from '../add-user/add-user.component';
 
 @Component({
   selector: 'app-users-list',
@@ -39,7 +40,7 @@ export class UsersListComponent implements OnInit {
   }
 
   openDialogAddUser() {
-    const dialogRef = this.dialog.open(DialogAddUser);
+    const dialogRef = this.dialog.open(AddUserComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
@@ -53,7 +54,6 @@ export class UsersListComponent implements OnInit {
       if (result) {
         this.deleteUser(id);
       }
-      console.log(`Dialog result: ${result}`);
     });
   }
 
@@ -75,14 +75,6 @@ export class UsersListComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 }
-
-@Component({
-  selector: 'app-add-user',
-  templateUrl: 'addUserForm.html',
-  styleUrls: ['./users.component.css']
-})
-
-export class DialogAddUser { }
 
 @Component({
   selector: 'app-add-user',

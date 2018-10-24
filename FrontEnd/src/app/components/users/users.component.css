@@ -21,12 +21,3 @@ table {
     size: 90%;
     align-content: center;
  }
-
- .addUser-container {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .addUser-container > * {
-    width: 100%;
-  }
