@@ -25,7 +25,6 @@ namespace EirinDuran.ServicesTest
         {
             userRepo = new UserRepository(GetContextFactory());
             teamRepo = new TeamRepository(GetContextFactory());
-            logger = new LoggerStub();
             userRepo.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
         }
 
@@ -37,7 +36,7 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void SimpleLoginOk()
         {
-            LoginServices login = new LoginServices(userRepo, teamRepo, logger);
+            LoginServices login = new LoginServices(userRepo, teamRepo);
             login.CreateSession("sSanchez", "user");
             Assert.AreEqual("sSanchez", login.LoggedUser.UserName);
         }
@@ -46,7 +45,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(ServicesException))]
         public void UserTryToLogginDoesNotExists()
         {
-            LoginServices login = new LoginServices(userRepo, teamRepo, logger);
+            LoginServices login = new LoginServices(userRepo, teamRepo);
             login.CreateSession("pAntonio", "user");
         }
 
@@ -54,7 +53,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(IServices.Exceptions.InvalidaDataException))]
         public void TryToLoginUserWithIncorrectPassword()
         {
-            LoginServices login = new LoginServices(userRepo, teamRepo, logger);
+            LoginServices login = new LoginServices(userRepo, teamRepo);
             login.CreateSession("sSanchez", "pass");
         }
     }

@@ -17,10 +17,12 @@ namespace EirinDuran.WebApi.Controllers
     {
         private readonly ILoginServices loginServices;
         private readonly IEncounterServices encounterServices;
+        private readonly ILogger logger;
 
-        public EncountersController(ILoginServices loginServices, IEncounterServices encounterServices)
+        public EncountersController(ILoginServices loginServices, IEncounterServices encounterServices, ILogger logger)
         {
             this.encounterServices = encounterServices;
+            this.logger = logger;
             this.loginServices = loginServices;
         }
 
@@ -208,6 +210,7 @@ namespace EirinDuran.WebApi.Controllers
             {
                 CreateSession();
                 var encounters = encounterServices.CreateFixture(fixtureModelIn.CreationAlgorithmName, fixtureModelIn.SportName, fixtureModelIn.StartingDate);
+                logger.Log(loginServices.LoggedUser.UserName, $"Created a fixture using the {fixtureModelIn.CreationAlgorithmName} generator");
                 return Ok(encounters);
             }
             catch (ServicesException e)

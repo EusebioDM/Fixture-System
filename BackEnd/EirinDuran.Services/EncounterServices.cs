@@ -25,13 +25,11 @@ namespace EirinDuran.Services
         private PermissionValidator adminValidator;
         private EncounterMapper mapper;
         private CommentMapper commentMapper;
-        //private const string FixtureGeneratorsDirectory = "Fixture Generators";
 
-        public EncounterServices(ILoginServices loginServices, IExtendedEncounterRepository encounterRepo, IRepository<Sport> sportRepo, IRepository<Team> teamRepo, IRepository<User> userRepo, ILogger logger)
+        public EncounterServices(ILoginServices loginServices, IExtendedEncounterRepository encounterRepo, IRepository<Sport> sportRepo, IRepository<Team> teamRepo, IRepository<User> userRepo)
         {
             this.loginServices = loginServices;
             this.userRepo = userRepo;
-            this.logger = logger;
             encounterRepository = encounterRepo;
             this.sportRepo = sportRepo;
             this.teamRepo = teamRepo;
@@ -239,7 +237,6 @@ namespace EirinDuran.Services
             ICollection<Encounter> encounters = generator.GenerateFixture(teamsInSport, startDate);
             ValidateFixture(encounters);
             SaveEncounters(encounters);
-            logger.Log(loginServices.LoggedUser.UserName, $"Created a fixture using the {fixtureGeneratorName} generator on the sport {sportName}");
             return encounters.Select(e => mapper.Map(e));
         }
 

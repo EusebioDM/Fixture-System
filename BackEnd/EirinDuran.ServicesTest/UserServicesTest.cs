@@ -35,7 +35,6 @@ namespace EirinDuran.ServicesTest
             userRepo = new UserRepository(GetContextFactory());
             sportRepo = new SportRepository(GetContextFactory());
             teamRepo = new TeamRepository(GetContextFactory());
-            logger = new LoggerStub();
             encounterRepo = new EncounterRepository(GetContextFactory());
             userRepo.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
             userRepo.Add(new User(Role.Follower, "martinFowler", "Martin", "Fowler", "user", "fowler@fowler.com"));
@@ -71,7 +70,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(InsufficientPermissionException))]
         public void AddUserWithoutPermissions()
         {
-            LoginServices login = new LoginServices(userRepo, teamRepo, logger);
+            LoginServices login = new LoginServices(userRepo, teamRepo);
             UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
 
             login.CreateSession("martinFowler", "user");
@@ -81,7 +80,7 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void AddUserSimpleOk()
         {
-            LoginServices login = new LoginServices(userRepo, teamRepo, logger);
+            LoginServices login = new LoginServices(userRepo, teamRepo);
             UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
 
             login.CreateSession("sSanchez", "user");
@@ -96,7 +95,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(ServicesException))]
         public void AddInvalidUserNameTest()
         {
-            LoginServices login = new LoginServices(userRepo, teamRepo, logger);
+            LoginServices login = new LoginServices(userRepo, teamRepo);
             UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
             login.CreateSession("sSanchez", "user");
             UserDTO user = new UserDTO()
@@ -110,7 +109,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(ServicesException))]
         public void AddInvalidMailTest()
         {
-            LoginServices login = new LoginServices(userRepo, teamRepo, logger);
+            LoginServices login = new LoginServices(userRepo, teamRepo);
             UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
             login.CreateSession("sSanchez", "user");
             UserDTO user = new UserDTO()
@@ -125,7 +124,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(DataAccessException))]
         public void DeleteUserSimpleOk()
         {
-            LoginServices login = new LoginServices(userRepo, teamRepo, logger);
+            LoginServices login = new LoginServices(userRepo, teamRepo);
             UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
 
             login.CreateSession("sSanchez", "user");
@@ -139,7 +138,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(InsufficientPermissionException))]
         public void DeleteUserWithoutSufficientPermissions()
         {
-            LoginServices login = new LoginServices(userRepo, teamRepo, logger);
+            LoginServices login = new LoginServices(userRepo, teamRepo);
             UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
 
             login.CreateSession("martinFowler", "user");
@@ -152,7 +151,7 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void ModifyUserOk()
         {
-            LoginServices login = new LoginServices(userRepo, teamRepo, logger);
+            LoginServices login = new LoginServices(userRepo, teamRepo);
             UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
 
             login.CreateSession("sSanchez", "user");
@@ -178,7 +177,7 @@ namespace EirinDuran.ServicesTest
         [ExpectedException(typeof(InsufficientPermissionException))]
         public void ModifyUserwithoutSufficientPermissions()
         {
-            LoginServices login = new LoginServices(userRepo, teamRepo, logger);
+            LoginServices login = new LoginServices(userRepo, teamRepo);
             UserServices services = new UserServices(login, userRepo, teamRepo, sportRepo);
 
             login.CreateSession("martinFowler", "user");
@@ -249,7 +248,7 @@ namespace EirinDuran.ServicesTest
         [TestMethod]
         public void RecoverAllFollowedTeams()
         {
-            ILoginServices loginServices = new LoginServices(userRepo, teamRepo, logger);
+            ILoginServices loginServices = new LoginServices(userRepo, teamRepo);
             IUserServices userServices = new UserServices(loginServices, userRepo, teamRepo, sportRepo);
             ITeamServices teamServices = new TeamServices(loginServices, teamRepo, sportRepo, userRepo);
             ISportServices sportServices = new SportServices(loginServices, sportRepo);

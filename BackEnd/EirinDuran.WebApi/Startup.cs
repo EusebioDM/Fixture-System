@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using EirinDuran.DataAccess.Entities;
+using EirinDuran.WebApi.Controllers;
 
 namespace EirinDuran.WebApi
 {

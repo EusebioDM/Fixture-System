@@ -2,7 +2,7 @@
 using EirinDuran.Domain.User;
 using EirinDuran.IServices.Interfaces;
 
-namespace EirinDuran.ServicesTest
+namespace EirinDuran.WebApiTest
 {
     internal class LoggerStub : ILogger
     {

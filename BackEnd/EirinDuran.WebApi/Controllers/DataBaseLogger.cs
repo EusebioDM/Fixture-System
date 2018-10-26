@@ -2,7 +2,7 @@ using EirinDuran.DataAccess.Entities;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices.Interfaces;
 
-namespace EirinDuran.Services
+namespace EirinDuran.WebApi.Controllers
 {
     public class DataBaseLogger : ILogger
     {

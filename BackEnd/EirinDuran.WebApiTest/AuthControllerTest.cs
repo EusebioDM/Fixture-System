@@ -27,7 +27,7 @@ namespace EirinDuran.WebApiTest
                 Mail = "mail@gmail.com",
                 IsAdmin = true
             };
-            var controller = new AuthController(configuration.Object, new LoginServicesMock(macri));
+            var controller = new AuthController(configuration.Object, new LoginServicesMock(macri), new LoggerStub());
 
             LoginModelIn loginModel = new LoginModelIn();
             loginModel.UserName = "Macri";
@@ -54,14 +54,13 @@ namespace EirinDuran.WebApiTest
                 Mail = "usertest@gmail.com",
                 IsAdmin = true
             };
-            var controller = new AuthController(configuration.Object, new LoginServicesMock(userTest));
+            var controller = new AuthController(configuration.Object, new LoginServicesMock(userTest), new LoggerStub());
             controller.ModelState.AddModelError("UserName is required", "");
             controller.ModelState.AddModelError("Password is required", "");
 
             LoginModelIn loginModel = new LoginModelIn();
     
             var result = controller.Login(loginModel);
-
             var createdResult = result as BadRequestObjectResult;
 
             Assert.AreEqual(400, createdResult.StatusCode);
@@ -84,7 +83,7 @@ namespace EirinDuran.WebApiTest
 
             var loginServicesMock = new Mock<ILoginServices>();
             loginServicesMock.Setup(l => l.CreateSession("UserTest", "UserTest")).Throws(new Exception());
-            var controller = new AuthController(configuration.Object, loginServicesMock.Object);
+            var controller = new AuthController(configuration.Object, loginServicesMock.Object, new LoggerStub());
 
             LoginModelIn loginModel = new LoginModelIn();
             loginModel.UserName = "UserTest";

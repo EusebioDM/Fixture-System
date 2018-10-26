@@ -63,7 +63,7 @@ namespace EirinDuran.WebApiTest
             List<EncounterDTO> encs = new List<EncounterDTO>() { enc };
             enconunterServicesMock.Setup(m => m.GetAllEncounters()).Returns(encs);
 
-            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object, new LoggerStub()) { ControllerContext = controllerContext, };
 
             var obtainedResult = controller.Get(new DateTime(), new DateTime()) as ActionResult<List<EncounterModelOut>>;
             enconunterServicesMock.Verify(e => e.GetAllEncounters(), Times.AtMostOnce());
@@ -90,7 +90,7 @@ namespace EirinDuran.WebApiTest
 
             enconunterServicesMock.Setup(m => m.GetAllEncounters()).Throws(new ServicesException());
 
-            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object, new LoggerStub()) { ControllerContext = controllerContext, };
 
             var obtainedResult = controller.Get(new DateTime(), new DateTime()) as ActionResult<List<EncounterModelOut>>;
             enconunterServicesMock.Verify(e => e.GetAllEncounters(), Times.AtMostOnce());
@@ -124,7 +124,7 @@ namespace EirinDuran.WebApiTest
 
             enconunterServicesMock.Setup(m => m.CreateEncounter(enc)).Returns(enc);
 
-            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object, new LoggerStub()) { ControllerContext = controllerContext, };
 
             var obtainedResult = controller.Create(new EncounterModelIn()
             {
@@ -163,7 +163,7 @@ namespace EirinDuran.WebApiTest
 
             enconunterServicesMock.Setup(m => m.CreateEncounter(enc)).Throws(new InsufficientPermissionException());
 
-            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object, new LoggerStub()) { ControllerContext = controllerContext, };
 
             var obtainedResult = controller.Create(new EncounterModelIn()
             {
@@ -199,7 +199,7 @@ namespace EirinDuran.WebApiTest
 
             enconunterServicesMock.Setup(m => m.CreateEncounter(enc)).Throws(new ServicesException());
 
-            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object, new LoggerStub()) { ControllerContext = controllerContext, };
 
             var obtainedResult = controller.Create(new EncounterModelIn()
             {
@@ -237,7 +237,7 @@ namespace EirinDuran.WebApiTest
 
             enconunterServicesMock.Setup(m => m.CreateEncounter(enc));
 
-            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object, new LoggerStub()) { ControllerContext = controllerContext, };
             controller.ModelState.AddModelError("", "");
 
             var obtainedResult = controller.Create(new EncounterModelIn()) as BadRequestObjectResult;
@@ -266,7 +266,7 @@ namespace EirinDuran.WebApiTest
             IEnumerable<EncounterDTO> encounters = new List<EncounterDTO>() { encounter };
             enconunterServices.Setup(e => e.GetAllEncounters()).Returns(encounters);
 
-            var controller = new EncountersController(loginServices, enconunterServices.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, enconunterServices.Object, new LoggerStub()) { ControllerContext = controllerContext, };
 
             var obtainedResult = controller.AddComment(4 + "", "This is a test comment in a mock!") as OkResult;
             enconunterServices.Verify(m => m.GetAllEncounters(), Times.AtMostOnce());
@@ -294,7 +294,7 @@ namespace EirinDuran.WebApiTest
             IEnumerable<EncounterDTO> encounters = new List<EncounterDTO>() { encounter };
             enconunterServices.Setup(e => e.AddComment(4 + "", "This is a test comment in a mock!")).Throws(new ServicesException());
 
-            var controller = new EncountersController(loginServices, enconunterServices.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, enconunterServices.Object, new LoggerStub()) { ControllerContext = controllerContext, };
 
             var obtainedResult = controller.AddComment(4 + "", "This is a test comment in a mock!") as BadRequestObjectResult;
             enconunterServices.Verify(m => m.AddComment(4 + "", "This is a test comment in a mock!"), Times.AtMostOnce());
@@ -318,7 +318,7 @@ namespace EirinDuran.WebApiTest
 
             enconunterServicesMock.Setup(m => m.DeleteEncounter("1"));
 
-            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object, new LoggerStub()) { ControllerContext = controllerContext, };
 
             var obtainedResult = controller.Delete("1") as OkResult;
             enconunterServicesMock.Verify(e => e.DeleteEncounter("1"), Times.AtMostOnce());
@@ -342,7 +342,7 @@ namespace EirinDuran.WebApiTest
 
             enconunterServicesMock.Setup(m => m.DeleteEncounter("1")).Throws(new InsufficientPermissionException());
 
-            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object, new LoggerStub()) { ControllerContext = controllerContext, };
 
             var obtainedResult = controller.Delete("1") as UnauthorizedResult;
             enconunterServicesMock.Verify(e => e.DeleteEncounter("1"), Times.AtMostOnce());
@@ -366,7 +366,7 @@ namespace EirinDuran.WebApiTest
 
             enconunterServicesMock.Setup(m => m.DeleteEncounter("1")).Throws(new ServicesException());
 
-            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object, new LoggerStub()) { ControllerContext = controllerContext, };
 
             var obtainedResult = controller.Delete("1") as BadRequestObjectResult;
             enconunterServicesMock.Verify(e => e.DeleteEncounter("1"), Times.AtMostOnce());
@@ -393,7 +393,7 @@ namespace EirinDuran.WebApiTest
 
             enconunterServicesMock.Setup(m => m.GetAllCommentsToOneEncounter("1")).Returns(comments);
 
-            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object, new LoggerStub()) { ControllerContext = controllerContext, };
 
             var obtainedResult = controller.GetEncounterComments("1") as ActionResult<IEnumerable<CommentDTO>>;
             enconunterServicesMock.Verify(e => e.GetAllCommentsToOneEncounter("1"), Times.AtMostOnce());
@@ -418,7 +418,7 @@ namespace EirinDuran.WebApiTest
 
             enconunterServicesMock.Setup(m => m.GetAllCommentsToOneEncounter("1")).Throws(new ServicesException());
 
-            var controller = new EncountersController(loginServices, enconunterServicesMock.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, enconunterServicesMock.Object, new LoggerStub()) { ControllerContext = controllerContext, };
 
             var obtainedResult = controller.GetEncounterComments("1") as ActionResult<IEnumerable<CommentDTO>>;
             enconunterServicesMock.Verify(e => e.GetAllCommentsToOneEncounter("1"), Times.AtMostOnce());
@@ -442,7 +442,7 @@ namespace EirinDuran.WebApiTest
             };
             List<string> expected = new List<string>() { "RoundRobinFixture", "AllOnceFixture" };
             encounterServicesMock.Setup(s => s.GetAvailableFixtureGenerators()).Returns(expected);
-            var controller = new EncountersController(loginServices, encounterServicesMock.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, encounterServicesMock.Object, new LoggerStub()) { ControllerContext = controllerContext, };
             var actual = controller.GetAvailableFixtureGenerators();
 
             Assert.IsTrue(expected.Count() == actual.Value.Count);
@@ -464,7 +464,7 @@ namespace EirinDuran.WebApiTest
             };
             List<EncounterDTO> expected = new List<EncounterDTO>() { new EncounterDTO() { Id = IntToGuid(1) }, new EncounterDTO() { Id = IntToGuid(2) } };
             encounterServicesMock.Setup(s => s.CreateFixture("RoundRobinFixture", "Futbol", new DateTime(3000, 10, 10))).Returns(expected);
-            var controller = new EncountersController(loginServices, encounterServicesMock.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, encounterServicesMock.Object, new LoggerStub()) { ControllerContext = controllerContext, };
             IActionResult actual = controller.CreateFixture(new FixtureModelIn() { CreationAlgorithmName = "RoundRobinFixture", SportName = "Futbol", StartingDate = new DateTime(3000, 10, 10) });
 
             Assert.IsInstanceOfType(actual, typeof(OkObjectResult));
@@ -484,7 +484,7 @@ namespace EirinDuran.WebApiTest
             };
             List<EncounterDTO> expected = new List<EncounterDTO>() { new EncounterDTO() { Id = IntToGuid(1) }, new EncounterDTO() { Id = IntToGuid(2) } };
             encounterServicesMock.Setup(s => s.CreateFixture("RoundRobinFixture", "Futbol", new DateTime(3000, 10, 10))).Returns(expected);
-            var controller = new EncountersController(loginServices, encounterServicesMock.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, encounterServicesMock.Object, new LoggerStub()) { ControllerContext = controllerContext, };
             controller.ModelState.AddModelError("", "");
             IActionResult actual = controller.CreateFixture(new FixtureModelIn() { CreationAlgorithmName = "RoundRobinFixture", SportName = "Futbol", StartingDate = new DateTime(3000, 10, 10) });
 
@@ -505,7 +505,7 @@ namespace EirinDuran.WebApiTest
             };
             List<EncounterDTO> expected = new List<EncounterDTO>() { new EncounterDTO() { Id = IntToGuid(1) }, new EncounterDTO() { Id = IntToGuid(2) } };
             encounterServicesMock.Setup(s => s.CreateFixture("RoundRobinFixture", "Futbol", new DateTime(3000, 10, 10))).Returns(expected);
-            var controller = new EncountersController(loginServices, encounterServicesMock.Object) { ControllerContext = controllerContext, };
+            var controller = new EncountersController(loginServices, encounterServicesMock.Object, new LoggerStub()) { ControllerContext = controllerContext, };
             controller.CreateFixture(new FixtureModelIn() { CreationAlgorithmName = "RoundRobinFixture", SportName = "Futbol", StartingDate = new DateTime(3000, 10, 10) });
             encounterServicesMock.Setup(s => s.CreateFixture("RoundRobinFixture", "Futbol", new DateTime(3000, 10, 10))).Throws(new ServicesException());
             var actual = controller.CreateFixture(new FixtureModelIn() { CreationAlgorithmName = "RoundRobinFixture", SportName = "Futbol", StartingDate = new DateTime(3000, 10, 10) });
