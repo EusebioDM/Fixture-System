@@ -23,8 +23,9 @@ export class AddUserComponent implements OnInit {
   }
 
   public submit() {
-    //let user = new User(this.username, this.name, this.surname, this.mail, this.password, this.role);
-    //this.usersService.addUser();
+    const user = new User(this.username, this.name, this.surname, this.password, this.mail, this.role);
+    console.log(user);
+    this.usersService.addUser(user);
     console.log('El form se está enviando ' + this.username + ' ' + this.role);
   }
 

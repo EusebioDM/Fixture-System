@@ -51,9 +51,9 @@ import { SportsComponent } from './components/sports/sports.component';
 import { TeamsComponent } from './components/teams/teams.component';
 //
 
-import { DialogAddUser } from './components/users/users.component';
 import { DialogConfirmToDeleteUser } from './components/users/users.component';
 import { EncountersComponent } from './components/encounters/encounters.component';
+import { AddUserComponent } from './components/add-user/add-user.component';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -79,12 +79,13 @@ const appRoutes: Routes = [
     UsersListComponent,
     SportsComponent,
     TeamsComponent,
-    DialogAddUser,
+    AddUserComponent,
     DialogConfirmToDeleteUser,
-    EncountersComponent
+    EncountersComponent,
+    AddUserComponent
   ],
   entryComponents: [
-    DialogAddUser,
+    AddUserComponent,
     DialogConfirmToDeleteUser
   ],
   imports: [
