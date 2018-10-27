@@ -10,9 +10,11 @@ import { AddUserComponent } from '../add-user/add-user.component';
   styleUrls: ['./users.component.css']
 })
 export class UsersListComponent implements OnInit {
-  constructor(private usersService: UsersService, public dialog: MatDialog) { }
+  constructor(public usersService: UsersService, private dialog: MatDialog) { }
 
+  @ViewChild(AddUserComponent)
   @ViewChild(MatPaginator) paginator: MatPaginator;
+
   users: Array<User>;
 
   displayedColumns: string[] = ['userName', 'name', 'surname', 'mail', 'btnModify', 'btnBorrar'];
@@ -44,7 +46,17 @@ export class UsersListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
+      if (result) {
+        // actualizar tabla
+        this.ngOnInit();
+      }
     });
+  }
+
+  usersToParent(added: User) {
+    console.log('Entró desde el hijo con: ' + added.userName);
+    this.dataSource.data.add(added);
+    this.dataSource.paginator = this.paginator;
   }
 
   openDialogConfirmDeleteUser(id: string) {

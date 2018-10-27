@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { UsersService } from '../../services/users.service';
 import { User } from '../../classes/user';
 
@@ -17,6 +17,8 @@ export class AddUserComponent implements OnInit {
   passwordRepeated: string;
   role: string;
 
+  @Output() usersToParent = new EventEmitter<User>();
+
   constructor(private usersService: UsersService) { }
 
   ngOnInit() {
@@ -24,10 +26,9 @@ export class AddUserComponent implements OnInit {
 
   public submit() {
     const user = new User(this.username, this.name, this.surname, this.password, this.mail, this.role);
-    console.log(user);
-    this.usersService.addUser(user);
-    console.log('El form se está enviando ' + this.username + ' ' + this.role);
+    this.usersService.addUser(user).subscribe(result => {
+      this.usersToParent.emit(user);
+      console.log('Se debería haber emitido: ');
+    });
   }
-
-
 }
