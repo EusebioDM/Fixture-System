@@ -3,6 +3,7 @@ import { User } from '../../classes/user';
 import { UsersService } from '../../services/users.service';
 import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { AddUserComponent } from '../add-user/add-user.component';
+import { ModifyUserComponent } from '../modify-user/modify-user.component';
 
 @Component({
   selector: 'app-users-list',
@@ -53,6 +54,7 @@ export class UsersListComponent implements OnInit {
     });
   }
 
+  // no está funcionando
   usersToParent(added: User) {
     console.log('Entró desde el hijo con: ' + added.userName);
     this.dataSource.data.add(added);
@@ -65,6 +67,18 @@ export class UsersListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.deleteUser(id);
+      }
+    });
+  }
+
+  openDialogModifyUser(id: string) {
+    const dialogRef = this.dialog.open(ModifyUserComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if (result) {
+        // actualizar tabla
+        this.ngOnInit();
       }
     });
   }

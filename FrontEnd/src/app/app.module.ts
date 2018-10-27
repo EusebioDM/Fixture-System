@@ -54,6 +54,7 @@ import { TeamsComponent } from './components/teams/teams.component';
 import { DialogConfirmToDeleteUser } from './components/users/users.component';
 import { EncountersComponent } from './components/encounters/encounters.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
+import { ModifyUserComponent } from './components/modify-user/modify-user.component';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -62,8 +63,24 @@ export function tokenGetter() {
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   {
-    path: 'administrator',
-    component: AdminNavComponent,
+    path: 'users',
+    component: UsersListComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      expectedRole: 'Administrator'
+    }
+  },
+  {
+    path: 'sports',
+    component: SportsComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      expectedRole: 'Administrator'
+    }
+  },
+  {
+    path: 'teams',
+    component: TeamsComponent,
     canActivate: [RoleGuardService],
     data: {
       expectedRole: 'Administrator'
@@ -82,11 +99,12 @@ const appRoutes: Routes = [
     AddUserComponent,
     DialogConfirmToDeleteUser,
     EncountersComponent,
-    AddUserComponent
+    ModifyUserComponent,
   ],
   entryComponents: [
     AddUserComponent,
-    DialogConfirmToDeleteUser
+    DialogConfirmToDeleteUser,
+    ModifyUserComponent
   ],
   imports: [
     BrowserModule,
@@ -122,11 +140,11 @@ const appRoutes: Routes = [
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
+    FormsModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true }
     ),
-    FormsModule,
     HttpClientModule,
     HttpModule,
     JwtModule.forRoot({

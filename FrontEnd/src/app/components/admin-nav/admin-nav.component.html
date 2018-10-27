@@ -4,18 +4,18 @@
     <span class="example-fill-remaining-space"></span>
     <span class="align-center"></span>
     <span class="example-spacer"></span>
-    <button mat-button routerLink="/#">Administar Usuarios</button>
-    <button mat-button routerLink="/#" routerLinkActive="active">Administrar Deportes</button>
-    <button mat-button routerLink="/#" routerLinkActive="active">Administrar Equipos</button>
+    <button mat-button routerLink="/users" routerLinkActive="active">Administar Usuarios</button>
+    <button mat-button routerLink="/sports" routerLinkActive="active">Administrar Deportes</button>
+    <button mat-button routerLink="/teams" routerLinkActive="active">Administrar Equipos</button>
     <button mat-button routerLink="/#" routerLinkActive="active">Administrar Encuentros</button>
     <button mat-button (click)=signOut() routerLink="/login" routerLinkActive="active">Cerrar Sesión</button>
   </mat-toolbar-row>
 </mat-toolbar>
-
+<!--
 <mat-tab-group>
     <mat-tab label="Administar Usuarios"> <app-users-list></app-users-list> </mat-tab>
     <mat-tab label="Administar Deportes"> <app-users-list></app-users-list> </mat-tab>
     <mat-tab label="Administar Equipos"> <app-teams></app-teams> </mat-tab>
     <mat-tab label="Administar Encuentros"> <app-users-list></app-users-list> </mat-tab>
 </mat-tab-group>
-  
+-->

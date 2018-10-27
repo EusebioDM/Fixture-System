@@ -1,0 +1,40 @@
+<form>
+  <div class="addUser-container">
+
+      <mat-form-field>
+          <input matInput name="username" placeholder="Nombre de Usuario">
+      </mat-form-field>
+
+      <mat-form-field>
+          <input matInput name="name" placeholder="Nombre">
+      </mat-form-field>
+
+      <mat-form-field>
+          <input matInput name="surname" placeholder="Apellido">
+      </mat-form-field>
+
+      <mat-form-field>
+          <input matInput name="mail" placeholder="Mail">
+      </mat-form-field>
+
+      <mat-form-field>
+          <input matInput name="password" placeholder="Contraseña">
+      </mat-form-field>
+
+      <mat-form-field>
+          <input matInput name="repeatPassword" placeholder="Repetir Contraseña">
+      </mat-form-field>
+
+      <mat-form-field>
+          <mat-select name="role" placeholder="Rol">
+              <mat-option value="seguidor">Seguidor</mat-option>
+              <mat-option value="administrador">Administrador</mat-option>
+          </mat-select>
+      </mat-form-field>
+  </div>
+
+  <mat-dialog-actions align="end">
+      <button mat-button color="warn" mat-dialog-close>Cancelar</button>
+      <button mat-button color="primary" [mat-dialog-close]="true" cdkFocusInitial>Agregar</button>
+  </mat-dialog-actions>
+</form>

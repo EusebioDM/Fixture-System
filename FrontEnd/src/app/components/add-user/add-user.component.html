@@ -2,31 +2,31 @@
     <div class="addUser-container">
 
         <mat-form-field>
-            <input matInput name="username" [(ngModel)]='username' placeholder="Nombre de Usuario">
+            <input matInput required name="username" [(ngModel)]='username' placeholder="Nombre de Usuario">
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput name="name" [(ngModel)]='name' placeholder="Nombre">
+            <input matInput required name="name" [(ngModel)]='name' placeholder="Nombre">
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput name="surname" [(ngModel)]='surname' placeholder="Apellido">
+            <input matInput required name="surname" [(ngModel)]='surname' placeholder="Apellido">
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput name="mail" [(ngModel)]='mail' placeholder="Mail">
+            <input matInput required name="mail" [(ngModel)]="mail" placeholder="Mail">
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput name="password" [(ngModel)]='password' placeholder="Contraseña">
+            <input matInput required name="password" [(ngModel)]='password' placeholder="Contraseña">
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput name="repeatPassword" [(ngModel)]='repeatPassword' placeholder="Repetir Contraseña">
+            <input matInput required name="repeatPassword" [(ngModel)]='repeatPassword' placeholder="Repetir Contraseña">
         </mat-form-field>
 
         <mat-form-field>
-            <mat-select name="role" [(ngModel)]='role' placeholder="Rol">
+            <mat-select required name="role" [(ngModel)]='role' placeholder="Rol">
                 <mat-option value="seguidor">Seguidor</mat-option>
                 <mat-option value="administrador">Administrador</mat-option>
             </mat-select>

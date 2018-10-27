@@ -21,7 +21,7 @@ export class LoginComponent {
       this.auth.login(this.username, this.password)
         .pipe(first())
         .subscribe(
-          result => this.router.navigate(['administrator']),
+          result => this.router.navigate(['users']),
           err => this.error = 'Usuario y/o contraseña invalido/s'
         );
     }
