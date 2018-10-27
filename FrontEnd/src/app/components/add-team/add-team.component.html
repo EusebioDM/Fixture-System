@@ -1,0 +1,23 @@
+<form>
+  <div class="addTeam-container">
+
+    <mat-form-field>
+      <input matInput required name="teamName" [(ngModel)]='name' placeholder="Nombre del Equipo">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Deporte" [(ngModel)]="sportName" name="food">
+        <mat-option *ngFor="let aSport of sports" [value]="aSport.name">
+          {{aSport.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <input type="file" (change)="onFileSelected($event)"  accept=".png, .jpg, .jpeg">
+  </div>
+
+  <mat-dialog-actions align="end">
+    <button mat-button color="warn" mat-dialog-close>Cancelar</button>
+    <button mat-button color="primary" [mat-dialog-close]="true" cdkFocusInitial (click)="submit()">Agregar</button>
+  </mat-dialog-actions>
+</form>

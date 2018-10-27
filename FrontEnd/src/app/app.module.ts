@@ -55,6 +55,7 @@ import { DialogConfirmToDeleteUser } from './components/users/users.component';
 import { EncountersComponent } from './components/encounters/encounters.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { ModifyUserComponent } from './components/modify-user/modify-user.component';
+import { AddTeamComponent } from './components/add-team/add-team.component';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -85,6 +86,14 @@ const appRoutes: Routes = [
     data: {
       expectedRole: 'Administrator'
     }
+  },
+  {
+    path: 'encounters',
+    component: EncountersComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      expectedRole: 'Administrator'
+    }
   }
 ];
 
@@ -100,9 +109,11 @@ const appRoutes: Routes = [
     DialogConfirmToDeleteUser,
     EncountersComponent,
     ModifyUserComponent,
+    AddTeamComponent,
   ],
   entryComponents: [
     AddUserComponent,
+    AddTeamComponent,
     DialogConfirmToDeleteUser,
     ModifyUserComponent
   ],

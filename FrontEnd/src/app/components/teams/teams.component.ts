@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Team } from 'src/app/classes/team';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatDialog  } from '@angular/material';
 import { TeamsService } from 'src/app/services/teams.service';
+import { AddTeamComponent } from '../add-team/add-team.component';
 
 @Component({
   selector: 'app-teams',
@@ -10,12 +11,12 @@ import { TeamsService } from 'src/app/services/teams.service';
 })
 export class TeamsComponent implements OnInit {
 
-  constructor(private teamsService: TeamsService) { }
+  constructor(private teamsService: TeamsService, private dialog: MatDialog) { }
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   teams: Array<Team>;
 
-  displayedColumns: string[] = ['name', 'sportName', 'logo'];
+  displayedColumns: string[] = ['name', 'sportName', 'logo', 'btnModify', 'btnDelete'];
   dataSource;
 
   ngOnInit() {
@@ -31,5 +32,17 @@ export class TeamsComponent implements OnInit {
   private result(data: Array<Team>): void {
     this.teams = data;
     console.log(this.teams);
+  }
+
+  openDialogAddTeam() {
+    const dialogRef = this.dialog.open(AddTeamComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if (result) {
+        // actualizar tabla
+        this.ngOnInit();
+      }
+    });
   }
 }

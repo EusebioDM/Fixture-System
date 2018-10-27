@@ -18,7 +18,7 @@ export class UsersListComponent implements OnInit {
 
   users: Array<User>;
 
-  displayedColumns: string[] = ['userName', 'name', 'surname', 'mail', 'btnModify', 'btnBorrar'];
+  displayedColumns: string[] = ['userName', 'name', 'surname', 'mail', 'btnModify', 'btnDelete'];
   dataSource;
 
   ngOnInit() {
