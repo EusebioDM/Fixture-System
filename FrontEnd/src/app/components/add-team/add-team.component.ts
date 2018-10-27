@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TeamsService } from '../../services/teams.service';
+import { SportsService } from '../../services/sports.service';
 import { Sport } from '../../classes/sport';
 import { Team } from 'src/app/classes/team';
 
@@ -12,19 +13,24 @@ export class AddTeamComponent implements OnInit {
 
   name: string;
   sportName: string;
-  logoArray = [];
   logo: string;
+
   selectedFile;
 
-  sports: Sport[] = [
-    { name: 'SportTest1' },
-    { name: 'HardCode2' },
-    { name: 'HardCode3' }
-  ];
+  sports: Array<Sport>;
 
-  constructor(private teamsService: TeamsService) { }
+  constructor(private teamsService: TeamsService, private sportsService: SportsService) { }
 
   ngOnInit() {
+    this.sportsService.getSports().subscribe(
+      ((data: Array<Sport>) => this.result(data)),
+      ((error: any) => console.log(error))
+    );
+  }
+
+  private result(data: Array<Sport>): void {
+    this.sports = data;
+    console.log(this.sports);
   }
 
   onFileSelected(event) {
@@ -38,7 +44,6 @@ export class AddTeamComponent implements OnInit {
   }
 
   handleReaderLoaded(e) {
-    // this.logoArray.push('data:image/png;base64,' + btoa(e.target.result));
     this.logo = btoa(e.target.result);
   }
 
