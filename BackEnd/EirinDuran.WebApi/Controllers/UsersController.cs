@@ -16,13 +16,15 @@ namespace EirinDuran.WebApi.Controllers
     {
         private readonly ILoginServices loginServices;
         private readonly IUserServices userServices;
-        private readonly IEncounterServices encounterServices;
+        private readonly IEncounterSimpleServices _encounterSimpleServices;
+        private readonly IEncounterQueryServices encounterQueryServices;
 
-        public UsersController(ILoginServices loginServices, IUserServices userServices, IEncounterServices encounterServices)
+        public UsersController(ILoginServices loginServices, IUserServices userServices, IEncounterSimpleServices encounterSimpleServices, IEncounterQueryServices encounterQueryServices)
         {
             this.userServices = userServices;
             this.loginServices = loginServices;
-            this.encounterServices = encounterServices;
+            this._encounterSimpleServices = encounterSimpleServices;
+            this.encounterQueryServices = encounterQueryServices;
         }
 
         [HttpGet]
@@ -180,11 +182,11 @@ namespace EirinDuran.WebApi.Controllers
             {
                 CreateSession();
                 UserDTO user = userServices.GetUser(loginServices.LoggedUser.UserName);
-                IEnumerable<EncounterDTO> encounters = encounterServices.GetAllEncountersWithFollowedTeams();
+                IEnumerable<EncounterDTO> encounters = encounterQueryServices.GetAllEncountersWithFollowedTeams();
                 List<CommentDTO> comments = new List<CommentDTO>();
                 foreach (var encounter in encounters)
                 {
-                    comments.AddRange(encounterServices.GetAllCommentsToOneEncounter(encounter.Id.ToString()));
+                    comments.AddRange(encounterQueryServices.GetAllCommentsToOneEncounter(encounter.Id.ToString()));
                 }
                 return comments;
             }

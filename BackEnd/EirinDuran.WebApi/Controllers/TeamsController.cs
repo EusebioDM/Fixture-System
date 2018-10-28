@@ -7,6 +7,7 @@ using EirinDuran.IServices.DTOs;
 using System.Security.Claims;
 using EirinDuran.IServices.Exceptions;
 using System;
+using System.Xml;
 using EirinDuran.WebApi.Models;
 
 namespace EirinDuran.WebApi.Controllers
@@ -17,13 +18,15 @@ namespace EirinDuran.WebApi.Controllers
     {
         private readonly ILoginServices loginServices;
         private readonly ITeamServices teamServices;
-        private readonly IEncounterServices encounterServices;
+        private readonly IEncounterSimpleServices _encounterSimpleServices;
+        private readonly IEncounterQueryServices encounterQueryServices;
 
-        public TeamsController(ILoginServices loginServices, ITeamServices teamServices, IEncounterServices encounterServices)
+        public TeamsController(ILoginServices loginServices, ITeamServices teamServices, IEncounterSimpleServices encounterSimpleServices, IEncounterQueryServices encounterQueryServices)
         {
             this.loginServices = loginServices;
             this.teamServices = teamServices;
-            this.encounterServices = encounterServices;
+            this._encounterSimpleServices = encounterSimpleServices;
+            this.encounterQueryServices = encounterQueryServices;
         }
 
         [HttpGet]
@@ -62,7 +65,7 @@ namespace EirinDuran.WebApi.Controllers
         {
             try
             {
-                return encounterServices.GetEncountersByTeam(teamId).Select(e => new EncounterModelOut(e)).ToList();
+                return encounterQueryServices.GetEncountersByTeam(teamId).Select(e => new EncounterModelOut(e)).ToList();
             }
             catch (ServicesException e)
             {

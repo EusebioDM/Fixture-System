@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using EirinDuran.Domain.Fixture;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -16,13 +17,17 @@ namespace EirinDuran.WebApi.Controllers
     public class EncountersController : ControllerBase
     {
         private readonly ILoginServices loginServices;
-        private readonly IEncounterServices encounterServices;
+        private readonly IEncounterSimpleServices _encounterSimpleServices;
+        private readonly IEncounterQueryServices encounterQueryServices;
+        private readonly IFixtureServices fixtureServices;
         private readonly ILogger logger;
 
-        public EncountersController(ILoginServices loginServices, IEncounterServices encounterServices, ILogger logger)
+        public EncountersController(ILoginServices loginServices, IEncounterSimpleServices encounterSimpleServices, ILogger logger, IEncounterQueryServices encounterQueryServices, IFixtureServices fixtureServices)
         {
-            this.encounterServices = encounterServices;
+            this._encounterSimpleServices = encounterSimpleServices;
             this.logger = logger;
+            this.encounterQueryServices = encounterQueryServices;
+            this.fixtureServices = fixtureServices;
             this.loginServices = loginServices;
         }
 
@@ -49,11 +54,11 @@ namespace EirinDuran.WebApi.Controllers
         {
             if (start.Equals(new DateTime()) || end.Equals(new DateTime()))
             {
-                return encounterServices.GetAllEncounters().Select(e => new EncounterModelOut(e)).ToList();
+                return _encounterSimpleServices.GetAllEncounters().Select(e => new EncounterModelOut(e)).ToList();
             }
             else
             {
-                return encounterServices.GetEncountersByDate(start, end).Select(e => new EncounterModelOut(e)).ToList();
+                return encounterQueryServices.GetEncountersByDate(start, end).Select(e => new EncounterModelOut(e)).ToList();
             }
         }
 
@@ -64,7 +69,7 @@ namespace EirinDuran.WebApi.Controllers
             try
             {
                 CreateSession();
-                return new EncounterModelOut(encounterServices.GetEncounter(id));
+                return new EncounterModelOut(_encounterSimpleServices.GetEncounter(id));
 
             }
             catch(ServicesException e)
@@ -98,7 +103,7 @@ namespace EirinDuran.WebApi.Controllers
 
         private IActionResult TryToAddEncounter(EncounterModelIn encounter)
         {
-            EncounterDTO createdEncounter = encounterServices.CreateEncounter(encounter.ToServicesDTO());
+            EncounterDTO createdEncounter = _encounterSimpleServices.CreateEncounter(encounter.ToServicesDTO());
             return CreatedAtRoute("GetEncounter", new { id = createdEncounter.Id }, createdEncounter);
         }
 
@@ -121,7 +126,7 @@ namespace EirinDuran.WebApi.Controllers
         {
             try
             {
-                encounterServices.UpdateEncounter(encounterModel);
+                _encounterSimpleServices.UpdateEncounter(encounterModel);
                 return Ok();
             }
             catch (ServicesException e)
@@ -151,7 +156,7 @@ namespace EirinDuran.WebApi.Controllers
 
         private IActionResult TryToDelete(string id)
         {
-            encounterServices.DeleteEncounter(id);
+            _encounterSimpleServices.DeleteEncounter(id);
             return Ok();
         }
 
@@ -163,7 +168,7 @@ namespace EirinDuran.WebApi.Controllers
             CreateSession();
             try
             {
-                return encounterServices.GetAllCommentsToOneEncounter(encounterId).ToList();
+                return encounterQueryServices.GetAllCommentsToOneEncounter(encounterId).ToList();
             }
             catch (ServicesException e)
             {
@@ -179,7 +184,7 @@ namespace EirinDuran.WebApi.Controllers
             try
             {
                 CreateSession();
-                encounterServices.AddComment(encounterId, menssage);
+                _encounterSimpleServices.AddComment(encounterId, menssage);
                 return Ok();
             }
             catch (ServicesException e)
@@ -194,7 +199,7 @@ namespace EirinDuran.WebApi.Controllers
         public ActionResult<List<string>> GetAvailableFixtureGenerators()
         {
             CreateSession();
-            return encounterServices.GetAvailableFixtureGenerators().ToList();
+            return fixtureServices.GetAvailableFixtureGenerators().ToList();
         }
 
         [HttpPost]
@@ -209,7 +214,7 @@ namespace EirinDuran.WebApi.Controllers
             try
             {
                 CreateSession();
-                var encounters = encounterServices.CreateFixture(fixtureModelIn.CreationAlgorithmName, fixtureModelIn.SportName, fixtureModelIn.StartingDate);
+                var encounters = fixtureServices.CreateFixture(fixtureModelIn.CreationAlgorithmName, fixtureModelIn.SportName, fixtureModelIn.StartingDate);
                 logger.Log(loginServices.LoggedUser.UserName, $"Created a fixture using the {fixtureModelIn.CreationAlgorithmName} generator");
                 return Ok(encounters);
             }

@@ -19,12 +19,14 @@ namespace EirinDuran.WebApiTest
         private UserDTO juan;
         private UserDTO roberto;
         private UserDTO pablo;
-        private Mock<IEncounterServices> encounterServices;
+        private Mock<IEncounterSimpleServices> encounterServices;
+        private Mock<IEncounterQueryServices> encounterQueryServices;
 
         [TestInitialize]
         public void SetUp()
         {
-            encounterServices = new Mock<IEncounterServices>();
+            encounterServices = new Mock<IEncounterSimpleServices>();
+            encounterQueryServices = new Mock<IEncounterQueryServices>();
             CreateUserJuan();
             CreateUserRoberto();
             CreateUserPablo();
@@ -85,7 +87,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object, encounterQueryServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -117,7 +119,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object, encounterQueryServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -147,7 +149,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, mockUserService.Object, encounterServices.Object)
+            var controller = new UsersController(loginServices, mockUserService.Object, encounterServices.Object, encounterQueryServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -175,7 +177,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, mockUserService.Object, encounterServices.Object)
+            var controller = new UsersController(loginServices, mockUserService.Object, encounterServices.Object, encounterQueryServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -204,7 +206,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object, encounterQueryServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -237,7 +239,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object, encounterQueryServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -263,7 +265,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userService.Object, encounterServices.Object)
+            var controller = new UsersController(loginServices, userService.Object, encounterServices.Object, encounterQueryServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -293,7 +295,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object, encounterQueryServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -323,7 +325,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object, encounterQueryServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -354,7 +356,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object, encounterQueryServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -385,7 +387,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object, encounterQueryServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -416,7 +418,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object, encounterQueryServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -454,7 +456,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object, encounterQueryServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -492,7 +494,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object, encounterQueryServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -532,7 +534,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object, encounterQueryServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -565,7 +567,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServices.Object, encounterQueryServices.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -579,7 +581,8 @@ namespace EirinDuran.WebApiTest
         public void GetCommentariesOfLoggedUserUsersController()
         {
             var userServicesMock = new Mock<IUserServices>();
-            var encounterServicesMock = new Mock<IEncounterServices>();
+            var encounterServicesMock = new Mock<IEncounterSimpleServices>();
+            var encounterQueryServicesMock = new Mock<IEncounterQueryServices>();
             ILoginServices loginServices = new LoginServicesMock(pablo);
 
             EncounterDTO encounter = new EncounterDTO() { SportName = "Futbol", DateTime = new DateTime(3018 / 08 / 08), TeamIds = new List<string>() {"team1", "team2"}};
@@ -587,8 +590,8 @@ namespace EirinDuran.WebApiTest
             CommentDTO comment = new CommentDTO() { Message = "This is a test comment!", UserName = pablo.UserName, TimeStamp = new DateTime(2019 / 03 / 03) };
             List<CommentDTO> comments = new List<CommentDTO>() { comment };
 
-            encounterServicesMock.Setup(e => e.GetAllEncountersWithFollowedTeams()).Returns(encounters);
-            encounterServicesMock.Setup(e => e.GetAllCommentsToOneEncounter(It.IsAny<string>())).Returns(comments);
+            encounterQueryServicesMock.Setup(e => e.GetAllEncountersWithFollowedTeams()).Returns(encounters);
+            encounterQueryServicesMock.Setup(e => e.GetAllCommentsToOneEncounter(It.IsAny<string>())).Returns(comments);
 
             var httpContext = new DefaultHttpContext();
             httpContext.Request.Headers["Authorization"] = "";
@@ -596,13 +599,13 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServicesMock.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServicesMock.Object, encounterQueryServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
 
-            encounterServicesMock.Verify(u => u.GetAllEncountersWithFollowedTeams(), Times.AtMostOnce);
-            encounterServicesMock.Verify(u => u.GetAllCommentsToOneEncounter(It.IsAny<string>()), Times.AtMostOnce);
+            encounterQueryServicesMock.Verify(u => u.GetAllEncountersWithFollowedTeams(), Times.AtMostOnce);
+            encounterQueryServicesMock.Verify(u => u.GetAllCommentsToOneEncounter(It.IsAny<string>()), Times.AtMostOnce);
             var obtainedResult = controller.GetFollowedTeamCommentaries();
             var commentaries = obtainedResult.Value as List<CommentDTO>;
 
@@ -616,10 +619,11 @@ namespace EirinDuran.WebApiTest
         public void ServicesExceptionTryToGetCommentariesOfLoggedUserUsersController()
         {
             var userServicesMock = new Mock<IUserServices>();
-            var encounterServicesMock = new Mock<IEncounterServices>();
+            var encounterServicesMock = new Mock<IEncounterSimpleServices>();
+            var encounterQueryServicesMock = new Mock<IEncounterQueryServices>();
             ILoginServices loginServices = new LoginServicesMock(pablo);
 
-            encounterServicesMock.Setup(e => e.GetAllEncountersWithFollowedTeams()).Throws(new ServicesException());
+            encounterQueryServicesMock.Setup(e => e.GetAllEncountersWithFollowedTeams()).Throws(new ServicesException());
 
             var httpContext = new DefaultHttpContext();
             httpContext.Request.Headers["Authorization"] = "";
@@ -627,12 +631,12 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServicesMock.Object)
+            var controller = new UsersController(loginServices, userServicesMock.Object, encounterServicesMock.Object, encounterQueryServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
 
-            encounterServicesMock.Verify(u => u.GetAllEncountersWithFollowedTeams(), Times.AtMostOnce);
+            encounterQueryServicesMock.Verify(u => u.GetAllEncountersWithFollowedTeams(), Times.AtMostOnce);
           
             var obtainedResult = controller.GetFollowedTeamCommentaries();
             var resultRequest = obtainedResult.Result as BadRequestObjectResult;

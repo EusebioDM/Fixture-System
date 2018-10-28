@@ -16,13 +16,15 @@ namespace EirinDuran.WebApi.Controllers
     {
         private readonly ILoginServices loginServices;
         private readonly ISportServices sportServices;
-        private readonly IEncounterServices encounterServices;
+        private readonly IEncounterSimpleServices _encounterSimpleServices;
+        private readonly IEncounterQueryServices encounterQueryServices;
 
-        public SportsController(ILoginServices loginServices, ISportServices sportServices, IEncounterServices encounterServices)
+        public SportsController(ILoginServices loginServices, ISportServices sportServices, IEncounterSimpleServices encounterSimpleServices, IEncounterQueryServices encounterQueryServices)
         {
             this.loginServices = loginServices;
             this.sportServices = sportServices;
-            this.encounterServices = encounterServices;
+            this._encounterSimpleServices = encounterSimpleServices;
+            this.encounterQueryServices = encounterQueryServices;
         }
 
         [HttpGet]
@@ -61,7 +63,7 @@ namespace EirinDuran.WebApi.Controllers
         {
             try
             {
-                return encounterServices.GetEncountersBySport(sportId).Select(e => new EncounterModelOut(e)).ToList();
+                return encounterQueryServices.GetEncountersBySport(sportId).Select(e => new EncounterModelOut(e)).ToList();
             }
             catch (ServicesException e)
             {

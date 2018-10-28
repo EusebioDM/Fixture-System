@@ -14,7 +14,7 @@ using Castle.Core.Internal;
 
 namespace EirinDuran.Services
 {
-    public class EncounterServices : IEncounterServices
+    public class EncounterSimpleServices : IEncounterSimpleServices
     {
         private ILoginServices loginServices;
         private IExtendedEncounterRepository encounterRepository;
@@ -26,7 +26,7 @@ namespace EirinDuran.Services
         private EncounterMapper mapper;
         private CommentMapper commentMapper;
 
-        public EncounterServices(ILoginServices loginServices, IExtendedEncounterRepository encounterRepo, IRepository<Sport> sportRepo, IRepository<Team> teamRepo, IRepository<User> userRepo)
+        public EncounterSimpleServices(ILoginServices loginServices, IExtendedEncounterRepository encounterRepo, IRepository<Sport> sportRepo, IRepository<Team> teamRepo, IRepository<User> userRepo)
         {
             this.loginServices = loginServices;
             this.userRepo = userRepo;
@@ -141,47 +141,7 @@ namespace EirinDuran.Services
             }
         }
 
-        public IEnumerable<EncounterDTO> GetEncountersBySport(string sportName)
-        {
-            try
-            {
-                return encounterRepository.GetBySport(sportName).Select(e => mapper.Map(e));
-            }
-            catch (DataAccessException e)
-            {
-                throw new ServicesException($"Failure to recover encounter with {sportName} sport name.", e);
-            }
-        }
-
-        public IEnumerable<EncounterDTO> GetEncountersByTeam(string teamId)
-        {
-            try
-            {
-                return encounterRepository.GetByTeam(teamId).Select(e => mapper.Map(e));
-            }
-            catch (DataAccessException e)
-            {
-                throw new ServicesException($"Failure to get all encounters of a team with id {teamId}.", e);
-            }
-        }
-
-        public IEnumerable<EncounterDTO> GetEncountersByDate(DateTime start, DateTime end)
-        {
-            IEnumerable<Encounter> encounters = encounterRepository.GetByDate(start, end);
-            return encounters.Select(e => mapper.Map(e));
-        }
-
-        public IEnumerable<CommentDTO> GetAllCommentsToOneEncounter(string encounterId)
-        {
-            try
-            {
-                return encounterRepository.Get(encounterId).Comments.Select(c => commentMapper.Map(c));
-            }
-            catch (DataAccessException e)
-            {
-                throw new ServicesException("Failure to recover all commentaries from encounter with id " + encounterId, e);
-            }
-        }
+        
 
         public void UpdateEncounter(EncounterDTO encounterModel)
         {
@@ -208,90 +168,6 @@ namespace EirinDuran.Services
             catch (DataAccessException e)
             {
                 throw new ServicesException($"Failure to delete encounter with id {id}.", e);
-            }
-        }
-
-        public IEnumerable<EncounterDTO> GetAllEncountersWithFollowedTeams()
-        {
-            List<Encounter> encountersWithComment = new List<Encounter>();
-            IEnumerable<Encounter> allEncounters = encounterRepository.GetAll();
-            foreach (var encounter in allEncounters)
-            {
-                bool intersect = encounter.Teams.Select(t => t.Name).Intersect(loginServices.LoggedUser.FollowedTeamsNames).Any();
-                bool hasComments = (encounter.Comments.Count() > 0);
-
-                if (intersect && hasComments)
-                {
-                    encountersWithComment.Add(encounter);
-                }
-            }
-
-            return encountersWithComment.Select(e => mapper.Map(e));
-        }
-
-        public IEnumerable<EncounterDTO> CreateFixture(string fixtureGeneratorName, string sportName, DateTime startDate)
-        {
-            adminValidator.ValidatePermissions();
-            IFixtureGenerator generator = GetFixtureGenerator(fixtureGeneratorName, sportName);
-            IEnumerable<Team> teamsInSport = teamRepo.GetAll().Where(t => t.Sport.Name == sportName);
-            ICollection<Encounter> encounters = generator.GenerateFixture(teamsInSport, startDate);
-            ValidateFixture(encounters);
-            SaveEncounters(encounters);
-            return encounters.Select(e => mapper.Map(e));
-        }
-
-        private void ValidateFixture(ICollection<Encounter> encounters)
-        {
-            foreach (var encounter in encounters)
-            {
-                ValidateNonOverlappingOfDates(encounter);
-            }
-        }
-
-        private void SaveEncounters(ICollection<Encounter> encounters)
-        {
-            foreach (var encounter in encounters)
-            {
-                encounterRepository.Add(encounter);
-            }
-        }
-
-        private IFixtureGenerator GetFixtureGenerator(string fixtureGeneratorName, string sportName)
-        {
-            Func<IFixtureGenerator, bool> isNeededGenerator = g => g.GetType().FullName.EndsWith(fixtureGeneratorName);
-            AssemblyLoader.AssemblyLoader loader = GetAssemblyLoader();
-            IEnumerable<IFixtureGenerator> generators = loader.GetImplementations<IFixtureGenerator>().Where(isNeededGenerator);
-            if (generators.IsNullOrEmpty())
-            {
-                throw new ServicesException($"{fixtureGeneratorName} was not a valid fixture generator");
-            }
-
-            return generators.First();
-        }
-
-        public IEnumerable<string> GetAvailableFixtureGenerators()
-        {
-            Func<IFixtureGenerator, string> getGeneratorTypeName = t => t.GetType().FullName.Split('.').Last();
-            AssemblyLoader.AssemblyLoader loader = GetAssemblyLoader();
-            return loader.GetImplementations<IFixtureGenerator>().Select(getGeneratorTypeName);
-        }
-
-        private AssemblyLoader.AssemblyLoader GetAssemblyLoader()
-        {
-            string currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string path = Directory.EnumerateDirectories(currentDir).First(d => d.EndsWith("FixtureGenerators"));
-            return new AssemblyLoader.AssemblyLoader(path);
-        }
-
-        private Sport GetSport(string sportName)
-        {
-            try
-            {
-                return sportRepo.Get(sportName);
-            }
-            catch (DataAccessException ex)
-            {
-                throw new ServicesException($"Sport with name {sportName} doesnt exists", ex);
             }
         }
     }

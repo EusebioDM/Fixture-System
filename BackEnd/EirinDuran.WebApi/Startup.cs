@@ -42,7 +42,7 @@ namespace EirinDuran.WebApi
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<ISportServices, SportServices>();
             services.AddScoped<ITeamServices, TeamServices>();
-            services.AddScoped<IEncounterServices, EncounterServices>();
+            services.AddScoped<IEncounterSimpleServices, EncounterSimpleServices>();
             services.AddScoped<ILogger, DataBaseLogger>();
             services.AddScoped<ILoggerServices, LoggerServices>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
