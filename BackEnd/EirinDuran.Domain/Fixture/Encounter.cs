@@ -8,14 +8,14 @@ namespace EirinDuran.Domain.Fixture
     public class Encounter
     {
         public Guid Id { get; private set; }
-        private ICollection<Team> teams;
-        private DateTime dateTime;
+        public Dictionary<Team, int> Results;
         public DateTime DateTime { get => dateTime; set => SetDateIfValid(value); }
         public IEnumerable<Team> Teams => teams;
         public IEnumerable<Comment> Comments => comments;
-        private ICollection<Comment> comments;
-
         public Sport Sport { get; private set; }
+        private ICollection<Team> teams;
+        private DateTime dateTime;
+        private ICollection<Comment> comments;
 
         public Encounter(Sport sport, IEnumerable<Team> teams, DateTime dateTime)
         {
@@ -25,6 +25,7 @@ namespace EirinDuran.Domain.Fixture
             this.teams = GetTeamsArray(teams);
             DateTime = dateTime;
             Id = Guid.NewGuid();
+            Results = new Dictionary<Team, int>();
         }
 
         public Encounter(Guid id, Sport sport, IEnumerable<Team> teams, DateTime dateTime, ICollection<Comment> comments) : this(sport, teams,dateTime)
