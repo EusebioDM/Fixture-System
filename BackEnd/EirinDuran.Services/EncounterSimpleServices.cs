@@ -16,26 +16,19 @@ namespace EirinDuran.Services
 {
     public class EncounterSimpleServices : IEncounterSimpleServices
     {
-        private ILoginServices loginServices;
-        private IExtendedEncounterRepository encounterRepository;
-        private IRepository<Sport> sportRepo;
-        private IRepository<Team> teamRepo;
-        private IRepository<User> userRepo;
-        private ILogger logger;
-        private PermissionValidator adminValidator;
-        private EncounterMapper mapper;
-        private CommentMapper commentMapper;
+        private readonly ILoginServices loginServices;
+        private readonly IRepository<Encounter> encounterRepository;
+        private readonly IRepository<User> userRepo;
+        private readonly ILogger logger;
+        private readonly PermissionValidator adminValidator;
+        private readonly EncounterMapper mapper;
 
-        public EncounterSimpleServices(ILoginServices loginServices, IExtendedEncounterRepository encounterRepo, IRepository<Sport> sportRepo, IRepository<Team> teamRepo, IRepository<User> userRepo)
+        public EncounterSimpleServices(ILoginServices loginServices, IRepository<Encounter> encounterRepo, IRepository<Sport> sportRepo, IRepository<Team> teamRepo)
         {
             this.loginServices = loginServices;
-            this.userRepo = userRepo;
             encounterRepository = encounterRepo;
-            this.sportRepo = sportRepo;
-            this.teamRepo = teamRepo;
             adminValidator = new PermissionValidator(Role.Administrator, loginServices);
             mapper = new EncounterMapper(sportRepo, teamRepo);
-            commentMapper = new CommentMapper(userRepo);
         }
 
         public EncounterDTO CreateEncounter(EncounterDTO encounterDTO)
@@ -140,8 +133,6 @@ namespace EirinDuran.Services
                 throw new ServicesException($"Failure to recover encounter with id = {encounterId}.", e);
             }
         }
-
-        
 
         public void UpdateEncounter(EncounterDTO encounterModel)
         {

@@ -97,7 +97,7 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("sSanchez", "user");
 
-            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo);
             IEnumerable<Team> teams = new List<Team> { atenas, wanderers };
             DateTime date = new DateTime(3018, 10, 07);
 
@@ -115,7 +115,7 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("martinFowler", "user");
 
-            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo);
             IEnumerable<Team> teams = new List<Team> { atenas, wanderers };
             DateTime date = new DateTime(3018, 10, 07);
 
@@ -129,7 +129,7 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("sSanchez", "user");
 
-            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo);
 
             IEnumerable<Team> teamsFirstEncounter = new List<Team> { felix, river };
             IEnumerable<Team> teamsSecondEncounter = new List<Team> { felix, penhiarol };
@@ -147,7 +147,7 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("sSanchez", "user");
 
-            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo);
             IEnumerable<Team> teams = new List<Team> { atenas, wanderers };
             DateTime date = new DateTime(3018, 10, 07);
 
@@ -168,7 +168,7 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("sSanchez", "user");
 
-            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo);
             IEnumerable<Team> teams = new List<Team> { atenas, wanderers };
             DateTime date = new DateTime(3018, 10, 07);
 
@@ -258,7 +258,7 @@ namespace EirinDuran.ServicesTest
         public void CreateEncounterWithInvalidRelationshipTest()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo);
             EncounterDTO encounter = new EncounterDTO()
             {
                 SportName = "Football",
@@ -273,7 +273,7 @@ namespace EirinDuran.ServicesTest
         public void CreateEncounterWithInvalidDateTest()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo);
             EncounterDTO encounter = new EncounterDTO()
             {
                 SportName = "Football",
@@ -286,7 +286,7 @@ namespace EirinDuran.ServicesTest
         public void AddCommentToEncounter()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo);
             EncounterQueryServices encounterQueryServices = new EncounterQueryServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             
             DateTime date = new DateTime(3018, 10, 12);
@@ -308,7 +308,7 @@ namespace EirinDuran.ServicesTest
         public void GetAllEncounters()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo);
             EncounterQueryServices encounterQueryServices = new EncounterQueryServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             IEnumerable<Team> teams = new List<Team> { felix, river };
             DateTime date = new DateTime(3018, 10, 12);
@@ -326,7 +326,7 @@ namespace EirinDuran.ServicesTest
         public void DeleteEncounter()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo);
             IEnumerable<Team> teams = new List<Team> { felix, river };
             DateTime date = new DateTime(3018, 10, 12);
 
@@ -346,7 +346,7 @@ namespace EirinDuran.ServicesTest
         public void DeleteEncounterWithoutSufficientPermission()
         {
             login.CreateSession("martinFowler", "user");
-            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo);
 
             IEnumerable<Team> teams = new List<Team> { felix, river };
 
@@ -367,7 +367,7 @@ namespace EirinDuran.ServicesTest
         public void ListEncountersByTeam()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo);
             EncounterQueryServices encounterQueryServices = new EncounterQueryServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             Encounter encounter1 = new Encounter(futbol, new List<Team> { felix, river }, new DateTime(3018, 10, 05));
             Encounter encounter2 = new Encounter(futbol, new List<Team> { atenas, wanderers }, new DateTime(3018, 10, 07));
@@ -387,7 +387,7 @@ namespace EirinDuran.ServicesTest
         public void ListEncountersBySport()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo);
             EncounterQueryServices encounterQueryServices = new EncounterQueryServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             
             Encounter encounter1 = new Encounter(futbol, new List<Team> { felix, river }, new DateTime(3018, 10, 05));
@@ -408,7 +408,7 @@ namespace EirinDuran.ServicesTest
         public void ListEncountersByDate()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo);
             EncounterQueryServices encounterQueryServices = new EncounterQueryServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             
             Encounter encounter1 = new Encounter(futbol, new List<Team> { felix, river }, new DateTime(3018, 10, 05));
