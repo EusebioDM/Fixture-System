@@ -15,6 +15,7 @@ namespace EirinDuran.DataAccess.Entities
         public virtual SportEntity Sport { get; set; }
         public virtual ICollection<EncounterTeam> Teams { get; set; }
         public virtual ICollection<CommentEntity> Comments { get; set; }
+        public virtual ICollection<TeamResult> Results { get; set; }
         private EncounterMapper mapper;
 
         public EncounterEntity()
@@ -40,8 +41,7 @@ namespace EirinDuran.DataAccess.Entities
 
         public override bool Equals(object obj)
         {
-            var entity = obj as EncounterEntity;
-            return entity != null &&
+            return obj is EncounterEntity entity &&
                    Id.Equals(entity.Id);
         }
 

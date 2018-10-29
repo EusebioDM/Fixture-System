@@ -1,4 +1,5 @@
-﻿using EirinDuran.Domain.Fixture;
+﻿using System;
+using EirinDuran.Domain.Fixture;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices.DTOs;
 using System.Collections.Generic;
@@ -34,12 +35,14 @@ namespace EirinDuran.Services.DTO_Mappers
 
         protected override Encounter TryToMapModel(EncounterDTO encounterDTO)
         {
-            return new Encounter(id: encounterDTO.Id,
+            Encounter encounter = new Encounter(
+                id: encounterDTO.Id,
                 teams: encounterDTO.TeamIds.Select(t => teamRepo.Get(t)),
-                comments: encounterDTO.CommentsIds.ConvertAll(comment => commentRepo.Get(comment.ToString())),
+                comments: encounterDTO.CommentsIds.ToList().ConvertAll(comment => commentRepo.Get(comment.ToString())),
                 dateTime: encounterDTO.DateTime,
                 sport: sportRepo.Get(encounterDTO.SportName)
             );
+            return encounter;
         }
     }
 }

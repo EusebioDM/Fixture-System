@@ -83,7 +83,7 @@ namespace EirinDuran.WebApi.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Action1");
+                    b.Property<string>("Action");
 
                     b.Property<DateTime>("DateTime");
 
@@ -119,6 +119,29 @@ namespace EirinDuran.WebApi.Migrations
                     b.HasIndex("SportName");
 
                     b.ToTable("Teams");
+                });
+
+            modelBuilder.Entity("EirinDuran.DataAccess.Entities.TeamResult", b =>
+                {
+                    b.Property<string>("TeamId");
+
+                    b.Property<Guid>("EncounterId");
+
+                    b.Property<Guid?>("EncounterEntityId");
+
+                    b.Property<int>("Position");
+
+                    b.Property<string>("TeamName");
+
+                    b.Property<string>("TeamSportName");
+
+                    b.HasKey("TeamId", "EncounterId");
+
+                    b.HasIndex("EncounterEntityId");
+
+                    b.HasIndex("TeamName", "TeamSportName");
+
+                    b.ToTable("TeamResult");
                 });
 
             modelBuilder.Entity("EirinDuran.DataAccess.Entities.TeamUser", b =>
@@ -199,6 +222,17 @@ namespace EirinDuran.WebApi.Migrations
                         .WithMany()
                         .HasForeignKey("SportName")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("EirinDuran.DataAccess.Entities.TeamResult", b =>
+                {
+                    b.HasOne("EirinDuran.DataAccess.Entities.EncounterEntity")
+                        .WithMany("Results")
+                        .HasForeignKey("EncounterEntityId");
+
+                    b.HasOne("EirinDuran.DataAccess.Entities.TeamEntity", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamName", "TeamSportName");
                 });
 
             modelBuilder.Entity("EirinDuran.DataAccess.Entities.TeamUser", b =>

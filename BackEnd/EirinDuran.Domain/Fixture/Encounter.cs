@@ -8,14 +8,15 @@ namespace EirinDuran.Domain.Fixture
     public class Encounter
     {
         public Guid Id { get; private set; }
-        public Dictionary<Team, int> Results;
         public DateTime DateTime { get => dateTime; set => SetDateIfValid(value); }
         public IEnumerable<Team> Teams => teams;
         public IEnumerable<Comment> Comments => comments;
+        public IEnumerable<KeyValuePair<Team, int>> Results => results;
         public Sport Sport { get; private set; }
         private ICollection<Team> teams;
         private DateTime dateTime;
         private ICollection<Comment> comments;
+        private Dictionary<Team, int> results;
 
         public Encounter(Sport sport, IEnumerable<Team> teams, DateTime dateTime)
         {
@@ -25,13 +26,14 @@ namespace EirinDuran.Domain.Fixture
             this.teams = GetTeamsArray(teams);
             DateTime = dateTime;
             Id = Guid.NewGuid();
-            Results = new Dictionary<Team, int>();
+            results = new Dictionary<Team, int>();
         }
 
-        public Encounter(Guid id, Sport sport, IEnumerable<Team> teams, DateTime dateTime, ICollection<Comment> comments) : this(sport, teams,dateTime)
+        public Encounter(Guid id, Sport sport, IEnumerable<Team> teams, DateTime dateTime, ICollection<Comment> comments, Dictionary<Team,int> results) : this(sport, teams,dateTime)
         {
             Id = id == Guid.Empty ? Guid.NewGuid() : id;
             this.comments = comments;
+            this.results = results;
         }
 
         public void AddComment(User.User user, string message)
@@ -66,6 +68,18 @@ namespace EirinDuran.Domain.Fixture
                 throw new InvalidDateException();
             else
                 dateTime = date;
+        }
+
+        public void AddOrReplaceResult(Team team, int position)
+        {
+            ValidateTeamIsInEncounter(team);
+            results[team] = position;
+        }
+
+        private void ValidateTeamIsInEncounter(Team team)
+        {
+            if (!teams.Contains(team))
+                throw new InvalidTeamException();
         }
 
         public override bool Equals(object obj)
