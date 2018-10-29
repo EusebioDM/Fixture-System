@@ -40,6 +40,25 @@ export class SportsService {
       );
   }
 
+  addSport(sport: Sport) {
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+
+    return this.httpService.post(this.sportsUrl, sport, requestOptions).pipe(
+      tap((s: Sport) => console.log(`added sport w/ id=${s.name}`)),
+      catchError(this.handleError)
+    );
+  }
+
+  deleteSport(id: string) {
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+    console.log(this.sportsUrl + id);
+    return this.httpService.delete(this.sportsUrl + '/' + id, requestOptions);
+  }
+
   private handleError(error: Response) {
     console.error(error);
     return throwError(error.json().error || 'Server error');

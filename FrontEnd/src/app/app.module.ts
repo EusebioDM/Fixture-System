@@ -56,6 +56,9 @@ import { EncountersComponent } from './components/encounters/encounters.componen
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { ModifyUserComponent } from './components/modify-user/modify-user.component';
 import { AddTeamComponent } from './components/add-team/add-team.component';
+import { FollowerNavComponent } from './components/follower-nav/follower-nav.component';
+import { FavoritesComponent } from './components/favorites/favorites.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -94,6 +97,22 @@ const appRoutes: Routes = [
     data: {
       expectedRole: 'Administrator'
     }
+  },
+  {
+    path: 'calendar',
+    component: CalendarComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      expectedRole: 'Follower'
+    }
+  },
+  {
+    path: 'favorites',
+    component: FavoritesComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      expectedRole: 'Follower'
+    }
   }
 ];
 
@@ -110,6 +129,9 @@ const appRoutes: Routes = [
     EncountersComponent,
     ModifyUserComponent,
     AddTeamComponent,
+    FollowerNavComponent,
+    FavoritesComponent,
+    CalendarComponent,
   ],
   entryComponents: [
     AddUserComponent,

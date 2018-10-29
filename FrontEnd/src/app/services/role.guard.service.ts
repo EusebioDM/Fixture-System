@@ -10,6 +10,7 @@ import * as jwtDecode from 'jwt-decode';
 @Injectable()
 export class RoleGuardService implements CanActivate {
   constructor(public auth: LoginService, public router: Router) { }
+
   canActivate(route: ActivatedRouteSnapshot): boolean {
 
     const expectedRole = route.data.expectedRole;

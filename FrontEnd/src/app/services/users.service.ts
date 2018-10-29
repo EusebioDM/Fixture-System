@@ -47,7 +47,7 @@ export class UsersService {
 
     return this.httpService.post(this.usersUrl, user, requestOptions).pipe(
       tap((u: User) => console.log(`added user w/ id=${u.userName}`)),
-      catchError((error: any) => Observable.throw(error.json().error || 'Server error'))
+      catchError(this.handleError)
     );
   }
 
@@ -55,8 +55,17 @@ export class UsersService {
     const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
-    console.log(this.usersUrl + id);
     return this.httpService.delete(this.usersUrl + '/' + id, requestOptions);
+  }
+
+  updateUser(user: User): Observable<any> {
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+    return this.httpService.put(this.usersUrl + '/' + user.userName, user, requestOptions).pipe(
+      tap(_ => console.log(`updated user id=${user.userName}`)),
+      catchError(this.handleError)
+    );
   }
 
   private handleError(error: Response) {

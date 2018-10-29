@@ -40,11 +40,6 @@ export class TeamsService {
       );
   }
 
-  private handleError(error: Response) {
-    console.error(error);
-    return throwError(error.json().error || 'Server error');
-  }
-
   addTeam(team: Team) {
     const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
@@ -54,5 +49,18 @@ export class TeamsService {
       tap((t: Team) => console.log(`added team w/ id=${t.name}`)),
       catchError(this.handleError)
     );
+  }
+
+  deleteTeam(id: string) {
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+    console.log(this.teamsUrl + id);
+    return this.httpService.delete(this.teamsUrl + '/' + id, requestOptions);
+  }
+
+  private handleError(error: Response) {
+    console.error(error);
+    return throwError(error.json().error || 'Server error');
   }
 }
