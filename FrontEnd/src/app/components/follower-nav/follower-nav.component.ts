@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LoginService } from 'src/app/services/login/login.service';
 
 @Component({
   selector: 'app-follower-nav',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FollowerNavComponent implements OnInit {
 
-  constructor() { }
+  constructor(private loginService: LoginService) { }
 
   ngOnInit() {
   }
 
+  signOut() {
+    this.loginService.logout();
+  }
 }
