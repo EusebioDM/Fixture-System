@@ -25,10 +25,10 @@ export class AddUserComponent implements OnInit {
   }
 
   public submit() {
+    console.log('Se envia: ' + this.username);
     const user = new User(this.username, this.name, this.surname, this.password, this.mail, this.role);
     this.usersService.addUser(user).subscribe(result => {
       this.usersToParent.emit(user);
-      console.log('Se debería haber emitido: ');
     });
   }
 }
