@@ -1,0 +1,23 @@
+table {
+    margin: 0 auto;
+    margin-top: 40px;
+    width: 90%;
+    size: 90%;
+    align-content: center;
+ }
+
+ .mat-button-toggle-group {
+    margin: 0px auto;
+    margin-left: 30%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    align-content: center;
+ }
+
+ .mat-elevation-z8 {
+    margin: 0 auto;
+    margin-top: 40px;
+    width: 40%;
+    size: 40%;
+    align-content: center;
+ }
