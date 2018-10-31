@@ -16,6 +16,7 @@ export class UsersListComponent implements OnInit {
   @ViewChild(AddUserComponent)
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  userId: string;
   users: Array<User>;
 
   displayedColumns: string[] = ['userName', 'name', 'surname', 'mail', 'btnModify', 'btnDelete'];
@@ -71,8 +72,13 @@ export class UsersListComponent implements OnInit {
     });
   }
 
-  openDialogModifyUser(id: string) {
-    const dialogRef = this.dialog.open(ModifyUserComponent);
+  openDialogModifyUser(user: User) {
+    console.log(user.userName);
+    const dialogRef = this.dialog.open(
+      ModifyUserComponent,
+      {
+        data: { userName: user.userName, name: user.name, surname: user.surname, mail: user.mail }
+      });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
@@ -99,6 +105,10 @@ export class UsersListComponent implements OnInit {
 
     this.dataSource.data.splice(this.dataSource.data.indexOf(us), 1);
     this.dataSource.paginator = this.paginator;
+  }
+
+  onRowClicked(row) {
+    console.log('Row clicked: ', row);
   }
 }
 

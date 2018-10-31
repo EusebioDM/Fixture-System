@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Optional } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material';
+import { Inject } from '@angular/core';
 import { User } from '../../classes/user';
 import { from } from 'rxjs';
 import { UsersService } from 'src/app/services/users.service';
@@ -10,7 +12,12 @@ import { UsersService } from 'src/app/services/users.service';
 })
 export class ModifyUserComponent implements OnInit {
 
-  constructor(private usersService: UsersService) { }
+  constructor(
+    private usersService: UsersService,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: User
+  ) { }
+
+  @Input() userId: string;
 
   username: string;
   name: string;
@@ -22,10 +29,19 @@ export class ModifyUserComponent implements OnInit {
 
 
   ngOnInit() {
+    if (this.data) {
+      console.log('Acá está pasado el dato ' + this.data.userName);
+      this.username = this.data.userName;
+      this.name = this.data.name;
+      this.surname = this.data.surname;
+      this.mail = this.data.mail;
+    }
   }
 
   public submit() {
+
     const user = new User(this.username, this.name, this.surname, this.password, this.mail, this.role);
+    user.userName = this.data.userName;
     this.usersService.updateUser(user).subscribe(result => {
       console.log('Se actualizó: ' + user.userName);
     });

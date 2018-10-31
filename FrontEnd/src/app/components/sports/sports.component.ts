@@ -9,6 +9,9 @@ export class SportsComponent implements OnInit {
 
   constructor() { }
 
+  displayedColumns: string[] = ['sportName'];
+  dataSource;
+
   ngOnInit() {
   }
 
