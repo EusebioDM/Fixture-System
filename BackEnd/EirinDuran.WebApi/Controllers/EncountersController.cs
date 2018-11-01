@@ -17,17 +17,19 @@ namespace EirinDuran.WebApi.Controllers
     public class EncountersController : ControllerBase
     {
         private readonly ILoginServices loginServices;
-        private readonly IEncounterSimpleServices _encounterSimpleServices;
+        private readonly IEncounterSimpleServices encounterSimpleServices;
         private readonly IEncounterQueryServices encounterQueryServices;
         private readonly IFixtureServices fixtureServices;
+        private readonly ITeamServices teamServices;
         private readonly ILogger logger;
 
-        public EncountersController(ILoginServices loginServices, IEncounterSimpleServices encounterSimpleServices, ILogger logger, IEncounterQueryServices encounterQueryServices, IFixtureServices fixtureServices)
+        public EncountersController(ILoginServices loginServices, IEncounterSimpleServices encounterSimpleServices, ILogger logger, IEncounterQueryServices encounterQueryServices, IFixtureServices fixtureServices, ITeamServices teamServices)
         {
-            this._encounterSimpleServices = encounterSimpleServices;
+            this.encounterSimpleServices = encounterSimpleServices;
             this.logger = logger;
             this.encounterQueryServices = encounterQueryServices;
             this.fixtureServices = fixtureServices;
+            this.teamServices = teamServices;
             this.loginServices = loginServices;
         }
 
@@ -54,7 +56,7 @@ namespace EirinDuran.WebApi.Controllers
         {
             if (start.Equals(new DateTime()) || end.Equals(new DateTime()))
             {
-                return _encounterSimpleServices.GetAllEncounters().Select(e => new EncounterModelOut(e)).ToList();
+                return encounterSimpleServices.GetAllEncounters().Select(e => new EncounterModelOut(e)).ToList();
             }
             else
             {
@@ -69,7 +71,7 @@ namespace EirinDuran.WebApi.Controllers
             try
             {
                 CreateSession();
-                return new EncounterModelOut(_encounterSimpleServices.GetEncounter(id));
+                return new EncounterModelOut(encounterSimpleServices.GetEncounter(id));
 
             }
             catch(ServicesException e)
@@ -103,18 +105,19 @@ namespace EirinDuran.WebApi.Controllers
 
         private IActionResult TryToAddEncounter(EncounterModelIn encounter)
         {
-            EncounterDTO createdEncounter = _encounterSimpleServices.CreateEncounter(encounter.ToServicesDTO());
+            EncounterDTO createdEncounter = encounterSimpleServices.CreateEncounter(encounter.ToServicesDTO());
             return CreatedAtRoute("GetEncounter", new { id = createdEncounter.Id }, createdEncounter);
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Put(string id, [FromBody] EncounterModelIn encounterModel)
+        public IActionResult Put(string id, [FromBody] EncounterUpdateModelIn encounterModel)
         {
             try
             {
                 CreateSession();
-                return TryToPut(id, encounterModel.ToServicesDTO());
+                encounterModel.Id = Guid.Parse(id);
+                return TryToPut(id, encounterModel);
             }
             catch(InsufficientPermissionException)
             {
@@ -122,17 +125,25 @@ namespace EirinDuran.WebApi.Controllers
             }
         }
 
-        private IActionResult TryToPut(string id, EncounterDTO encounterModel)
+        private IActionResult TryToPut(string id, EncounterUpdateModelIn encounterModel)
         {
             try
             {
-                _encounterSimpleServices.UpdateEncounter(encounterModel);
+                EncounterDTO toUpdate = GetUpdatedEncounter(encounterModel);
+                encounterSimpleServices.UpdateEncounter(toUpdate);
                 return Ok();
             }
             catch (ServicesException e)
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        private EncounterDTO GetUpdatedEncounter(EncounterUpdateModelIn encounterModel)
+        {
+            EncounterDTO toUpdate = encounterSimpleServices.GetEncounter(encounterModel.Id.ToString());
+            encounterModel.UpdateServicesDTO(toUpdate, teamServices);
+            return toUpdate;
         }
 
         [HttpDelete("{id}")]
@@ -156,7 +167,7 @@ namespace EirinDuran.WebApi.Controllers
 
         private IActionResult TryToDelete(string id)
         {
-            _encounterSimpleServices.DeleteEncounter(id);
+            encounterSimpleServices.DeleteEncounter(id);
             return Ok();
         }
 
@@ -184,7 +195,7 @@ namespace EirinDuran.WebApi.Controllers
             try
             {
                 CreateSession();
-                _encounterSimpleServices.AddComment(encounterId, menssage);
+                encounterSimpleServices.AddComment(encounterId, menssage);
                 return Ok();
             }
             catch (ServicesException e)

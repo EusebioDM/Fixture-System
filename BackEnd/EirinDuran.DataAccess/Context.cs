@@ -46,6 +46,8 @@ namespace EirinDuran.DataAccess
             builder.Entity<EncounterTeam>().HasKey("TeamName", "SportName", "EncounterId");
             builder.Entity<EncounterTeam>().HasOne(et => et.Team).WithMany().HasForeignKey("TeamNameFk", "SportNameFk").OnDelete(DeleteBehavior.ClientSetNull);
             builder.Entity<TeamResult>().HasKey("TeamId", "EncounterId");
+            builder.Entity<TeamResult>().HasOne(tr => tr.Team).WithMany().OnDelete(DeleteBehavior.ClientSetNull);
+            builder.Entity<EncounterEntity>().HasMany(e => e.Results).WithOne().OnDelete(DeleteBehavior.Cascade);
         }
 
         public void DeleteDataBase()

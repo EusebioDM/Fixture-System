@@ -19,14 +19,14 @@ namespace EirinDuran.Services
         private readonly ILoginServices loginServices;
         private readonly IRepository<Encounter> encounterRepository;
         private readonly IRepository<User> userRepo;
-        private readonly ILogger logger;
         private readonly PermissionValidator adminValidator;
         private readonly EncounterMapper mapper;
 
-        public EncounterSimpleServices(ILoginServices loginServices, IRepository<Encounter> encounterRepo, IRepository<Sport> sportRepo, IRepository<Team> teamRepo)
+        public EncounterSimpleServices(ILoginServices loginServices, IRepository<Encounter> encounterRepo, IRepository<Sport> sportRepo, IRepository<Team> teamRepo, IRepository<User> userRepo)
         {
             this.loginServices = loginServices;
             encounterRepository = encounterRepo;
+            this.userRepo = userRepo;
             adminValidator = new PermissionValidator(Role.Administrator, loginServices);
             mapper = new EncounterMapper(sportRepo, teamRepo);
         }
@@ -139,6 +139,7 @@ namespace EirinDuran.Services
             adminValidator.ValidatePermissions();
 
             Encounter encounter = mapper.Map(encounterModel);
+            ValidateNonOverlappingOfDates(encounter);
             try
             {
                 encounterRepository.Update(encounter);

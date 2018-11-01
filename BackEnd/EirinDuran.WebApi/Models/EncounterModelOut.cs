@@ -14,6 +14,8 @@ namespace EirinDuran.WebApi.Models
         public DateTime DateTime { get; set; }
         
         public ICollection<string> TeamIds { get; set; }
+        
+        public Dictionary<string, int> Results { get; set; } = new Dictionary<string, int>();
      
         public string SportName { get; set; }
 
@@ -28,8 +30,7 @@ namespace EirinDuran.WebApi.Models
 
         public override bool Equals(object obj)
         {
-            var @in = obj as EncounterModelOut;
-            return @in != null &&
+            return obj is EncounterModelOut @in &&
                    Id.Equals(@in.Id);
         }
 
@@ -44,6 +45,7 @@ namespace EirinDuran.WebApi.Models
             DateTime = encounter.DateTime;
             TeamIds = encounter.TeamIds;
             SportName = encounter.SportName;
+            encounter.Results.ToList().ForEach(p => Results.Add(p.Key.Name, p.Value));
            
             CommentariesUrl = "/api/encounters/" + Id + "/commentaries";
             AddCommentariesUrl = "/api/encounters/" + Id + "/commentaries";

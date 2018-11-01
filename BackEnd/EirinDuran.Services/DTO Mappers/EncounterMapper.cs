@@ -14,33 +14,42 @@ namespace EirinDuran.Services.DTO_Mappers
         private IRepository<Sport> sportRepo;
         private IRepository<Team> teamRepo;
         private IRepository<Comment> commentRepo;
+        private TeamMapper teamMapper;
 
         public EncounterMapper(IRepository<Sport> sportRepo, IRepository<Team> teamRepo)
         {
             this.sportRepo = sportRepo;
             this.teamRepo = teamRepo;
+            teamMapper = new TeamMapper(sportRepo);
         }
 
         public override EncounterDTO Map(Encounter encounter)
         {
+            Dictionary<TeamDTO, int> results = new Dictionary<TeamDTO, int>();
+            encounter.Results.ToList().ForEach(p => results.Add(teamMapper.Map(p.Key), p.Value));
             return new EncounterDTO()
             {
                 Id = encounter.Id,
                 DateTime = encounter.DateTime,
                 CommentsIds = encounter.Comments.Select(comment => comment.Id).ToList(),
                 SportName = encounter.Sport.Name,
-                TeamIds = encounter.Teams.Select(t => t.Name + "_" + t.Sport.Name).ToList()
+                TeamIds = encounter.Teams.Select(t => t.Name + "_" + t.Sport.Name).ToList(),
+                Results = results
             };
         }
 
         protected override Encounter TryToMapModel(EncounterDTO encounterDTO)
         {
+            Dictionary<Team, int> results = new Dictionary<Team, int>();
+            encounterDTO.Results.ToList().ForEach(p => results.Add(teamRepo.Get(p.Key.Name + "_" + p.Key.SportName), p.Value));
+            
             Encounter encounter = new Encounter(
                 id: encounterDTO.Id,
                 teams: encounterDTO.TeamIds.Select(t => teamRepo.Get(t)),
                 comments: encounterDTO.CommentsIds.ToList().ConvertAll(comment => commentRepo.Get(comment.ToString())),
                 dateTime: encounterDTO.DateTime,
-                sport: sportRepo.Get(encounterDTO.SportName)
+                sport: sportRepo.Get(encounterDTO.SportName),
+                results: results
             );
             return encounter;
         }
