@@ -46,5 +46,4 @@ export class ModifyUserComponent implements OnInit {
       console.log('Se actualizó: ' + user.userName);
     });
   }
-
 }
