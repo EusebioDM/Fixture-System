@@ -54,7 +54,7 @@ namespace EirinDuran.AssemblyLoader
 
             return assemblies;
         }
-
+        
         private void AddAssemblyIfExists(string file, List<Assembly> assemblies)
         {
             try

@@ -16,6 +16,7 @@ namespace EirinDuran.Services
 {
     public class FixtureServices : IFixtureServices
     {
+        private const string FixtureGeneratorsFolderName = "FixtureGenerators";
         private readonly PermissionValidator adminValidator;
         private readonly EncounterMapper mapper;
         private readonly IRepository<Encounter> encounterRepository;
@@ -105,7 +106,7 @@ namespace EirinDuran.Services
         private AssemblyLoader.AssemblyLoader GetAssemblyLoader()
         {
             string currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string path = Directory.EnumerateDirectories(currentDir).First(d => d.EndsWith("FixtureGenerators"));
+            string path = Directory.EnumerateDirectories(currentDir).First(d => d.EndsWith(FixtureGeneratorsFolderName));
             return new AssemblyLoader.AssemblyLoader(path);
         }
 

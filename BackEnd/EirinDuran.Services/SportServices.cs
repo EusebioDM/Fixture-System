@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices.DTOs;
@@ -92,6 +94,5 @@ namespace EirinDuran.Services
                 throw new ServicesException("Failure to delete sport.", e);
             }
         }
-
     }
 }

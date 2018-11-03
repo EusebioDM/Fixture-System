@@ -16,15 +16,17 @@ namespace EirinDuran.WebApi.Controllers
     {
         private readonly ILoginServices loginServices;
         private readonly ISportServices sportServices;
-        private readonly IEncounterSimpleServices _encounterSimpleServices;
+        private readonly IEncounterSimpleServices encounterSimpleServices;
         private readonly IEncounterQueryServices encounterQueryServices;
+        private readonly IPositionsServices positionsServices;
 
-        public SportsController(ILoginServices loginServices, ISportServices sportServices, IEncounterSimpleServices encounterSimpleServices, IEncounterQueryServices encounterQueryServices)
+        public SportsController(ILoginServices loginServices, ISportServices sportServices, IEncounterSimpleServices encounterSimpleServices, IEncounterQueryServices encounterQueryServices, IPositionsServices positionsServices)
         {
             this.loginServices = loginServices;
             this.sportServices = sportServices;
-            this._encounterSimpleServices = encounterSimpleServices;
+            this.encounterSimpleServices = encounterSimpleServices;
             this.encounterQueryServices = encounterQueryServices;
+            this.positionsServices = positionsServices;
         }
 
         [HttpGet]
@@ -43,12 +45,26 @@ namespace EirinDuran.WebApi.Controllers
 
 
         [HttpGet("{sportId}", Name = "GetSport")]
-        [Authorize(Roles = "Administrator, Follower")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult<SportModelOut> GetById(string sportId)
         {
             try
             {
                 return new SportModelOut(sportServices.GetSport(sportId));
+            }
+            catch (ServicesException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{sportId}/results", Name = "GetSportTable")]
+        [Authorize]
+        public ActionResult<Dictionary<string, int>> GetPositionsTable(string sportId)
+        {
+            try
+            {
+                return positionsServices.GetPositionsTable(new SportDTO() {Name = sportId});
             }
             catch (ServicesException e)
             {

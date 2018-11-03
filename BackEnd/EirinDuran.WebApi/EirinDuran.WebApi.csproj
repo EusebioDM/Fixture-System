@@ -32,6 +32,11 @@
     <Copy SourceFiles="$(ProjectDir)\..\FixtureGenerators\EirinDuran.FixtureGenerators.AllOnce\bin\Debug\netstandard2.0\EirinDuran.FixtureGenerators.AllOnce.dll" DestinationFolder="$(OutputPath)\FixtureGenerators" ContinueOnError="false" />
     <Copy SourceFiles="$(ProjectDir)\..\FixtureGenerators\EirinDuran.FixtureGenerators.RoundRobin\bin\Debug\netstandard2.0\EirinDuran.FixtureGenerators.RoundRobin.dll" DestinationFolder="$(OutputPath)\FixtureGenerators" ContinueOnError="false" />
   </Target>
+
+  <Target Name="AddDefaultPositionGenerators" AfterTargets="Build">
+    <MakeDir Directories="$(OutputPath)\PositionTableGenerators" ContinueOnError="true" />
+    <Copy SourceFiles="$(ProjectDir)\..\DefaultPositionTableGenerator\bin\Debug\netstandard2.0\DefaultPositionTableGenerator.dll" DestinationFolder="$(OutputPath)\PositionTableGenerators" ContinueOnError="false" />
+  </Target>  
   
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>
 

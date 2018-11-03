@@ -73,7 +73,7 @@ namespace EirinDuran.Services
             DateTime encounterDateToAdd = encounter.DateTime;
 
             IEnumerable<Encounter> allEncounters = encounterRepository.GetAll();
-            foreach (var aEncounter in allEncounters.ToList())
+            foreach (var aEncounter in allEncounters.Where(e => !e.Equals(encounter)).ToList())
             {
                 Team firstTeamInDataBase = aEncounter.Teams.ElementAt(0);
                 Team secondTeamInDataBase = aEncounter.Teams.ElementAt(1);
@@ -133,6 +133,7 @@ namespace EirinDuran.Services
                 throw new ServicesException($"Failure to recover encounter with id = {encounterId}.", e);
             }
         }
+
 
         public void UpdateEncounter(EncounterDTO encounterModel)
         {

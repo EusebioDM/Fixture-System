@@ -47,6 +47,7 @@ namespace EirinDuran.WebApi
             services.AddScoped<IFixtureServices, FixtureServices>();
             services.AddScoped<ILogger, DataBaseLogger>();
             services.AddScoped<ILoggerServices, LoggerServices>();
+            services.AddScoped<IPositionsServices, PositionServices>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

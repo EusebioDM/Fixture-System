@@ -11,7 +11,7 @@ namespace EirinDuran.Domain.Fixture
         public DateTime DateTime { get => dateTime; set => SetDateIfValid(value); }
         public IEnumerable<Team> Teams => teams;
         public IEnumerable<Comment> Comments => comments;
-        public IEnumerable<KeyValuePair<Team, int>> Results => results;
+        public Dictionary<Team, int> Results => new Dictionary<Team, int>(results);
         public Sport Sport { get; private set; }
         private ICollection<Team> teams;
         private DateTime dateTime;
@@ -82,20 +82,22 @@ namespace EirinDuran.Domain.Fixture
                 throw new InvalidTeamException();
         }
 
+        protected bool Equals(Encounter other)
+        {
+            return Id.Equals(other.Id);
+        }
+
         public override bool Equals(object obj)
         {
-            Encounter other = (Encounter)obj;
-            return this.Teams.SequenceEqual(other.Teams) &&
-                   this.DateTime == other.DateTime;
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Encounter) obj);
         }
 
         public override int GetHashCode()
         {
-            var hashCode = -1161983822;
-            hashCode = hashCode * -1521134295 + DateTime.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<IEnumerable<Team>>.Default.GetHashCode(Teams);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Sport>.Default.GetHashCode(Sport);
-            return hashCode;
+            return Id.GetHashCode();
         }
     }
 }
