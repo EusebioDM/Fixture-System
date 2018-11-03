@@ -32,10 +32,10 @@ export class UsersService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.usersUrl, requestOptions)
+    return this.httpService.get(this.usersUrl + '/' + id, requestOptions)
       .pipe(
-        map((response: Response) => <User>response.json().find((user: User) => user.userName = id)),
-        tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
+        map((response: Response) => <User>response.json()),
+        tap(data => console.log('Obtained user: ' + JSON.stringify(data))),
         catchError(this.handleError)
       );
   }

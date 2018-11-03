@@ -1,8 +1,9 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { UsersService } from '../../services/users.service';
 import { User } from '../../classes/user';
-import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { compareValidator } from 'src/app/shared/compare-validator.directive';
+import { uniqueUsernameValidator } from 'src/app/shared/unique-username-validator.directive';
 
 @Component({
   selector: 'app-add-user',
@@ -11,49 +12,75 @@ import { ErrorStateMatcher } from '@angular/material/core';
 })
 export class AddUserComponent implements OnInit {
 
-  constructor(private usersService: UsersService) { }
+  constructor(private formBuilder: FormBuilder, private usersService: UsersService) { }
 
-  username: string;
-  name: string;
-  surname: string;
-  mail: string;
-  password: string;
-  passwordRepeated: string;
-  role: string;
+  addUserForm: FormGroup;
 
   @Output() usersToParent = new EventEmitter<User>();
 
-  /* pwConfirm = new FormControl('', [
-    Validators.required
-  ]); */
-
-  requiredFormControl = new FormControl('', [
-    Validators.required,
-  ]);
-
-  emailFormControl = new FormControl('', [
-    Validators.required,
-    Validators.email,
-  ]);
-
-
-  matcher = new FormErrorStateMatcher();
-
   ngOnInit() {
+    this.createAddUserForm();
+  }
+
+  createAddUserForm() {
+    this.addUserForm = this.formBuilder.group({
+      username: ['',
+      null,
+      uniqueUsernameValidator(this.usersService)
+      ],
+      name: ['',
+        Validators.required
+      ],
+      surname: ['',
+        Validators.required
+      ],
+      mail: ['',
+        Validators.email
+      ],
+      password: ['',
+        Validators.required
+      ],
+      passwordConfirm: ['',
+        compareValidator('password')
+      ],
+      role: ['',
+        Validators.required
+      ],
+    });
+  }
+
+  get username() {
+    return this.addUserForm.get('username');
+  }
+
+  get name() {
+    return this.addUserForm.get('name');
+  }
+
+  get surname() {
+    return this.addUserForm.get('surname');
+  }
+
+  get mail() {
+    return this.addUserForm.get('mail');
+  }
+
+  get password() {
+    return this.addUserForm.get('password');
+  }
+
+  get passwordConfirm() {
+    return this.addUserForm.get('passwordConfirm');
+  }
+
+  get role() {
+    return this.addUserForm.get('role');
   }
 
   public submit() {
-    console.log('Se envia: ' + this.username);
-    const user = new User(this.username, this.name, this.surname, this.password, this.mail, this.role);
-    this.usersService.addUser(user).subscribe(result => {
+    const user = this.addUserForm.value;
+    this.usersService.addUser(user).subscribe(() => {
       this.usersToParent.emit(user);
     });
-  }
-}
-
-export class FormErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
 }

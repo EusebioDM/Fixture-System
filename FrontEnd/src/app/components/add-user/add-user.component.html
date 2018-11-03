@@ -1,64 +1,59 @@
-<form>
+<form [formGroup]="addUserForm">
     <div class="addUser-container">
-
         <mat-form-field>
-            <input matInput required name="username" [(ngModel)]='username' placeholder="Nombre de Usuario"
-                [errorStateMatcher]="matcher">
-            <mat-error *ngIf="requiredFormControl.hasError('required')">
-                El nombre de usuario es <strong>requerido</strong>
+            <input matInput name="username" placeholder="Nombre de Usuario" formControlName="username" required>
+            <mat-error *ngIf="username.invalid && (username.dirty || username.touched)">
+                El nombre de usuario no está disponible
             </mat-error>
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput required name="name" [(ngModel)]='name' placeholder="Nombre" [errorStateMatcher]="matcher">
-            <mat-error *ngIf="requiredFormControl.hasError('required')">
+            <input matInput name="name" placeholder="Nombre" formControlName="name" required>
+            <mat-error *ngIf="name.touched && name.errors?.required">
                 El nombre es <strong>requerido</strong>
             </mat-error>
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput required name="surname" [(ngModel)]='surname' placeholder="Apellido" [errorStateMatcher]="matcher">
-            <mat-error *ngIf="requiredFormControl.hasError('required')">
+            <input matInput name="surname" placeholder="Apellido" formControlName="surname" required>
+            <mat-error *ngIf="surname.touched && surname.errors?.required">
                 El apellido es <strong>requerido</strong>
             </mat-error>
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput required name="mail" [(ngModel)]="mail" placeholder="Mail" [formControl]="emailFormControl"
-                [errorStateMatcher]="matcher">
-            <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-                Ingrese un mail valido
-            </mat-error>
-            <mat-error *ngIf="emailFormControl.hasError('required')">
+            <input matInput name="mail" placeholder="Mail" formControlName="mail" required>
+            <mat-error *ngIf="mail.touched && mail.errors?.required">
                 El mail es <strong>requerido</strong>
             </mat-error>
+            <mat-error *ngIf="mail.touched && mail.errors?.email">
+                Ingrese un mail valido
+            </mat-error>
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput required name="password" type="password" [(ngModel)]='password' placeholder="Contraseña"
-                [errorStateMatcher]="matcher">
-            <mat-error *ngIf="requiredFormControl.hasError('required')">
+            <input matInput name="password" type="password" placeholder="Contraseña" formControlName="password" required>
+            <mat-error *ngIf="password.touched && password.errors?.required">
                 La contraseña es <strong>requerida</strong>
             </mat-error>
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput required name="repeatPassword" type="password" [(ngModel)]='passwordRepeated' placeholder="Repetir Contraseña"
-            appCompareValidator="password" [errorStateMatcher]="matcher">
-            <mat-error *ngIf="requiredFormControl.hasError('required')">
+            <input matInput name="passwordConfirm" type="password" placeholder="Repetir Contraseña" formControlName="passwordConfirm" required>
+            <mat-error *ngIf="passwordConfirm.touched && passwordConfirm.errors?.required">
                 La contraseña es <strong>requerida</strong>
             </mat-error>
-            <mat-error *ngIf="!requiredFormControl.hasError('required') && pwConfirm.hasError('compare')">
+            <mat-error *ngIf="passwordConfirm.touched && passwordConfirm.errors?.compare">
                 Las contraseñas no coinciden
             </mat-error>
         </mat-form-field>
 
         <mat-form-field>
-            <mat-select required name="role" [(ngModel)]='role' placeholder="Rol" [errorStateMatcher]="matcher">
+            <mat-select name="role" placeholder="Rol" formControlName="role" required>
                 <mat-option value="seguidor">Seguidor</mat-option>
                 <mat-option value="administrador">Administrador</mat-option>
             </mat-select>
-            <mat-error *ngIf="requiredFormControl.hasError('required')">
+            <mat-error *ngIf="role.touched && role.errors?.required">
                 El rol es <strong>requerido</strong>
             </mat-error>
         </mat-form-field>
@@ -66,6 +61,7 @@
 
     <mat-dialog-actions align="end">
         <button mat-button color="warn" mat-dialog-close>Cancelar</button>
-        <button mat-button color="primary" [mat-dialog-close]="true" cdkFocusInitial (click)="submit()">Agregar</button>
+        <button mat-button color="primary" [mat-dialog-close]="true" cdkFocusInitial [disabled]="addUserForm.invalid"
+            (click)="submit()">Agregar</button>
     </mat-dialog-actions>
 </form>

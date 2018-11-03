@@ -59,6 +59,7 @@ import { FollowerNavComponent } from './components/follower-nav/follower-nav.com
 import { FavoritesComponent } from './components/favorites/favorites.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { CompareValidatorDirective } from './shared/compare-validator.directive';
+import { UniqueUsernameValidatorDirective } from './shared/unique-username-validator.directive';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -133,6 +134,7 @@ const appRoutes: Routes = [
     FavoritesComponent,
     CalendarComponent,
     CompareValidatorDirective,
+    UniqueUsernameValidatorDirective,
   ],
   entryComponents: [
     AddUserComponent,
