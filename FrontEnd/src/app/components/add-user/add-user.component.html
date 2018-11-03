@@ -3,32 +3,29 @@
 
         <mat-form-field>
             <input matInput required name="username" [(ngModel)]='username' placeholder="Nombre de Usuario"
-            [errorStateMatcher]="matcher">
+                [errorStateMatcher]="matcher">
             <mat-error *ngIf="requiredFormControl.hasError('required')">
                 El nombre de usuario es <strong>requerido</strong>
             </mat-error>
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput required name="name" [(ngModel)]='name' placeholder="Nombre"
-            [errorStateMatcher]="matcher">
+            <input matInput required name="name" [(ngModel)]='name' placeholder="Nombre" [errorStateMatcher]="matcher">
             <mat-error *ngIf="requiredFormControl.hasError('required')">
                 El nombre es <strong>requerido</strong>
             </mat-error>
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput required name="surname" [(ngModel)]='surname' placeholder="Apellido"
-            [errorStateMatcher]="matcher">
+            <input matInput required name="surname" [(ngModel)]='surname' placeholder="Apellido" [errorStateMatcher]="matcher">
             <mat-error *ngIf="requiredFormControl.hasError('required')">
                 El apellido es <strong>requerido</strong>
             </mat-error>
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput required name="mail" [(ngModel)]="mail" placeholder="Mail"
-            [formControl]="emailFormControl"
-            [errorStateMatcher]="matcher">
+            <input matInput required name="mail" [(ngModel)]="mail" placeholder="Mail" [formControl]="emailFormControl"
+                [errorStateMatcher]="matcher">
             <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
                 Ingrese un mail valido
             </mat-error>
@@ -39,19 +36,20 @@
 
         <mat-form-field>
             <input matInput required name="password" type="password" [(ngModel)]='password' placeholder="Contraseña"
-            [errorStateMatcher]="matcher">
+                [errorStateMatcher]="matcher">
             <mat-error *ngIf="requiredFormControl.hasError('required')">
                 La contraseña es <strong>requerida</strong>
             </mat-error>
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput required name="repeatPassword" type="password" [(ngModel)]='repeatPassword' placeholder="Repetir Contraseña"
-            [formControl]="passwordMatchFormControl"
-            [errorStateMatcher]="matcher"
-            (change)="onRepeatPasswordChange()">
+            <input matInput required name="repeatPassword" type="password" [(ngModel)]='passwordRepeated' placeholder="Repetir Contraseña"
+            appCompareValidator="password" [errorStateMatcher]="matcher">
             <mat-error *ngIf="requiredFormControl.hasError('required')">
                 La contraseña es <strong>requerida</strong>
+            </mat-error>
+            <mat-error *ngIf="!requiredFormControl.hasError('required') && pwConfirm.hasError('compare')">
+                Las contraseñas no coinciden
             </mat-error>
         </mat-form-field>
 

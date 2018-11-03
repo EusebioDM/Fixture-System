@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { UsersService } from '../../services/users.service';
 import { User } from '../../classes/user';
-import { FormControl, FormGroupDirective, NgForm, Validators, ValidatorFn } from '@angular/forms';
+import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 
 @Component({
@@ -23,9 +23,9 @@ export class AddUserComponent implements OnInit {
 
   @Output() usersToParent = new EventEmitter<User>();
 
-  passwordMatchFormControl = new FormControl('', [
+  /* pwConfirm = new FormControl('', [
     Validators.required
-  ]);
+  ]); */
 
   requiredFormControl = new FormControl('', [
     Validators.required,
@@ -40,12 +40,6 @@ export class AddUserComponent implements OnInit {
   matcher = new FormErrorStateMatcher();
 
   ngOnInit() {
-  }
-
-  onRepeatPasswordChange() {
-    if (this.password !== this.passwordRepeated) {
-      console.log('Las contraseñas no coinciden');
-    }
   }
 
   public submit() {
