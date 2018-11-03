@@ -1,9 +1,10 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { UsersService } from '../../services/users.service';
 import { User } from '../../classes/user';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { compareValidator } from 'src/app/shared/compare-validator.directive';
 import { uniqueUsernameValidator } from 'src/app/shared/unique-username-validator.directive';
+import { ErrorStateMatcher } from '@angular/material';
 
 @Component({
   selector: 'app-add-user',
@@ -15,6 +16,7 @@ export class AddUserComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private usersService: UsersService) { }
 
   addUserForm: FormGroup;
+  error: string;
 
   @Output() usersToParent = new EventEmitter<User>();
 
@@ -25,8 +27,8 @@ export class AddUserComponent implements OnInit {
   createAddUserForm() {
     this.addUserForm = this.formBuilder.group({
       username: ['',
-      null,
-      uniqueUsernameValidator(this.usersService)
+        null,
+        uniqueUsernameValidator(this.usersService)
       ],
       name: ['',
         Validators.required
@@ -79,8 +81,18 @@ export class AddUserComponent implements OnInit {
 
   public submit() {
     const user = this.addUserForm.value;
-    this.usersService.addUser(user).subscribe(() => {
-      this.usersToParent.emit(user);
-    });
+    this.usersService.addUser(user).subscribe(
+      result => { },
+      err => this.error = 'Error al agregar usuario'
+    );
+  }
+
+  matcher = new MyErrorStateMatcher();
+}
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
 }
