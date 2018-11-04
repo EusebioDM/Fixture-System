@@ -29,6 +29,7 @@ import { MaterialModule } from './material/material.module';
 
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { WelcomeNavComponent } from './components/welcome-nav/welcome-nav.component';
 
 
 export function tokenGetter() {
@@ -105,6 +106,7 @@ const appRoutes: Routes = [
     CalendarComponent,
     CompareValidatorDirective,
     UniqueUsernameValidatorDirective,
+    WelcomeNavComponent,
   ],
   entryComponents: [
     AddUserComponent,

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from '../../classes/user';
 import { UsersService } from '../../services/users.service';
-import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatDialog, MatSort } from '@angular/material';
 import { AddUserComponent } from '../add-user/add-user.component';
 import { ModifyUserComponent } from '../modify-user/modify-user.component';
 
@@ -14,6 +14,7 @@ export class UsersListComponent implements OnInit {
   constructor(public usersService: UsersService, private dialog: MatDialog) { }
 
   @ViewChild(AddUserComponent)
+  @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   userId: string;
@@ -21,6 +22,7 @@ export class UsersListComponent implements OnInit {
 
   displayedColumns: string[] = ['userName', 'name', 'surname', 'mail', 'btnModify', 'btnDelete'];
   dataSource;
+  searchKey: string;
 
   ngOnInit() {
     this.usersService.getUsers().subscribe(
@@ -36,7 +38,17 @@ export class UsersListComponent implements OnInit {
 
   private loadTableDataSource() {
     this.dataSource = new MatTableDataSource<User>(this.users);
+    this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+  }
+
+  onSearchClear() {
+    this.searchKey = '';
+    this.applyFilter();
+  }
+
+  applyFilter() {
+    this.dataSource.filter = this.searchKey.trim().toLowerCase();
   }
 
   getUser(id: string) {
