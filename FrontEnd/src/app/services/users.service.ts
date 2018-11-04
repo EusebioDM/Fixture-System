@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { User } from '../classes/user';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -9,6 +9,7 @@ import { map, tap, catchError } from 'rxjs/operators';
 })
 export class UsersService {
 
+  users: Array<User>;
   private usersUrl = 'api/users';
   token = localStorage.getItem('access_token');
 
@@ -27,7 +28,7 @@ export class UsersService {
       );
   }
 
-  getUserById(id: string): Observable<User> {
+  getUserById(id: string): Observable<User | undefined> {
     const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });

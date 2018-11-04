@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { UsersService } from '../../services/users.service';
 import { User } from '../../classes/user';
-import { FormBuilder, FormGroup, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, FormGroupDirective, NgForm, AbstractControl } from '@angular/forms';
 import { compareValidator } from 'src/app/shared/compare-validator.directive';
 import { uniqueUsernameValidator } from 'src/app/shared/unique-username-validator.directive';
 import { ErrorStateMatcher } from '@angular/material';
@@ -28,7 +28,7 @@ export class AddUserComponent implements OnInit {
     this.addUserForm = this.formBuilder.group({
       username: ['',
         null,
-        uniqueUsernameValidator(this.usersService)
+        uniqueUsernameValidator(this.usersService) // async
       ],
       name: ['',
         Validators.required
