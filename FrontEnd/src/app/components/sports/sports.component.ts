@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { SportsService } from 'src/app/services/sports.service';
 import { Sport } from 'src/app/classes/sport';
-import { MatTableDataSource, MatPaginator } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatDialogConfig, MatDialog, MatSort, MAT_DIALOG_DATA } from '@angular/material';
+import { AddSportComponent } from '../add-sport/add-sport.component';
 
 @Component({
   selector: 'app-sports',
@@ -10,13 +11,17 @@ import { MatTableDataSource, MatPaginator } from '@angular/material';
 })
 export class SportsComponent implements OnInit {
 
-  constructor(private sportsService: SportsService) { }
+  constructor(
+    private sportsService: SportsService,
+    private dialog: MatDialog
+  ) { }
 
+  @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['sportName'];
+  displayedColumns: string[] = ['sportName', 'actionDelete'];
   dataSource;
-
+  searchKey: string;
   sports: Array<Sport>;
 
   ngOnInit() {
@@ -33,9 +38,40 @@ export class SportsComponent implements OnInit {
 
   private loadTableDataSource() {
     this.dataSource = new MatTableDataSource<Sport>(this.sports);
+    this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+    /*
+    this.dataSource.filterPredicate = (data, filter) => {
+      return this.displayedColumns.some(ele => {
+        return ele !== 'actionDelete' && data[ele].toLowerCase().indexOf(filter) !== -1;
+      });
+    };
+    */
   }
 
+  onSearchClear() {
+    this.searchKey = '';
+    this.applyFilter();
+  }
 
+  applyFilter() {
+    this.dataSource.filter = this.searchKey.trim().toLowerCase();
+  }
+
+  onInsert() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(AddSportComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      ((sport: Sport) => {
+        if (sport !== undefined) {
+            console.log('El deporte devuelto es: ' + sport.name);
+            this.sports.push(sport);
+            this.loadTableDataSource();
+        }
+      })
+    );
+  }
 
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from '../../classes/user';
 import { UsersService } from '../../services/users.service';
-import { MatTableDataSource, MatPaginator, MatDialog, MatSort } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatDialog, MatSort, MatDialogConfig } from '@angular/material';
 import { AddUserComponent } from '../add-user/add-user.component';
 import { ModifyUserComponent } from '../modify-user/modify-user.component';
 
@@ -17,12 +17,12 @@ export class UsersListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  userId: string;
-  users: Array<User>;
-
   displayedColumns: string[] = ['userName', 'name', 'surname', 'mail', 'btnModify', 'btnDelete'];
   dataSource;
   searchKey: string;
+
+  userId: string;
+  users: Array<User>;
 
   ngOnInit() {
     this.usersService.getUsers().subscribe(
@@ -40,6 +40,11 @@ export class UsersListComponent implements OnInit {
     this.dataSource = new MatTableDataSource<User>(this.users);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+    this.dataSource.filterPredicate = (data, filter) => {
+      return this.displayedColumns.some(ele => {
+        return ele !== 'btnModify' && ele !== 'btnDelete' && data[ele].toLowerCase().indexOf(filter) !== -1;
+      });
+    };
   }
 
   onSearchClear() {
@@ -55,8 +60,11 @@ export class UsersListComponent implements OnInit {
     console.log('El usuario es: ' + this.usersService.getUserById(id));
   }
 
-  openDialogAddUser() {
-    const dialogRef = this.dialog.open(AddUserComponent);
+  onInsert() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(AddUserComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);

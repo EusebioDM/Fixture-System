@@ -30,6 +30,7 @@ import { MaterialModule } from './material/material.module';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WelcomeNavComponent } from './components/welcome-nav/welcome-nav.component';
+import { AddSportComponent } from './components/add-sport/add-sport.component';
 
 
 export function tokenGetter() {
@@ -107,9 +108,11 @@ const appRoutes: Routes = [
     CompareValidatorDirective,
     UniqueUsernameValidatorDirective,
     WelcomeNavComponent,
+    AddSportComponent,
   ],
   entryComponents: [
     AddUserComponent,
+    AddSportComponent,
     AddTeamComponent,
     DialogConfirmToDeleteUser,
     ModifyUserComponent

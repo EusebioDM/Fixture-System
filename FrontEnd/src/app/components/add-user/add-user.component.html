@@ -54,8 +54,8 @@
 
         <mat-form-field>
             <mat-select name="role" placeholder="Rol" formControlName="role" required [errorStateMatcher]="matcher">
-                <mat-option value="seguidor">Seguidor</mat-option>
-                <mat-option value="administrador">Administrador</mat-option>
+                <mat-option value="Follower">Seguidor</mat-option>
+                <mat-option value="Administrador">Administrador</mat-option>
             </mat-select>
             <mat-error *ngIf="role.errors?.required">
                 El rol es <strong>requerido</strong>
