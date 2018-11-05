@@ -32,6 +32,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WelcomeNavComponent } from './components/welcome-nav/welcome-nav.component';
 import { AddSportComponent } from './components/add-sport/add-sport.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.component';
 
 
 export function tokenGetter() {
@@ -118,14 +119,16 @@ const appRoutes: Routes = [
     UniqueUsernameValidatorDirective,
     WelcomeNavComponent,
     AddSportComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    YesNoDialogComponent
   ],
   entryComponents: [
     AddUserComponent,
     AddSportComponent,
     AddTeamComponent,
     DialogConfirmToDeleteUser,
-    ModifyUserComponent
+    ModifyUserComponent,
+    YesNoDialogComponent
   ],
   imports: [
     MaterialModule,

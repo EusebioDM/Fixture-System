@@ -123,12 +123,13 @@ export class UsersListComponent implements OnInit {
 
     let us;
     this.dataSource.data.forEach(user => {
-      if (user.username === id) {
+      if (user.userName === id) {
         us = user;
       }
     });
 
     this.dataSource.data.splice(this.dataSource.data.indexOf(us), 1);
+    this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
   }
 

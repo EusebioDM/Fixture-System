@@ -3,6 +3,7 @@ import { SportsService } from 'src/app/services/sports.service';
 import { Sport } from 'src/app/classes/sport';
 import { MatTableDataSource, MatPaginator, MatDialogConfig, MatDialog, MatSort, MAT_DIALOG_DATA } from '@angular/material';
 import { AddSportComponent } from '../add-sport/add-sport.component';
+import { YesNoDialogComponent } from '../yes-no-dialog/yes-no-dialog.component';
 
 @Component({
   selector: 'app-sports',
@@ -40,13 +41,6 @@ export class SportsComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Sport>(this.sports);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-    /*
-    this.dataSource.filterPredicate = (data, filter) => {
-      return this.displayedColumns.some(ele => {
-        return ele !== 'actionDelete' && data[ele].toLowerCase().indexOf(filter) !== -1;
-      });
-    };
-    */
   }
 
   onSearchClear() {
@@ -74,8 +68,34 @@ export class SportsComponent implements OnInit {
   }
 
   onDelete(sportId: string) {
-    if (confirm('¿Está seguro que quiere borrar el deporte ' + sportId + ' y todos sus equipos?')) {
-      // this.sportsService.deleteSport(sportId).subscribe();
-    }
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(YesNoDialogComponent, dialogConfig);
+    dialogRef.componentInstance.title = 'Borrar deporte...';
+    dialogRef.componentInstance.message = '¿Está seguro que quiere borrar al deporte ' + sportId + ' y todos sus equipos?';
+
+    dialogRef.afterClosed().subscribe(
+      ((result) => {
+        if (result) {
+          this.sportsService.deleteSport(sportId).subscribe();
+          this.updateDataSource(sportId);
+        }
+      })
+    );
+  }
+
+  private updateDataSource(id: string) {
+
+    let sp;
+    this.dataSource.data.forEach(sport => {
+      if (sport.name === id) {
+        sp = sport;
+      }
+    });
+
+    this.dataSource.data.splice(this.dataSource.data.indexOf(sp), 1);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
   }
 }
