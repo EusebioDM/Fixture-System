@@ -11,7 +11,10 @@ import { ModifyUserComponent } from '../modify-user/modify-user.component';
   styleUrls: ['./users.component.css']
 })
 export class UsersListComponent implements OnInit {
-  constructor(public usersService: UsersService, private dialog: MatDialog) { }
+  constructor(
+    public usersService: UsersService,
+    private dialog: MatDialog
+  ) { }
 
   @ViewChild(AddUserComponent)
   @ViewChild(MatSort) sort: MatSort;
@@ -66,13 +69,15 @@ export class UsersListComponent implements OnInit {
     dialogConfig.autoFocus = true;
     const dialogRef = this.dialog.open(AddUserComponent, dialogConfig);
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      if (result) {
-        // actualizar tabla
-        this.ngOnInit();
-      }
-    });
+    dialogRef.afterClosed().subscribe(
+      ((user: User) => {
+        if (user !== undefined) {
+          this.users.push(user);
+          console.log('El nombre de usuario es ' + user.userName);
+          this.loadTableDataSource();
+        }
+      })
+    );
   }
 
   // no está funcionando
@@ -109,16 +114,16 @@ export class UsersListComponent implements OnInit {
     });
   }
 
-  deleteUser(id: string) {
-    this.usersService.deleteUser(id).subscribe();
-    this.updateDataSource(id);
+  deleteUser(userId: string) {
+    this.usersService.deleteUser(userId).subscribe();
+    this.updateDataSource(userId);
   }
 
   private updateDataSource(id: string) {
 
     let us;
     this.dataSource.data.forEach(user => {
-      if (user.userName === id) {
+      if (user.username === id) {
         us = user;
       }
     });

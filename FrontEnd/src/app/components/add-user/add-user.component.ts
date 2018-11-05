@@ -1,10 +1,11 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Inject } from '@angular/core';
 import { UsersService } from '../../services/users.service';
 import { User } from '../../classes/user';
 import { FormBuilder, FormGroup, Validators, FormControl, FormGroupDirective, NgForm, AbstractControl } from '@angular/forms';
 import { compareValidator } from 'src/app/shared/compare-validator.directive';
 import { uniqueUsernameValidator } from 'src/app/shared/unique-username-validator.directive';
-import { ErrorStateMatcher } from '@angular/material';
+import { ErrorStateMatcher, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { UsersListComponent } from '../users/users.component';
 
 @Component({
   selector: 'app-add-user',
@@ -13,7 +14,12 @@ import { ErrorStateMatcher } from '@angular/material';
 })
 export class AddUserComponent implements OnInit {
 
-  constructor(private formBuilder: FormBuilder, private usersService: UsersService) { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: AddUserComponent,
+    public dialogRef: MatDialogRef<UsersListComponent>,
+    private formBuilder: FormBuilder,
+    private usersService: UsersService
+  ) { }
 
   addUserForm: FormGroup;
   error: string;
@@ -26,9 +32,11 @@ export class AddUserComponent implements OnInit {
 
   createAddUserForm() {
     this.addUserForm = this.formBuilder.group({
-      username: ['',
-        null,
-        uniqueUsernameValidator(this.usersService) // async
+      userName: ['',
+        // null,
+        Validators.required // ,
+        // this.noWhitespaceValidator
+        // uniqueUsernameValidator(this.usersService) // async
       ],
       name: ['',
         Validators.required
@@ -51,8 +59,16 @@ export class AddUserComponent implements OnInit {
     });
   }
 
-  get username() {
-    return this.addUserForm.get('username');
+  /*
+  public noWhitespaceValidator(control: FormControl) {
+    const isWhitespace = (control.value || '').trim().length === 0;
+    const isValid = !isWhitespace;
+    return isValid ? null : { 'whitespace': true };
+  }
+  */
+
+  get userName() {
+    return this.addUserForm.get('userName');
   }
 
   get name() {
@@ -82,7 +98,10 @@ export class AddUserComponent implements OnInit {
   public submit() {
     const user = this.addUserForm.value;
     this.usersService.addUser(user).subscribe(
-      result => { },
+      ((result: User) => {
+        console.log('El nombre del usuario desde el add-user es: ' + user.userName);
+        this.dialogRef.close(user);
+      }),
       err => this.error = 'Error al agregar usuario'
     );
   }

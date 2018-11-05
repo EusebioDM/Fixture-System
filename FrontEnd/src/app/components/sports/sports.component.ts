@@ -66,12 +66,16 @@ export class SportsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       ((sport: Sport) => {
         if (sport !== undefined) {
-            console.log('El deporte devuelto es: ' + sport.name);
-            this.sports.push(sport);
-            this.loadTableDataSource();
+          this.sports.push(sport);
+          this.loadTableDataSource();
         }
       })
     );
   }
 
+  onDelete(sportId: string) {
+    if (confirm('¿Está seguro que quiere borrar el deporte ' + sportId + ' y todos sus equipos?')) {
+      // this.sportsService.deleteSport(sportId).subscribe();
+    }
+  }
 }

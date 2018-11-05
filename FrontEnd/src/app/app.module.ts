@@ -31,6 +31,7 @@ import { MaterialModule } from './material/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WelcomeNavComponent } from './components/welcome-nav/welcome-nav.component';
 import { AddSportComponent } from './components/add-sport/add-sport.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 
 export function tokenGetter() {
@@ -86,6 +87,14 @@ const appRoutes: Routes = [
     data: {
       expectedRole: 'Follower'
     }
+  },
+  {
+    path: '404',
+    component: NotFoundComponent
+  },
+  {
+    path: '**',
+    redirectTo: '/404'
   }
 ];
 
@@ -109,6 +118,7 @@ const appRoutes: Routes = [
     UniqueUsernameValidatorDirective,
     WelcomeNavComponent,
     AddSportComponent,
+    NotFoundComponent
   ],
   entryComponents: [
     AddUserComponent,
