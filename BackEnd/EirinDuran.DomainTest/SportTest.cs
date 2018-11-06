@@ -16,11 +16,11 @@ namespace EirinDuran.DomainTest
         {
             Sport sport = new Sport("Futbol");
 
-            Assert.AreEqual("Futbol", sport.Name);
+            Assert.AreEqual("Futbol", (string)sport.Name);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(EmptyFieldException))]
+        [ExpectedException(typeof(DomainException))]
         public void CreateTeamEmptyNameTest()
         {
             Sport sport = new Sport("    ");

@@ -22,7 +22,7 @@ namespace EirinDuran.DomainTest
         public void CreateTeamTest()
         {
             Team boca = CreateBocaTeam();
-            Assert.AreEqual("Boca Juniors", boca.Name);
+            Assert.AreEqual("Boca Juniors", (string)boca.Name);
         }
 
         [TestMethod]
@@ -44,14 +44,14 @@ namespace EirinDuran.DomainTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(EmptyFieldException))]
+        [ExpectedException(typeof(DomainException))]
         public void NullTeamNameTest()
         {
             Team team = new Team(null, null);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(EmptyFieldException))]
+        [ExpectedException(typeof(DomainException))]
         public void EmptyTeamNameTest()
         {
             Team team = new Team("                  ", null);

@@ -88,7 +88,7 @@ namespace EirinDuran.ServicesTest
 
             User result = userRepo.Get("pepeAvila");
 
-            Assert.AreEqual("pepeAvila", result.UserName);
+            Assert.AreEqual("pepeAvila", (string)result.UserName);
         }
 
         [TestMethod]
@@ -170,7 +170,7 @@ namespace EirinDuran.ServicesTest
 
             User result = userRepo.Get("pepeAvila");
 
-            Assert.AreEqual("ANGEL", result.Name);
+            Assert.AreEqual("Angel", (string)result.Name);
         }
 
         [TestMethod]

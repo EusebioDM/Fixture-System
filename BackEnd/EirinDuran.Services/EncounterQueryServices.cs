@@ -38,7 +38,7 @@ namespace EirinDuran.Services
             IEnumerable<Encounter> allEncounters = encounterRepository.GetAll();
             foreach (var encounter in allEncounters)
             {
-                bool intersect = encounter.Teams.Select(t => t.Name).Intersect(loginServices.LoggedUser.FollowedTeamsNames).Any();
+                bool intersect = encounter.Teams.Select(t => t.Name.ToString()).Intersect(loginServices.LoggedUser.FollowedTeamsNames).Any();
                 bool hasComments = (encounter.Comments.Any());
 
                 if (intersect && hasComments)

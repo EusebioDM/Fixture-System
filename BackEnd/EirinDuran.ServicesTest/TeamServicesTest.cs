@@ -113,7 +113,7 @@ namespace EirinDuran.ServicesTest
 
             TeamDTO recovered = services.GetTeam("Boca_Futbol");
 
-            Assert.AreEqual(boca.Name, recovered.Name);
+            Assert.AreEqual((string)boca.Name, recovered.Name);
         }
 
         [TestMethod]

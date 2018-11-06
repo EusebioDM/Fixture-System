@@ -4,9 +4,8 @@ namespace EirinDuran.Domain.Fixture
 {
     public class Sport
     {
-        private string name;
         private StringValidator validator;
-        public string Name { get => name; set => SetNameIfValid(value); }
+        public Name Name { get; private set; }
         public  EncounterPlayerCount EncounterPlayerCount { get; private set; }
 
         public Sport(string name, EncounterPlayerCount encounterPlayerCount = EncounterPlayerCount.TwoPlayers)
@@ -14,19 +13,6 @@ namespace EirinDuran.Domain.Fixture
             validator = new StringValidator();
             Name = name;
             EncounterPlayerCount = encounterPlayerCount;
-        }
-
-        private void SetNameIfValid(string value)
-        {
-            bool valid = validator.ValidateNotNullOrEmptyString(value);
-            if (!valid)
-            {
-                throw new EmptyFieldException("Name");
-            }
-            else
-            {
-                name = value;
-            }
         }
 
         public override bool Equals(object obj)
