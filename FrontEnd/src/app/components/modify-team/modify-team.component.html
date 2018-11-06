@@ -1,0 +1,13 @@
+<form>
+  <div class="addTeam-container">
+
+    <mat-form-field>
+      <input matInput required name="teamName" [(ngModel)]='name' placeholder="Nombre del Equipo">
+    </mat-form-field>
+  </div>
+
+  <mat-dialog-actions align="end">
+    <button mat-button color="warn" mat-dialog-close>Cancelar</button>
+    <button mat-button color="primary" [mat-dialog-close]="true" cdkFocusInitial (click)="submit()">Agregar</button>
+  </mat-dialog-actions>
+</form>

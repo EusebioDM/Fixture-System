@@ -33,6 +33,7 @@ import { WelcomeNavComponent } from './components/welcome-nav/welcome-nav.compon
 import { AddSportComponent } from './components/add-sport/add-sport.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.component';
+import { ModifyTeamComponent } from './components/modify-team/modify-team.component';
 
 
 export function tokenGetter() {
@@ -120,7 +121,8 @@ const appRoutes: Routes = [
     WelcomeNavComponent,
     AddSportComponent,
     NotFoundComponent,
-    YesNoDialogComponent
+    YesNoDialogComponent,
+    ModifyTeamComponent
   ],
   entryComponents: [
     AddUserComponent,
@@ -128,6 +130,7 @@ const appRoutes: Routes = [
     AddTeamComponent,
     DialogConfirmToDeleteUser,
     ModifyUserComponent,
+    ModifyTeamComponent,
     YesNoDialogComponent
   ],
   imports: [

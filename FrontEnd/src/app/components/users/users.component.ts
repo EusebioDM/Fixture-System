@@ -98,7 +98,6 @@ export class UsersListComponent implements OnInit {
   }
 
   openDialogModifyUser(user: User) {
-    console.log(user.userName);
     const dialogRef = this.dialog.open(
       ModifyUserComponent,
       {

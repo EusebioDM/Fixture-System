@@ -4,6 +4,7 @@ import { MatPaginator, MatTableDataSource, MatDialog, MatSort, MatDialogConfig }
 import { TeamsService } from 'src/app/services/teams.service';
 import { AddTeamComponent } from '../add-team/add-team.component';
 import { YesNoDialogComponent } from '../yes-no-dialog/yes-no-dialog.component';
+import { ModifyTeamComponent } from '../modify-team/modify-team.component';
 
 @Component({
   selector: 'app-teams',
@@ -93,7 +94,6 @@ export class TeamsComponent implements OnInit {
   }
 
   private updateDataSource(id: string) {
-    console.log(id);
     let tm;
     this.dataSource.data.forEach(team => {
       const idTeam = (team.name + '_' + team.sportName);
@@ -105,5 +105,21 @@ export class TeamsComponent implements OnInit {
     this.dataSource.data.splice(this.dataSource.data.indexOf(tm), 1);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+  }
+
+  onModify(team: Team) {
+    const dialogRef = this.dialog.open(
+      ModifyTeamComponent,
+      {
+        data: { name: team.name, sportName: team.sportName, logo: team.logo }
+      });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if (result) {
+        // actualizar tabla
+        this.ngOnInit();
+      }
+    });
   }
 }

@@ -30,7 +30,6 @@ export class ModifyUserComponent implements OnInit {
 
   ngOnInit() {
     if (this.data) {
-      console.log('Acá está pasado el dato ' + this.data.userName);
       this.username = this.data.userName;
       this.name = this.data.name;
       this.surname = this.data.surname;
