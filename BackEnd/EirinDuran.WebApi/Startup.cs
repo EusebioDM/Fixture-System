@@ -15,6 +15,7 @@ using System.Text;
 using EirinDuran.DataAccess.Entities;
 using EirinDuran.IServices.Infrastructure_Interfaces;
 using EirinDuran.IServices.Services_Interfaces;
+using EirinDuran.Logger;
 using EirinDuran.WebApi.Controllers;
 
 namespace EirinDuran.WebApi
