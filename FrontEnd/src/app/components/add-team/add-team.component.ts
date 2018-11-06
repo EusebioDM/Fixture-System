@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { TeamsService } from '../../services/teams.service';
 import { SportsService } from '../../services/sports.service';
 import { Sport } from '../../classes/sport';
 import { Team } from 'src/app/classes/team';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { TeamsComponent } from '../teams/teams.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-add-team',
@@ -19,19 +22,48 @@ export class AddTeamComponent implements OnInit {
 
   sports: Array<Sport>;
 
-  constructor(private teamsService: TeamsService, private sportsService: SportsService) { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: AddTeamComponent,
+    private teamsService: TeamsService,
+    private sportsService: SportsService,
+    private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<TeamsComponent>
+  ) { }
+
+  addTeamForm: FormGroup;
 
   ngOnInit() {
     this.sportsService.getSports().subscribe(
       ((data: Array<Sport>) => this.result(data)),
       ((error: any) => console.log(error))
     );
+    this.createAddTeamForm();
   }
 
   private result(data: Array<Sport>): void {
     this.sports = data;
     console.log(this.sports);
   }
+
+  createAddTeamForm() {
+    this.addTeamForm = this.formBuilder.group({
+      name: ['',
+        Validators.required
+      ],
+      sportName: ['',
+        Validators.required
+      ]
+    });
+  }
+  /*
+  get name() {
+    return this.addTeamForm.get('name');
+  }
+
+  get sportName() {
+    return this.addTeamForm.get('sportName');
+  }
+  */
 
   onFileSelected(event) {
     this.selectedFile = event.target.files[0];
@@ -49,6 +81,10 @@ export class AddTeamComponent implements OnInit {
 
   public submit() {
     const team = new Team(this.name, this.sportName, this.logo);
-    this.teamsService.addTeam(team).subscribe();
+    this.teamsService.addTeam(team).subscribe(
+      ((result: Team) => {
+        this.dialogRef.close(team);
+      })
+    );
   }
 }

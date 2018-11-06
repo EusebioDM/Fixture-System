@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Team } from 'src/app/classes/team';
-import { MatPaginator, MatTableDataSource, MatDialog, MatSort } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatDialog, MatSort, MatDialogConfig } from '@angular/material';
 import { TeamsService } from 'src/app/services/teams.service';
 import { AddTeamComponent } from '../add-team/add-team.component';
 
@@ -11,15 +11,18 @@ import { AddTeamComponent } from '../add-team/add-team.component';
 })
 export class TeamsComponent implements OnInit {
 
-  constructor(private teamsService: TeamsService, private dialog: MatDialog) { }
+  constructor(
+    private teamsService: TeamsService,
+    private dialog: MatDialog
+  ) { }
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  teams: Array<Team>;
 
   displayedColumns: string[] = ['name', 'sportName', 'logo', 'btnModify', 'btnDelete'];
   dataSource;
   searchKey: string;
+  teams: Array<Team>;
 
   ngOnInit() {
     this.teamsService.getTeams().subscribe(
@@ -30,7 +33,6 @@ export class TeamsComponent implements OnInit {
 
   private result(data: Array<Team>): void {
     this.teams = data;
-    console.log('Este es el array de teams: ' + this.teams);
     this.loadTableDataSource();
   }
 
@@ -45,8 +47,20 @@ export class TeamsComponent implements OnInit {
     };
   }
 
+  onSearchClear() {
+    this.searchKey = '';
+    this.applyFilter();
+  }
+
+  applyFilter() {
+    this.dataSource.filter = this.searchKey.trim().toLowerCase();
+  }
+
   onInsert() {
-    const dialogRef = this.dialog.open(AddTeamComponent);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(AddTeamComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
@@ -55,14 +69,5 @@ export class TeamsComponent implements OnInit {
         this.ngOnInit();
       }
     });
-  }
-
-  onSearchClear() {
-    this.searchKey = '';
-    this.applyFilter();
-  }
-
-  applyFilter() {
-    this.dataSource.filter = this.searchKey.trim().toLowerCase();
   }
 }
