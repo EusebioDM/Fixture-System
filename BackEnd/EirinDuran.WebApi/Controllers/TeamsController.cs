@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using EirinDuran.IServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using EirinDuran.IServices.DTOs;
@@ -8,6 +7,7 @@ using System.Security.Claims;
 using EirinDuran.IServices.Exceptions;
 using System;
 using System.Xml;
+using EirinDuran.IServices.Services_Interfaces;
 using EirinDuran.WebApi.Models;
 
 namespace EirinDuran.WebApi.Controllers

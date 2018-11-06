@@ -1,8 +1,7 @@
-﻿using EirinDuran.IServices.DTOs;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using EirinDuran.IServices.DTOs;
 
-namespace EirinDuran.IServices.Interfaces
+namespace EirinDuran.IServices.Services_Interfaces
 {
     public interface IEncounterSimpleServices
     {

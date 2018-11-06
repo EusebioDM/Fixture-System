@@ -7,7 +7,8 @@ using EirinDuran.Domain.Fixture;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
-using EirinDuran.IServices.Interfaces;
+using EirinDuran.IServices.Infrastructure_Interfaces;
+using EirinDuran.IServices.Services_Interfaces;
 
 namespace EirinDuran.Services
 {
@@ -15,10 +16,13 @@ namespace EirinDuran.Services
     {
         private const string ResultsGeneratorFolderName = "PositionTableGenerators";
         private readonly IExtendedEncounterRepository encounterRepo;
+        private readonly IAssemblyLoader assemblyLoader;
 
-        public PositionServices(IExtendedEncounterRepository encounterRepo)
+        public PositionServices(IExtendedEncounterRepository encounterRepo, IAssemblyLoader assemblyLoader)
         {
             this.encounterRepo = encounterRepo;
+            this.assemblyLoader = assemblyLoader;
+            SetupAssemblyLoader();
         }
 
         public Dictionary<string, int> GetPositionsTable(SportDTO sportDto)
@@ -35,17 +39,16 @@ namespace EirinDuran.Services
 
         private Dictionary<string, int> TryToGetPositionsTable(SportDTO sportDto)
         {
-            AssemblyLoader.AssemblyLoader loader = GetAssemblyLoader();
-            IPositionTableGenerator generator = loader.GetImplementations<IPositionTableGenerator>().First();
+            IPositionTableGenerator generator = assemblyLoader.GetImplementations<IPositionTableGenerator>().First();
             IEnumerable<Encounter> encounters = encounterRepo.GetBySport(sportDto.Name);
             return generator.GetPositionTable(encounters);
         }
 
-        private AssemblyLoader.AssemblyLoader GetAssemblyLoader()
+        private void SetupAssemblyLoader()
         {
             string currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string generatorFolder = Directory.GetDirectories(currentDir).First(d => d.EndsWith(ResultsGeneratorFolderName));
-            return new AssemblyLoader.AssemblyLoader(generatorFolder);
+            assemblyLoader.AssembliesPath = generatorFolder;
         }
     }
 }

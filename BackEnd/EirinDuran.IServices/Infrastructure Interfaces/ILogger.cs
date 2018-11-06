@@ -1,4 +1,4 @@
-namespace EirinDuran.IServices.Interfaces
+namespace EirinDuran.IServices.Infrastructure_Interfaces
 {
     public interface ILogger
     {

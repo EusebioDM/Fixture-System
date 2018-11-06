@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using EirinDuran.IServices.DTOs;
-using EirinDuran.IServices.Interfaces;
+using EirinDuran.IServices.Services_Interfaces;
 
 namespace EirinDuran.WebApi.Models
 {

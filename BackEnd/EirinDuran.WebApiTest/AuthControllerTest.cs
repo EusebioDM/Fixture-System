@@ -5,8 +5,8 @@ using EirinDuran.WebApi.Controllers;
 using EirinDuran.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using EirinDuran.IServices.DTOs;
-using EirinDuran.IServices.Interfaces;
 using System;
+using EirinDuran.IServices.Services_Interfaces;
 
 namespace EirinDuran.WebApiTest
 {

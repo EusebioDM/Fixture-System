@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using EirinDuran.IServices.DTOs;
-using EirinDuran.IServices.Interfaces;
 using EirinDuran.WebApi.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using EirinDuran.IServices.Exceptions;
+using EirinDuran.IServices.Services_Interfaces;
 using EirinDuran.WebApi.Models;
 
 namespace EirinDuran.WebApiTest

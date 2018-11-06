@@ -3,7 +3,6 @@ using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
-using EirinDuran.IServices.Interfaces;
 using EirinDuran.Services.DTO_Mappers;
 using System;
 using System.Collections.Generic;
@@ -11,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Castle.Core.Internal;
+using EirinDuran.IServices.Services_Interfaces;
 
 namespace EirinDuran.Services
 {

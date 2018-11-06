@@ -9,7 +9,8 @@ using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.IServices.Exceptions;
-using EirinDuran.IServices.Interfaces;
+using EirinDuran.IServices.Infrastructure_Interfaces;
+using EirinDuran.IServices.Services_Interfaces;
 
 namespace EirinDuran.ServicesTest
 {

@@ -4,4 +4,8 @@
         <TargetFramework>netstandard2.0</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\EirinDuran.IServices\EirinDuran.IServices.csproj" />
+    </ItemGroup>
+
 </Project>

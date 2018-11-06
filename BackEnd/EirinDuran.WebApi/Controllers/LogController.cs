@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
-using EirinDuran.IServices.Interfaces;
+using EirinDuran.IServices.Services_Interfaces;
 using EirinDuran.Services;
 using EirinDuran.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;

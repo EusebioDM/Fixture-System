@@ -9,7 +9,8 @@ using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
-using EirinDuran.IServices.Interfaces;
+using EirinDuran.IServices.Infrastructure_Interfaces;
+using EirinDuran.IServices.Services_Interfaces;
 using EirinDuran.Services.DTO_Mappers;
 
 namespace EirinDuran.Services
@@ -21,14 +22,17 @@ namespace EirinDuran.Services
         private readonly EncounterMapper mapper;
         private readonly IRepository<Encounter> encounterRepository;
         private readonly IRepository<Team> teamRepo;
+        private readonly IAssemblyLoader assemblyLoader;
         private readonly IRepository<Sport> sportRepo;
 
-        public FixtureServices(ILoginServices loginServices,IRepository<Encounter> encounterRepository, IRepository<Sport> sportRepo,IRepository<Team> teamRepo)
+        public FixtureServices(ILoginServices loginServices,IRepository<Encounter> encounterRepository, IRepository<Sport> sportRepo,IRepository<Team> teamRepo, IAssemblyLoader assemblyLoader)
         {
             this.adminValidator = new PermissionValidator(Role.Administrator, loginServices);
             mapper = new EncounterMapper(sportRepo,teamRepo);
             this.encounterRepository = encounterRepository;
             this.teamRepo = teamRepo;
+            this.assemblyLoader = assemblyLoader;
+            SetupAssemblyLoader();
             this.sportRepo = sportRepo;
         }
 
@@ -86,8 +90,8 @@ namespace EirinDuran.Services
         private Domain.Fixture.IFixtureGenerator GetFixtureGenerator(string fixtureGeneratorName, string sportName)
         {
             Func<Domain.Fixture.IFixtureGenerator, bool> isNeededGenerator = g => g.GetType().FullName.EndsWith(fixtureGeneratorName);
-            AssemblyLoader.AssemblyLoader loader = GetAssemblyLoader();
-            IEnumerable<Domain.Fixture.IFixtureGenerator> generators = loader.GetImplementations<Domain.Fixture.IFixtureGenerator>().Where(isNeededGenerator);
+            SetupAssemblyLoader();
+            IEnumerable<Domain.Fixture.IFixtureGenerator> generators = assemblyLoader.GetImplementations<Domain.Fixture.IFixtureGenerator>().Where(isNeededGenerator);
             if (generators.IsNullOrEmpty())
             {
                 throw new ServicesException($"{fixtureGeneratorName} was not a valid fixture generator");
@@ -99,15 +103,14 @@ namespace EirinDuran.Services
         public IEnumerable<string> GetAvailableFixtureGenerators()
         {
             Func<Domain.Fixture.IFixtureGenerator, string> getGeneratorTypeName = t => t.GetType().FullName.Split('.').Last();
-            AssemblyLoader.AssemblyLoader loader = GetAssemblyLoader();
-            return loader.GetImplementations<Domain.Fixture.IFixtureGenerator>().Select(getGeneratorTypeName);
+            return assemblyLoader.GetImplementations<Domain.Fixture.IFixtureGenerator>().Select(getGeneratorTypeName);
         }
 
-        private AssemblyLoader.AssemblyLoader GetAssemblyLoader()
+        private void SetupAssemblyLoader()
         {
             string currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string path = Directory.EnumerateDirectories(currentDir).First(d => d.EndsWith(FixtureGeneratorsFolderName));
-            return new AssemblyLoader.AssemblyLoader(path);
+            assemblyLoader.AssembliesPath = path;
         }
 
         private Sport GetSport(string sportName)

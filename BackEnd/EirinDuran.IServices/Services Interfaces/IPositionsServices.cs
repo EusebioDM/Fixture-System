@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using EirinDuran.IServices.DTOs;
 
-namespace EirinDuran.IServices.Interfaces
+namespace EirinDuran.IServices.Services_Interfaces
 {
     public interface IPositionsServices
     {

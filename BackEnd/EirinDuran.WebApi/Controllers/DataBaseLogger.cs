@@ -1,6 +1,7 @@
 using EirinDuran.DataAccess.Entities;
 using EirinDuran.IDataAccess;
-using EirinDuran.IServices.Interfaces;
+using EirinDuran.IServices.Infrastructure_Interfaces;
+using EirinDuran.IServices.Services_Interfaces;
 
 namespace EirinDuran.WebApi.Controllers
 {

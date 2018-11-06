@@ -4,22 +4,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using EirinDuran.IServices.Infrastructure_Interfaces;
 
 namespace EirinDuran.AssemblyLoader
 {
-    public class AssemblyLoader
+    public class AssemblyLoader : IAssemblyLoader
     {
-        private readonly string assembliesPath;
-
         public AssemblyLoader()
         {
-            assembliesPath = Directory.GetCurrentDirectory();
+            AssembliesPath = Directory.GetCurrentDirectory();
         }
-
-        public AssemblyLoader(string assembliesPath)
-        {
-            this.assembliesPath = assembliesPath;
-        }
+        
+        public string AssembliesPath { get; set; }
 
         public IEnumerable<TInterface> GetImplementations<TInterface>()
         {
@@ -46,7 +42,7 @@ namespace EirinDuran.AssemblyLoader
         private List<Assembly> GetAssembliesInDirectory()
         {
             List<Assembly> assemblies = new List<Assembly>();
-            IEnumerable<string> files = Directory.GetFiles(assembliesPath);
+            IEnumerable<string> files = Directory.GetFiles(AssembliesPath);
             foreach (string file in files)
             {
                 AddAssemblyIfExists(file, assemblies);
