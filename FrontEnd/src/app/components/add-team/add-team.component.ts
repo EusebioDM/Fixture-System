@@ -80,6 +80,11 @@ export class AddTeamComponent implements OnInit {
   }
 
   public submit() {
+    const teamName = this.addTeamForm.value.name;
+    const sportName = this.addTeamForm.value.sportName;
+
+    console.log('El nombre del equipo es: ' + teamName + ' el deporte del equipo ' + sportName);
+
     const team = new Team(this.name, this.sportName, this.logo);
     this.teamsService.addTeam(team).subscribe(
       ((result: Team) => {

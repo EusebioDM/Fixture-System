@@ -3,6 +3,7 @@ import { Team } from 'src/app/classes/team';
 import { MatPaginator, MatTableDataSource, MatDialog, MatSort, MatDialogConfig } from '@angular/material';
 import { TeamsService } from 'src/app/services/teams.service';
 import { AddTeamComponent } from '../add-team/add-team.component';
+import { YesNoDialogComponent } from '../yes-no-dialog/yes-no-dialog.component';
 
 @Component({
   selector: 'app-teams',
@@ -62,12 +63,47 @@ export class TeamsComponent implements OnInit {
     dialogConfig.autoFocus = true;
     const dialogRef = this.dialog.open(AddTeamComponent, dialogConfig);
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      if (result) {
-        // actualizar tabla
-        this.ngOnInit();
+    dialogRef.afterClosed().subscribe(
+      ((team: Team) => {
+        if (team !== undefined) {
+          // this.teams.push(team);
+          // this.loadTableDataSource();
+        }
+      })
+    );
+  }
+
+  onDelete(teamName: string, sportId: string) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(YesNoDialogComponent, dialogConfig);
+    dialogRef.componentInstance.title = 'Borrar equipo...';
+    dialogRef.componentInstance.message = '¿Está seguro que quiere borrar al equipo ' + teamName
+      + ' perteneciente al deporte ' + sportId + '.';
+
+    dialogRef.afterClosed().subscribe(
+      ((result) => {
+        if (result) {
+          this.teamsService.deleteTeam(teamName + '_' + sportId).subscribe();
+          this.updateDataSource(teamName + '_' + sportId);
+        }
+      })
+    );
+  }
+
+  private updateDataSource(id: string) {
+    console.log(id);
+    let tm;
+    this.dataSource.data.forEach(team => {
+      const idTeam = (team.name + '_' + team.sportName);
+      if (idTeam === id) {
+        tm = team;
       }
     });
+
+    this.dataSource.data.splice(this.dataSource.data.indexOf(tm), 1);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
   }
 }
