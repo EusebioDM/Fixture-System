@@ -71,6 +71,7 @@ namespace EirinDuran.WebApi
             services.AddScoped<IRepository<Log>, LogRepository>();
             services.AddScoped<IExtendedEncounterRepository, ExtendedEncounterRepository>();
         }
+        
         private void SetupAuthentication(IServiceCollection services)
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
