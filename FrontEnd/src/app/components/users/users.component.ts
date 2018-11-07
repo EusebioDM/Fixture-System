@@ -105,7 +105,6 @@ export class UsersListComponent implements OnInit {
       });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
       if (result) {
         // actualizar tabla
         this.ngOnInit();

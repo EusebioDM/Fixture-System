@@ -32,5 +32,4 @@ export class ModifyTeamComponent implements OnInit {
       this.logo = this.data.logo;
     }
   }
-
 }

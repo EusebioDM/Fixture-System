@@ -28,7 +28,7 @@ export class TeamsService {
   }
 
   getTeamById(id: string): Observable<Team> {
-    const myHeaders = new Headers();
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 

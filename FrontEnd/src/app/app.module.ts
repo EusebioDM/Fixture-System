@@ -95,6 +95,11 @@ const appRoutes: Routes = [
     component: NotFoundComponent
   },
   {
+    path: '',
+    redirectTo: '/login',
+    pathMatch: 'full'
+  },
+  {
     path: '**',
     redirectTo: '/404'
   }

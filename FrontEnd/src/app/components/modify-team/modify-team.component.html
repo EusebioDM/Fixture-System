@@ -4,6 +4,13 @@
     <mat-form-field>
       <input matInput required name="teamName" [(ngModel)]='name' placeholder="Nombre del Equipo">
     </mat-form-field>
+
+    <mat-form-field>
+      <input matInput required name="sportName" [(ngModel)]='sportName' disabled>
+    </mat-form-field>
+
+    <img src="data:image/png;base64,{{logo}}" style="height:90px;width:90px" />
+
   </div>
 
   <mat-dialog-actions align="end">
