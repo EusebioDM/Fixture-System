@@ -34,6 +34,7 @@ import { AddSportComponent } from './components/add-sport/add-sport.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.component';
 import { ModifyTeamComponent } from './components/modify-team/modify-team.component';
+import { LoginRedirectService } from './services/login.redirect.service';
 
 
 export function tokenGetter() {
@@ -41,7 +42,11 @@ export function tokenGetter() {
 }
 
 const appRoutes: Routes = [
-  { path: 'login', component: LoginComponent },
+  {
+    path: 'login',
+    component: LoginComponent,
+    // canActivate: [LoginRedirectService]
+  },
   {
     path: 'users',
     component: UsersListComponent,
