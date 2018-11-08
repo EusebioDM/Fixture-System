@@ -27,12 +27,25 @@ export class EncountersService {
       );
   }
 
-  getEnconutertById(id: string): Observable<Encounter> {
+  getEnconutersById(id: string): Observable<Encounter> {
     const myHeaders = new Headers();
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
     return this.httpService.get(this.encountersUrl + '/' + id, requestOptions)
+      .pipe(
+        map((response: Response) => <Encounter>response.json()),
+        tap(data => console.log('Obtained encounter: ' + JSON.stringify(data))),
+        catchError(this.handleError)
+      );
+  }
+
+  getEnconutersFromToDate(dateFrom: string, dateTo: string): Observable<Encounter> {
+    const myHeaders = new Headers();
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+
+    return this.httpService.get(this.encountersUrl + '/?=' + dateFrom + '/?=' + dateTo, requestOptions)
       .pipe(
         map((response: Response) => <Encounter>response.json()),
         tap(data => console.log('Obtained encounter: ' + JSON.stringify(data))),
@@ -51,12 +64,35 @@ export class EncountersService {
     );
   }
 
+  updateEncounter(encounter: Encounter): Observable<any> {
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+    return this.httpService.put(this.encountersUrl + '/' + encounter.id, encounter, requestOptions).pipe(
+      tap(_ => console.log(`updated user id=${encounter.id}`)),
+      catchError(this.handleError)
+    );
+  }
+
   deleteEncounter(id: string) {
     const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
     return this.httpService.delete(this.encountersUrl + '/' + id, requestOptions);
+  }
+
+  GetAvailableFixtureGenerators() {
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+
+    return this.httpService.get(this.encountersUrl + '/fixture', requestOptions)
+      .pipe(
+        map((response: Response) => <Array<string>>response.json()),
+        tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
+        catchError(this.handleError)
+      );
   }
 
   private handleError(error: Response) {

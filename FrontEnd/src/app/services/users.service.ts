@@ -52,13 +52,6 @@ export class UsersService {
     );
   }
 
-  deleteUser(id: string) {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
-    myHeaders.append('Accept', 'application/json');
-    const requestOptions = new RequestOptions({ headers: myHeaders });
-    return this.httpService.delete(this.usersUrl + '/' + id, requestOptions);
-  }
-
   updateUser(user: User): Observable<any> {
     const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
@@ -67,6 +60,13 @@ export class UsersService {
       tap(_ => console.log(`updated user id=${user.userName}`)),
       catchError(this.handleError)
     );
+  }
+
+  deleteUser(id: string) {
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+    return this.httpService.delete(this.usersUrl + '/' + id, requestOptions);
   }
 
   private handleError(error: Response) {
