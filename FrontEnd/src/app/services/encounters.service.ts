@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Team } from '../classes/team';
+import { Encounter } from '../classes/encounter';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable, throwError } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
@@ -7,56 +7,56 @@ import { map, tap, catchError } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class TeamsService {
+export class EncountersService {
 
-  private teamsUrl = 'api/teams';
+  private encountersUrl = 'api/encounters';
   token = localStorage.getItem('access_token');
 
   constructor(private httpService: Http) { }
 
-  getTeams(): Observable<Array<Team>> {
+  getEncounters(): Observable<Array<Encounter>> {
     const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.teamsUrl, requestOptions)
+    return this.httpService.get(this.encountersUrl, requestOptions)
       .pipe(
-        map((response: Response) => <Array<Team>>response.json()),
+        map((response: Response) => <Array<Encounter>>response.json()),
         tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
         catchError(this.handleError)
       );
   }
 
-  getTeamById(id: string): Observable<Team> {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+  getEnconutertById(id: string): Observable<Encounter> {
+    const myHeaders = new Headers();
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.teamsUrl + '/' + id, requestOptions)
+    return this.httpService.get(this.encountersUrl + '/' + id, requestOptions)
       .pipe(
-        map((response: Response) => <Team>response.json()),
-        tap(data => console.log('Obtained team: ' + JSON.stringify(data))),
+        map((response: Response) => <Encounter>response.json()),
+        tap(data => console.log('Obtained encounter: ' + JSON.stringify(data))),
         catchError(this.handleError)
       );
   }
 
-  addTeam(team: Team) {
+  addEncounter(encounter: Encounter) {
     const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.post(this.teamsUrl, team, requestOptions).pipe(
-      tap((t: Team) => console.log(`added team w/ id=${t.name}`)),
+    return this.httpService.post(this.encountersUrl, encounter, requestOptions).pipe(
+      tap((e: Encounter) => console.log(`added encounter`)),
       catchError(this.handleError)
     );
   }
 
-  deleteTeam(id: string) {
+  deleteEncounter(id: string) {
     const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
-    console.log(this.teamsUrl + id);
-    return this.httpService.delete(this.teamsUrl + '/' + id, requestOptions);
+
+    return this.httpService.delete(this.encountersUrl + '/' + id, requestOptions);
   }
 
   private handleError(error: Response) {

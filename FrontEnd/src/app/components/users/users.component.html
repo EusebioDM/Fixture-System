@@ -37,13 +37,13 @@
 
     <ng-container matColumnDef="role">
       <th mat-header-cell *matHeaderCellDef> Rol </th>
-      <td mat-cell *matCellDef="let aUser"> {{aUser.role}} </td>
+      <td mat-cell *matCellDef="let aUser"> {{aUser.isAdmin}} </td>
     </ng-container>
 
     <ng-container matColumnDef="btnModify">
       <th mat-header-cell *matHeaderCellDef> Modificar </th>
-      <td mat-cell *matCellDef="let aUser"> <button mat-mini-fab color="primary" (click)="openDialogModifyUser(aUser)">
-          <mat-icon class="icon">edit</mat-icon>
+      <td mat-cell *matCellDef="let aUser"> <button  mat-button (click)="openDialogModifyUser(aUser)">
+          <mat-icon class="icon" color="primary">edit</mat-icon>
         </button> </td>
     </ng-container>
 

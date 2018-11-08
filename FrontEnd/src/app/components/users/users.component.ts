@@ -138,11 +138,3 @@ export class UsersListComponent implements OnInit {
   }
 }
 
-@Component({
-  selector: 'app-add-user',
-  templateUrl: 'confirmToDeleteUser.html',
-  styleUrls: ['./users.component.css']
-})
-
-export class DialogConfirmToDeleteUser { }
-
