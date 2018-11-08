@@ -4,6 +4,7 @@ import { UsersService } from '../../services/users.service';
 import { MatTableDataSource, MatPaginator, MatDialog, MatSort, MatDialogConfig } from '@angular/material';
 import { AddUserComponent } from '../add-user/add-user.component';
 import { ModifyUserComponent } from '../modify-user/modify-user.component';
+import { YesNoDialogComponent } from '../yes-no-dialog/yes-no-dialog.component';
 
 @Component({
   selector: 'app-users-list',
@@ -71,7 +72,7 @@ export class UsersListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(
       ((user: User) => {
-        if (user !== undefined) {
+        if (user) {
           this.users.push(user);
           console.log('El nombre de usuario es ' + user.userName);
           this.loadTableDataSource();
@@ -80,21 +81,22 @@ export class UsersListComponent implements OnInit {
     );
   }
 
-  // no está funcionando
-  usersToParent(added: User) {
-    console.log('Entró desde el hijo con: ' + added.userName);
-    this.dataSource.data.add(added);
-    this.dataSource.paginator = this.paginator;
-  }
+  onDelete(id: string) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(YesNoDialogComponent, dialogConfig);
+    dialogRef.componentInstance.title = 'Borrar usuario...';
+    dialogRef.componentInstance.message = '¿Está seguro que quiere borrar al usuario ' + id + ' y todos los datos asociados a éste.';
 
-  openDialogConfirmDeleteUser(id: string) {
-    const dialogRef = this.dialog.open(DialogConfirmToDeleteUser);
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.deleteUser(id);
-      }
-    });
+    dialogRef.afterClosed().subscribe(
+      ((result) => {
+        if (result) {
+          this.usersService.deleteUser(id).subscribe();
+          this.updateDataSource(id);
+        }
+      })
+    );
   }
 
   openDialogModifyUser(user: User) {
@@ -135,12 +137,4 @@ export class UsersListComponent implements OnInit {
     console.log('Row clicked: ', row);
   }
 }
-
-@Component({
-  selector: 'app-add-user',
-  templateUrl: 'confirmToDeleteUser.html',
-  styleUrls: ['./users.component.css']
-})
-
-export class DialogConfirmToDeleteUser { }
 

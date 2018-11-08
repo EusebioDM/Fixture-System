@@ -66,8 +66,7 @@ export class TeamsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(
       ((team: Team) => {
-        if (team !== undefined) {
-          console.log(team);
+        if (team) {
           this.teams.push(team);
           this.loadTableDataSource();
         }

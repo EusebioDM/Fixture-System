@@ -44,7 +44,7 @@
 
     <ng-container matColumnDef="btnDelete">
       <th mat-header-cell *matHeaderCellDef> Borrar </th>
-      <td mat-cell *matCellDef="let aUser"> <button mat-mini-fab color="warn" (click)="openDialogConfirmDeleteUser(aUser.userName)">
+      <td mat-cell *matCellDef="let aUser"> <button mat-mini-fab color="warn" (click)="onDelete(aUser.userName)">
           <mat-icon class="icon">delete_outline</mat-icon>
         </button> </td>
     </ng-container>

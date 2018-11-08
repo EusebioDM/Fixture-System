@@ -15,7 +15,6 @@ import { UsersService } from './services/users.service';
 import { HttpModule } from '@angular/http';
 import { SportsComponent } from './components/sports/sports.component';
 import { TeamsComponent } from './components/teams/teams.component';
-import { DialogConfirmToDeleteUser } from './components/users/users.component';
 import { EncountersComponent } from './components/encounters/encounters.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { ModifyUserComponent } from './components/modify-user/modify-user.component';
@@ -119,7 +118,6 @@ const appRoutes: Routes = [
     SportsComponent,
     TeamsComponent,
     AddUserComponent,
-    DialogConfirmToDeleteUser,
     EncountersComponent,
     ModifyUserComponent,
     AddTeamComponent,
@@ -138,7 +136,6 @@ const appRoutes: Routes = [
     AddUserComponent,
     AddSportComponent,
     AddTeamComponent,
-    DialogConfirmToDeleteUser,
     ModifyUserComponent,
     ModifyTeamComponent,
     YesNoDialogComponent
