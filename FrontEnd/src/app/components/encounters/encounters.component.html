@@ -9,7 +9,11 @@
 
     <ng-container matColumnDef="teams">
       <th mat-header-cell *matHeaderCellDef> Equipos </th>
-      <td mat-cell *matCellDef="let aEncounter"> {{aEncounter.teams}} </td>
+      <td mat-cell *matCellDef="let aEncounter">  <ul>
+        <li *ngFor="let teamId of aEncounter.teamsIds">
+          {{ teamId }}
+        </li>
+      </ul> {{aEncounter.teamsIds}} </td>
     </ng-container>
 
     <ng-container matColumnDef="date">

@@ -31,6 +31,7 @@ export class EncountersComponent implements OnInit {
 
   private result(data: Array<Encounter>): void {
     this.encounters = data;
+    console.log(this.encounters[0].teamsIds);
     this.loadTableDataSource();
   }
 
