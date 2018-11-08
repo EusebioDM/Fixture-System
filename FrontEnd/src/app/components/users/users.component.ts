@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from '../../classes/user';
 import { UsersService } from '../../services/users.service';
-import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatDialog, MatSort, MatDialogConfig } from '@angular/material';
+import { AddUserComponent } from '../add-user/add-user.component';
+import { ModifyUserComponent } from '../modify-user/modify-user.component';
 
 @Component({
   selector: 'app-users-list',
@@ -9,13 +11,21 @@ import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
   styleUrls: ['./users.component.css']
 })
 export class UsersListComponent implements OnInit {
-  constructor(private usersService: UsersService, public dialog: MatDialog) { }
+  constructor(
+    public usersService: UsersService,
+    private dialog: MatDialog
+  ) { }
 
+  @ViewChild(AddUserComponent)
+  @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  users: Array<User>;
 
-  displayedColumns: string[] = ['userName', 'name', 'surname', 'mail', 'btnModify', 'btnBorrar'];
+  displayedColumns: string[] = ['userName', 'name', 'surname', 'mail', 'btnModify', 'btnDelete'];
   dataSource;
+  searchKey: string;
+
+  userId: string;
+  users: Array<User>;
 
   ngOnInit() {
     this.usersService.getUsers().subscribe(
@@ -26,21 +36,55 @@ export class UsersListComponent implements OnInit {
 
   private result(data: Array<User>): void {
     this.users = data;
-    console.log(this.users);
+    this.loadTableDataSource();
+  }
+
+  private loadTableDataSource() {
     this.dataSource = new MatTableDataSource<User>(this.users);
+    this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+    this.dataSource.filterPredicate = (data, filter) => {
+      return this.displayedColumns.some(ele => {
+        return ele !== 'btnModify' && ele !== 'btnDelete' && data[ele].toLowerCase().indexOf(filter) !== -1;
+      });
+    };
+  }
+
+  onSearchClear() {
+    this.searchKey = '';
+    this.applyFilter();
+  }
+
+  applyFilter() {
+    this.dataSource.filter = this.searchKey.trim().toLowerCase();
   }
 
   getUser(id: string) {
     console.log('El usuario es: ' + this.usersService.getUserById(id));
   }
 
-  openDialogAddUser() {
-    const dialogRef = this.dialog.open(DialogAddUser);
+  onInsert() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(AddUserComponent, dialogConfig);
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
+    dialogRef.afterClosed().subscribe(
+      ((user: User) => {
+        if (user !== undefined) {
+          this.users.push(user);
+          console.log('El nombre de usuario es ' + user.userName);
+          this.loadTableDataSource();
+        }
+      })
+    );
+  }
+
+  // no está funcionando
+  usersToParent(added: User) {
+    console.log('Entró desde el hijo con: ' + added.userName);
+    this.dataSource.data.add(added);
+    this.dataSource.paginator = this.paginator;
   }
 
   openDialogConfirmDeleteUser(id: string) {
@@ -50,33 +94,47 @@ export class UsersListComponent implements OnInit {
       if (result) {
         this.deleteUser(id);
       }
-      console.log(`Dialog result: ${result}`);
     });
   }
 
-  deleteUser(id: string) {
-    console.log('User to delete: ' + id);
+  openDialogModifyUser(user: User) {
+    const dialogRef = this.dialog.open(
+      ModifyUserComponent,
+      {
+        data: { userName: user.userName, name: user.name, surname: user.surname, mail: user.mail }
+      });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // actualizar tabla
+        this.ngOnInit();
+      }
+    });
+  }
+
+  deleteUser(userId: string) {
+    this.usersService.deleteUser(userId).subscribe();
+    this.updateDataSource(userId);
+  }
+
+  private updateDataSource(id: string) {
+
     let us;
     this.dataSource.data.forEach(user => {
       if (user.userName === id) {
         us = user;
       }
     });
-    console.log('Usuario ' + us);
+
     this.dataSource.data.splice(this.dataSource.data.indexOf(us), 1);
+    this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-    console.log('Usuarios ' + this.dataSource.data);
-    this.usersService.deleteUser(id).subscribe();
+  }
+
+  onRowClicked(row) {
+    console.log('Row clicked: ', row);
   }
 }
-
-@Component({
-  selector: 'app-add-user',
-  templateUrl: 'addUserForm.html',
-  styleUrls: ['./users.component.css']
-})
-
-export class DialogAddUser { }
 
 @Component({
   selector: 'app-add-user',

@@ -1,0 +1,11 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span><img src="favicon.ico"></span>
+    <span class="follower-nav-fill-remaining-space"></span>
+    <span class="align-center"></span>
+    <span class="follower-nav-spacer"></span>
+    <button mat-button routerLink="/favorites" routerLinkActive="active">Favoritos</button>
+    <button mat-button routerLink="/calendar" routerLinkActive="active">Canlendario</button>
+    <button mat-button (click)="signOut()" routerLink="/login" routerLinkActive="active">Cerrar Sesión</button>
+  </mat-toolbar-row>
+</mat-toolbar>

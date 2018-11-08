@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { User } from '../classes/user';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -9,9 +9,12 @@ import { map, tap, catchError } from 'rxjs/operators';
 })
 export class UsersService {
 
+  users: Array<User>;
   private usersUrl = 'api/users';
   token = localStorage.getItem('access_token');
+
   constructor(private httpService: Http) { }
+
   getUsers(): Observable<Array<User>> {
     const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
@@ -25,26 +28,26 @@ export class UsersService {
       );
   }
 
-  getUserById(id: string): Observable<User> {
+  getUserById(id: string): Observable<User | undefined> {
     const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.usersUrl, requestOptions)
+    return this.httpService.get(this.usersUrl + '/' + id, requestOptions)
       .pipe(
-        map((response: Response) => <User>response.json().find((user: User) => user.userName = id)),
-        tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
+        map((response: Response) => <User>response.json()),
+        tap(data => console.log('Obtained user: ' + JSON.stringify(data))),
         catchError(this.handleError)
       );
   }
 
-  addUser (user: User): Observable<User> {
+  addUser(user: User) {
     const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
     return this.httpService.post(this.usersUrl, user, requestOptions).pipe(
-      tap((user: User) => console.log(`added user w/ id=${user.userName}`)),
+      tap((u: User) => console.log(`added user w/ id=${u.userName}`)),
       catchError(this.handleError)
     );
   }
@@ -53,8 +56,17 @@ export class UsersService {
     const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
-    console.log(this.usersUrl + id);
     return this.httpService.delete(this.usersUrl + '/' + id, requestOptions);
+  }
+
+  updateUser(user: User): Observable<any> {
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+    return this.httpService.put(this.usersUrl + '/' + user.userName, user, requestOptions).pipe(
+      tap(_ => console.log(`updated user id=${user.userName}`)),
+      catchError(this.handleError)
+    );
   }
 
   private handleError(error: Response) {

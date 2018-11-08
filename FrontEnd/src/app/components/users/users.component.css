@@ -1,12 +1,12 @@
 table {
     margin: 0 auto;
-    margin-top: 40px;
+    margin-top: 10px;
     width: 90%;
     size: 90%;
     align-content: center;
  }
 
- .mat-button-toggle-group {
+ .search-div {
     margin: 0px auto;
     margin-left: 5%;
     margin-top: 20px;
@@ -14,19 +14,14 @@ table {
     align-content: center;
  }
 
+ .search-form-field {
+     margin-left: 10px;
+ }
+
  .mat-elevation-z8 {
     margin: 0 auto;
-    margin-top: 40px;
+    margin-top: 10px;
     width: 90%;
     size: 90%;
     align-content: center;
  }
-
- .addUser-container {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .addUser-container > * {
-    width: 100%;
-  }

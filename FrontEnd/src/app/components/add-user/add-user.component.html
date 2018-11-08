@@ -1,0 +1,79 @@
+<form [formGroup]="addUserForm">
+    <div class="addUser-container">
+        <mat-form-field>
+            <input matInput name="userName" placeholder="Nombre de Usuario" formControlName="userName" required
+                [errorStateMatcher]="matcher">
+            <!--<mat-error *ngIf="userName.invalid && (userName.dirty || userName.touched)">-->
+            <mat-error *ngIf="userName.errors?.required">
+                El nombre de usuario no está disponible
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput name="name" placeholder="Nombre" formControlName="name" required [errorStateMatcher]="matcher">
+            <mat-error *ngIf="name.errors?.required">
+                El nombre es <strong>requerido</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput name="surname" placeholder="Apellido" formControlName="surname" required
+                [errorStateMatcher]="matcher">
+            <mat-error *ngIf="surname.errors?.required">
+                El apellido es <strong>requerido</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput name="mail" placeholder="Mail" formControlName="mail" required [errorStateMatcher]="matcher">
+            <mat-error *ngIf="mail.errors?.required">
+                El mail es <strong>requerido</strong>
+            </mat-error>
+            <mat-error *ngIf="mail.errors?.email">
+                Ingrese un mail valido
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput name="password" type="password" placeholder="Contraseña" formControlName="password"
+                required [errorStateMatcher]="matcher">
+            <mat-error *ngIf="password.errors?.required">
+                La contraseña es <strong>requerida</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput name="passwordConfirm" type="password" placeholder="Repetir Contraseña" formControlName="passwordConfirm"
+                required [errorStateMatcher]="matcher">
+            <mat-error *ngIf="passwordConfirm.errors?.required">
+                La contraseña es <strong>requerida</strong>
+            </mat-error>
+            <mat-error *ngIf="passwordConfirm.errors?.compare">
+                Las contraseñas no coinciden
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-select name="role" placeholder="Rol" formControlName="role" required [errorStateMatcher]="matcher">
+                <mat-option value="Follower">Seguidor</mat-option>
+                <mat-option value="Administrador">Administrador</mat-option>
+            </mat-select>
+            <mat-error *ngIf="role.errors?.required">
+                El rol es <strong>requerido</strong>
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <mat-dialog-actions align="end">
+        <button mat-button color="warn" mat-dialog-close>Cancelar</button>
+        <button mat-button color="primary" cdkFocusInitial [disabled]="addUserForm.invalid" (click)="submit()">Agregar</button>
+    </mat-dialog-actions>
+</form>
+<br>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Form status: {{addUserForm.status}}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Form Value</h6>
+        <pre>{{addUserForm.value | json}}</pre>
+    </div>
+</div>

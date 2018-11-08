@@ -1,21 +1,13 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
     <span><img src="favicon.ico"></span>
-    <span class="example-fill-remaining-space"></span>
+    <span class="admin-nav-fill-remaining-space"></span>
     <span class="align-center"></span>
-    <span class="example-spacer"></span>
-    <button mat-button routerLink="/#">Administar Usuarios</button>
-    <button mat-button routerLink="/#" routerLinkActive="active">Administrar Deportes</button>
-    <button mat-button routerLink="/#" routerLinkActive="active">Administrar Equipos</button>
-    <button mat-button routerLink="/#" routerLinkActive="active">Administrar Encuentros</button>
-    <button mat-button (click)=signOut() routerLink="/login" routerLinkActive="active">Cerrar Sesión</button>
+    <span class="admin-nav-spacer"></span>
+    <button mat-button routerLink="/users" routerLinkActive="active"><mat-icon class="icon">input</mat-icon> Usuarios</button>
+    <button mat-button routerLink="/sports" routerLinkActive="active"><mat-icon class="icon">input</mat-icon> Deportes</button>
+    <button mat-button routerLink="/teams" routerLinkActive="active"><mat-icon class="icon">input</mat-icon> Equipos</button>
+    <button mat-button routerLink="/encounters" routerLinkActive="active"><mat-icon class="icon">input</mat-icon> Encuentros</button>
+    <button mat-button (click)="signOut()" routerLink="/login" routerLinkActive="active"><mat-icon class="icon">account_circle</mat-icon> Cerrar Sesión</button>
   </mat-toolbar-row>
 </mat-toolbar>
-
-<mat-tab-group>
-    <mat-tab label="Administar Usuarios"> <app-users-list></app-users-list> </mat-tab>
-    <mat-tab label="Administar Deportes"> <app-users-list></app-users-list> </mat-tab>
-    <mat-tab label="Administar Equipos"> <app-teams></app-teams> </mat-tab>
-    <mat-tab label="Administar Encuentros"> <app-users-list></app-users-list> </mat-tab>
-</mat-tab-group>
-  

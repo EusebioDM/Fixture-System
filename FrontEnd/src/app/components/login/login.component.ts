@@ -13,26 +13,23 @@ export class LoginComponent {
   public password: string;
   public error: string;
 
-  constructor(private auth: LoginService, private router: Router) { }
+  constructor(private loginService: LoginService, private router: Router) { }
 
   public submit() {
-    if (this.validateFields()) {
 
-      this.auth.login(this.username, this.password)
-        .pipe(first())
-        .subscribe(
-          result => this.router.navigate(['administrator']),
-          err => this.error = 'Usuario y/o contraseña invalido/s'
-        );
-    }
-  }
 
-  // why doesn't work??
-  private validateFields(): boolean {
-    if (this.username === '' || this.password === '') {
-      this.error = 'Debe completar los campos';
-      return false;
-    }
-    return true;
+    this.loginService.login(this.username, this.password)
+      .pipe(first())
+      .subscribe(
+        result => {
+          if (this.loginService.getLoggedUserRole() === 'Administrator') {
+            this.router.navigate(['users']);
+          } else {
+            this.router.navigate(['favorites']);
+          }
+        },
+        err => this.error = 'Usuario y/o contraseña invalido/s'
+      );
   }
 }
+

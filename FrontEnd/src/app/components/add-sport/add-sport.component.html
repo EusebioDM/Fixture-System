@@ -1,0 +1,26 @@
+<form [formGroup]="addSportForm">
+  
+    <mat-form-field>
+      <input matInput name="name" placeholder="Nombre del deporte" formControlName="name" required>
+      <mat-error *ngIf="name.errors?.required">
+        El deporte es <strong>requerido</strong>
+      </mat-error>
+    </mat-form-field>
+
+  <mat-dialog-actions align="end">
+    <button mat-button color="warn" mat-dialog-close>Cancelar</button>
+    <button mat-button color="primary" cdkFocusInitial [disabled]="addSportForm.invalid"
+      (click)="submit()">Agregar</button>
+  </mat-dialog-actions>
+
+</form>
+
+<br>
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Form status: {{addSportForm.status}}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">Form Value</h6>
+    <pre>{{addSportForm.value | json}}</pre>
+  </div>
+</div>
