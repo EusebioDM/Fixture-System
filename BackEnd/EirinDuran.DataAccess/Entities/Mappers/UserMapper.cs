@@ -23,7 +23,7 @@ namespace EirinDuran.DataAccess.Entities.Mappers
                 Mail = user.Mail,
                 Role = user.Role
             };
-            List<TeamUserEntity> teamUsersRelations = user.FollowedTeams.ToList().ConvertAll(t => new TeamUserEntity(
+            List<TeamUser> teamUsersRelations = user.FollowedTeams.ToList().ConvertAll(t => new TeamUser(
                 team: new TeamEntity(t),
                 user: userEntity
             ));
@@ -52,7 +52,7 @@ namespace EirinDuran.DataAccess.Entities.Mappers
             destination.Password = source.Password;
             destination.Mail = source.Mail;
             destination.Role = source.Role;
-            destination.TeamUsers = source.FollowedTeams.Select(t => new TeamUserEntity()
+            destination.TeamUsers = source.FollowedTeams.Select(t => new TeamUser()
             {
                 Team = new TeamEntity(t),
                 TeamName = t.Name,

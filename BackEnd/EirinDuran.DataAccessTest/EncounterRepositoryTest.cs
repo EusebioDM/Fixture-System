@@ -11,6 +11,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace EirinDuran.DataAccessTest
 {
@@ -36,6 +37,7 @@ namespace EirinDuran.DataAccessTest
             Assert.IsTrue(actual.Any(e => e.Teams.Contains(boca) && e.Teams.Contains(river) && e.Sport.Equals(futbol)));
             Assert.IsTrue(actual.Any(e => e.Comments.Any(m => m.Message.Equals("Meow"))));
             Assert.IsTrue(actual.Any(e => e.Teams.Contains(tomba) && e.Teams.Contains(river) && e.Sport.Equals(futbol)));
+            Assert.IsTrue(actual.Any(e => e.Results.Contains(new KeyValuePair<Team, int>(boca, 1)) && e.Results.Contains(new KeyValuePair<Team, int>(river,2))));
             Assert.AreEqual(2, actual.Count());
         }
 
@@ -44,7 +46,7 @@ namespace EirinDuran.DataAccessTest
         {
             Encounter tombaBoca = new Encounter(futbol, new List<Team> { boca, river }, new DateTime(3001, 10, 1));
             repo.Update(tombaBoca);
-
+            
             Assert.AreEqual(3, repo.GetAll().Count());
         }
 
@@ -53,10 +55,12 @@ namespace EirinDuran.DataAccessTest
         {
             Encounter encounter = repo.GetAll().First(e => e.Teams.Contains(boca));
             encounter.AddComment(macri, "msj");
+            encounter.AddOrReplaceResult(river, 2);
             repo.Update(encounter);
 
             Encounter updated = repo.GetAll().First(e => e.Teams.Contains(boca));
             Assert.IsTrue(updated.Comments.Any(c => c.Message.Equals("msj")));
+            Assert.IsTrue(updated.Results.Any(p => p.Key.Equals(river) && p.Value.Equals(2)));
         }
 
         [TestInitialize]
@@ -120,6 +124,8 @@ namespace EirinDuran.DataAccessTest
         {
             Encounter encounter = new Encounter(futbol, new List<Team>() { boca, river }, new DateTime(3001, 10, 10));
             encounter.AddComment(macri, "Meow");
+            encounter.AddOrReplaceResult(boca, 1);
+            encounter.AddOrReplaceResult(river, 2);
             return encounter;
         }
 

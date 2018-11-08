@@ -28,25 +28,25 @@ namespace EirinDuran.DomainTest
         [TestMethod]
         public void UserNameOkUserTest()
         {
-            Assert.AreEqual("A.Gómez", user.UserName);
+            Assert.AreEqual("A.Gómez", (string)user.UserName);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(EmptyFieldException))]
+        [ExpectedException(typeof(DomainException))]
         public void UserNameEmptyUserTest()
         {
             user = new User(Role.Follower, "", "Álvaro", "Gómez", "pass1234", "agomez@mail.com");
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidCharactersFieldExcepion))]
+        [ExpectedException(typeof(DomainException))]
         public void NameEmptyUserTest()
         {
             user.Name = "";
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidCharactersFieldExcepion))]
+        [ExpectedException(typeof(DomainException))]
         public void NameInvalidCharactersUserTest()
         {
             user.Name = "Alva334ro";
@@ -55,18 +55,18 @@ namespace EirinDuran.DomainTest
         [TestMethod]
         public void NameOkUserTest()
         {
-            Assert.AreEqual("ÁLVARO", user.Name);
+            Assert.AreEqual("Álvaro", (string)user.Name);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidCharactersFieldExcepion))]
+        [ExpectedException(typeof(DomainException))]
         public void SurnameEmptyUserTest()
         {
             user.Surname = "";
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidCharactersFieldExcepion))]
+        [ExpectedException(typeof(DomainException))]
         public void SurnameInvalidCharactersUserTest()
         {
             user.Surname = "+Gomez";
@@ -75,11 +75,11 @@ namespace EirinDuran.DomainTest
         [TestMethod]
         public void SurnameOkUserTest()
         {
-            Assert.AreEqual("GÓMEZ", user.Surname);
+            Assert.AreEqual("Gómez", (string)user.Surname);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(EmptyFieldException))]
+        [ExpectedException(typeof(DomainException))]
         public void PasswordEmptyUserTest()
         {
             user.Password = "";
@@ -88,17 +88,17 @@ namespace EirinDuran.DomainTest
         [TestMethod]
         public void PasswordOkUserTest()
         {
-            Assert.AreEqual("pass1234", user.Password);
+            Assert.AreEqual("pass1234", (string)user.Password);
         }
 
         [TestMethod]
         public void MailOkUserTest()
         {
-            Assert.AreEqual("gomez@gomez.uy", user.Mail);
+            Assert.AreEqual("gomez@gomez.uy", (string)user.Mail);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidMailFormatException))]
+        [ExpectedException(typeof(DomainException))]
         public void InvalidMailFormatTest()
         {
             user.Mail = "gomez@gomez";

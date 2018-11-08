@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EirinDuran.WebApi.Migrations
 {
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     [DbContext(typeof(Context))]
     partial class ContextModelSnapshot : ModelSnapshot
     {
@@ -16,11 +15,11 @@ namespace EirinDuran.WebApi.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.3-rtm-32065")
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("EirinDuran.Entities.CommentEntity", b =>
+            modelBuilder.Entity("EirinDuran.DataAccess.Entities.CommentEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -42,20 +41,12 @@ namespace EirinDuran.WebApi.Migrations
                     b.ToTable("CommentEntity");
                 });
 
-            modelBuilder.Entity("EirinDuran.Entities.EncounterEntity", b =>
+            modelBuilder.Entity("EirinDuran.DataAccess.Entities.EncounterEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AwayTeamName");
-
-                    b.Property<string>("AwayTeamSportName");
-
                     b.Property<DateTime>("DateTime");
-
-                    b.Property<string>("HomeTeamName");
-
-                    b.Property<string>("HomeTeamSportName");
 
                     b.Property<string>("SportName");
 
@@ -63,24 +54,59 @@ namespace EirinDuran.WebApi.Migrations
 
                     b.HasIndex("SportName");
 
-                    b.HasIndex("AwayTeamName", "AwayTeamSportName");
-
-                    b.HasIndex("HomeTeamName", "HomeTeamSportName");
-
                     b.ToTable("Encounters");
                 });
 
-            modelBuilder.Entity("EirinDuran.Entities.SportEntity", b =>
+            modelBuilder.Entity("EirinDuran.DataAccess.Entities.EncounterTeam", b =>
+                {
+                    b.Property<string>("TeamName");
+
+                    b.Property<string>("SportName");
+
+                    b.Property<Guid>("EncounterId");
+
+                    b.Property<string>("SportNameFk");
+
+                    b.Property<string>("TeamNameFk");
+
+                    b.HasKey("TeamName", "SportName", "EncounterId");
+
+                    b.HasIndex("EncounterId");
+
+                    b.HasIndex("TeamNameFk", "SportNameFk");
+
+                    b.ToTable("EncounterTeam");
+                });
+
+            modelBuilder.Entity("EirinDuran.DataAccess.Entities.Log", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Action");
+
+                    b.Property<DateTime>("DateTime");
+
+                    b.Property<string>("UserName");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Logs");
+                });
+
+            modelBuilder.Entity("EirinDuran.DataAccess.Entities.SportEntity", b =>
                 {
                     b.Property<string>("SportName")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("EncounterPlayerCount");
 
                     b.HasKey("SportName");
 
                     b.ToTable("Sports");
                 });
 
-            modelBuilder.Entity("EirinDuran.Entities.TeamEntity", b =>
+            modelBuilder.Entity("EirinDuran.DataAccess.Entities.TeamEntity", b =>
                 {
                     b.Property<string>("Name");
 
@@ -95,17 +121,38 @@ namespace EirinDuran.WebApi.Migrations
                     b.ToTable("Teams");
                 });
 
-            modelBuilder.Entity("EirinDuran.Entities.TeamUserEntity", b =>
+            modelBuilder.Entity("EirinDuran.DataAccess.Entities.TeamResult", b =>
+                {
+                    b.Property<string>("TeamId");
+
+                    b.Property<Guid>("EncounterId");
+
+                    b.Property<Guid?>("EncounterEntityId");
+
+                    b.Property<int>("Position");
+
+                    b.Property<string>("TeamName");
+
+                    b.Property<string>("TeamSportName");
+
+                    b.HasKey("TeamId", "EncounterId");
+
+                    b.HasIndex("EncounterEntityId");
+
+                    b.HasIndex("TeamName", "TeamSportName");
+
+                    b.ToTable("TeamResult");
+                });
+
+            modelBuilder.Entity("EirinDuran.DataAccess.Entities.TeamUser", b =>
                 {
                     b.Property<string>("TeamName");
 
-                    b.Property<string>("UserNamee");
+                    b.Property<string>("UserName");
 
                     b.Property<string>("SportName");
 
-                    b.Property<string>("UserName");
-
-                    b.HasKey("TeamName", "UserNamee");
+                    b.HasKey("TeamName", "UserName");
 
                     b.HasIndex("UserName");
 
@@ -116,7 +163,7 @@ namespace EirinDuran.WebApi.Migrations
                     b.ToTable("TeamUsers");
                 });
 
-            modelBuilder.Entity("EirinDuran.Entities.UserEntity", b =>
+            modelBuilder.Entity("EirinDuran.DataAccess.Entities.UserEntity", b =>
                 {
                     b.Property<string>("UserName")
                         .ValueGeneratedOnAdd();
@@ -136,52 +183,68 @@ namespace EirinDuran.WebApi.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("EirinDuran.Entities.CommentEntity", b =>
+            modelBuilder.Entity("EirinDuran.DataAccess.Entities.CommentEntity", b =>
                 {
-                    b.HasOne("EirinDuran.Entities.EncounterEntity")
+                    b.HasOne("EirinDuran.DataAccess.Entities.EncounterEntity")
                         .WithMany("Comments")
                         .HasForeignKey("EncounterEntityId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("EirinDuran.Entities.UserEntity", "User")
+                    b.HasOne("EirinDuran.DataAccess.Entities.UserEntity", "User")
                         .WithMany()
                         .HasForeignKey("UserName")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("EirinDuran.Entities.EncounterEntity", b =>
+            modelBuilder.Entity("EirinDuran.DataAccess.Entities.EncounterEntity", b =>
                 {
-                    b.HasOne("EirinDuran.Entities.SportEntity", "Sport")
-                        .WithMany()
-                        .HasForeignKey("SportName")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("EirinDuran.Entities.TeamEntity", "AwayTeam")
-                        .WithMany()
-                        .HasForeignKey("AwayTeamName", "AwayTeamSportName");
-
-                    b.HasOne("EirinDuran.Entities.TeamEntity", "HomeTeam")
-                        .WithMany()
-                        .HasForeignKey("HomeTeamName", "HomeTeamSportName");
-                });
-
-            modelBuilder.Entity("EirinDuran.Entities.TeamEntity", b =>
-                {
-                    b.HasOne("EirinDuran.Entities.SportEntity", "Sport")
+                    b.HasOne("EirinDuran.DataAccess.Entities.SportEntity", "Sport")
                         .WithMany()
                         .HasForeignKey("SportName")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("EirinDuran.Entities.TeamUserEntity", b =>
+            modelBuilder.Entity("EirinDuran.DataAccess.Entities.EncounterTeam", b =>
                 {
-                    b.HasOne("EirinDuran.Entities.UserEntity", "User")
+                    b.HasOne("EirinDuran.DataAccess.Entities.EncounterEntity", "Encounter")
+                        .WithMany("Teams")
+                        .HasForeignKey("EncounterId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("EirinDuran.DataAccess.Entities.TeamEntity", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamNameFk", "SportNameFk");
+                });
+
+            modelBuilder.Entity("EirinDuran.DataAccess.Entities.TeamEntity", b =>
+                {
+                    b.HasOne("EirinDuran.DataAccess.Entities.SportEntity", "Sport")
+                        .WithMany()
+                        .HasForeignKey("SportName")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("EirinDuran.DataAccess.Entities.TeamResult", b =>
+                {
+                    b.HasOne("EirinDuran.DataAccess.Entities.EncounterEntity")
+                        .WithMany("Results")
+                        .HasForeignKey("EncounterEntityId");
+
+                    b.HasOne("EirinDuran.DataAccess.Entities.TeamEntity", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamName", "TeamSportName");
+                });
+
+            modelBuilder.Entity("EirinDuran.DataAccess.Entities.TeamUser", b =>
+                {
+                    b.HasOne("EirinDuran.DataAccess.Entities.UserEntity", "User")
                         .WithMany("TeamUsers")
-                        .HasForeignKey("UserName");
+                        .HasForeignKey("UserName")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("EirinDuran.Entities.TeamEntity", "Team")
+                    b.HasOne("EirinDuran.DataAccess.Entities.TeamEntity", "Team")
                         .WithOne()
-                        .HasForeignKey("EirinDuran.Entities.TeamUserEntity", "TeamName", "SportName")
+                        .HasForeignKey("EirinDuran.DataAccess.Entities.TeamUser", "TeamName", "SportName")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

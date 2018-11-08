@@ -7,21 +7,15 @@ namespace EirinDuran.IServices.DTOs
     public class EncounterDTO
     {
         public Guid Id { get; set; }
-
         public DateTime DateTime { get; set; }
-
-        public string HomeTeamName { get; set; }
-
-        public string AwayTeamName { get; set; }
-
-        public List<Guid> CommentsIds { get; set; } = new List<Guid>();
-
+        public ICollection<string> TeamIds { get; set; } = new List<string>();
+        public ICollection<Guid> CommentsIds { get; set; } = new List<Guid>();
+        public Dictionary<TeamDTO, int> Results { get; set; } = new Dictionary<TeamDTO, int>();
         public string SportName { get; set; }
 
         public override bool Equals(object obj)
         {
-            var dTO = obj as EncounterDTO;
-            return dTO != null &&
+            return obj is EncounterDTO dTO &&
                    Id.Equals(dTO.Id);
         }
 

@@ -7,7 +7,8 @@ namespace EirinDuran.DataAccess.Entities
 {
     public class SportEntity : IEntity<Sport>
     {
-        public string SportName { get; set; } 
+        public string SportName { get; set; }
+        public EncounterPlayerCount EncounterPlayerCount { get; set; }
         private SportMapper mapper;
 
         public SportEntity()

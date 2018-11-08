@@ -6,21 +6,24 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using EirinDuran.IServices.Infrastructure_Interfaces;
+using EirinDuran.IServices.Services_Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
-using EirinDuran.IServices.Interfaces;
 
 namespace EirinDuran.WebApi.Controllers
 {
     [Route("api/[controller]")]
     public class AuthController : Controller
     {
-        private ILoginServices loginServices;
-        private IConfiguration configuration;
+        private readonly ILoginServices loginServices;
+        private readonly ILogger logger;
+        private readonly IConfiguration configuration;
 
-        public AuthController(IConfiguration configuration, ILoginServices loginServices)
+        public AuthController(IConfiguration configuration, ILoginServices loginServices, ILogger logger)
         {
             this.loginServices = loginServices;
+            this.logger = logger;
             this.configuration = configuration;
         }
 
@@ -62,6 +65,7 @@ namespace EirinDuran.WebApi.Controllers
             );
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+            logger.Log(loginModel.UserName, "Logged into the system");
             return Ok(new { Token = tokenString });
         }
     }

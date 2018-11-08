@@ -1,5 +1,5 @@
 ﻿using EirinDuran.IServices.DTOs;
-using EirinDuran.IServices.Interfaces;
+using EirinDuran.IServices.Services_Interfaces;
 
 namespace EirinDuran.WebApiTest
 {

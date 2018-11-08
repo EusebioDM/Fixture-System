@@ -5,7 +5,6 @@ using EirinDuran.Domain.User;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
-using EirinDuran.IServices.Interfaces;
 using EirinDuran.Services;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,6 +13,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using EirinDuran.IServices.Infrastructure_Interfaces;
+using EirinDuran.IServices.Services_Interfaces;
 
 namespace EirinDuran.ServicesTest
 {
@@ -23,6 +24,7 @@ namespace EirinDuran.ServicesTest
         private IRepository<User> userRepo;
         private IRepository<Sport> sportRepo;
         private IRepository<Team> teamRepo;
+        private ILogger logger;
         private IRepository<Encounter> encounterRepo;
         private UserDTO pepe;
         private UserDTO pablo;
@@ -87,7 +89,7 @@ namespace EirinDuran.ServicesTest
 
             User result = userRepo.Get("pepeAvila");
 
-            Assert.AreEqual("pepeAvila", result.UserName);
+            Assert.AreEqual("pepeAvila", (string)result.UserName);
         }
 
         [TestMethod]
@@ -169,7 +171,7 @@ namespace EirinDuran.ServicesTest
 
             User result = userRepo.Get("pepeAvila");
 
-            Assert.AreEqual("ANGEL", result.Name);
+            Assert.AreEqual("Angel", (string)result.Name);
         }
 
         [TestMethod]

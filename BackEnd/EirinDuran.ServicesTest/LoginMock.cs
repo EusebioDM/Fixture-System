@@ -1,11 +1,11 @@
 ﻿using EirinDuran.Domain.User;
 using EirinDuran.IServices;
 using EirinDuran.IServices.DTOs;
-using EirinDuran.IServices.Interfaces;
 using EirinDuran.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using EirinDuran.IServices.Services_Interfaces;
 
 namespace EirinDuran.ServicesTest
 {

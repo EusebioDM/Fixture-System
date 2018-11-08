@@ -4,35 +4,20 @@ namespace EirinDuran.Domain.Fixture
 {
     public class Sport
     {
-        private string name;
-        private HashSet<Team> teams;
         private StringValidator validator;
-        public string Name { get => name; set => SetNameIfValid(value); }
+        public Name Name { get; private set; }
+        public  EncounterPlayerCount EncounterPlayerCount { get; private set; }
 
-        public Sport(string name)
+        public Sport(string name, EncounterPlayerCount encounterPlayerCount = EncounterPlayerCount.TwoPlayers)
         {
             validator = new StringValidator();
-            teams = new HashSet<Team>();
             Name = name;
-        }
-
-        private void SetNameIfValid(string value)
-        {
-            bool valid = validator.ValidateNotNullOrEmptyString(value);
-            if (!valid)
-            {
-                throw new EmptyFieldException("Name");
-            }
-            else
-            {
-                name = value;
-            }
+            EncounterPlayerCount = encounterPlayerCount;
         }
 
         public override bool Equals(object obj)
         {
-            var sport = obj as Sport;
-            return sport != null &&
+            return obj is Sport sport &&
                    Name == sport.Name;
         }
 

@@ -13,6 +13,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using EirinDuran.FixtureGenerators.AllOnce;
+using EirinDuran.FixtureGenerators.RoundRobin;
+using EirinDuran.IServices.Infrastructure_Interfaces;
+using EirinDuran.IServices.Services_Interfaces;
 
 namespace EirinDuran.ServicesTest
 {
@@ -23,6 +27,8 @@ namespace EirinDuran.ServicesTest
         private IRepository<User> userRepo;
         private IRepository<Sport> sportRepo;
         private IRepository<Team> teamRepo;
+        private ILogger logger;
+        private IAssemblyLoader assemblyLoader;
         private ExtendedEncounterRepository encounterRepo;
         private EncounterMapper mapper;
         private TeamMapper teamMapper;
@@ -52,6 +58,7 @@ namespace EirinDuran.ServicesTest
             userRepo.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
             userRepo.Add(new User(Role.Follower, "martinFowler", "Martin", "Fowler", "user", "fowler@fowler.com"));
             login = new LoginServices(userRepo, teamRepo);
+            assemblyLoader = new AssemblyLoader.AssemblyLoader();
             InitializeTeams();
         }
 
@@ -93,12 +100,12 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("sSanchez", "user");
 
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             IEnumerable<Team> teams = new List<Team> { atenas, wanderers };
             DateTime date = new DateTime(3018, 10, 07);
 
             Encounter expected = new Encounter(futbol, teams, date);
-            encounterServices.CreateEncounter(mapper.Map(expected));
+            encounterSimpleServices.CreateEncounter(mapper.Map(expected));
 
             List<Encounter> recovered = encounterRepo.GetAll().ToList();
 
@@ -111,12 +118,12 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("martinFowler", "user");
 
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             IEnumerable<Team> teams = new List<Team> { atenas, wanderers };
             DateTime date = new DateTime(3018, 10, 07);
 
             Encounter encounter = new Encounter(futbol, teams, date);
-            encounterServices.CreateEncounter(mapper.Map(encounter));
+            encounterSimpleServices.CreateEncounter(mapper.Map(encounter));
         }
 
         [TestMethod]
@@ -125,7 +132,7 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("sSanchez", "user");
 
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
 
             IEnumerable<Team> teamsFirstEncounter = new List<Team> { felix, river };
             IEnumerable<Team> teamsSecondEncounter = new List<Team> { felix, penhiarol };
@@ -134,8 +141,8 @@ namespace EirinDuran.ServicesTest
 
             Encounter encounter = new Encounter(futbol, teamsFirstEncounter, date);
             Encounter encounterOverlappingDates = new Encounter(futbol, teamsSecondEncounter, date);
-            encounterServices.CreateEncounter(mapper.Map(encounter));
-            encounterServices.CreateEncounter(mapper.Map(encounterOverlappingDates));
+            encounterSimpleServices.CreateEncounter(mapper.Map(encounter));
+            encounterSimpleServices.CreateEncounter(mapper.Map(encounterOverlappingDates));
         }
 
         [TestMethod]
@@ -143,7 +150,7 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("sSanchez", "user");
 
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             IEnumerable<Team> teams = new List<Team> { atenas, wanderers };
             DateTime date = new DateTime(3018, 10, 07);
 
@@ -152,7 +159,7 @@ namespace EirinDuran.ServicesTest
             
             expected.DateTime = new DateTime(3021, 10, 07);
 
-            encounterServices.UpdateEncounter(mapper.Map(expected));
+            encounterSimpleServices.UpdateEncounter(mapper.Map(expected));
 
             List<Encounter> recovered = encounterRepo.GetAll().ToList();
             Assert.AreEqual(expected.Sport, recovered[0].Sport);
@@ -164,7 +171,7 @@ namespace EirinDuran.ServicesTest
         {
             login.CreateSession("sSanchez", "user");
 
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             IEnumerable<Team> teams = new List<Team> { atenas, wanderers };
             DateTime date = new DateTime(3018, 10, 07);
 
@@ -175,7 +182,7 @@ namespace EirinDuran.ServicesTest
 
             encounterRepo.Add(expectedWithId);
 
-            EncounterDTO recovered = encounterServices.GetEncounter(IntToGuid(2) + "");
+            EncounterDTO recovered = encounterSimpleServices.GetEncounter(IntToGuid(2) + "");
             Assert.AreEqual(expectedWithId.Id, recovered.Id);
         }
 
@@ -183,8 +190,8 @@ namespace EirinDuran.ServicesTest
         public void CreateAutoGeneratedFixtureWithoutTeams()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
-            encounterServices.CreateFixture("RoundRobinFixture", "Basquetball", new DateTime(3000, 10, 10));
+            FixtureServices fixtureServices = new FixtureServices(login, encounterRepo, sportRepo, teamRepo, assemblyLoader);
+            fixtureServices.CreateFixture("RoundRobin", "Basquetball", new DateTime(3000, 10, 10));
 
             IEnumerable<Encounter> encounters = encounterRepo.GetAll();
             Assert.AreEqual(0, encounters.Count());
@@ -194,10 +201,10 @@ namespace EirinDuran.ServicesTest
         public void CreateAutoGeneratedFixtureImpairNumberOfTeams()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
-            encounterServices.CreateFixture("RoundRobinFixture", "Futbol", new DateTime(3000, 10, 10));
+            FixtureServices fixtureServices = new FixtureServices(login, encounterRepo, sportRepo, teamRepo, assemblyLoader);
+            fixtureServices.CreateFixture("RoundRobin", "Futbol", new DateTime(3000, 10, 10));
 
-            IEnumerable<Encounter> expected = new RoundRobinFixture(futbol).GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
+            IEnumerable<Encounter> expected = new RoundRobin().GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
             IEnumerable<Encounter> actual = encounterRepo.GetAll();
             Assert.IsTrue(expected.SequenceEqual(actual));
         }
@@ -206,10 +213,10 @@ namespace EirinDuran.ServicesTest
         public void CreateAutoGeneratedFixtureRoundRobin()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
-            encounterServices.CreateFixture("RoundRobinFixture", "Futbol", new DateTime(3000, 10, 10));
+            FixtureServices fixtureServices = new FixtureServices(login, encounterRepo, sportRepo, teamRepo, assemblyLoader);
+            fixtureServices.CreateFixture("RoundRobin", "Futbol", new DateTime(3000, 10, 10));
 
-            IEnumerable<Encounter> expected = new RoundRobinFixture(futbol).GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
+            IEnumerable<Encounter> expected = new RoundRobin().GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
             IEnumerable<Encounter> actual = encounterRepo.GetAll();
             Assert.IsTrue(expected.SequenceEqual(actual));
         }
@@ -220,10 +227,10 @@ namespace EirinDuran.ServicesTest
         public void CreateAutoGeneratedFixtureAllOnce()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
-            encounterServices.CreateFixture("AllOnceFixture", "Futbol", new DateTime(3000, 10, 10));
+            FixtureServices fixtureServices = new FixtureServices(login, encounterRepo, sportRepo, teamRepo, assemblyLoader);
+            fixtureServices.CreateFixture("AllOnce", "Futbol", new DateTime(3000, 10, 10));
 
-            IEnumerable<Encounter> expected = new AllOnceFixture(futbol).GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
+            IEnumerable<Encounter> expected = new AllOnce().GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
             IEnumerable<Encounter> actual = encounterRepo.GetAll();
             Assert.IsTrue(expected.SequenceEqual(actual));
         }
@@ -234,9 +241,9 @@ namespace EirinDuran.ServicesTest
         public void CreateAutoGeneratedFixtureWithOverlappingDates()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
-            encounterServices.CreateFixture("AllOnceFixture", "Futbol", new DateTime(3000, 10, 10));
-            encounterServices.CreateFixture("AllOnceFixture", "Futbol", new DateTime(3000, 10, 10));
+            FixtureServices fixtureServices = new FixtureServices(login, encounterRepo, sportRepo, teamRepo, assemblyLoader);
+            fixtureServices.CreateFixture("AllOnce", "Futbol", new DateTime(3000, 10, 10));
+            fixtureServices.CreateFixture("AllOnce", "Futbol", new DateTime(3000, 10, 10));
         }
 
         [TestMethod]
@@ -244,9 +251,9 @@ namespace EirinDuran.ServicesTest
         public void CreateAutoGeneratedFixtureWithoutPermissions()
         {
             login.CreateSession("martinFowler", "user");
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            FixtureServices fixtureServices = new FixtureServices(login, encounterRepo, sportRepo, teamRepo, assemblyLoader);
 
-            encounterServices.CreateFixture("AllOnceFixture", "Futbol", new DateTime(3000, 10, 10));
+            fixtureServices.CreateFixture("AllOnce", "Futbol", new DateTime(3000, 10, 10));
         }
 
         [TestMethod]
@@ -254,15 +261,14 @@ namespace EirinDuran.ServicesTest
         public void CreateEncounterWithInvalidRelationshipTest()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             EncounterDTO encounter = new EncounterDTO()
             {
                 SportName = "Football",
-                AwayTeamName = "River Plate",
-                HomeTeamName = "Cerro",
+                TeamIds =  new List<string>() {"River Plate_Futbol", "Cerro"},
                 DateTime = DateTime.UnixEpoch
             };
-            encounterServices.CreateEncounter(encounter);
+            encounterSimpleServices.CreateEncounter(encounter);
         }
 
         [TestMethod]
@@ -270,33 +276,33 @@ namespace EirinDuran.ServicesTest
         public void CreateEncounterWithInvalidDateTest()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             EncounterDTO encounter = new EncounterDTO()
             {
                 SportName = "Football",
-                AwayTeamName = "River Plate",
-                HomeTeamName = ""
+                TeamIds = new List<string>() {"River Plate_Futbol", ""}
             };
-            encounterServices.CreateEncounter(encounter);
+            encounterSimpleServices.CreateEncounter(encounter);
         }
 
         [TestMethod]
         public void AddCommentToEncounter()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterQueryServices encounterQueryServices = new EncounterQueryServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            
             DateTime date = new DateTime(3018, 10, 12);
             Guid guid = Guid.NewGuid();
-            encounterServices.CreateEncounter(new EncounterDTO()
+            encounterSimpleServices.CreateEncounter(new EncounterDTO()
             {
                 SportName = "Futbol",
-                AwayTeamName = "River Plate",
-                HomeTeamName = "Cerro",
+                TeamIds =  new List<string>() {"River Plate_Futbol", "Cerro_Futbol"},
                 DateTime = date,
                 Id = guid
             });
-            encounterServices.AddComment(guid.ToString(), "Aguante River vieja, no me importa nada");
-            CommentDTO comment = encounterServices.GetAllCommentsToOneEncounter(guid.ToString()).Single();
+            encounterSimpleServices.AddComment(guid.ToString(), "Aguante River vieja, no me importa nada");
+            CommentDTO comment = encounterQueryServices.GetAllCommentsToOneEncounter(guid.ToString()).Single();
             Assert.AreEqual("sSanchez", comment.UserName);
             Assert.AreEqual("Aguante River vieja, no me importa nada", comment.Message);
         }
@@ -305,15 +311,16 @@ namespace EirinDuran.ServicesTest
         public void GetAllEncounters()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterQueryServices encounterQueryServices = new EncounterQueryServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             IEnumerable<Team> teams = new List<Team> { felix, river };
             DateTime date = new DateTime(3018, 10, 12);
-            IFixtureGenerator fixture = new RoundRobinFixture(futbol);
+            IFixtureGenerator fixture = new RoundRobin();
             Services.DTO_Mappers.EncounterMapper mapper = new Services.DTO_Mappers.EncounterMapper(sportRepo, teamRepo);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
-            encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
+            encounterSimpleServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
 
-            IEnumerable<Encounter> result = encounterServices.GetAllEncounters().Select(e => mapper.Map(e));
+            IEnumerable<Encounter> result = encounterSimpleServices.GetAllEncounters().Select(e => mapper.Map(e));
             bool areAllPresent = encounters.All(i => result.ToList().Remove(i));
             Assert.IsTrue(areAllPresent);
         }
@@ -322,19 +329,19 @@ namespace EirinDuran.ServicesTest
         public void DeleteEncounter()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             IEnumerable<Team> teams = new List<Team> { felix, river };
             DateTime date = new DateTime(3018, 10, 12);
 
-            IFixtureGenerator fixture = new RoundRobinFixture(futbol);
+            IFixtureGenerator fixture = new RoundRobin();
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
-            encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
-            IEnumerable<EncounterDTO> allEncounters = encounterServices.GetAllEncounters();
+            encounterSimpleServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
+            IEnumerable<EncounterDTO> allEncounters = encounterSimpleServices.GetAllEncounters();
 
-            encounterServices.DeleteEncounter(allEncounters.First().Id.ToString());
+            encounterSimpleServices.DeleteEncounter(allEncounters.First().Id.ToString());
 
-            Assert.IsTrue(encounterServices.GetAllEncounters().ToList().Count == 0);
+            Assert.IsTrue(encounterSimpleServices.GetAllEncounters().ToList().Count == 0);
         }
 
         [TestMethod]
@@ -342,40 +349,40 @@ namespace EirinDuran.ServicesTest
         public void DeleteEncounterWithoutSufficientPermission()
         {
             login.CreateSession("martinFowler", "user");
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
 
             IEnumerable<Team> teams = new List<Team> { felix, river };
 
             DateTime date = new DateTime(3018, 10, 12);
 
-            IFixtureGenerator fixture = new RoundRobinFixture(futbol);
+            IFixtureGenerator fixture = new RoundRobin();
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
 
-            encounterServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
-            IEnumerable<EncounterDTO> allEncounters = encounterServices.GetAllEncounters();
+            encounterSimpleServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
+            IEnumerable<EncounterDTO> allEncounters = encounterSimpleServices.GetAllEncounters();
 
-            encounterServices.DeleteEncounter(allEncounters.First().Id.ToString());
+            encounterSimpleServices.DeleteEncounter(allEncounters.First().Id.ToString());
 
-            Assert.IsTrue(encounterServices.GetAllEncounters().ToList().Count == 0);
+            Assert.IsTrue(encounterSimpleServices.GetAllEncounters().ToList().Count == 0);
         }
 
         [TestMethod]
         public void ListEncountersByTeam()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
-
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterQueryServices encounterQueryServices = new EncounterQueryServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
             Encounter encounter1 = new Encounter(futbol, new List<Team> { felix, river }, new DateTime(3018, 10, 05));
             Encounter encounter2 = new Encounter(futbol, new List<Team> { atenas, wanderers }, new DateTime(3018, 10, 07));
             Encounter encounter3 = new Encounter(futbol, new List<Team> { penhiarol, torque }, new DateTime(3018, 10, 09));
             Encounter encounter4 = new Encounter(futbol, new List<Team> { river, liverpool }, new DateTime(3018, 10, 11));
 
-            encounterServices.CreateEncounter(mapper.Map(encounter1));
-            encounterServices.CreateEncounter(mapper.Map(encounter2));
-            encounterServices.CreateEncounter(mapper.Map(encounter3));
-            encounterServices.CreateEncounter(mapper.Map(encounter4));
+            encounterSimpleServices.CreateEncounter(mapper.Map(encounter1));
+            encounterSimpleServices.CreateEncounter(mapper.Map(encounter2));
+            encounterSimpleServices.CreateEncounter(mapper.Map(encounter3));
+            encounterSimpleServices.CreateEncounter(mapper.Map(encounter4));
 
-            IEnumerable<EncounterDTO> encountersRiver = encounterServices.GetEncountersByTeam(river.Name + "_" + futbol.Name);
+            IEnumerable<EncounterDTO> encountersRiver = encounterQueryServices.GetEncountersByTeam(river.Name + "_" + futbol.Name);
             Assert.IsTrue(encountersRiver.ToList().Count == 2);
         }
 
@@ -383,19 +390,20 @@ namespace EirinDuran.ServicesTest
         public void ListEncountersBySport()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
-
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterQueryServices encounterQueryServices = new EncounterQueryServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            
             Encounter encounter1 = new Encounter(futbol, new List<Team> { felix, river }, new DateTime(3018, 10, 05));
             Encounter encounter2 = new Encounter(futbol, new List<Team> { atenas, wanderers }, new DateTime(3018, 10, 07));
             Encounter encounter3 = new Encounter(futbol, new List<Team> { penhiarol, torque }, new DateTime(3018, 10, 09));
             Encounter encounter4 = new Encounter(futbol, new List<Team> { river, liverpool }, new DateTime(3018, 10, 11));
 
-            encounterServices.CreateEncounter(mapper.Map(encounter1));
-            encounterServices.CreateEncounter(mapper.Map(encounter2));
-            encounterServices.CreateEncounter(mapper.Map(encounter3));
-            encounterServices.CreateEncounter(mapper.Map(encounter4));
+            encounterSimpleServices.CreateEncounter(mapper.Map(encounter1));
+            encounterSimpleServices.CreateEncounter(mapper.Map(encounter2));
+            encounterSimpleServices.CreateEncounter(mapper.Map(encounter3));
+            encounterSimpleServices.CreateEncounter(mapper.Map(encounter4));
 
-            IEnumerable<EncounterDTO> encountersRiver = encounterServices.GetEncountersBySport(futbol.Name);
+            IEnumerable<EncounterDTO> encountersRiver = encounterQueryServices.GetEncountersBySport(futbol.Name);
             Assert.IsTrue(encountersRiver.ToList().Count == 4);
         }
 
@@ -403,19 +411,20 @@ namespace EirinDuran.ServicesTest
         public void ListEncountersByDate()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
-
+            EncounterSimpleServices encounterSimpleServices = new EncounterSimpleServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            EncounterQueryServices encounterQueryServices = new EncounterQueryServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            
             Encounter encounter1 = new Encounter(futbol, new List<Team> { felix, river }, new DateTime(3018, 10, 05));
             Encounter encounter2 = new Encounter(futbol, new List<Team> { atenas, wanderers }, new DateTime(3018, 10, 07));
             Encounter encounter3 = new Encounter(futbol, new List<Team> { penhiarol, torque }, new DateTime(3018, 10, 09));
             Encounter encounter4 = new Encounter(futbol, new List<Team> { river, liverpool }, new DateTime(3018, 10, 11));
 
-            encounterServices.CreateEncounter(mapper.Map(encounter1));
-            encounterServices.CreateEncounter(mapper.Map(encounter2));
-            encounterServices.CreateEncounter(mapper.Map(encounter3));
-            encounterServices.CreateEncounter(mapper.Map(encounter4));
+            encounterSimpleServices.CreateEncounter(mapper.Map(encounter1));
+            encounterSimpleServices.CreateEncounter(mapper.Map(encounter2));
+            encounterSimpleServices.CreateEncounter(mapper.Map(encounter3));
+            encounterSimpleServices.CreateEncounter(mapper.Map(encounter4));
 
-            IEnumerable<EncounterDTO> encountersRiver = encounterServices.GetEncountersByDate(new DateTime(3018, 10, 06), new DateTime(3018, 10, 09));
+            IEnumerable<EncounterDTO> encountersRiver = encounterQueryServices.GetEncountersByDate(new DateTime(3018, 10, 06), new DateTime(3018, 10, 09));
             Assert.IsTrue(encountersRiver.ToList().Count == 2);
         }
 
@@ -423,11 +432,11 @@ namespace EirinDuran.ServicesTest
         public void GetAvailableFixtureGenerators()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
+            FixtureServices fixtureServices = new FixtureServices(login, encounterRepo, sportRepo, teamRepo, assemblyLoader);
 
-            IEnumerable<string> actual = encounterServices.GetAvailableFixtureGenerators();
-            Assert.IsTrue(actual.Contains("AllOnceFixture"));
-            Assert.IsTrue(actual.Contains("RoundRobinFixture"));
+            IEnumerable<string> actual = fixtureServices.GetAvailableFixtureGenerators();
+            Assert.IsTrue(actual.Contains("AllOnce"));
+            Assert.IsTrue(actual.Contains("RoundRobin"));
         }
 
         [TestMethod]
@@ -435,8 +444,8 @@ namespace EirinDuran.ServicesTest
         public void CreateFixtureWithInvalidGeneratorName()
         {
             login.CreateSession("sSanchez", "user");
-            EncounterServices encounterServices = new EncounterServices(login, encounterRepo, sportRepo, teamRepo, userRepo);
-            encounterServices.CreateFixture("A non existant fixture generator", "Futbol", new DateTime(3000, 10, 10));
+            FixtureServices fixtureServices = new FixtureServices(login, encounterRepo, sportRepo, teamRepo, assemblyLoader);
+            fixtureServices.CreateFixture("A non existant fixture generator", "Futbol", new DateTime(3000, 10, 10));
         }
 
         private string GetResourcePath(string resourceName)

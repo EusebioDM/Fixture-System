@@ -1,38 +1,34 @@
 using System.Text.RegularExpressions;
+using EirinDuran.Domain.User;
 
 namespace EirinDuran.Domain
 {
-    public class StringValidator
+    internal class StringValidator
     {
-        public bool ValidateNotNullOrEmptyString(string aString)
+        public void ValidateNotNullOrEmptyString(string aString)
         {
-            return !string.IsNullOrWhiteSpace(aString);
-        }
-
-        public bool ValidateOnlyLetersString(string aString)
-        {
-            Regex stringLettersOnly = new Regex(@"^[a-zA-ZäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙ]+$");
-            bool isValid = false;
-
-            if (stringLettersOnly.IsMatch(aString))
+            if (string.IsNullOrWhiteSpace(aString))
             {
-                isValid = true;
+                throw new DomainException($"Field was empty");
             }
-
-            return isValid;
         }
 
-        public bool ValidateMailFormat(string mail)
+        public void ValidateOnlyLettersString(string aString)
+        {
+            Regex stringLettersOnly = new Regex(@"^[a-zA-ñZäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙ ]+$");
+            if (!stringLettersOnly.IsMatch(aString))
+            {
+                throw new DomainException($"String with value {aString} contained invalid elements");
+            }
+        }
+
+        public void ValidateMailFormat(string mail)
         {
             Regex validMailFormat = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
-            bool isValid = false;
-
-            if (validMailFormat.IsMatch(mail))
+            if (!validMailFormat.IsMatch(mail))
             {
-                isValid = true;
+                throw new DomainException($"{mail} is an invalid mail");
             }
-
-            return isValid;
         }
     }
 }

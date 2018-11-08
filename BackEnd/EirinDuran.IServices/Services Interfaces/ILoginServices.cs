@@ -1,7 +1,6 @@
 ﻿using EirinDuran.IServices.DTOs;
-using System;
 
-namespace EirinDuran.IServices.Interfaces
+namespace EirinDuran.IServices.Services_Interfaces
 {
     public interface ILoginServices
     {

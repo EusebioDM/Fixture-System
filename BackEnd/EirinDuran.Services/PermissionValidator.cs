@@ -1,7 +1,7 @@
 using EirinDuran.Domain.User;
 using EirinDuran.IServices;
 using EirinDuran.IServices.Exceptions;
-using EirinDuran.IServices.Interfaces;
+using EirinDuran.IServices.Services_Interfaces;
 using EirinDuran.Services;
 
 namespace EirinDuran.Services
