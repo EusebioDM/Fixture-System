@@ -27,6 +27,7 @@ export class ModifyUserComponent implements OnInit {
   passwordRepeated: string;
   role: string;
 
+  user: User;
 
   ngOnInit() {
     if (this.data) {
@@ -41,8 +42,6 @@ export class ModifyUserComponent implements OnInit {
 
     const user = new User(this.username, this.name, this.surname, this.password, this.mail, this.role);
     user.userName = this.data.userName;
-    this.usersService.updateUser(user).subscribe(result => {
-      console.log('Se actualizó: ' + user.userName);
-    });
+    this.usersService.updateUser(user).subscribe();
   }
 }

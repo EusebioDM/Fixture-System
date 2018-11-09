@@ -29,6 +29,10 @@ export class UsersListComponent implements OnInit {
   users: Array<User>;
 
   ngOnInit() {
+    this.getData();
+  }
+
+  private getData() {
     this.usersService.getUsers().subscribe(
       ((data: Array<User>) => this.result(data)),
       ((error: any) => console.log(error))
@@ -60,10 +64,6 @@ export class UsersListComponent implements OnInit {
     this.dataSource.filter = this.searchKey.trim().toLowerCase();
   }
 
-  getUser(id: string) {
-    console.log('El usuario es: ' + this.usersService.getUserById(id));
-  }
-
   onInsert() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -73,9 +73,7 @@ export class UsersListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       ((user: User) => {
         if (user) {
-          this.users.push(user);
-          console.log('El nombre de usuario es ' + user.userName);
-          this.loadTableDataSource();
+          this.getData();
         }
       })
     );
@@ -92,11 +90,26 @@ export class UsersListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       ((result) => {
         if (result) {
-          this.usersService.deleteUser(id).subscribe();
-          this.updateDataSource(id);
+          this.usersService.deleteUser(id).subscribe(
+            () => { this.getData(); }
+          );
         }
       })
     );
+  }
+
+  onModify(user: User) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(ModifyUserComponent, dialogConfig);
+    dialogRef.componentInstance.user = user;
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.getData();
+      }
+    });
   }
 
   openDialogModifyUser(user: User) {
@@ -108,29 +121,9 @@ export class UsersListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // actualizar tabla
-        this.ngOnInit();
+        this.getData();
       }
     });
-  }
-
-  deleteUser(userId: string) {
-    this.usersService.deleteUser(userId).subscribe();
-    this.updateDataSource(userId);
-  }
-
-  private updateDataSource(id: string) {
-
-    let us;
-    this.dataSource.data.forEach(user => {
-      if (user.userName === id) {
-        us = user;
-      }
-    });
-
-    this.dataSource.data.splice(this.dataSource.data.indexOf(us), 1);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
   }
 
   onRowClicked(row) {

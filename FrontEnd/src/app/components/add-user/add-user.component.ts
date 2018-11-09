@@ -36,7 +36,7 @@ export class AddUserComponent implements OnInit {
         // null,
         Validators.required,
         // this.noWhitespaceValidator
-       uniqueUsernameValidator(this.usersService) // async
+        uniqueUsernameValidator(this.usersService) // async
       ],
       name: ['',
         Validators.required

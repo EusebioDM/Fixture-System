@@ -3,8 +3,7 @@
         <mat-form-field>
             <input matInput name="userName" placeholder="Nombre de Usuario" formControlName="userName" required
                 [errorStateMatcher]="matcher">
-            <!--<mat-error *ngIf="userName.invalid && (userName.dirty || userName.touched)">-->
-            <mat-error *ngIf="userName.errors?.required">
+            <mat-error *ngIf="userName.invalid && (userName.dirty || userName.touched)">
                 El nombre de usuario no está disponible
             </mat-error>
         </mat-form-field>
