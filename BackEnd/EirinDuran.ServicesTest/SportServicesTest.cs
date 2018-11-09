@@ -4,7 +4,6 @@ using EirinDuran.Domain.Fixture;
 using EirinDuran.IDataAccess;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
-using EirinDuran.IServices.Interfaces;
 using EirinDuran.Services;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,6 +11,7 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using EirinDuran.IServices.Services_Interfaces;
 
 namespace EirinDuran.ServicesTest
 {

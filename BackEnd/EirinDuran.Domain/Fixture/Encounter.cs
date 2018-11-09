@@ -8,35 +8,32 @@ namespace EirinDuran.Domain.Fixture
     public class Encounter
     {
         public Guid Id { get; private set; }
-        private Team[] teams;
-
-        private DateTime dateTime;
-
         public DateTime DateTime { get => dateTime; set => SetDateIfValid(value); }
         public IEnumerable<Team> Teams => teams;
         public IEnumerable<Comment> Comments => comments;
-        private ICollection<Comment> comments;
-
+        public Dictionary<Team, int> Results => new Dictionary<Team, int>(results);
         public Sport Sport { get; private set; }
+        private ICollection<Team> teams;
+        private DateTime dateTime;
+        private ICollection<Comment> comments;
+        private Dictionary<Team, int> results;
 
         public Encounter(Sport sport, IEnumerable<Team> teams, DateTime dateTime)
         {
             comments = new List<Comment>();
-            ValidateNumberOfTeams(teams);
             Sport = sport;
+            ValidateNumberOfTeams(teams);
             this.teams = GetTeamsArray(teams);
             DateTime = dateTime;
             Id = Guid.NewGuid();
+            results = new Dictionary<Team, int>();
         }
 
-        public Encounter(Guid id, Sport sport, IEnumerable<Team> teams, DateTime dateTime, ICollection<Comment> comments)
+        public Encounter(Guid id, Sport sport, IEnumerable<Team> teams, DateTime dateTime, ICollection<Comment> comments, Dictionary<Team,int> results) : this(sport, teams,dateTime)
         {
             Id = id == Guid.Empty ? Guid.NewGuid() : id;
-            ValidateNumberOfTeams(teams);
-            Sport = sport;
-            this.teams = GetTeamsArray(teams);
             this.comments = comments;
-            DateTime = dateTime;
+            this.results = results;
         }
 
         public void AddComment(User.User user, string message)
@@ -46,22 +43,17 @@ namespace EirinDuran.Domain.Fixture
 
         private void ValidateNumberOfTeams(IEnumerable<Team> teams)
         {
-            if(teams.Count() != 2)
+            if(Sport.EncounterPlayerCount == EncounterPlayerCount.TwoPlayers && teams.Count() != 2)
             {
                 throw new InvalidNumberOfTeamsException();
             }
         }
 
-        private Team[] GetTeamsArray(IEnumerable<Team> teams)
+        private List<Team> GetTeamsArray(IEnumerable<Team> teams)
         {
-            Team[] array = new Team[2];
-            int i = 0;
-            foreach (Team team in teams)
-            {
-                ValidateTeamIsValid(team);
-                array[i++] = team;
-            }
-            return array;
+            List<Team> teamList = teams.ToList();
+            teamList.ForEach(ValidateTeamIsValid);
+            return teamList;
         }
 
         private void ValidateTeamIsValid(Team team)
@@ -78,20 +70,34 @@ namespace EirinDuran.Domain.Fixture
                 dateTime = date;
         }
 
+        public void AddOrReplaceResult(Team team, int position)
+        {
+            ValidateTeamIsInEncounter(team);
+            results[team] = position;
+        }
+
+        private void ValidateTeamIsInEncounter(Team team)
+        {
+            if (!teams.Contains(team))
+                throw new InvalidTeamException();
+        }
+
+        protected bool Equals(Encounter other)
+        {
+            return Id.Equals(other.Id);
+        }
+
         public override bool Equals(object obj)
         {
-            Encounter other = (Encounter)obj;
-            return this.Teams.SequenceEqual(other.Teams) &&
-                   this.DateTime == other.DateTime;
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Encounter) obj);
         }
 
         public override int GetHashCode()
         {
-            var hashCode = -1161983822;
-            hashCode = hashCode * -1521134295 + DateTime.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<IEnumerable<Team>>.Default.GetHashCode(Teams);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Sport>.Default.GetHashCode(Sport);
-            return hashCode;
+            return Id.GetHashCode();
         }
     }
 }

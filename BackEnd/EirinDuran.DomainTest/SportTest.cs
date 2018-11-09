@@ -16,11 +16,11 @@ namespace EirinDuran.DomainTest
         {
             Sport sport = new Sport("Futbol");
 
-            Assert.AreEqual("Futbol", sport.Name);
+            Assert.AreEqual("Futbol", (string)sport.Name);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(EmptyFieldException))]
+        [ExpectedException(typeof(DomainException))]
         public void CreateTeamEmptyNameTest()
         {
             Sport sport = new Sport("    ");
@@ -43,5 +43,23 @@ namespace EirinDuran.DomainTest
 
             Assert.AreNotEqual(futbol, basquet);
         }
+
+        [TestMethod]
+        public void EncounterSizeTwoPlayersTest()
+        {
+            Sport futbol = new Sport("Futbol", EncounterPlayerCount.TwoPlayers);
+
+            Assert.AreEqual(EncounterPlayerCount.TwoPlayers, futbol.EncounterPlayerCount);
+        }
+        
+        [TestMethod]
+        public void EncounterSizeMoreThanTwoPlayersTest()
+        {
+            Sport futbol = new Sport("Futbol", EncounterPlayerCount.TwoPlayers);
+
+            Assert.AreEqual(EncounterPlayerCount.TwoPlayers, futbol.EncounterPlayerCount);
+        }
+        
+        
     }
 }

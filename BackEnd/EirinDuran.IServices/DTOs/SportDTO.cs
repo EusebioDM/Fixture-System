@@ -5,5 +5,6 @@ namespace EirinDuran.IServices.DTOs
     public class SportDTO
     {
         public string Name { get; set; }
+        public EncounterPlayerCount EncounterPlayerCount { get; set; }
     }
 }

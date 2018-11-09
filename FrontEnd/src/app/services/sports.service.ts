@@ -32,10 +32,10 @@ export class SportsService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.sportsUrl, requestOptions)
+    return this.httpService.get(this.sportsUrl + '/' + id, requestOptions)
       .pipe(
-        map((response: Response) => <Sport>response.json().find((s: Sport) => s.name = id)),
-        tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
+        map((response: Response) => <Sport>response.json()),
+        tap(data => console.log('Obtained sport: ' + JSON.stringify(data))),
         catchError(this.handleError)
       );
   }

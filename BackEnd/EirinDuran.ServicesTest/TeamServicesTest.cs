@@ -8,9 +8,9 @@ using EirinDuran.Domain.Fixture;
 using System.Collections.Generic;
 using System.Linq;
 using EirinDuran.IServices.Exceptions;
-using EirinDuran.IServices.Interfaces;
 using EirinDuran.IServices.DTOs;
 using EirinDuran.Domain.User;
+using EirinDuran.IServices.Services_Interfaces;
 
 namespace EirinDuran.ServicesTest
 {
@@ -113,7 +113,7 @@ namespace EirinDuran.ServicesTest
 
             TeamDTO recovered = services.GetTeam("Boca_Futbol");
 
-            Assert.AreEqual(boca.Name, recovered.Name);
+            Assert.AreEqual((string)boca.Name, recovered.Name);
         }
 
         [TestMethod]

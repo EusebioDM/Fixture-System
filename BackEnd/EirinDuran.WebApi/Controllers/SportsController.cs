@@ -1,12 +1,12 @@
 using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Exceptions;
-using EirinDuran.IServices.Interfaces;
 using EirinDuran.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using EirinDuran.IServices.Services_Interfaces;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -16,13 +16,17 @@ namespace EirinDuran.WebApi.Controllers
     {
         private readonly ILoginServices loginServices;
         private readonly ISportServices sportServices;
-        private readonly IEncounterServices encounterServices;
+        private readonly IEncounterSimpleServices encounterSimpleServices;
+        private readonly IEncounterQueryServices encounterQueryServices;
+        private readonly IPositionsServices positionsServices;
 
-        public SportsController(ILoginServices loginServices, ISportServices sportServices, IEncounterServices encounterServices)
+        public SportsController(ILoginServices loginServices, ISportServices sportServices, IEncounterSimpleServices encounterSimpleServices, IEncounterQueryServices encounterQueryServices, IPositionsServices positionsServices)
         {
             this.loginServices = loginServices;
             this.sportServices = sportServices;
-            this.encounterServices = encounterServices;
+            this.encounterSimpleServices = encounterSimpleServices;
+            this.encounterQueryServices = encounterQueryServices;
+            this.positionsServices = positionsServices;
         }
 
         [HttpGet]
@@ -41,12 +45,26 @@ namespace EirinDuran.WebApi.Controllers
 
 
         [HttpGet("{sportId}", Name = "GetSport")]
-        [Authorize(Roles = "Administrator, Follower")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult<SportModelOut> GetById(string sportId)
         {
             try
             {
                 return new SportModelOut(sportServices.GetSport(sportId));
+            }
+            catch (ServicesException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{sportId}/results", Name = "GetSportTable")]
+        [Authorize]
+        public ActionResult<Dictionary<string, int>> GetPositionsTable(string sportId)
+        {
+            try
+            {
+                return positionsServices.GetPositionsTable(new SportDTO() {Name = sportId});
             }
             catch (ServicesException e)
             {
@@ -61,7 +79,7 @@ namespace EirinDuran.WebApi.Controllers
         {
             try
             {
-                return encounterServices.GetEncountersBySport(sportId).Select(e => new EncounterModelOut(e)).ToList();
+                return encounterQueryServices.GetEncountersBySport(sportId).Select(e => new EncounterModelOut(e)).ToList();
             }
             catch (ServicesException e)
             {

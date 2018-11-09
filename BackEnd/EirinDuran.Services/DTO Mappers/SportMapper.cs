@@ -16,13 +16,14 @@ namespace EirinDuran.Services.DTO_Mappers
         {
             return new SportDTO()
             {
-                Name = sport.Name
+                Name = sport.Name,
+                EncounterPlayerCount =  (IServices.DTOs.EncounterPlayerCount)sport.EncounterPlayerCount
             };
         }
 
         protected override Sport TryToMapModel(SportDTO sportDTO)
         {
-            return new Sport(name: sportDTO.Name);
+            return new Sport(name: sportDTO.Name, encounterPlayerCount: (Domain.Fixture.EncounterPlayerCount)sportDTO.EncounterPlayerCount);
         }
     }
 }

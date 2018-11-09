@@ -28,7 +28,7 @@ namespace EirinDuran.Services.DTO_Mappers
                 Password = user.Password,
                 Mail = user.Mail,
                 IsAdmin = user.Role == Role.Administrator,
-                FollowedTeamsNames = user.FollowedTeams.Select(userFollowedTeam => userFollowedTeam.Name).ToList()
+                FollowedTeamsNames = user.FollowedTeams.Select(userFollowedTeam => userFollowedTeam.Name.ToString()).ToList()
             };
         }
 

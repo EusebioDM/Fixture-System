@@ -1,12 +1,13 @@
 using System.Collections.Generic;
+using System.Linq;
 using EirinDuran.IServices.DTOs;
-using EirinDuran.IServices.Interfaces;
 using EirinDuran.WebApi.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using EirinDuran.IServices.Exceptions;
+using EirinDuran.IServices.Services_Interfaces;
 using EirinDuran.WebApi.Models;
 
 namespace EirinDuran.WebApiTest
@@ -18,12 +19,20 @@ namespace EirinDuran.WebApiTest
         private UserDTO rodolfo;
         private SportDTO football;
         private SportDTO tennis;
+        private Mock<IEncounterQueryServices> encounterQueryServices;
+        private Mock<IEncounterSimpleServices> encounterServicesMock;
+        private Mock<ISportServices> sportServicesMock;
+        private Mock<IPositionsServices> positionServicesMock;
 
         [TestInitialize]
         public void SetUp()
         {
             football = new SportDTO() { Name = "Futbol" };
             tennis = new SportDTO() { Name = "Tenis" };
+            encounterQueryServices = new Mock<IEncounterQueryServices>();
+            encounterServicesMock = new Mock<IEncounterSimpleServices>();
+            sportServicesMock = new Mock<ISportServices>();
+            positionServicesMock = new Mock<IPositionsServices>();
 
             CreateUserMariano();
             CreateUserRodolfo();
@@ -58,11 +67,9 @@ namespace EirinDuran.WebApiTest
         [TestMethod]
         public void CreateSportOkSportsController()
         {
-            var sportServicesMock = new Mock<ISportServices>();
             sportServicesMock.Setup(s => s.CreateSport(It.IsAny<SportDTO>()));
-            var encounterServicesMock = new Mock<IEncounterServices>();
             ILoginServices login = new LoginServicesMock(mariano);
-
+            
             var httpContext = new DefaultHttpContext();
             httpContext.Request.Headers["Authorization"] = "";
 
@@ -70,7 +77,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object)
+            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -90,9 +97,7 @@ namespace EirinDuran.WebApiTest
         [TestMethod]
         public void CreateSportWithoutPermissionSportsController()
         {
-            var sportServicesMock = new Mock<ISportServices>();
             sportServicesMock.Setup(s => s.CreateSport(It.IsAny<SportDTO>())).Throws(new InsufficientPermissionException());
-            var encounterServicesMock = new Mock<IEncounterServices>();
             ILoginServices login = new LoginServicesMock(rodolfo);
 
             var httpContext = new DefaultHttpContext();
@@ -102,7 +107,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object)
+            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -119,9 +124,10 @@ namespace EirinDuran.WebApiTest
         [TestMethod]
         public void CreateSportAlreadyExistsSportsController()
         {
-            var sportServicesMock = new Mock<ISportServices>();
+            
             sportServicesMock.Setup(s => s.CreateSport(It.IsAny<SportDTO>())).Throws(new ServicesException());
-            var encounterServicesMock = new Mock<IEncounterServices>();
+            
+            
             ILoginServices login = new LoginServicesMock(rodolfo);
 
             var httpContext = new DefaultHttpContext();
@@ -131,7 +137,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object)
+            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -151,9 +157,10 @@ namespace EirinDuran.WebApiTest
             string name = "Tennis";
             var modelIn = new SportDTO() { Name = name };
 
-            var sportServicesMock = new Mock<ISportServices>();
+            
             sportServicesMock.Setup(s => s.DeleteSport(name));
-            var encounterServicesMock = new Mock<IEncounterServices>();
+            
+            
             
             ILoginServices loginServices = new LoginServicesMock(mariano);
 
@@ -164,7 +171,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(loginServices, sportServicesMock.Object, encounterServicesMock.Object)
+            var controller = new SportsController(loginServices, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -183,9 +190,10 @@ namespace EirinDuran.WebApiTest
             string name = "Water Polo";
             var modelIn = new SportDTO() { Name = name };
 
-            var sportServicesMock = new Mock<ISportServices>();
+            
             sportServicesMock.Setup(s => s.DeleteSport(name)).Throws(new ServicesException());
-            var encounterServicesMock = new Mock<IEncounterServices>();
+            
+            
 
             ILoginServices loginServices = new LoginServicesMock(mariano);
 
@@ -196,7 +204,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(loginServices, sportServicesMock.Object, encounterServicesMock.Object)
+            var controller = new SportsController(loginServices, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -214,9 +222,10 @@ namespace EirinDuran.WebApiTest
             string name = "Futbol";
             var modelIn = new SportDTO() { Name = name };
 
-            var sportServicesMock = new Mock<ISportServices>();
+            
             sportServicesMock.Setup(s => s.DeleteSport(name)).Throws(new InsufficientPermissionException());
-            var encounterServicesMock = new Mock<IEncounterServices>();
+            
+            
 
             ILoginServices loginServices = new LoginServicesMock(mariano);
 
@@ -227,7 +236,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(loginServices, sportServicesMock.Object, encounterServicesMock.Object)
+            var controller = new SportsController(loginServices, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -243,9 +252,10 @@ namespace EirinDuran.WebApiTest
         public void GetAllSportsOkSportsController()
         {
             var expectedSports = new List<SportDTO>() { football, tennis };
-            var sportServicesMock = new Mock<ISportServices>();
+            
             sportServicesMock.Setup(s => s.GetAllSports()).Returns(expectedSports);
-            var encounterServicesMock = new Mock<IEncounterServices>();
+            
+            var encounterQueryServicesMock = new Mock<IEncounterQueryServices>();
             
             ILoginServices login = new LoginServicesMock(mariano);
 
@@ -255,7 +265,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object)
+            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServicesMock.Object, positionServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -276,9 +286,10 @@ namespace EirinDuran.WebApiTest
             string sportName = "Futbol";
             EncounterDTO encounter = CreateAEncounter(sportName);
             var expectedEncounters = new List<EncounterDTO>() { encounter };
-            var encounterServicesMock = new Mock<IEncounterServices>();
-            var sportServicesMock = new Mock<ISportServices>();
-            encounterServicesMock.Setup(s => s.GetEncountersBySport(sportName)).Returns(expectedEncounters);
+            
+            var encounterQueryServicesMock = new Mock<IEncounterQueryServices>();
+            
+            encounterQueryServicesMock.Setup(s => s.GetEncountersBySport(sportName)).Returns(expectedEncounters);
             ILoginServices login = new LoginServicesMock(mariano);
 
             var httpContext = new DefaultHttpContext();
@@ -287,7 +298,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object)
+            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServicesMock.Object, positionServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -295,19 +306,19 @@ namespace EirinDuran.WebApiTest
             var obtainedResult = controller.GetEncounters(sportName) as ActionResult<List<EncounterModelOut>>;
             var val = obtainedResult.Value;
 
-            encounterServicesMock.Verify(e => e.GetEncountersBySport(sportName), Times.AtMostOnce);
+            encounterQueryServicesMock.Verify(e => e.GetEncountersBySport(sportName), Times.AtMostOnce);
             Assert.IsNotNull(obtainedResult);
             Assert.IsNotNull(obtainedResult.Value);
             Assert.AreEqual(encounter.Id, obtainedResult.Value[0].Id);
             Assert.AreEqual(encounter.SportName, obtainedResult.Value[0].SportName);
-            Assert.AreEqual(encounter.HomeTeamName, obtainedResult.Value[0].HomeTeamName);
-            Assert.AreEqual(encounter.AwayTeamName, obtainedResult.Value[0].AwayTeamName);
+            Assert.AreEqual(encounter.TeamIds.First(), obtainedResult.Value[0].TeamIds.First());
+            Assert.AreEqual(encounter.TeamIds.Last(), obtainedResult.Value[0].TeamIds.Last());
             Assert.AreEqual(encounter.DateTime, obtainedResult.Value[0].DateTime);
         }
 
         private EncounterDTO CreateAEncounter(string sportId)
         {
-            return new EncounterDTO() { SportName = sportId, AwayTeamName = "Manchester", HomeTeamName = "UsAtlanta" };
+            return new EncounterDTO() { SportName = sportId, TeamIds = new List<string>(){"Manchester","UsAtlanta" }};
         }
 
         [TestMethod]
@@ -316,9 +327,10 @@ namespace EirinDuran.WebApiTest
 
             string sportName = "Tennis";
             var expectedEncounters = new List<EncounterDTO>() { };
-            var encounterServicesMock = new Mock<IEncounterServices>();
-            var sportServicesMock = new Mock<ISportServices>();
-            encounterServicesMock.Setup(s => s.GetEncountersBySport(sportName)).Returns(expectedEncounters);
+            
+            var encounterQueryServicesMock = new Mock<IEncounterQueryServices>();
+            
+            encounterQueryServicesMock.Setup(s => s.GetEncountersBySport(sportName)).Returns(expectedEncounters);
             ILoginServices login = new LoginServicesMock(mariano);
 
             var httpContext = new DefaultHttpContext();
@@ -327,7 +339,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object)
+            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServicesMock.Object, positionServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -342,9 +354,10 @@ namespace EirinDuran.WebApiTest
         [TestMethod]
         public void GetSportsByNameOkSportsController()
         {
-            var sportServicesMock = new Mock<ISportServices>();
+            
             sportServicesMock.Setup(s => s.GetSport(football.Name)).Returns(football);
-            var encounterServicesMock = new Mock<IEncounterServices>();
+            
+            
 
             ILoginServices login = new LoginServicesMock(mariano);
 
@@ -354,7 +367,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object)
+            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -373,11 +386,12 @@ namespace EirinDuran.WebApiTest
         [TestMethod]
         public void GetEncountersBySportOkSportsController()
         {
-            var sportServicesMock = new Mock<ISportServices>();
-            var encounterServicesMock = new Mock<IEncounterServices>();
+            
+            
+            var encounterQueryServicesMock = new Mock<IEncounterQueryServices>();
             EncounterDTO encounter = CreateAEncounter(football.Name);
             List<EncounterDTO> encounters = new List<EncounterDTO>() { encounter };
-            encounterServicesMock.Setup(e => e.GetEncountersBySport(football.Name)).Returns(encounters);
+            encounterQueryServicesMock.Setup(e => e.GetEncountersBySport(football.Name)).Returns(encounters);
 
             ILoginServices login = new LoginServicesMock(mariano);
 
@@ -387,21 +401,21 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object)
+            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServicesMock.Object, positionServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
 
             var obtainedResult = controller.GetEncounters(football.Name) as ActionResult<List<EncounterModelOut>>;
-            encounterServicesMock.Verify(e => e.GetEncountersBySport(football.Name), Times.AtMostOnce);
+            encounterQueryServicesMock.Verify(e => e.GetEncountersBySport(football.Name), Times.AtMostOnce);
 
             Assert.IsNotNull(obtainedResult);
             Assert.IsNotNull(obtainedResult.Value);
             List<EncounterModelOut> encounterResult = obtainedResult.Value;
             Assert.AreEqual(encounter.Id, encounterResult[0].Id);
             Assert.AreEqual(encounter.SportName, encounterResult[0].SportName);
-            Assert.AreEqual(encounter.HomeTeamName, encounterResult[0].HomeTeamName);
-            Assert.AreEqual(encounter.AwayTeamName, encounterResult[0].AwayTeamName);
+            Assert.AreEqual(encounter.TeamIds.First(), encounterResult[0].TeamIds.First());
+            Assert.AreEqual(encounter.TeamIds.Last(), encounterResult[0].TeamIds.Last());
             Assert.AreEqual(encounter.DateTime, encounterResult[0].DateTime);
         }
     }

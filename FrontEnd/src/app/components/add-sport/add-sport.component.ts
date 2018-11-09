@@ -30,11 +30,18 @@ export class AddSportComponent implements OnInit {
       name: ['',
         Validators.required
       ],
+      encounterPlayerCount: ['',
+        Validators.required
+      ]
     });
   }
 
   get name() {
     return this.addSportForm.get('name');
+  }
+
+  get encounterPlayerCount() {
+    return this.addSportForm.get('encounterPlayerCount');
   }
 
   submit() {

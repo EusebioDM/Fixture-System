@@ -19,10 +19,15 @@
       <td mat-cell *matCellDef="let aSport"> {{aSport.name}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="encounterPlayerCount">
+      <th mat-header-cell *matHeaderCellDef> Cantidad de Equipos </th>
+      <td mat-cell *matCellDef="let aSport"> {{aSport.encounterPlayerCount}} </td>
+    </ng-container>
+
     <ng-container matColumnDef="actionDelete">
       <th mat-header-cell *matHeaderCellDef> Borrar </th>
-      <td mat-cell *matCellDef="let aSport"> <button mat-mini-fab color="warn" (click)="onDelete(aSport.name)">
-          <mat-icon class="icon">delete_outline</mat-icon>
+      <td mat-cell *matCellDef="let aSport"> <button mat-button (click)="onDelete(aSport.name)">
+          <mat-icon color="warn" class="icon">delete_outline</mat-icon>
         </button> </td>
     </ng-container>
 

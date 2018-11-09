@@ -32,10 +32,10 @@ export class TeamsService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.teamsUrl, requestOptions)
+    return this.httpService.get(this.teamsUrl + '/' + id, requestOptions)
       .pipe(
-        map((response: Response) => <Team>response.json().find((team: Team) => team.name = id)),
-        tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
+        map((response: Response) => <Team>response.json()),
+        tap(data => console.log('Obtained team: ' + JSON.stringify(data))),
         catchError(this.handleError)
       );
   }

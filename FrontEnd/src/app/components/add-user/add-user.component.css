@@ -1,10 +1,10 @@
 .addUser-container {
     min-width: 300px;
-    /*max-width: 500px;*/
     width: 100%;
     display: flex;
     flex-direction: column;
   }
+  
 .addUser-container mat-form-field {
   width: 300px;
   margin-bottom: 20px;

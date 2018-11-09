@@ -20,7 +20,7 @@ export class SportsComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['sportName', 'actionDelete'];
+  displayedColumns: string[] = ['sportName', 'encounterPlayerCount', 'actionDelete'];
   dataSource;
   searchKey: string;
   sports: Array<Sport>;
@@ -59,7 +59,7 @@ export class SportsComponent implements OnInit {
     const dialogRef = this.dialog.open(AddSportComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(
       ((sport: Sport) => {
-        if (sport !== undefined) {
+        if (sport) {
           this.sports.push(sport);
           this.loadTableDataSource();
         }

@@ -1,8 +1,13 @@
 export class Encounter {
     id: string;
+    dateTime: string;
+    teamsIds: Array<string>;
     sportName: string;
-    logo: string;
 
-    constructor(id: string, dateTime: string, sportName: string, homeTeamName: string, AwayTeamName: string, ) {
+    constructor(id: string, dateTime: string, teamsIds: Array<string>, sportName: string) {
+        this.id = id;
+        this.dateTime = dateTime;
+        this.teamsIds = teamsIds;
+        this.sportName = sportName;
     }
 }

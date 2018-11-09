@@ -20,6 +20,11 @@ namespace EirinDuran.DomainTest
         private Team river;
         private List<Team> teams;
         private Sport futbol;
+        private Sport sailing;
+        private Team redBull;
+        private Team azzurra;
+        private Team aleph;
+        private Team artemis;
 
         [TestMethod]
         public void CreateEncounterTest()
@@ -73,15 +78,31 @@ namespace EirinDuran.DomainTest
             Assert.AreEqual(DateTime.Now.Hour, comment.TimeStamp.Hour);
         }
 
+        [TestMethod]
+        public void MoreThan2PlayersEncounterTest()
+        {
+            Encounter encounter = new Encounter(sailing, new List<Team>(){azzurra, redBull, artemis, aleph}, new DateTime(3000,10,10));
+            
+            Assert.IsTrue(encounter.Teams.Contains(redBull));
+            Assert.IsTrue(encounter.Teams.Contains(azzurra));
+            Assert.IsTrue(encounter.Teams.Contains(artemis));
+            Assert.IsTrue(encounter.Teams.Contains(aleph));
+        }
+        
         [TestInitialize]
         public void TestInit()
         {
             fechaMenor = new DateTime(3000, 1, 20, 1, 1, 1);
             fechaMayor = new DateTime(3000, 1, 21, 1, 1, 1);
             futbol = new Sport("Futbol");
+            sailing = new Sport("Sailing", EncounterPlayerCount.MoreThanTwoPlayers);
             boca = CreateBocaTeam();
             river = CreateTeamThatBelongsInTheB();
             teams = new List<Team>() { boca, river };
+            redBull = new Team("RedBull", sailing);
+            azzurra = new Team("Azzurra", sailing);
+            aleph = new Team("Aleph", sailing);
+            artemis = new Team("Artemis", sailing);
         }
 
         private Team CreateBocaTeam()

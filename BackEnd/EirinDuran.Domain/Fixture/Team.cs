@@ -5,11 +5,9 @@ namespace EirinDuran.Domain.Fixture
 {
     public class Team
     {
-        public string Name { get => name; set => SetNameIfValid(value); }
-        private string name;
+        public Name Name { get; set; }
         public Sport Sport { get; set; }
         public Image Logo { get; set; }
-        private StringValidator validator;
 
         public Team()
         {
@@ -18,7 +16,6 @@ namespace EirinDuran.Domain.Fixture
 
         public Team(string name, Sport sport) : this()
         {
-            validator = new StringValidator();
             Name = name;
             Sport = sport;
         }
@@ -34,19 +31,9 @@ namespace EirinDuran.Domain.Fixture
             Logo = logo;
         }
 
-        private void SetNameIfValid(string value)
-        {
-            bool valid = validator.ValidateNotNullOrEmptyString(value);
-            if (!valid)
-                throw new EmptyFieldException("Name");
-            else
-                name = value;
-        }
-
         public override bool Equals(object obj)
         {
-            Team other = obj as Team;
-            return other != null &&
+            return obj is Team other &&
                    Name == other.Name &&
                    Sport.Equals(other.Sport);
         }

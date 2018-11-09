@@ -1,5 +1,6 @@
 ﻿using EirinDuran.IServices.DTOs;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace EirinDuran.WebApi.Models
@@ -11,16 +12,13 @@ namespace EirinDuran.WebApi.Models
         [Required]
         public DateTime DateTime { get; set; }
         [Required]
-        public string HomeTeamName { get; set; }
-        [Required]
-        public string AwayTeamName { get; set; }
+        public ICollection<string> TeamIds { get; set; }
         [Required]
         public string SportName { get; set; }
 
         public override bool Equals(object obj)
         {
-            var @in = obj as EncounterModelIn;
-            return @in != null &&
+            return obj is EncounterModelIn @in &&
                    Id.Equals(@in.Id);
         }
 
@@ -35,8 +33,7 @@ namespace EirinDuran.WebApi.Models
             {
                 Id = Id,
                 DateTime = DateTime,
-                HomeTeamName = HomeTeamName,
-                AwayTeamName = AwayTeamName,
+                TeamIds =  TeamIds,
                 SportName = SportName
             };
         }

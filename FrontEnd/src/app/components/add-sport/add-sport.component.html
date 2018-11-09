@@ -1,5 +1,5 @@
 <form [formGroup]="addSportForm">
-  
+  <div class="addSport-container">
     <mat-form-field>
       <input matInput name="name" placeholder="Nombre del deporte" formControlName="name" required>
       <mat-error *ngIf="name.errors?.required">
@@ -7,12 +7,22 @@
       </mat-error>
     </mat-form-field>
 
-  <mat-dialog-actions align="end">
-    <button mat-button color="warn" mat-dialog-close>Cancelar</button>
-    <button mat-button color="primary" cdkFocusInitial [disabled]="addSportForm.invalid"
-      (click)="submit()">Agregar</button>
-  </mat-dialog-actions>
+    <mat-form-field>
+      <mat-select name="encounterPlayerCount" placeholder="Cantidad de equipos" formControlName="encounterPlayerCount"
+        required>
+        <mat-option value="TwoPlayers">Dos Jugadores</mat-option>
+        <mat-option value="MoreThanTwoPlayers">Más de dos Jugadores</mat-option>
+      </mat-select>
+      <mat-error *ngIf="encounterPlayerCount.errors?.required">
+        La cantidad de equipos <strong>requerida</strong>
+      </mat-error>
+    </mat-form-field>
 
+    <mat-dialog-actions align="end">
+      <button mat-button color="warn" mat-dialog-close>Cancelar</button>
+      <button mat-button color="primary" cdkFocusInitial [disabled]="addSportForm.invalid" (click)="submit()">Agregar</button>
+    </mat-dialog-actions>
+  </div>
 </form>
 
 <br>

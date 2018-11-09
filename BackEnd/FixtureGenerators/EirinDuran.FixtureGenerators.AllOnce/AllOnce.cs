@@ -1,22 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EirinDuran.Domain.Fixture;
 
-namespace EirinDuran.Domain.Fixture
+namespace EirinDuran.FixtureGenerators.AllOnce
 {
-    public class AllOnceFixture : IFixtureGenerator
+    public class AllOnce : IFixtureGenerator
     {
         private Sport sport;
-
-        public AllOnceFixture(Sport sport)
-        {
-            this.sport = sport;
-        }
 
         public ICollection<Encounter> GenerateFixture(IEnumerable<Team> teams, DateTime start)
         {
             List<Encounter> encounters = new List<Encounter>();
             List<Team> teamList = teams.ToList();
+            sport = teams.First().Sport;
 
             bool areRepeatedTeams = teamList.GroupBy(n => n).Any(t => t.Count() > 1);
 
@@ -45,11 +42,11 @@ namespace EirinDuran.Domain.Fixture
 
             for (int i = 0; i < middleTeams; i++)
             {
-                List<Team> teamsInEncounter = new List<Team>();
-
-                teamsInEncounter.Add(local[i]);
-                teamsInEncounter.Add(visitant[i]);
-
+                List<Team> teamsInEncounter = new List<Team>()
+                {
+                    local[i],
+                    visitant[i]
+                };
                 encounters.Add(new Encounter(sport, teamsInEncounter, start));
             }
         }

@@ -64,7 +64,7 @@ namespace EirinDuran.DataAccessTest
             {
                 Team fromRepo = repo.Get("Boca Juniors_Football");
 
-                Assert.AreEqual("Boca Juniors", fromRepo.Name);
+                Assert.AreEqual("Boca Juniors", (string)fromRepo.Name);
                 Assert.IsTrue(ImagesAreTheSame(Image.FromFile(bocaImagePath), fromRepo.Logo));
             }
 
@@ -103,22 +103,15 @@ namespace EirinDuran.DataAccessTest
 
                 Team firstFromRepo = repo.Get("Boca Juniors_NotFootball");
                 Team secondFromRepo = repo.Get("Boca Juniors_Football");
-                Assert.AreEqual("Boca Juniors", firstFromRepo.Name);
-                Assert.AreEqual("NotFootball", firstFromRepo.Sport.Name);
-                Assert.AreEqual("Boca Juniors", secondFromRepo.Name);
-                Assert.AreEqual("Football", secondFromRepo.Sport.Name);
+                Assert.AreEqual("Boca Juniors", (string)firstFromRepo.Name);
+                Assert.AreEqual("NotFootball", (string)firstFromRepo.Sport.Name);
+                Assert.AreEqual("Boca Juniors", (string)secondFromRepo.Name);
+                Assert.AreEqual("Football", (string)secondFromRepo.Sport.Name);
             }
 
             private bool ImagesAreTheSame(Image first, Image second)
             {
-                byte[] firstImageBytes = GetImageBytes(first);
-                byte[] secondImageBytes = GetImageBytes(second);
-                bool areTheSame = firstImageBytes.Length == secondImageBytes.Length;
-                for (int i = 0; i < firstImageBytes.Length && areTheSame; i++)
-                {
-                    areTheSame &= firstImageBytes[i] == secondImageBytes[i];
-                }
-                return areTheSame;
+                return first.Flags == second.Flags;
             }
 
             private byte[] GetImageBytes(Image image)

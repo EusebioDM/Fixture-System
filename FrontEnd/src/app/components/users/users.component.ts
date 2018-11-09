@@ -21,7 +21,7 @@ export class UsersListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['userName', 'name', 'surname', 'mail', 'btnModify', 'btnDelete'];
+  displayedColumns: string[] = ['userName', 'name', 'surname', 'mail', 'role', 'btnModify', 'btnDelete'];
   dataSource;
   searchKey: string;
 
@@ -87,7 +87,7 @@ export class UsersListComponent implements OnInit {
     dialogConfig.autoFocus = true;
     const dialogRef = this.dialog.open(YesNoDialogComponent, dialogConfig);
     dialogRef.componentInstance.title = 'Borrar usuario...';
-    dialogRef.componentInstance.message = '¿Está seguro que quiere borrar al usuario ' + id + ' y todos los datos asociados a éste.';
+    dialogRef.componentInstance.message = '¿Está seguro que quiere borrar al usuario ' + id + ' y todos los datos asociados a éste?';
 
     dialogRef.afterClosed().subscribe(
       ((result) => {

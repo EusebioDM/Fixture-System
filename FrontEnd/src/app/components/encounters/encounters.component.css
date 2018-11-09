@@ -1,0 +1,27 @@
+table {
+    margin: 0 auto;
+    margin-top: 10px;
+    width: 90%;
+    size: 90%;
+    align-content: center;
+ }
+
+ .search-div {
+    margin: 0px auto;
+    margin-left: 5%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    align-content: center;
+ }
+
+ .search-form-field {
+     margin-left: 10px;
+ }
+
+ .mat-elevation-z8 {
+    margin: 0 auto;
+    margin-top: 10px;
+    width: 90%;
+    size: 90%;
+    align-content: center;
+ }
