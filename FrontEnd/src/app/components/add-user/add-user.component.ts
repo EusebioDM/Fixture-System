@@ -34,9 +34,9 @@ export class AddUserComponent implements OnInit {
     this.addUserForm = this.formBuilder.group({
       userName: ['',
         // null,
-        Validators.required // ,
+        Validators.required,
         // this.noWhitespaceValidator
-        // uniqueUsernameValidator(this.usersService) // async
+       uniqueUsernameValidator(this.usersService) // async
       ],
       name: ['',
         Validators.required

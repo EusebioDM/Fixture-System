@@ -42,7 +42,7 @@
 
     <ng-container matColumnDef="btnModify">
       <th mat-header-cell *matHeaderCellDef> Modificar </th>
-      <td mat-cell *matCellDef="let aUser"> <button  mat-button (click)="openDialogModifyUser(aUser)">
+      <td mat-cell *matCellDef="let aUser"> <button mat-button (click)="openDialogModifyUser(aUser)">
           <mat-icon class="icon" color="primary">edit</mat-icon>
         </button> </td>
     </ng-container>
@@ -55,13 +55,13 @@
     </ng-container>
 
     <ng-container matColumnDef="loading">
-      <mat-footer-cell *matFooterCellDef colspan="6">
+      <mat-footer-cell *matFooterCellDef colspan="7">
         Cargando datos...
       </mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="noData">
-      <mat-footer-cell *matFooterCellDef colspan="6">
+      <mat-footer-cell *matFooterCellDef colspan="7">
         No hay datos.
       </mat-footer-cell>
     </ng-container>

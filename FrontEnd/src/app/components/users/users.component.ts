@@ -46,7 +46,7 @@ export class UsersListComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.filterPredicate = (data, filter) => {
       return this.displayedColumns.some(ele => {
-        return ele !== 'btnModify' && ele !== 'btnDelete' && data[ele].toLowerCase().indexOf(filter) !== -1;
+        return ele !== 'role' && ele !== 'btnModify' && ele !== 'btnDelete' && data[ele].toLowerCase().indexOf(filter) !== -1;
       });
     };
   }
