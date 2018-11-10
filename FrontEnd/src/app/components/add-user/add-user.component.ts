@@ -1,11 +1,12 @@
 import { Component, OnInit, EventEmitter, Output, Inject } from '@angular/core';
 import { UsersService } from '../../services/users.service';
 import { User } from '../../classes/user';
-import { FormBuilder, FormGroup, Validators, FormControl, FormGroupDirective, NgForm, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
 import { compareValidator } from 'src/app/shared/compare-validator.directive';
 import { uniqueUsernameValidator } from 'src/app/shared/unique-username-validator.directive';
-import { ErrorStateMatcher, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { UsersListComponent } from '../users/users.component';
+import { InstantErrorStateMatcher } from 'src/app/shared/instant-error-state-matcher';
 
 @Component({
   selector: 'app-add-user',
@@ -21,51 +22,13 @@ export class AddUserComponent implements OnInit {
     private usersService: UsersService
   ) { }
 
-  addUserForm: FormGroup;
-  error: string;
-
-  @Output() usersToParent = new EventEmitter<User>();
-
-  ngOnInit() {
-    this.createAddUserForm();
-  }
-
-  createAddUserForm() {
-    this.addUserForm = this.formBuilder.group({
-      userName: ['',
-        // null,
-        Validators.required,
-        // this.noWhitespaceValidator
-        uniqueUsernameValidator(this.usersService) // async
-      ],
-      name: ['',
-        Validators.required
-      ],
-      surname: ['',
-        Validators.required
-      ],
-      mail: ['',
-        Validators.email
-      ],
-      password: ['',
-        Validators.required
-      ],
-      passwordConfirm: ['',
-        compareValidator('password')
-      ],
-      role: ['',
-        Validators.required
-      ],
-    });
-  }
-
   /*
-  public noWhitespaceValidator(control: FormControl) {
+  public noWhitespaceValidator(control: AbstractControl): ValidationErrors | null {
     const isWhitespace = (control.value || '').trim().length === 0;
     const isValid = !isWhitespace;
     return isValid ? null : { 'whitespace': true };
   }
-  */
+*/
 
   get userName() {
     return this.addUserForm.get('userName');
@@ -95,23 +58,54 @@ export class AddUserComponent implements OnInit {
     return this.addUserForm.get('role');
   }
 
+  addUserForm: FormGroup;
+  error: string;
+
+  @Output() usersToParent = new EventEmitter<User>();
+
+  matcher = new InstantErrorStateMatcher();
+
+  ngOnInit() {
+    this.createAddUserForm();
+  }
+
+  createAddUserForm() {
+    this.addUserForm = this.formBuilder.group({
+      userName: ['',
+        // null,
+        Validators.required,
+        // this.noWhitespaceValidator,
+        uniqueUsernameValidator(this.usersService) // async
+      ],
+      name: ['',
+        Validators.required
+      ],
+      surname: ['',
+        Validators.required
+      ],
+      mail: ['',
+        Validators.email
+      ],
+      password: ['',
+        Validators.required
+      ],
+      passwordConfirm: ['',
+        compareValidator('password')
+      ],
+      role: ['',
+        Validators.required
+      ],
+    });
+  }
+
   public submit() {
     const user = this.addUserForm.value;
     this.usersService.addUser(user).subscribe(
-      ((result: User) => {
+      (() => {
         console.log('El nombre del usuario desde el add-user es: ' + user.userName);
         this.dialogRef.close(user);
       }),
-      err => this.error = 'Error al agregar usuario'
+      (error) => this.error = error
     );
-  }
-
-  matcher = new MyErrorStateMatcher();
-}
-
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
 }

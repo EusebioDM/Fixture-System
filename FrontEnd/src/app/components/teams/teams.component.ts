@@ -67,8 +67,9 @@ export class TeamsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       ((team: Team) => {
         if (team) {
-          this.teams.push(team);
-          this.loadTableDataSource();
+          // this.teams.push(team);
+          // this.loadTableDataSource();
+          this.ngOnInit();
         }
       })
     );

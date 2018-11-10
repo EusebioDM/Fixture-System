@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, PipeTransform, Pipe } from '@angular/core';
 import { User } from '../../classes/user';
 import { UsersService } from '../../services/users.service';
 import { MatTableDataSource, MatPaginator, MatDialog, MatSort, MatDialogConfig } from '@angular/material';
@@ -128,6 +128,17 @@ export class UsersListComponent implements OnInit {
 
   onRowClicked(row) {
     console.log('Row clicked: ', row);
+  }
+}
+
+@Pipe({ name: 'userType' })
+export class UserTypePipe implements PipeTransform {
+  transform(isAdmin: boolean): string {
+    if (isAdmin) {
+      return 'Administrador';
+    } else {
+      return 'Seguidor';
+    }
   }
 }
 

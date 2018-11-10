@@ -10,10 +10,10 @@ import { AuthGuard } from './services/auth.guard';
 import { RoleGuardService } from './services/role.guard.service';
 import { HttpClientModule } from '@angular/common/http';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
-import { UsersListComponent } from './components/users/users.component';
+import { UsersListComponent, UserTypePipe } from './components/users/users.component';
 import { UsersService } from './services/users.service';
 import { HttpModule } from '@angular/http';
-import { SportsComponent } from './components/sports/sports.component';
+import { SportsComponent, SportPlayersPipe } from './components/sports/sports.component';
 import { TeamsComponent } from './components/teams/teams.component';
 import { EncountersComponent } from './components/encounters/encounters.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
@@ -26,14 +26,13 @@ import { CompareValidatorDirective } from './shared/compare-validator.directive'
 import { UniqueUsernameValidatorDirective } from './shared/unique-username-validator.directive';
 import { MaterialModule } from './material/material.module';
 
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WelcomeNavComponent } from './components/welcome-nav/welcome-nav.component';
 import { AddSportComponent } from './components/add-sport/add-sport.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.component';
 import { ModifyTeamComponent } from './components/modify-team/modify-team.component';
-import { LoginRedirectService } from './services/login.redirect.service';
+
 
 
 export function tokenGetter() {
@@ -130,7 +129,9 @@ const appRoutes: Routes = [
     AddSportComponent,
     NotFoundComponent,
     YesNoDialogComponent,
-    ModifyTeamComponent
+    ModifyTeamComponent,
+    UserTypePipe,
+    SportPlayersPipe
   ],
   entryComponents: [
     AddUserComponent,

@@ -37,7 +37,7 @@
 
     <ng-container matColumnDef="role">
       <th mat-header-cell *matHeaderCellDef> Rol </th>
-      <td mat-cell *matCellDef="let aUser"> {{aUser.isAdmin}} </td>
+      <td mat-cell *matCellDef="let aUser"> {{aUser.isAdmin | userType}} </td>
     </ng-container>
 
     <ng-container matColumnDef="btnModify">

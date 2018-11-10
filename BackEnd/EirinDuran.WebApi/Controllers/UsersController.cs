@@ -58,7 +58,8 @@ namespace EirinDuran.WebApi.Controllers
             }
             catch (ServicesException e)
             {
-                return NotFound(e.Message);
+                return null;
+               // return NotFound(e.Message);
             }
         }
 

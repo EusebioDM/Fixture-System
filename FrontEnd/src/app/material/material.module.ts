@@ -35,6 +35,7 @@ import * as Material from '@angular/material';
     Material.MatTableModule,
     Material.MatSortModule,
     Material.MatPaginatorModule,
+    Material.MatNativeDateModule
   ],
   exports: [
     CommonModule,
@@ -69,6 +70,7 @@ import * as Material from '@angular/material';
     Material.MatTableModule,
     Material.MatSortModule,
     Material.MatPaginatorModule,
+    Material.MatNativeDateModule
   ],
   providers: [
     { provide: Material.MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } },

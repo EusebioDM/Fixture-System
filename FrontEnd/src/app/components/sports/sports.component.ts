@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, PipeTransform, Pipe } from '@angular/core';
 import { SportsService } from 'src/app/services/sports.service';
 import { Sport } from 'src/app/classes/sport';
 import { MatTableDataSource, MatPaginator, MatDialogConfig, MatDialog, MatSort, MAT_DIALOG_DATA } from '@angular/material';
@@ -26,6 +26,10 @@ export class SportsComponent implements OnInit {
   sports: Array<Sport>;
 
   ngOnInit() {
+    this.getData();
+  }
+
+  private getData() {
     this.sportsService.getSports().subscribe(
       ((data: Array<Sport>) => this.result(data)),
       ((error: any) => console.log(error))
@@ -60,8 +64,7 @@ export class SportsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       ((sport: Sport) => {
         if (sport) {
-          this.sports.push(sport);
-          this.loadTableDataSource();
+          this.getData();
         }
       })
     );
@@ -78,24 +81,22 @@ export class SportsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       ((result) => {
         if (result) {
-          this.sportsService.deleteSport(sportId).subscribe();
-          this.updateDataSource(sportId);
+          this.sportsService.deleteSport(sportId).subscribe(
+            () => { this.getData(); }
+          );
         }
       })
     );
   }
+}
 
-  private updateDataSource(id: string) {
-
-    let sp;
-    this.dataSource.data.forEach(sport => {
-      if (sport.name === id) {
-        sp = sport;
-      }
-    });
-
-    this.dataSource.data.splice(this.dataSource.data.indexOf(sp), 1);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+@Pipe({ name: 'sportPlayers' })
+export class SportPlayersPipe implements PipeTransform {
+  transform(sportPlayers: string): string {
+    if (sportPlayers === 'TwoPlayers') {
+      return 'Dos Jugadores';
+    } else {
+      return 'Más de dos Jugadores';
+    }
   }
 }

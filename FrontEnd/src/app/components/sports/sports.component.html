@@ -21,7 +21,7 @@
 
     <ng-container matColumnDef="encounterPlayerCount">
       <th mat-header-cell *matHeaderCellDef> Cantidad de Equipos </th>
-      <td mat-cell *matCellDef="let aSport"> {{aSport.encounterPlayerCount}} </td>
+      <td mat-cell *matCellDef="let aSport"> {{aSport.encounterPlayerCount | sportPlayers}} </td>
     </ng-container>
 
     <ng-container matColumnDef="actionDelete">

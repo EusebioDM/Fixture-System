@@ -6,6 +6,7 @@ import { Team } from 'src/app/classes/team';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { TeamsComponent } from '../teams/teams.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { InstantErrorStateMatcher } from 'src/app/shared/instant-error-state-matcher';
 
 @Component({
   selector: 'app-add-team',
@@ -14,12 +15,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class AddTeamComponent implements OnInit {
 
-  name: string;
-  sportName: string;
+  // name: string;
+  // sportName: string;
+
   logo: string;
-
   selectedFile;
-
   sports: Array<Sport>;
 
   constructor(
@@ -31,12 +31,14 @@ export class AddTeamComponent implements OnInit {
   ) { }
 
   addTeamForm: FormGroup;
+  matcher = new InstantErrorStateMatcher();
 
   ngOnInit() {
     this.sportsService.getSports().subscribe(
       ((data: Array<Sport>) => this.result(data)),
       ((error: any) => console.log(error))
     );
+    console.log('entré a add team!');
     this.createAddTeamForm();
   }
 
@@ -55,7 +57,7 @@ export class AddTeamComponent implements OnInit {
       ]
     });
   }
-  /*
+
   get name() {
     return this.addTeamForm.get('name');
   }
@@ -63,7 +65,6 @@ export class AddTeamComponent implements OnInit {
   get sportName() {
     return this.addTeamForm.get('sportName');
   }
-  */
 
   onFileSelected(event) {
     this.selectedFile = event.target.files[0];
@@ -80,12 +81,9 @@ export class AddTeamComponent implements OnInit {
   }
 
   public submit() {
-    const teamName = this.addTeamForm.value.name;
-    const sportName = this.addTeamForm.value.sportName;
+    const team = this.addTeamForm.value;
+    team.logo = this.logo;
 
-    console.log('El nombre del equipo es: ' + teamName + ' el deporte del equipo ' + sportName);
-
-    const team = new Team(this.name, this.sportName, this.logo);
     this.teamsService.addTeam(team).subscribe(
       ((result: Team) => {
         this.dialogRef.close(team);

@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SportsComponent } from '../sports/sports.component';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Sport } from 'src/app/classes/sport';
+import { InstantErrorStateMatcher } from 'src/app/shared/instant-error-state-matcher';
 
 @Component({
   selector: 'app-add-sport',
@@ -20,6 +21,8 @@ export class AddSportComponent implements OnInit {
   ) { }
 
   addSportForm: FormGroup;
+
+  matcher = new InstantErrorStateMatcher();
 
   ngOnInit() {
     this.createAddSportForm();

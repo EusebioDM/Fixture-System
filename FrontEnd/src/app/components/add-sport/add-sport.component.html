@@ -1,7 +1,8 @@
 <form [formGroup]="addSportForm">
   <div class="addSport-container">
     <mat-form-field>
-      <input matInput name="name" placeholder="Nombre del deporte" formControlName="name" required>
+      <input matInput name="name" placeholder="Nombre del deporte" formControlName="name" required
+      [errorStateMatcher]="matcher">
       <mat-error *ngIf="name.errors?.required">
         El deporte es <strong>requerido</strong>
       </mat-error>
@@ -9,7 +10,7 @@
 
     <mat-form-field>
       <mat-select name="encounterPlayerCount" placeholder="Cantidad de equipos" formControlName="encounterPlayerCount"
-        required>
+        required [errorStateMatcher]="matcher">
         <mat-option value="TwoPlayers">Dos Jugadores</mat-option>
         <mat-option value="MoreThanTwoPlayers">Más de dos Jugadores</mat-option>
       </mat-select>

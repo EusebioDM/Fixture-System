@@ -51,6 +51,16 @@ export class TeamsService {
     );
   }
 
+  updateTeam(team: Team): Observable<any> {
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+    return this.httpService.put(this.teamsUrl + '/' + team.name + '_' + team.sportName, team, requestOptions).pipe(
+      tap(_ => console.log(`updated team id=${team.name + '_' + team.sportName}`)),
+      catchError(this.handleError)
+    );
+  }
+
   deleteTeam(id: string) {
     const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');

@@ -69,6 +69,11 @@
     </mat-dialog-actions>
 </form>
 <br>
+
+<mat-error *ngIf="error">
+    {{error}}
+</mat-error>
+
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">Form status: {{addUserForm.status}}</h5>
