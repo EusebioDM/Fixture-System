@@ -32,6 +32,7 @@ import { AddSportComponent } from './components/add-sport/add-sport.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.component';
 import { ModifyTeamComponent } from './components/modify-team/modify-team.component';
+import { LogsComponent } from './components/logs/logs.component';
 
 
 
@@ -72,6 +73,14 @@ const appRoutes: Routes = [
   {
     path: 'encounters',
     component: EncountersComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      expectedRole: 'Administrator'
+    }
+  },
+  {
+    path: 'logs',
+    component: LogsComponent,
     canActivate: [RoleGuardService],
     data: {
       expectedRole: 'Administrator'
@@ -131,7 +140,8 @@ const appRoutes: Routes = [
     YesNoDialogComponent,
     ModifyTeamComponent,
     UserTypePipe,
-    SportPlayersPipe
+    SportPlayersPipe,
+    LogsComponent
   ],
   entryComponents: [
     AddUserComponent,
