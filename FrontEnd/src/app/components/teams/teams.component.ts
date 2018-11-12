@@ -88,7 +88,8 @@ export class TeamsComponent implements OnInit {
       ((result) => {
         if (result) {
           this.teamsService.deleteTeam(teamName + '_' + sportId).subscribe();
-          this.updateDataSource(teamName + '_' + sportId);
+          // this.updateDataSource(teamName + '_' + sportId);
+          this.ngOnInit();
         }
       })
     );

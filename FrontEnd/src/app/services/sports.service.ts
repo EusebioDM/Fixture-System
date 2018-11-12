@@ -3,6 +3,7 @@ import { Sport } from '../classes/sport';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable, throwError } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
+import { Encounter } from '../classes/encounter';
 
 @Injectable({
   providedIn: 'root'
@@ -55,8 +56,20 @@ export class SportsService {
     const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
-    console.log(this.sportsUrl + id);
     return this.httpService.delete(this.sportsUrl + '/' + id, requestOptions);
+  }
+
+  getEncountersBySport(sportId: string): Observable<Array<Encounter>> {
+    const myHeaders = new Headers();
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+
+    return this.httpService.get(this.sportsUrl + sportId + '/encounters', requestOptions)
+      .pipe(
+        map((response: Response) => <Array<Encounter>>response.json()),
+        tap(data => console.log('Obtained sport: ' + JSON.stringify(data))),
+        catchError(this.handleError)
+      );
   }
 
   private handleError(error: Response) {

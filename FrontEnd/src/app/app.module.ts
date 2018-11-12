@@ -15,7 +15,7 @@ import { UsersService } from './services/users.service';
 import { HttpModule } from '@angular/http';
 import { SportsComponent, SportPlayersPipe } from './components/sports/sports.component';
 import { TeamsComponent } from './components/teams/teams.component';
-import { EncountersComponent } from './components/encounters/encounters.component';
+import { EncountersComponent, ListToSingleString } from './components/encounters/encounters.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { ModifyUserComponent } from './components/modify-user/modify-user.component';
 import { AddTeamComponent } from './components/add-team/add-team.component';
@@ -33,6 +33,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.component';
 import { ModifyTeamComponent } from './components/modify-team/modify-team.component';
 import { LogsComponent } from './components/logs/logs.component';
+import { AddEncounterComponent } from './components/add-encounter/add-encounter.component';
 
 
 
@@ -141,7 +142,9 @@ const appRoutes: Routes = [
     ModifyTeamComponent,
     UserTypePipe,
     SportPlayersPipe,
-    LogsComponent
+    ListToSingleString,
+    LogsComponent,
+    AddEncounterComponent
   ],
   entryComponents: [
     AddUserComponent,
@@ -149,7 +152,8 @@ const appRoutes: Routes = [
     AddTeamComponent,
     ModifyUserComponent,
     ModifyTeamComponent,
-    YesNoDialogComponent
+    YesNoDialogComponent,
+    AddEncounterComponent
   ],
   imports: [
     MaterialModule,

@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Pipe, PipeTransform } from '@angular/core';
 import { EncountersService } from 'src/app/services/encounters.service';
-import { MatSort, MatPaginator, MatTableDataSource } from '@angular/material';
+import { MatSort, MatPaginator, MatTableDataSource, MatDialogConfig, MatDialog } from '@angular/material';
 import { Encounter } from 'src/app/classes/encounter';
 import { Sport } from 'src/app/classes/sport';
 import { SportsService } from 'src/app/services/sports.service';
 import { TeamsService } from 'src/app/services/teams.service';
 import { Team } from 'src/app/classes/team';
+import { AddEncounterComponent } from '../add-encounter/add-encounter.component';
 
 @Component({
   selector: 'app-encounters',
@@ -17,7 +18,8 @@ export class EncountersComponent implements OnInit {
   constructor(
     private sportsService: SportsService,
     private teamsService: TeamsService,
-    private encountersService: EncountersService
+    private encountersService: EncountersService,
+    private dialog: MatDialog
   ) { }
 
   @ViewChild(MatSort) sort: MatSort;
@@ -68,4 +70,31 @@ export class EncountersComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
+  onInsert() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(AddEncounterComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(
+      ((/*user: User*/) => {
+        // if (user) {
+          // this.getData();
+       // }
+      })
+    );
+  }
+}
+
+@Pipe({ name: 'listToSingleString' })
+export class ListToSingleString implements PipeTransform {
+  transform(teamsIds: Array<string>): string {
+    let singleStringTeams = '';
+    teamsIds.forEach(teamId => {
+      const teamName = teamId.split('_');
+      singleStringTeams += teamName[0] + ' - ';
+    });
+
+    return singleStringTeams;
+  }
 }

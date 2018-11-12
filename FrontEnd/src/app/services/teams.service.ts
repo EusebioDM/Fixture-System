@@ -3,6 +3,7 @@ import { Team } from '../classes/team';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable, throwError } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
+import { Encounter } from '../classes/encounter';
 
 @Injectable({
   providedIn: 'root'
@@ -67,6 +68,19 @@ export class TeamsService {
     const requestOptions = new RequestOptions({ headers: myHeaders });
     console.log(this.teamsUrl + id);
     return this.httpService.delete(this.teamsUrl + '/' + id, requestOptions);
+  }
+
+  getEncountersByTeams(teamId: string): Observable<Array<Encounter>> {
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+
+    return this.httpService.get(this.teamsUrl + teamId + '/encounters', requestOptions)
+      .pipe(
+        map((response: Response) => <Array<Encounter>>response.json()),
+        tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
+        catchError(this.handleError)
+      );
   }
 
   private handleError(error: Response) {

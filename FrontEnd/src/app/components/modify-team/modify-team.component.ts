@@ -38,9 +38,6 @@ export class ModifyTeamComponent implements OnInit {
     this.addTeamForm = this.formBuilder.group({
       name: ['',
         Validators.required
-      ],
-      sportName: ['',
-        Validators.required
       ]
     });
   }
@@ -54,6 +51,6 @@ export class ModifyTeamComponent implements OnInit {
   }
 
   submit() {
-    // this.teamsServices.updateTeam(this.data);
+    this.teamsServices.updateTeam(new Team(this.name, this.sportName, this.logo)).subscribe();
   }
 }
