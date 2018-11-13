@@ -87,26 +87,12 @@ export class TeamsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       ((result) => {
         if (result) {
-          this.teamsService.deleteTeam(teamName + '_' + sportId).subscribe();
-          // this.updateDataSource(teamName + '_' + sportId);
-          this.ngOnInit();
+          this.teamsService.deleteTeam(teamName + '_' + sportId).subscribe(
+            () => { this.ngOnInit(); }
+          );
         }
       })
     );
-  }
-
-  private updateDataSource(id: string) {
-    let tm;
-    this.dataSource.data.forEach(team => {
-      const idTeam = (team.name + '_' + team.sportName);
-      if (idTeam === id) {
-        tm = team;
-      }
-    });
-
-    this.dataSource.data.splice(this.dataSource.data.indexOf(tm), 1);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
   }
 
   onModify(team: Team) {
@@ -119,7 +105,6 @@ export class TeamsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
       if (result) {
-        // actualizar tabla
         this.ngOnInit();
       }
     });

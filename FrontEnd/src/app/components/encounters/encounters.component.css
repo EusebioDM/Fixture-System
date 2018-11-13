@@ -26,3 +26,7 @@ table {
     size: 90%;
     align-content: center;
  }
+
+ #centering {
+     margin-left: 70px;    
+ }

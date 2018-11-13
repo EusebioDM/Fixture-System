@@ -38,7 +38,6 @@ export class AddTeamComponent implements OnInit {
       ((data: Array<Sport>) => this.result(data)),
       ((error: any) => console.log(error))
     );
-    console.log('entré a add team!');
     this.createAddTeamForm();
   }
 

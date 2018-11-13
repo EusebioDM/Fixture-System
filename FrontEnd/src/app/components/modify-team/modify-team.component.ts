@@ -20,26 +20,15 @@ export class ModifyTeamComponent implements OnInit {
     @Optional() @Inject(MAT_DIALOG_DATA) public data: Team
   ) { }
 
-  addTeamForm: FormGroup;
-
   @Input() teamId: string;
 
-  matcher = new InstantErrorStateMatcher();
-
+  selectedFile;
   name: string;
   sportName: string;
   logo: string;
 
   ngOnInit() {
     this.loadData();
-  }
-
-  modifyTeamForm() {
-    this.addTeamForm = this.formBuilder.group({
-      name: ['',
-        Validators.required
-      ]
-    });
   }
 
   private loadData() {
@@ -50,7 +39,26 @@ export class ModifyTeamComponent implements OnInit {
     }
   }
 
+  onFileSelected(event) {
+    this.selectedFile = event.target.files[0];
+    if (this.selectedFile) {
+      const reader = new FileReader();
+
+      reader.onload = this.handleReaderLoaded.bind(this);
+      reader.readAsBinaryString(this.selectedFile);
+    }
+  }
+
+  handleReaderLoaded(e) {
+    this.logo = btoa(e.target.result);
+  }
+
   submit() {
-    this.teamsServices.updateTeam(new Team(this.name, this.sportName, this.logo)).subscribe();
+    const team = new Team(this.name, this.sportName, this.logo);
+    this.teamsServices.updateTeam(team).subscribe(
+      ((result: Team) => {
+        this.dialogRef.close(team);
+      })
+    );
   }
 }

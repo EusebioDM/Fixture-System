@@ -2,12 +2,14 @@
   <div class="addTeam-container">
 
     <mat-form-field>
-      <input matInput required name="teamName" [(ngModel)]='name' placeholder="Nombre del Equipo">
+      <input matInput name="teamName" [(ngModel)]='name' disabled>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput required name="sportName" [(ngModel)]='sportName' disabled>
+      <input matInput name="sportName" [(ngModel)]='sportName' disabled>
     </mat-form-field>
+
+    <input type="file" (change)="onFileSelected($event)" accept=".png, .jpg, .jpeg">
 
     <img src="data:image/png;base64,{{logo}}" style="height:90px;width:90px" />
 
@@ -15,6 +17,6 @@
 
   <mat-dialog-actions align="end">
     <button mat-button color="warn" mat-dialog-close>Cancelar</button>
-    <button mat-button color="primary" [mat-dialog-close]="true" cdkFocusInitial (click)="submit()">Agregar</button>
+    <button mat-button color="primary" cdkFocusInitial (click)="submit()">Agregar</button>
   </mat-dialog-actions>
 </form>
