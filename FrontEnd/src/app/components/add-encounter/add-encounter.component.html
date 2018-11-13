@@ -2,7 +2,7 @@
   <div class="addEncounter-container">
 
     <mat-form-field>
-      <input matInput [matDatepicker]="encounterDate" placeholder="Fecha del encuentro" formControlName="encounterDate" required>
+      <input matInput [matDatepicker]="encounterDate" placeholder="Fecha del encuentro" formControlName="dateTime" required>
       <mat-datepicker-toggle matSuffix [for]="encounterDate"></mat-datepicker-toggle>
       <mat-datepicker #encounterDate></mat-datepicker>
       <mat-error *ngIf="encounterDate.errors?.required">
@@ -11,34 +11,27 @@
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select name="sport" placeholder="Deporte" formControlName="sport" required (selectionChange)="getTeamsData($event)">
+      <mat-select name="sport" placeholder="Deporte" formControlName="sportName" required (selectionChange)="getTeamsData($event)">
         <mat-option *ngFor="let sp of sports" [value]="sp.name">
           {{sp.name}}
         </mat-option>
       </mat-select>
-      <mat-error *ngIf="sport.errors?.required">
+      <mat-error *ngIf="sportName.errors?.required">
         El deporte es <strong>requerido</strong>
       </mat-error>
     </mat-form-field>
 
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-      <ng-container matColumnDef="check">
-        <th mat-header-cell *matHeaderCellDef> Agregar </th>
-        <td mat-cell *matCellDef="let element"> HOla </td>
-      </ng-container>
-
-      <ng-container matColumnDef="team">
-        <th mat-header-cell *matHeaderCellDef> Equipo </th>
-        <td mat-cell *matCellDef="let aTeam"> {{aTeam.name}} </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-
-
-
+    <mat-form-field>
+      <mat-select placeholder="Equipos" [formControl]="teamIds" multiple>
+        <mat-select-trigger>
+          {{teamIds.value ? teamIds.value[0] : ''}}
+          <span *ngIf="teamIds.value?.length > 1" class="checkbox-selection">
+            (+{{teamIds.value.length - 1}} {{teamIds.value?.length === 2 ? 'other' : 'others'}})
+          </span>
+        </mat-select-trigger>
+        <mat-option *ngFor="let aTeam of teams" [value]="getTeamId(aTeam.name, aTeam.sportName)">{{aTeam.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
 
   <mat-dialog-actions align="end">

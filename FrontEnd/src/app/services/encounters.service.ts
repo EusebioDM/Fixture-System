@@ -58,6 +58,8 @@ export class EncountersService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
+    debugger;
+    
     return this.httpService.post(this.encountersUrl, encounter, requestOptions).pipe(
       tap((e: Encounter) => console.log(`added encounter`)),
       catchError(this.handleError)

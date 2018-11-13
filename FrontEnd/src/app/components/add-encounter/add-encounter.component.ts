@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Sport } from '../../classes/sport';
 import { SportsService } from '../../services/sports.service';
 import { TeamsService } from '../../services/teams.service';
 import { Team } from '../../classes/team';
-import { MatTableDataSource } from '@angular/material';
+import { EncountersService } from '../../services/encounters.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { EncountersComponent } from '../encounters/encounters.component';
 
 @Component({
   selector: 'app-add-encounter',
@@ -14,14 +16,15 @@ import { MatTableDataSource } from '@angular/material';
 export class AddEncounterComponent implements OnInit {
 
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: AddEncounterComponent,
     private sportsService: SportsService,
     private teamsService: TeamsService,
+    private encountersService: EncountersService,
     private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<EncountersComponent>
   ) { }
 
-  displayedColumns: string[] = ['check', 'team'];
-  dataSource;
-
+  error: string;
   sports: Array<Sport>;
   teams: Array<Team>;
   addEncounterForm: FormGroup;
@@ -42,7 +45,6 @@ export class AddEncounterComponent implements OnInit {
     this.teamsService.getTeams().subscribe(
       ((data: Array<Team>) => {
         this.teams = data;
-        this.dataSource = new MatTableDataSource<Team>(this.teams);
       }),
       ((error: any) => console.log(error))
     );
@@ -50,20 +52,40 @@ export class AddEncounterComponent implements OnInit {
 
   createAddEncounterForm() {
     this.addEncounterForm = this.formBuilder.group({
-      encounterDate: ['',
+      dateTime: ['',
         Validators.required
       ],
-      sport: ['',
+      sportName: ['',
         Validators.required
       ],
+      teamIds: ['',
+        Validators.required]
     });
   }
 
-  get encounterDate() {
-    return this.addEncounterForm.get('encounterDate');
+  get dateTime() {
+    return this.addEncounterForm.get('dateTime');
   }
 
-  get sport() {
-    return this.addEncounterForm.get('sport');
+  get sportName() {
+    return this.addEncounterForm.get('sportName');
+  }
+
+  get teamIds() {
+    return this.addEncounterForm.get('teamIds');
+  }
+
+  public getTeamId(teamName: string, sportName: string): string {
+    return teamName + '_' + sportName;
+  }
+
+  public submit() {
+    const encounter = this.addEncounterForm.value;
+    this.encountersService.addEncounter(encounter).subscribe(
+      (() => {
+        this.dialogRef.close(encounter);
+      }),
+      (error) => this.error = error
+    );
   }
 }

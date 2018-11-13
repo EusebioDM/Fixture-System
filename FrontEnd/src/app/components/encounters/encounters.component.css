@@ -26,7 +26,23 @@ table {
     size: 90%;
     align-content: center;
  }
+  
+mat-tab-group mat-select {
+    width: 300px;
+    margin-bottom: 20px;
+    margin: 0px auto;
+    margin-left: 6%;
+    margin-right: 10px;
+    margin-top: 20px;
+    align-content: center;
+}
 
- #centering {
-     margin-left: 70px;    
- }
+mat-tab-group mat-form-field {
+    width: 300px;
+    margin-bottom: 20px;
+    margin: 0px auto;
+    margin-left: 6%;
+    margin-right: 10px;
+    margin-top: 10px;
+    align-content: center;
+}

@@ -7,6 +7,7 @@ import { SportsService } from 'src/app/services/sports.service';
 import { TeamsService } from 'src/app/services/teams.service';
 import { Team } from 'src/app/classes/team';
 import { AddEncounterComponent } from '../add-encounter/add-encounter.component';
+import { YesNoDialogComponent } from '../yes-no-dialog/yes-no-dialog.component';
 
 @Component({
   selector: 'app-encounters',
@@ -77,10 +78,32 @@ export class EncountersComponent implements OnInit {
     const dialogRef = this.dialog.open(AddEncounterComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(
-      ((/*user: User*/) => {
-        // if (user) {
-          // this.getData();
-       // }
+      ((encounter: Encounter) => {
+        if (encounter) {
+            this.ngOnInit();
+        }
+      })
+    );
+  }
+
+  onDelete(encounter: Encounter) {
+
+    const encounterId = encounter.id;
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(YesNoDialogComponent, dialogConfig);
+    dialogRef.componentInstance.title = 'Borrar encuentro...';
+    dialogRef.componentInstance.message = '¿Está seguro que quiere borrar al encuentro ' + encounterId + '?';
+
+    dialogRef.afterClosed().subscribe(
+      ((result) => {
+        if (result) {
+          this.encountersService.deleteEncounter(encounterId).subscribe(
+            () => { this.ngOnInit(); }
+          );
+        }
       })
     );
   }
