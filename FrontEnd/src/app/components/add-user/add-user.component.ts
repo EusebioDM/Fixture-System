@@ -102,7 +102,6 @@ export class AddUserComponent implements OnInit {
     const user = this.addUserForm.value;
     this.usersService.addUser(user).subscribe(
       (() => {
-        console.log('El nombre del usuario desde el add-user es: ' + user.userName);
         this.dialogRef.close(user);
       }),
       (error) => this.error = error

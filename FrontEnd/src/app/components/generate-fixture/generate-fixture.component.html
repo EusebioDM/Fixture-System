@@ -1,0 +1,55 @@
+<form [formGroup]="generateFixtureForm">
+  <div class="generateFixture-container">
+
+    <mat-form-field>
+      <input matInput [matDatepicker]="encounterDate" placeholder="Fecha del encuentro" formControlName="startingDate" required>
+      <mat-datepicker-toggle matSuffix [for]="encounterDate"></mat-datepicker-toggle>
+      <mat-datepicker #encounterDate></mat-datepicker>
+      <mat-error *ngIf="encounterDate.errors?.required">
+        La fecha es <strong>requerido</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select name="sport" placeholder="Deporte" formControlName="sportName" required (selectionChange)="getAvailableFixtures($event)">
+        <mat-option *ngFor="let sp of sports" [value]="sp.name">
+          {{sp.name}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="sportName.errors?.required">
+        El deporte es <strong>requerido</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select name="creationAlgorithmName" placeholder="Generadores de fixture" formControlName="creationAlgorithmName" required>
+        <mat-option *ngFor="let fx of fixtures" [value]="fx">
+          {{fx}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="creationAlgorithmName.errors?.required">
+        El algoritmo para generar fixture es <strong>requerido</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-dialog-actions align="end">
+      <button mat-button color="warn" mat-dialog-close>Cancelar</button>
+      <button mat-button color="primary" cdkFocusInitial [disabled]="generateFixtureForm.invalid" (click)="submit()">Generar
+        Fixture
+      </button>
+    </mat-dialog-actions>
+  </div>
+</form>
+<br>
+
+<mat-error *ngIf="error">
+  {{error}}
+</mat-error>
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Form status: {{generateFixtureForm.status}}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">Form Value</h6>
+    <pre>{{generateFixtureForm.value | json}}</pre>
+  </div>
+</div>

@@ -8,6 +8,9 @@ import { TeamsService } from 'src/app/services/teams.service';
 import { Team } from 'src/app/classes/team';
 import { AddEncounterComponent } from '../add-encounter/add-encounter.component';
 import { YesNoDialogComponent } from '../yes-no-dialog/yes-no-dialog.component';
+import { ModifyEncounterComponent } from '../modify-encounter/modify-encounter.component';
+import { AddEncountersResultComponent } from '../add-encounters-result/add-encounters-result.component';
+import { GenerateFixtureComponent } from '../generate-fixture/generate-fixture.component';
 
 @Component({
   selector: 'app-encounters',
@@ -26,7 +29,7 @@ export class EncountersComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['sport', 'teams', 'date', 'actionDelete'];
+  displayedColumns: string[] = ['sport', 'teams', 'date', 'actionResults', 'actionModify', 'actionDelete'];
   dataSource;
   searchKey: string;
   sports: Array<Sport>;
@@ -69,6 +72,23 @@ export class EncountersComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Encounter>(this.encounters);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+    /*
+    this.dataSource.filterPredicate = (data, filter) => {
+      return this.displayedColumns.some(ele => {
+        return ele !== 'actionResults' && ele !== 'actionModify' && ele !== 'actionDelete'
+          && data[ele].toLowerCase().indexOf(filter) !== -1;
+      });
+    };
+    */
+  }
+
+  onSearchClear() {
+    this.searchKey = '';
+    this.applyFilter();
+  }
+
+  applyFilter() {
+    this.dataSource.filter = this.searchKey.trim().toLowerCase();
   }
 
   onInsert() {
@@ -80,10 +100,53 @@ export class EncountersComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       ((encounter: Encounter) => {
         if (encounter) {
-            this.ngOnInit();
+          this.ngOnInit();
         }
       })
     );
+  }
+
+  onGenerateFixture() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(GenerateFixtureComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(
+      ((isGenerated: boolean) => {
+        if (isGenerated) {
+          this.ngOnInit();
+        }
+      })
+    );
+  }
+
+  onAddResults(encounter: Encounter) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(AddEncountersResultComponent, dialogConfig);
+    dialogRef.componentInstance.encounter = encounter;
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.ngOnInit();
+      }
+    });
+  }
+
+  onModify(encounter: Encounter) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(ModifyEncounterComponent, dialogConfig);
+    dialogRef.componentInstance.encounter = encounter;
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.ngOnInit();
+      }
+    });
   }
 
   onDelete(encounter: Encounter) {

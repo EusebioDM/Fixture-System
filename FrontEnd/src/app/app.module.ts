@@ -34,6 +34,9 @@ import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.c
 import { ModifyTeamComponent } from './components/modify-team/modify-team.component';
 import { LogsComponent } from './components/logs/logs.component';
 import { AddEncounterComponent } from './components/add-encounter/add-encounter.component';
+import { ModifyEncounterComponent } from './components/modify-encounter/modify-encounter.component';
+import { AddEncountersResultComponent } from './components/add-encounters-result/add-encounters-result.component';
+import { GenerateFixtureComponent } from './components/generate-fixture/generate-fixture.component';
 
 
 
@@ -144,7 +147,10 @@ const appRoutes: Routes = [
     SportPlayersPipe,
     ListToSingleString,
     LogsComponent,
-    AddEncounterComponent
+    AddEncounterComponent,
+    ModifyEncounterComponent,
+    AddEncountersResultComponent,
+    GenerateFixtureComponent
   ],
   entryComponents: [
     AddUserComponent,
@@ -153,7 +159,10 @@ const appRoutes: Routes = [
     ModifyUserComponent,
     ModifyTeamComponent,
     YesNoDialogComponent,
-    AddEncounterComponent
+    AddEncounterComponent,
+    ModifyEncounterComponent,
+    AddEncountersResultComponent,
+    GenerateFixtureComponent
   ],
   imports: [
     MaterialModule,

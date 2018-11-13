@@ -3,6 +3,7 @@ import { Encounter } from '../classes/encounter';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable, throwError } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
+import { Fixture } from '../classes/fixture';
 
 @Injectable({
   providedIn: 'root'
@@ -58,8 +59,6 @@ export class EncountersService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    debugger;
-    
     return this.httpService.post(this.encountersUrl, encounter, requestOptions).pipe(
       tap((e: Encounter) => console.log(`added encounter`)),
       catchError(this.handleError)
@@ -84,7 +83,7 @@ export class EncountersService {
     return this.httpService.delete(this.encountersUrl + '/' + id, requestOptions);
   }
 
-  GetAvailableFixtureGenerators() {
+  GetAvailableFixtureGenerators(): Observable<Array<string>> {
     const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
@@ -95,6 +94,17 @@ export class EncountersService {
         tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
         catchError(this.handleError)
       );
+  }
+
+  createFixture(fixture: Fixture) {
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+
+    return this.httpService.post(this.encountersUrl + '/fixture', fixture, requestOptions).pipe(
+      tap((f: Fixture) => console.log(`generated fixture`)),
+      catchError(this.handleError)
+    );
   }
 
   private handleError(error: Response) {
