@@ -83,6 +83,17 @@ export class TeamsService {
       );
   }
 
+  addFollowedTeamToLoggedUser(id: string) {
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+
+    return this.httpService.post(this.teamsUrl + '/' + id + '/follower', requestOptions).pipe(
+      tap((t: Team) => console.log(`added team w/ id=${t.name}`)),
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: Response) {
     console.error(error);
     return throwError(error.json().error || 'Server error');

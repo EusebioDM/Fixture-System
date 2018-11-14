@@ -1,0 +1,11 @@
+.mat-elevation-z8 {
+    min-width: 300px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+.mat-elevation-z8 mat-form-field {
+  width: 300px;
+  margin-bottom: 20px;
+}

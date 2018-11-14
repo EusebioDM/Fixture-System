@@ -37,6 +37,7 @@ import { AddEncounterComponent } from './components/add-encounter/add-encounter.
 import { ModifyEncounterComponent } from './components/modify-encounter/modify-encounter.component';
 import { AddEncountersResultComponent } from './components/add-encounters-result/add-encounters-result.component';
 import { GenerateFixtureComponent } from './components/generate-fixture/generate-fixture.component';
+import { FollowTeamsComponent } from './components/follow-teams/follow-teams.component';
 
 
 
@@ -107,6 +108,14 @@ const appRoutes: Routes = [
     }
   },
   {
+    path: 'followTeams',
+    component: FollowTeamsComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      expectedRole: 'Follower'
+    }
+  },
+  {
     path: '404',
     component: NotFoundComponent
   },
@@ -150,7 +159,8 @@ const appRoutes: Routes = [
     AddEncounterComponent,
     ModifyEncounterComponent,
     AddEncountersResultComponent,
-    GenerateFixtureComponent
+    GenerateFixtureComponent,
+    FollowTeamsComponent
   ],
   entryComponents: [
     AddUserComponent,

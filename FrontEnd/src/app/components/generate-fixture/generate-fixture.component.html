@@ -6,7 +6,7 @@
       <mat-datepicker-toggle matSuffix [for]="encounterDate"></mat-datepicker-toggle>
       <mat-datepicker #encounterDate></mat-datepicker>
       <mat-error *ngIf="encounterDate.errors?.required">
-        La fecha es <strong>requerido</strong>
+        La fecha es <strong>requerida</strong>
       </mat-error>
     </mat-form-field>
 
@@ -28,7 +28,7 @@
         </mat-option>
       </mat-select>
       <mat-error *ngIf="creationAlgorithmName.errors?.required">
-        El algoritmo para generar fixture es <strong>requerido</strong>
+        El algoritmo para generar el fixture es <strong>requerido</strong>
       </mat-error>
     </mat-form-field>
 
