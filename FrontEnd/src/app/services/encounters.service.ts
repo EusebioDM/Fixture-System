@@ -107,6 +107,30 @@ export class EncountersService {
     );
   }
 
+  getEncounterComments(id: string): Observable<Array<Comment>> {
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+
+    return this.httpService.get(this.encountersUrl + id + '/commentaries', requestOptions)
+      .pipe(
+        map((response: Response) => <Array<Comment>>response.json()),
+        tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
+        catchError(this.handleError)
+      );
+  }
+
+  addCommentToEncounter(encounterId: string, message: string) {
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+
+    return this.httpService.post(this.encountersUrl + encounterId + '/commentaries', message, requestOptions).pipe(
+      tap((f: Fixture) => console.log(`generated fixture`)),
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: Response) {
     console.error(error);
     return throwError(error.json().error || 'Server error');

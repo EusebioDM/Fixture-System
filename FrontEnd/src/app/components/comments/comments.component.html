@@ -1,4 +1,10 @@
-<app-follower-nav></app-follower-nav>
+<div *ngIf="isAdmin">
+  <app-admin-nav></app-admin-nav>
+</div>
+
+<div *ngIf="!isAdmin">
+  <app-follower-nav></app-follower-nav>
+</div>
 
 <div *ngFor="let comment of comments">
   <mat-card class="comment-card">
