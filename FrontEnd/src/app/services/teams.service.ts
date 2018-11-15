@@ -88,7 +88,7 @@ export class TeamsService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.post(this.teamsUrl + '/' + id + '/follower', requestOptions).pipe(
+    return this.httpService.post(this.teamsUrl + '/' + id + '/follower', null, requestOptions).pipe(
       tap((t: Team) => console.log(`added team w/ id=${t.name}`)),
       catchError(this.handleError)
     );

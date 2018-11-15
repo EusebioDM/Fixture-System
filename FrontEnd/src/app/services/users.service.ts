@@ -69,6 +69,19 @@ export class UsersService {
     return this.httpService.delete(this.usersUrl + '/' + id, requestOptions);
   }
 
+  getUserComments(): Observable<Array<Comment>> {
+    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+
+    return this.httpService.get(this.usersUrl + '/commentaries', requestOptions)
+      .pipe(
+        map((response: Response) => <Array<Comment>>response.json()),
+        tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
+        catchError(this.handleError)
+      );
+  }
+
   private handleError(error: Response) {
     console.error(error);
     return throwError(error.json().error || 'Server error');

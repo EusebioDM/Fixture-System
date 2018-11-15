@@ -38,6 +38,7 @@ import { ModifyEncounterComponent } from './components/modify-encounter/modify-e
 import { AddEncountersResultComponent } from './components/add-encounters-result/add-encounters-result.component';
 import { GenerateFixtureComponent } from './components/generate-fixture/generate-fixture.component';
 import { FollowTeamsComponent } from './components/follow-teams/follow-teams.component';
+import { CommentsComponent } from './components/comments/comments.component';
 
 
 
@@ -112,7 +113,15 @@ const appRoutes: Routes = [
     component: FollowTeamsComponent,
     canActivate: [RoleGuardService],
     data: {
-      expectedRole: 'Follower'
+      expectedRole: ['Follower', 'Administrator']
+    }
+  },
+  {
+    path: 'comments',
+    component: CommentsComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      expectedRole: ['Follower', 'Administrator']
     }
   },
   {
@@ -160,7 +169,8 @@ const appRoutes: Routes = [
     ModifyEncounterComponent,
     AddEncountersResultComponent,
     GenerateFixtureComponent,
-    FollowTeamsComponent
+    FollowTeamsComponent,
+    CommentsComponent
   ],
   entryComponents: [
     AddUserComponent,

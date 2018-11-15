@@ -12,12 +12,13 @@ export class RoleGuardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
 
+    debugger;
     const expectedRole = route.data.expectedRole;
     const role = this.auth.getLoggedUserRole();
 
     if (
       !this.auth.loggedIn ||
-      role !== expectedRole
+      !expectedRole.includes(role)
     ) {
       this.router.navigate(['login']);
       return false;
