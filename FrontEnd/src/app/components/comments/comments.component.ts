@@ -23,7 +23,6 @@ export class CommentsComponent implements OnInit {
   }
 
   private getData() {
-    debugger;
     this.usersService.getUserComments().subscribe(
       ((data: Array<Comment>) => this.result(data)),
       ((error: any) => console.log(error))

@@ -27,12 +27,22 @@ export class LoginService {
     return (localStorage.getItem('access_token') !== null);
   }
 
+  getLoggedUserName(): string {
+    const token = localStorage.getItem('access_token');
+    if (token !== null) {
+      const tokenPayload = (token);
+      const jwtData = tokenPayload.split('.')[1];
+      const decodedJwtJsonData = window.atob(jwtData);
+      const decodedJwtData = JSON.parse(decodedJwtJsonData);
+      const userName = decodedJwtData['UserName'];
+      return userName;
+    }
+  }
+
   getLoggedUserRole(): string {
     const token = localStorage.getItem('access_token');
     if (token !== null) {
       const tokenPayload = (token);
-
-
       const jwtData = tokenPayload.split('.')[1];
       const decodedJwtJsonData = window.atob(jwtData);
       const decodedJwtData = JSON.parse(decodedJwtJsonData);
