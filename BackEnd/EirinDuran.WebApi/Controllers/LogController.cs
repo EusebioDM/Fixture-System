@@ -27,7 +27,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Administrator")]
-        public ActionResult<List<LogDTO>> Get([FromQuery] DateTime start, [FromQuery] DateTime end)
+        public ActionResult<List<LogDTO>> GetAllLogs([FromQuery] DateTime start, [FromQuery] DateTime end)
         {
             try
             {

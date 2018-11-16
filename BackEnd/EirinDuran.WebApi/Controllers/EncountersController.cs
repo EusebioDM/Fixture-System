@@ -36,7 +36,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Administrator")]
-        public ActionResult<List<EncounterModelOut>> Get([FromQuery] DateTime start, [FromQuery] DateTime end)
+        public ActionResult<List<EncounterModelOut>> GetAllEncounters([FromQuery] DateTime start, [FromQuery] DateTime end)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet("{id}", Name = "GetEncounter")]
         [Authorize(Roles = "Administrator, Follower")]
-        public ActionResult<EncounterModelOut> GetById(string id)
+        public ActionResult<EncounterModelOut> GetEncounterById(string id)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Create(EncounterModelIn encounter)
+        public IActionResult CreateEncounter(EncounterModelIn encounter)
         {
             CreateSession();
             if (!ModelState.IsValid)
@@ -112,7 +112,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Put(string id, [FromBody] EncounterUpdateModelIn encounterModel)
+        public IActionResult ModifyEncounter(string id, [FromBody] EncounterUpdateModelIn encounterModel)
         {
             try
             {
@@ -149,7 +149,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Delete(string id)
+        public IActionResult DeleteEncounter(string id)
         {
             try
             {
@@ -190,8 +190,8 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPost]
         [Route("{encounterId}/commentaries")]
-        [Authorize]
-        public IActionResult AddComment(string encounterId, [FromBody] string menssage)
+        [Authorize(Roles = "Administrator")]
+        public IActionResult AddEncounterComment(string encounterId, [FromBody] string menssage)
         {
             try
             {

@@ -31,7 +31,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Authorize]
-        public ActionResult<List<TeamModelOut>> Get()
+        public ActionResult<List<TeamModelOut>> GetAllTeams()
         {
             try
             {
@@ -46,7 +46,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet("{teamId}", Name = "GetTeam")]
         [Authorize]
-        public ActionResult<TeamModelOut> Get(string teamId)
+        public ActionResult<TeamModelOut> GetTeamById(string teamId)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace EirinDuran.WebApi.Controllers
         [HttpGet]
         [Authorize]
         [Route("{teamId}/encounters")]
-        public ActionResult<List<EncounterModelOut>> GetEncounters(string teamId)
+        public ActionResult<List<EncounterModelOut>> GetTeamEncounters(string teamId)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Create(TeamModelIn team)
+        public IActionResult CreateTeam(TeamModelIn team)
         {
             if (!ModelState.IsValid)
             {
@@ -107,7 +107,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Put(string id, [FromBody] TeamModelIn team)
+        public IActionResult ModifyTeam(string id, [FromBody] TeamModelIn team)
         {
             if (!ModelState.IsValid)
             {
@@ -138,7 +138,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpDelete("{teamId}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Delete(string teamId)
+        public IActionResult DeleteTeam(string teamId)
         {
             try
             {

@@ -29,7 +29,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Administrator, Follower")]
-        public ActionResult<List<UserModelOut>> GetAll()
+        public ActionResult<List<UserModelOut>> GetAllUsers()
         {
             try
             {
@@ -49,7 +49,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet("{userId}", Name = "GetUser")]
         [Authorize(Roles = "Administrator, Follower")]
-        public ActionResult<UserModelOut> GetById(string userId)
+        public ActionResult<UserModelOut> GetUserById(string userId)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Create(UserModelIn userModel)
+        public IActionResult CreateUser(UserModelIn userModel)
         {
             if (!ModelState.IsValid)
             {
@@ -103,7 +103,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPut("{userId}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Modify(string userId, [FromBody] UserUpdateModelIn userModel)
+        public IActionResult ModifyUser(string userId, [FromBody] UserUpdateModelIn userModel)
         {
             if (!ModelState.IsValid)
             {
@@ -135,7 +135,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpDelete("{userId}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Delete(string userId)
+        public IActionResult DeleteUser(string userId)
         {
             try
             {
@@ -177,7 +177,7 @@ namespace EirinDuran.WebApi.Controllers
         [HttpGet]
         [Route("encounters")]
         [Authorize]
-        public ActionResult<List<EncounterModelOut>> GetFollowedTeamEncounters()
+        public ActionResult<List<EncounterModelOut>> GetFollowedTeamEncountersOfLoggedUser()
         {
             try
             {
@@ -201,7 +201,7 @@ namespace EirinDuran.WebApi.Controllers
         [HttpGet]
         [Route("commentaries")]
         [Authorize(Roles = "Administrator, Follower")]
-        public ActionResult<List<CommentDTO>> GetFollowedTeamCommentaries()
+        public ActionResult<List<CommentDTO>> GetFollowedTeamCommentariesOfLoggedUser()
         {
             try
             {

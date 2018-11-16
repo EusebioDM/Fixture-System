@@ -17,6 +17,7 @@ using EirinDuran.IServices.Infrastructure_Interfaces;
 using EirinDuran.IServices.Services_Interfaces;
 using EirinDuran.Logger;
 using EirinDuran.WebApi.Controllers;
+using EirinDuran.WebApi.Middlewares;
 
 namespace EirinDuran.WebApi
 {
@@ -46,6 +47,7 @@ namespace EirinDuran.WebApi
                     builder.AllowAnyOrigin();
                 });
             });
+
 
             SetupAuthentication(services);
         }
@@ -97,6 +99,7 @@ namespace EirinDuran.WebApi
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Secret"]))
                     };
                 });
+            services.AddMvc(options => options.Filters.Add(new LogginMiddleware()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -110,6 +113,7 @@ namespace EirinDuran.WebApi
             {
                 app.UseHsts();
             }
+
             app.UseAuthentication();
             app.UseMvc();
         }
