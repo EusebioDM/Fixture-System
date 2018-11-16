@@ -16,14 +16,14 @@ namespace EirinDuran.WebApi.Controllers
     {
         private readonly ILoginServices loginServices;
         private readonly IUserServices userServices;
-        private readonly IEncounterSimpleServices _encounterSimpleServices;
+        private readonly IEncounterSimpleServices encounterSimpleServices;
         private readonly IEncounterQueryServices encounterQueryServices;
 
         public UsersController(ILoginServices loginServices, IUserServices userServices, IEncounterSimpleServices encounterSimpleServices, IEncounterQueryServices encounterQueryServices)
         {
             this.userServices = userServices;
             this.loginServices = loginServices;
-            this._encounterSimpleServices = encounterSimpleServices;
+            this.encounterSimpleServices = encounterSimpleServices;
             this.encounterQueryServices = encounterQueryServices;
         }
 
@@ -159,13 +159,37 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Route("followers")]
-        [Authorize(Roles = "Administrator, Follower")]
+        [Authorize]
         public ActionResult<List<string>> GetFollowedTeams()
         {
             try
             {
                 CreateSession();
                 return loginServices.LoggedUser.FollowedTeamsNames;
+            }
+            catch (ServicesException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        
+        [HttpGet]
+        [Route("encounters")]
+        [Authorize]
+        public ActionResult<List<EncounterModelOut>> GetFollowedTeamEncounters()
+        {
+            try
+            {
+                CreateSession();
+                List<EncounterModelOut> encounters = new List<EncounterModelOut>();
+                IEnumerable<TeamDTO> followedTeams = userServices.GetFollowedTeams();
+                foreach (TeamDTO team in followedTeams)
+                {
+                    IEnumerable<EncounterModelOut> teamEncounters = encounterQueryServices.GetEncountersByTeam(team.Name + "_" + team.SportName).Select(dto => new EncounterModelOut(dto));
+                    encounters.AddRange(teamEncounters);
+                }
+
+                return encounters;
             }
             catch (ServicesException e)
             {
