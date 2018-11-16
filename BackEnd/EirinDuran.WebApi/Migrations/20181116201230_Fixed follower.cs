@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EirinDuran.WebApi.Migrations
 {
-    public partial class InitialCreatee : Migration
+    public partial class Fixedfollower : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

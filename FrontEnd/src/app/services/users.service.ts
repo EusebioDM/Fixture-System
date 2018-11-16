@@ -11,12 +11,11 @@ export class UsersService {
 
   users: Array<User>;
   private usersUrl = 'api/users';
-  token = localStorage.getItem('access_token');
 
   constructor(private httpService: Http) { }
 
   getUsers(): Observable<Array<User>> {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -29,7 +28,7 @@ export class UsersService {
   }
 
   getUserById(id: string): Observable<User | undefined> {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -42,7 +41,7 @@ export class UsersService {
   }
 
   addUser(user: User) {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -53,7 +52,7 @@ export class UsersService {
   }
 
   updateUser(user: User): Observable<any> {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
     return this.httpService.put(this.usersUrl + '/' + user.userName, user, requestOptions).pipe(
@@ -63,14 +62,14 @@ export class UsersService {
   }
 
   deleteUser(id: string) {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
     return this.httpService.delete(this.usersUrl + '/' + id, requestOptions);
   }
 
   getUserComments(): Observable<Array<Comment>> {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -84,6 +83,6 @@ export class UsersService {
 
   private handleError(error: Response) {
     console.error(error);
-    return throwError(error.json().error || 'Server error');
+    return throwError(error.json() || 'Server error');
   }
 }

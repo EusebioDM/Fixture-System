@@ -11,12 +11,11 @@ import { Fixture } from '../classes/fixture';
 export class EncountersService {
 
   private encountersUrl = 'api/encounters';
-  token = localStorage.getItem('access_token');
 
   constructor(private httpService: Http) { }
 
   getEncounters(): Observable<Array<Encounter>> {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -55,7 +54,7 @@ export class EncountersService {
   }
 
   addEncounter(encounter: Encounter) {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -66,7 +65,7 @@ export class EncountersService {
   }
 
   updateEncounter(encounter: Encounter): Observable<any> {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
     return this.httpService.put(this.encountersUrl + '/' + encounter.id, encounter, requestOptions).pipe(
@@ -76,7 +75,7 @@ export class EncountersService {
   }
 
   deleteEncounter(id: string) {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -84,7 +83,7 @@ export class EncountersService {
   }
 
   GetAvailableFixtureGenerators(): Observable<Array<string>> {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -97,7 +96,7 @@ export class EncountersService {
   }
 
   createFixture(fixture: Fixture) {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -108,7 +107,7 @@ export class EncountersService {
   }
 
   getEncounterComments(id: string): Observable<Array<Comment>> {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -121,7 +120,7 @@ export class EncountersService {
   }
 
   addCommentToEncounter(encounterId: string, message: string) {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -133,6 +132,6 @@ export class EncountersService {
 
   private handleError(error: Response) {
     console.error(error);
-    return throwError(error.json().error || 'Server error');
+    return throwError(error.json() || 'Server error');
   }
 }

@@ -11,12 +11,11 @@ import { Encounter } from '../classes/encounter';
 export class SportsService {
 
   private sportsUrl = 'api/sports';
-  token = localStorage.getItem('access_token');
 
   constructor(private httpService: Http) { }
 
   getSports(): Observable<Array<Sport>> {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -42,7 +41,7 @@ export class SportsService {
   }
 
   addSport(sport: Sport) {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -53,7 +52,7 @@ export class SportsService {
   }
 
   deleteSport(id: string) {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
     return this.httpService.delete(this.sportsUrl + '/' + id, requestOptions);

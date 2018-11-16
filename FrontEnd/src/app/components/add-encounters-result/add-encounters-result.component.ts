@@ -33,7 +33,7 @@ export class AddEncountersResultComponent implements OnInit {
 
   getTeamResult(result: any, teamId: string) {
     debugger;
-    this.encounter.results.push({teamId, result});
+    // this.encounter.results.push({teamId, result});
     console.log('Resultado: ' + result + ' para el equipo ' + teamId);
   }
 }

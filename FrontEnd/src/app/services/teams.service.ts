@@ -11,12 +11,11 @@ import { Encounter } from '../classes/encounter';
 export class TeamsService {
 
   private teamsUrl = 'api/teams';
-  token = localStorage.getItem('access_token');
 
   constructor(private httpService: Http) { }
 
   getTeams(): Observable<Array<Team>> {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -29,7 +28,7 @@ export class TeamsService {
   }
 
   getTeamById(id: string): Observable<Team> {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -42,7 +41,7 @@ export class TeamsService {
   }
 
   addTeam(team: Team) {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -53,7 +52,7 @@ export class TeamsService {
   }
 
   updateTeam(team: Team): Observable<any> {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
     return this.httpService.put(this.teamsUrl + '/' + team.name + '_' + team.sportName, team, requestOptions).pipe(
@@ -63,7 +62,7 @@ export class TeamsService {
   }
 
   deleteTeam(id: string) {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
     console.log(this.teamsUrl + id);
@@ -71,7 +70,7 @@ export class TeamsService {
   }
 
   getEncountersByTeams(teamId: string): Observable<Array<Encounter>> {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
@@ -84,7 +83,7 @@ export class TeamsService {
   }
 
   addFollowedTeamToLoggedUser(id: string) {
-    const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 

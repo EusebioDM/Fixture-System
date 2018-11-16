@@ -6,7 +6,9 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class LoginService {
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router) { }
 
   login(username: string, password: string): Observable<boolean> {
     return this.http.post<{ token: string }>('/api/auth', { username: username, password: password })
@@ -20,6 +22,7 @@ export class LoginService {
 
   logout() {
     localStorage.removeItem('access_token');
+    this.router.navigate(['login']);
     console.log('Token ' + localStorage.getItem('access_token'));
   }
 

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EirinDuran.WebApi.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20181116171254_InitialCreatee")]
-    partial class InitialCreatee
+    [Migration("20181116201230_Fixed follower")]
+    partial class Fixedfollower
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
