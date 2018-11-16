@@ -1,0 +1,26 @@
+table {
+    margin: 0 auto;
+    width: 90%;
+    size: 90%;
+    align-content: center;
+ }
+
+ .search-div {
+    margin: 0px auto;
+    margin-left: 25%;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    align-content: center;
+ }
+
+ .search-form-field {
+    margin-left: 10px;
+}
+
+ .mat-elevation-z8 {
+    margin: 0 auto;
+    margin-top: 10px;
+    width: 50%;
+    size: 50%;
+    align-content: center;
+ }

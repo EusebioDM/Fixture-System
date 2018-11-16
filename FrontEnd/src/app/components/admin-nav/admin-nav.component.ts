@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LoginService } from '../../services/login/login.service';
 
 @Component({
   selector: 'app-admin-nav',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminNavComponent implements OnInit {
 
-  constructor() { }
+  constructor(private loginService: LoginService) { }
+
+  loggedUser: string;
 
   ngOnInit() {
+    this.loggedUser = this.loginService.getLoggedUserName();
   }
 
+  public signOut() {
+    this.loginService.logout();
+  }
 }

@@ -190,7 +190,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPost]
         [Route("{encounterId}/commentaries")]
-        [Authorize(Roles = "Administrator")]
+        [Authorize]
         public IActionResult AddComment(string encounterId, [FromBody] string menssage)
         {
             try

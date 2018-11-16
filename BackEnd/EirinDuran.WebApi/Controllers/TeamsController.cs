@@ -77,14 +77,14 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize(Roles = "Administrator")]
         public IActionResult Create(TeamModelIn team)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
             try
             {
-                    CreateSession();
-                    return TryToCreate(team.Map());
+                CreateSession();
+                return TryToCreate(team.Map());
             }
             catch (InsufficientPermissionException)
             {
@@ -97,7 +97,7 @@ namespace EirinDuran.WebApi.Controllers
             try
             {
                 TeamDTO created = teamServices.CreateTeam(team);
-                return CreatedAtRoute("GetTeam", new { teamId = created.Name + "_" + team.SportName } , created);
+                return CreatedAtRoute("GetTeam", new { teamId = created.Name + "_" + team.SportName }, created);
             }
             catch (ServicesException e)
             {
@@ -109,7 +109,7 @@ namespace EirinDuran.WebApi.Controllers
         [Authorize(Roles = "Administrator")]
         public IActionResult Put(string id, [FromBody] TeamModelIn team)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
@@ -130,7 +130,7 @@ namespace EirinDuran.WebApi.Controllers
                 teamServices.UpdateTeam(team);
                 return Ok();
             }
-            catch(ServicesException e)
+            catch (ServicesException e)
             {
                 return BadRequest(e.Message);
             }

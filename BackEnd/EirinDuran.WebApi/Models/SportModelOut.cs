@@ -8,13 +8,13 @@ namespace EirinDuran.WebApi.Models
     {
         public string Name { get; set; }
         public string GetEncounters { get; }
-        public EncounterPlayerCount EncounterPlayerCount { get; set; }
+        public string EncounterPlayerCount { get; set; }
 
         public SportModelOut(SportDTO sport)
         {
             Name = sport.Name;
             GetEncounters = "/api/sports/" + Name + "/encounters";
-            EncounterPlayerCount = sport.EncounterPlayerCount;
+            EncounterPlayerCount = sport.EncounterPlayerCount.ToString();
         }
 
         public override bool Equals(object obj)

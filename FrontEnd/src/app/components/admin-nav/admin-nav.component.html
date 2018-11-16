@@ -1,3 +1,29 @@
-<p>
-  admin-nav works!
-</p>
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span><img src="favicon.ico"></span>
+    <span class="nav-fill-remaining-space"></span>
+    <span class="align-center"></span>
+    <span class="nav-spacer"></span>
+    <button mat-button routerLink="/users" routerLinkActive="active">
+      <mat-icon class="icon">group_add</mat-icon> Usuarios
+    </button>
+    <button mat-button routerLink="/sports" routerLinkActive="active">
+      <mat-icon class="icon">add_circle</mat-icon> Deportes
+    </button>
+    <button mat-button routerLink="/teams" routerLinkActive="active">
+      <mat-icon class="icon">input</mat-icon> Equipos
+    </button>
+    <button mat-button routerLink="/encounters" routerLinkActive="active">
+      <mat-icon class="icon">today</mat-icon> Encuentros
+    </button>
+    <button mat-button routerLink="/comments" routerLinkActive="active">
+      <mat-icon class="icon">forum</mat-icon> Comentarios
+    </button>
+    <button mat-button routerLink="/logs" routerLinkActive="active">
+      <mat-icon class="icon">history</mat-icon> Log
+    </button>
+    <button mat-button (click)="signOut()" routerLink="/login" routerLinkActive="active">
+      <mat-icon class="icon">account_circle</mat-icon> Salir, {{loggedUser}}
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
