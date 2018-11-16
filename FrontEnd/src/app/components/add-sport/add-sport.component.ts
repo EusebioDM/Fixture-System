@@ -20,8 +20,8 @@ export class AddSportComponent implements OnInit {
     public dialogRef: MatDialogRef<SportsComponent>
   ) { }
 
+  error: string;
   addSportForm: FormGroup;
-
   matcher = new InstantErrorStateMatcher();
 
   ngOnInit() {
@@ -52,7 +52,8 @@ export class AddSportComponent implements OnInit {
     this.sportsService.addSport(sport).subscribe(
       ((result: Sport) => {
         this.dialogRef.close(sport);
-      })
+      }),
+      (error) => this.error = error
     );
   }
 }

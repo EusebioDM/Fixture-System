@@ -26,5 +26,4 @@ export class UniqueUsernameValidatorDirective implements AsyncValidator {
   validate(c: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
     return uniqueUsernameValidator(this.userService)(c);
   }
-
 }

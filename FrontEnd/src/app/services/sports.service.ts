@@ -74,6 +74,6 @@ export class SportsService {
 
   private handleError(error: Response) {
     console.error(error);
-    return throwError(error.json().error || 'Server error');
+    return throwError(error.json() || 'Server error');
   }
 }

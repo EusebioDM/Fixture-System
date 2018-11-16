@@ -10,7 +10,10 @@ export class AdminNavComponent implements OnInit {
 
   constructor(private loginService: LoginService) { }
 
+  loggedUser: string;
+
   ngOnInit() {
+    this.loggedUser = this.loginService.getLoggedUserName();
   }
 
   public signOut() {

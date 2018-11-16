@@ -10,7 +10,10 @@ export class FollowerNavComponent implements OnInit {
 
   constructor(private loginService: LoginService) { }
 
+  loggedUser: string;
+
   ngOnInit() {
+    this.loggedUser = this.loginService.getLoggedUserName();
   }
 
   signOut() {

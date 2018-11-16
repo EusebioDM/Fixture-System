@@ -1,5 +1,5 @@
 <form [formGroup]="addSportForm">
-  <div class="addSport-container">
+  <div class="form-container">
     <mat-form-field>
       <input matInput name="name" placeholder="Nombre del deporte" formControlName="name" required
       [errorStateMatcher]="matcher">
@@ -18,6 +18,10 @@
         La cantidad de equipos <strong>requerida</strong>
       </mat-error>
     </mat-form-field>
+
+    <mat-error *ngIf="error">
+      {{error}}
+    </mat-error>
 
     <mat-dialog-actions align="end">
       <button mat-button color="warn" mat-dialog-close>Cancelar</button>
