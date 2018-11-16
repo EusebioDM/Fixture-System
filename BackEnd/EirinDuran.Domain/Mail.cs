@@ -23,6 +23,11 @@ namespace EirinDuran.Domain
         {
             return new Mail(pString);
         }
+        
+        public override string ToString()
+        {
+            return pString;
+        }
 
         public override bool Equals(object obj)
         {

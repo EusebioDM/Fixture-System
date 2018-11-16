@@ -19,6 +19,11 @@ namespace EirinDuran.Domain
         {
             return nonEmptyString.pString;
         }
+        
+        public override string ToString()
+        {
+            return pString;
+        }
 
         public static implicit operator NonEmptyString(string pString)
         {
