@@ -23,6 +23,7 @@ namespace EirinDuran.WebApiTest
         private Mock<IEncounterSimpleServices> encounterServicesMock;
         private Mock<ISportServices> sportServicesMock;
         private Mock<IPositionsServices> positionServicesMock;
+        private Mock<ITeamServices> teamServicesMock;
 
         [TestInitialize]
         public void SetUp()
@@ -33,6 +34,7 @@ namespace EirinDuran.WebApiTest
             encounterServicesMock = new Mock<IEncounterSimpleServices>();
             sportServicesMock = new Mock<ISportServices>();
             positionServicesMock = new Mock<IPositionsServices>();
+            teamServicesMock = new Mock<ITeamServices>();
 
             CreateUserMariano();
             CreateUserRodolfo();
@@ -77,7 +79,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object)
+            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object, teamServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -107,7 +109,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object)
+            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object, teamServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -137,7 +139,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object)
+            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object, teamServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -171,7 +173,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(loginServices, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object)
+            var controller = new SportsController(loginServices, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object, teamServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -204,7 +206,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(loginServices, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object)
+            var controller = new SportsController(loginServices, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object, teamServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -236,7 +238,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(loginServices, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object)
+            var controller = new SportsController(loginServices, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object, teamServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -265,7 +267,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServicesMock.Object, positionServicesMock.Object)
+            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServicesMock.Object, positionServicesMock.Object, teamServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -298,7 +300,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServicesMock.Object, positionServicesMock.Object)
+            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServicesMock.Object, positionServicesMock.Object, teamServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -339,7 +341,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServicesMock.Object, positionServicesMock.Object)
+            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServicesMock.Object, positionServicesMock.Object, teamServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -367,7 +369,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object)
+            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServices.Object, positionServicesMock.Object, teamServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };
@@ -401,7 +403,7 @@ namespace EirinDuran.WebApiTest
             {
                 HttpContext = httpContext,
             };
-            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServicesMock.Object, positionServicesMock.Object)
+            var controller = new SportsController(login, sportServicesMock.Object, encounterServicesMock.Object, encounterQueryServicesMock.Object, positionServicesMock.Object, teamServicesMock.Object)
             {
                 ControllerContext = controllerContext,
             };

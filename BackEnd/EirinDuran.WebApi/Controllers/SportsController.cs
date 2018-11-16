@@ -16,17 +16,19 @@ namespace EirinDuran.WebApi.Controllers
     {
         private readonly ILoginServices loginServices;
         private readonly ISportServices sportServices;
+        private readonly ITeamServices teamServices;
         private readonly IEncounterSimpleServices encounterSimpleServices;
         private readonly IEncounterQueryServices encounterQueryServices;
         private readonly IPositionsServices positionsServices;
 
-        public SportsController(ILoginServices loginServices, ISportServices sportServices, IEncounterSimpleServices encounterSimpleServices, IEncounterQueryServices encounterQueryServices, IPositionsServices positionsServices)
+        public SportsController(ILoginServices loginServices, ISportServices sportServices, IEncounterSimpleServices encounterSimpleServices, IEncounterQueryServices encounterQueryServices, IPositionsServices positionsServices, ITeamServices teamServices)
         {
             this.loginServices = loginServices;
             this.sportServices = sportServices;
             this.encounterSimpleServices = encounterSimpleServices;
             this.encounterQueryServices = encounterQueryServices;
             this.positionsServices = positionsServices;
+            this.teamServices = teamServices;
         }
 
         [HttpGet]
@@ -80,6 +82,24 @@ namespace EirinDuran.WebApi.Controllers
             try
             {
                 return encounterQueryServices.GetEncountersBySport(sportId).Select(e => new EncounterModelOut(e)).ToList();
+            }
+            catch (ServicesException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        
+        [HttpGet]
+        [Route("{sportId}/teams")]
+        [Authorize]
+        public ActionResult<List<TeamModelOut>> GetTeams(string sportId)
+        {
+            try
+            {
+                return teamServices.GetAllTeams()
+                    .Where(t => t.SportName == sportId)
+                    .Select(dto => new TeamModelOut(dto))
+                    .ToList();
             }
             catch (ServicesException e)
             {
