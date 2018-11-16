@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Encounter } from '../../classes/encounter';
 import { FormControl } from '@angular/forms';
-import { debug } from 'util';
 
 @Component({
   selector: 'app-add-encounters-result',
@@ -34,6 +33,7 @@ export class AddEncountersResultComponent implements OnInit {
 
   getTeamResult(result: any, teamId: string) {
     debugger;
+    this.encounter.results.push({teamId, result});
     console.log('Resultado: ' + result + ' para el equipo ' + teamId);
   }
 }
