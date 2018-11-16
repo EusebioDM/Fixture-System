@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatPaginator, MatTableDataSource } from '@angular/material';
 import { Team } from '../../classes/team';
 import { TeamsService } from '../../services/teams.service';
+import { UsersService } from 'src/app/services/users.service';
 
 @Component({
   selector: 'app-follow-teams',
@@ -11,6 +12,7 @@ import { TeamsService } from '../../services/teams.service';
 export class FollowTeamsComponent implements OnInit {
 
   constructor(
+    private usersSerivice: UsersService,
     private teamsService: TeamsService
   ) { }
 
@@ -21,6 +23,7 @@ export class FollowTeamsComponent implements OnInit {
   dataSource;
   searchKey: string;
   temas: Array<Team>;
+  teamsFollowed: Array<string>;
 
   ngOnInit() {
     this.getData();
@@ -29,6 +32,11 @@ export class FollowTeamsComponent implements OnInit {
   private getData() {
     this.teamsService.getTeams().subscribe(
       ((data: Array<Team>) => this.result(data)),
+      ((error: any) => console.log(error))
+    );
+
+    this.usersSerivice.getUserFollowedTeams().subscribe(
+      ((data: Array<string>) => this.resultAux(data)),
       ((error: any) => console.log(error))
     );
   }
@@ -42,6 +50,11 @@ export class FollowTeamsComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Team>(this.temas);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+  }
+
+  private resultAux(data: Array<string>) {
+    debugger;
+    this.teamsFollowed = data;
   }
 
   onSearchClear() {
