@@ -28,10 +28,10 @@ namespace EirinDuran.DataAccess
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            
+
             builder.Entity<Log>().HasKey(l => l.Id);
             builder.Entity<UserEntity>().HasKey(u => u.UserName);
-            builder.Entity<TeamEntity>().HasKey(t => new { t.Name, t.SportName });
+            builder.Entity<TeamEntity>().HasKey(t => new {t.Name, t.SportName});
             builder.Entity<SportEntity>().HasKey(s => s.SportName);
             builder.Entity<EncounterEntity>().HasKey(e => e.Id);
             builder.Entity<EncounterEntity>().HasMany(e => e.Teams).WithOne();
@@ -39,9 +39,10 @@ namespace EirinDuran.DataAccess
             builder.Entity<EncounterEntity>().HasOne(e => e.Sport).WithMany().OnDelete(DeleteBehavior.Cascade);
             builder.Entity<CommentEntity>().HasKey(e => e.Id);
             builder.Entity<CommentEntity>().HasOne(c => c.User).WithMany().OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<TeamUser>().HasKey(tu => new { tu.TeamName, tu.UserName });
+            builder.Entity<TeamUser>().HasKey(tu => new {tu.TeamName, tu.SportName, tu.UserName});
             builder.Entity<TeamUser>().HasOne(tu => tu.User).WithMany(u => u.TeamUsers);
-            builder.Entity<TeamUser>().HasOne(t => t.Team).WithOne().HasForeignKey<TeamUser>(new string[] { "TeamName", "SportName" }).OnDelete(DeleteBehavior.Cascade);
+            //builder.Entity<TeamUser>().HasOne(t => t.Team).WithMany().HasForeignKey<TeamUser>(new string[] { "TeamName", "SportName" }).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<TeamUser>().HasOne(t => t.Team).WithMany().OnDelete(DeleteBehavior.Cascade);
             builder.Entity<EncounterTeam>().HasOne(et => et.Encounter).WithMany(e => e.Teams);
             builder.Entity<EncounterTeam>().HasKey("TeamName", "SportName", "EncounterId");
             builder.Entity<EncounterTeam>().HasOne(et => et.Team).WithMany().HasForeignKey("TeamNameFk", "SportNameFk").OnDelete(DeleteBehavior.ClientSetNull);
@@ -54,6 +55,5 @@ namespace EirinDuran.DataAccess
         {
             base.Database.EnsureDeleted();
         }
-
     }
 }

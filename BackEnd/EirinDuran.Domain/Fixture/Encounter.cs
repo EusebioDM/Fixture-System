@@ -8,7 +8,13 @@ namespace EirinDuran.Domain.Fixture
     public class Encounter
     {
         public Guid Id { get; private set; }
-        public DateTime DateTime { get => dateTime; set => SetDateIfValid(value); }
+
+        public DateTime DateTime
+        {
+            get => dateTime;
+            set => SetDateIfValid(value);
+        }
+
         public IEnumerable<Team> Teams => teams;
         public IEnumerable<Comment> Comments => comments;
         public Dictionary<Team, int> Results => new Dictionary<Team, int>(results);
@@ -29,7 +35,7 @@ namespace EirinDuran.Domain.Fixture
             results = new Dictionary<Team, int>();
         }
 
-        public Encounter(Guid id, Sport sport, IEnumerable<Team> teams, DateTime dateTime, ICollection<Comment> comments, Dictionary<Team,int> results) : this(sport, teams,dateTime)
+        public Encounter(Guid id, Sport sport, IEnumerable<Team> teams, DateTime dateTime, ICollection<Comment> comments, Dictionary<Team, int> results) : this(sport, teams, dateTime)
         {
             Id = id == Guid.Empty ? Guid.NewGuid() : id;
             this.comments = comments;
@@ -43,7 +49,7 @@ namespace EirinDuran.Domain.Fixture
 
         private void ValidateNumberOfTeams(IEnumerable<Team> teams)
         {
-            if(Sport.EncounterPlayerCount == EncounterPlayerCount.TwoPlayers && teams.Count() != 2)
+            if (Sport.EncounterPlayerCount == EncounterPlayerCount.TwoPlayers && teams.Count() != 2)
             {
                 throw new InvalidNumberOfTeamsException();
             }
@@ -64,10 +70,7 @@ namespace EirinDuran.Domain.Fixture
 
         private void SetDateIfValid(DateTime date)
         {
-            if (date < DateTime.Now)
-                throw new InvalidDateException();
-            else
-                dateTime = date;
+            dateTime = date;
         }
 
         public void AddOrReplaceResult(Team team, int position)
