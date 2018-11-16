@@ -92,7 +92,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var obtainedResult = controller.GetAll() as ActionResult<List<UserModelOut>>;
+            var obtainedResult = controller.GetAllUsers() as ActionResult<List<UserModelOut>>;
             var value = obtainedResult.Value;
 
             userServicesMock.Verify(us => us.GetAllUsers(), Times.AtMostOnce);
@@ -124,7 +124,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var obtainedResult = controller.GetAll() as ActionResult<List<UserModelOut>>;
+            var obtainedResult = controller.GetAllUsers() as ActionResult<List<UserModelOut>>;
             var value = obtainedResult.Result as BadRequestObjectResult;
 
             userServicesMock.Verify(us => us.GetAllUsers(), Times.AtMostOnce);
@@ -155,7 +155,7 @@ namespace EirinDuran.WebApiTest
             };
 
             mockUserService.Verify(m => m.GetUser(expectedUser.UserName), Times.AtMostOnce());
-            var obtainedResult = controller.GetById(expectedUser.UserName) as ActionResult<UserModelOut>;
+            var obtainedResult = controller.GetUserById(expectedUser.UserName) as ActionResult<UserModelOut>;
 
             Assert.IsNotNull(obtainedResult);
             Assert.IsNotNull(obtainedResult.Value);
@@ -183,7 +183,7 @@ namespace EirinDuran.WebApiTest
             };
 
             mockUserService.Verify(m => m.GetUser(expectedUser.UserName), Times.AtMostOnce());
-            var obtainedResult = controller.GetById(expectedUser.UserName);
+            var obtainedResult = controller.GetUserById(expectedUser.UserName);
             var result = obtainedResult.Result as BadRequestObjectResult;
 
             Assert.IsNotNull(result);
@@ -212,7 +212,7 @@ namespace EirinDuran.WebApiTest
             };
 
             userServicesMock.Verify(m => m.CreateUser(fakeUser), Times.AtMostOnce());
-            var result = controller.Create(modelIn);
+            var result = controller.CreateUser(modelIn);
             var createdResult = result as CreatedAtRouteResult;
             var modelOut = createdResult.Value as UserModelOut;
 
@@ -244,7 +244,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var result = controller.Create(modelIn);
+            var result = controller.CreateUser(modelIn);
             var createdResult = result as UnauthorizedResult;
 
             Assert.IsNotNull(createdResult);
@@ -271,7 +271,7 @@ namespace EirinDuran.WebApiTest
             };
 
             controller.ModelState.AddModelError("", "Error");
-            var result = controller.Create(modelIn);
+            var result = controller.CreateUser(modelIn);
 
             var createdResult = result as BadRequestResult;
 
@@ -301,7 +301,7 @@ namespace EirinDuran.WebApiTest
             };
 
             userServicesMock.Verify(m => m.CreateUser(It.IsAny<UserDTO>()), Times.AtMostOnce());
-            var result = controller.Create(modelIn);
+            var result = controller.CreateUser(modelIn);
             var createdResult = result as BadRequestObjectResult;
 
             Assert.IsNotNull(createdResult);
@@ -331,7 +331,7 @@ namespace EirinDuran.WebApiTest
             };
 
             userServicesMock.Verify(m => m.DeleteUser(id), Times.AtMostOnce());
-            var result = controller.Delete(id);
+            var result = controller.DeleteUser(id);
             var createdResult = result as OkResult;
 
             Assert.IsNotNull(createdResult);
@@ -362,7 +362,7 @@ namespace EirinDuran.WebApiTest
             };
 
             userServicesMock.Verify(m => m.DeleteUser(id), Times.AtMostOnce());
-            var result = controller.Delete(id);
+            var result = controller.DeleteUser(id);
             var createdResult = result as BadRequestObjectResult;
 
             Assert.IsNotNull(createdResult);
@@ -393,7 +393,7 @@ namespace EirinDuran.WebApiTest
             };
 
             userServicesMock.Verify(m => m.DeleteUser(id), Times.AtMostOnce());
-            var result = controller.Delete(id);
+            var result = controller.DeleteUser(id);
             var createdResult = result as UnauthorizedResult;
 
             Assert.IsNotNull(createdResult);
@@ -423,7 +423,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var result = controller.Modify(id, new UserUpdateModelIn()
+            var result = controller.ModifyUser(id, new UserUpdateModelIn()
             {
                 Name = "UserTest",
                 Surname = "UserTest",
@@ -461,7 +461,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var result = controller.Modify(id, new UserUpdateModelIn()
+            var result = controller.ModifyUser(id, new UserUpdateModelIn()
             {
                 Name = "UserTest",
                 Surname = "UserTest",
@@ -501,7 +501,7 @@ namespace EirinDuran.WebApiTest
 
             controller.ModelState.AddModelError("", "");
 
-            var result = controller.Modify(id, new UserUpdateModelIn()
+            var result = controller.ModifyUser(id, new UserUpdateModelIn()
             {
                 Name = "",
                 Surname = "UserTest",
@@ -539,7 +539,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var result = controller.Modify(id, new UserUpdateModelIn()
+            var result = controller.ModifyUser(id, new UserUpdateModelIn()
             {
                 Name = "UserTest",
                 Surname = "UserTest",
@@ -606,7 +606,7 @@ namespace EirinDuran.WebApiTest
 
             encounterQueryServicesMock.Verify(u => u.GetAllEncountersWithFollowedTeams(), Times.AtMostOnce);
             encounterQueryServicesMock.Verify(u => u.GetAllCommentsToOneEncounter(It.IsAny<string>()), Times.AtMostOnce);
-            var obtainedResult = controller.GetFollowedTeamCommentaries();
+            var obtainedResult = controller.GetFollowedTeamCommentariesOfLoggedUser();
             var commentaries = obtainedResult.Value as List<CommentDTO>;
 
             Assert.IsNotNull(commentaries);
@@ -638,7 +638,7 @@ namespace EirinDuran.WebApiTest
 
             encounterQueryServicesMock.Verify(u => u.GetAllEncountersWithFollowedTeams(), Times.AtMostOnce);
           
-            var obtainedResult = controller.GetFollowedTeamCommentaries();
+            var obtainedResult = controller.GetFollowedTeamCommentariesOfLoggedUser();
             var resultRequest = obtainedResult.Result as BadRequestObjectResult;
 
             Assert.IsNotNull(resultRequest);

@@ -16,20 +16,20 @@ namespace EirinDuran.WebApi.Controllers
     {
         private readonly ILoginServices loginServices;
         private readonly IUserServices userServices;
-        private readonly IEncounterSimpleServices _encounterSimpleServices;
+        private readonly IEncounterSimpleServices encounterSimpleServices;
         private readonly IEncounterQueryServices encounterQueryServices;
 
         public UsersController(ILoginServices loginServices, IUserServices userServices, IEncounterSimpleServices encounterSimpleServices, IEncounterQueryServices encounterQueryServices)
         {
             this.userServices = userServices;
             this.loginServices = loginServices;
-            this._encounterSimpleServices = encounterSimpleServices;
+            this.encounterSimpleServices = encounterSimpleServices;
             this.encounterQueryServices = encounterQueryServices;
         }
 
         [HttpGet]
         [Authorize(Roles = "Administrator, Follower")]
-        public ActionResult<List<UserModelOut>> GetAll()
+        public ActionResult<List<UserModelOut>> GetAllUsers()
         {
             try
             {
@@ -49,7 +49,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet("{userId}", Name = "GetUser")]
         [Authorize(Roles = "Administrator, Follower")]
-        public ActionResult<UserModelOut> GetById(string userId)
+        public ActionResult<UserModelOut> GetUserById(string userId)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Create(UserModelIn userModel)
+        public IActionResult CreateUser(UserModelIn userModel)
         {
             if (!ModelState.IsValid)
             {
@@ -103,7 +103,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPut("{userId}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Modify(string userId, [FromBody] UserUpdateModelIn userModel)
+        public IActionResult ModifyUser(string userId, [FromBody] UserUpdateModelIn userModel)
         {
             if (!ModelState.IsValid)
             {
@@ -135,7 +135,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpDelete("{userId}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Delete(string userId)
+        public IActionResult DeleteUser(string userId)
         {
             try
             {
@@ -160,7 +160,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Route("followers")]
-        [Authorize(Roles = "Administrator, Follower")]
+        [Authorize]
         public ActionResult<List<string>> GetFollowedTeams()
         {
             try
@@ -173,11 +173,35 @@ namespace EirinDuran.WebApi.Controllers
                 return BadRequest(e.Message);
             }
         }
+        
+        [HttpGet]
+        [Route("encounters")]
+        [Authorize]
+        public ActionResult<List<EncounterModelOut>> GetFollowedTeamEncountersOfLoggedUser()
+        {
+            try
+            {
+                CreateSession();
+                List<EncounterModelOut> encounters = new List<EncounterModelOut>();
+                IEnumerable<TeamDTO> followedTeams = userServices.GetFollowedTeams();
+                foreach (TeamDTO team in followedTeams)
+                {
+                    IEnumerable<EncounterModelOut> teamEncounters = encounterQueryServices.GetEncountersByTeam(team.Name + "_" + team.SportName).Select(dto => new EncounterModelOut(dto));
+                    encounters.AddRange(teamEncounters);
+                }
+
+                return encounters;
+            }
+            catch (ServicesException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         [HttpGet]
         [Route("commentaries")]
         [Authorize(Roles = "Administrator, Follower")]
-        public ActionResult<List<CommentDTO>> GetFollowedTeamCommentaries()
+        public ActionResult<List<CommentDTO>> GetFollowedTeamCommentariesOfLoggedUser()
         {
             try
             {

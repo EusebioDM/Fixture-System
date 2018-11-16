@@ -51,13 +51,6 @@ namespace EirinDuran.DomainTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidDateException))]
-        public void InvalidDateException()
-        {
-            Encounter encounter = new Encounter(futbol, teams, new DateTime(1900, 1, 1));
-        }
-
-        [TestMethod]
         [ExpectedException(typeof(InvalidTeamException))]
         public void InvalidTeamSportTest()
         {

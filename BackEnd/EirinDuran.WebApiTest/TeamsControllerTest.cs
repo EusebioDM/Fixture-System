@@ -53,7 +53,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var result = controller.Create(teamIn);
+            var result = controller.CreateTeam(teamIn);
             teamServicesMock.Verify(t => t.CreateTeam(teamIn.Map()), Times.AtMostOnce);
             var createdResult = result as CreatedAtRouteResult;
             var teamOut = createdResult.Value as TeamDTO;
@@ -85,7 +85,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext
             };
 
-            var result = controller.Create(teamIn);
+            var result = controller.CreateTeam(teamIn);
             teamServicesMock.Verify(t => t.CreateTeam(It.IsAny<TeamDTO>()), Times.AtMostOnce);
             var unauthorizedResult = result as UnauthorizedResult;
 
@@ -114,7 +114,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var result = controller.Create(teamIn);
+            var result = controller.CreateTeam(teamIn);
             teamServicesMock.Verify(t => t.CreateTeam(It.IsAny<TeamDTO>()), Times.AtMostOnce);
             var resultRequest = result as BadRequestObjectResult;
 
@@ -146,7 +146,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var result = controller.Get();
+            var result = controller.GetAllTeams();
             teamServicesMock.Verify(t => t.GetAllTeams(), Times.AtMostOnce);
             var resultRequest = result as ActionResult<List<TeamModelOut>>;
 
@@ -179,7 +179,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var result = controller.Get();
+            var result = controller.GetAllTeams();
             teamServicesMock.Verify(t => t.GetAllTeams(), Times.AtMostOnce);
             var value = result as ActionResult<List<TeamModelOut>>;
             var resultRequest = result.Result as BadRequestObjectResult;
@@ -213,7 +213,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var result = controller.Get(teamId);
+            var result = controller.GetTeamById(teamId);
             teamServicesMock.Verify(t => t.GetTeam(teamId), Times.AtMostOnce);
             var resultRequest = result as ActionResult<TeamModelOut>;
 
@@ -249,7 +249,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var result = controller.Get(teamId);
+            var result = controller.GetTeamById(teamId);
             teamServicesMock.Verify(t => t.GetTeam(teamId), Times.AtMostOnce);
             var resultRequest = result.Result as BadRequestObjectResult;
 
@@ -280,7 +280,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var result = controller.Delete(teamName);
+            var result = controller.DeleteTeam(teamName);
             teamServicesMock.Verify(t => t.DeleteTeam(teamName), Times.AtMostOnce);
             var resultRequest = result as OkResult;
 
@@ -311,7 +311,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var result = controller.Delete(teamName);
+            var result = controller.DeleteTeam(teamName);
             teamServicesMock.Verify(t => t.DeleteTeam(teamName), Times.AtMostOnce);
             var resultRequest = result as UnauthorizedResult;
 
@@ -342,7 +342,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var result = controller.Delete(teamName);
+            var result = controller.DeleteTeam(teamName);
             teamServicesMock.Verify(t => t.DeleteTeam(teamName), Times.AtMostOnce);
             var resultRequest = result as BadRequestObjectResult;
 
@@ -374,7 +374,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var result = controller.GetEncounters(teamName);
+            var result = controller.GetTeamEncounters(teamName);
             encounterQueryServicesMock.Verify(e => e.GetEncountersByTeam(teamName), Times.AtMostOnce);
             var resultRequest = result as ActionResult<List<EncounterModelOut>>;
             List<EncounterModelOut> obtaniedEncounters = resultRequest.Value;
@@ -408,7 +408,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var result = controller.GetEncounters(teamName);
+            var result = controller.GetTeamEncounters(teamName);
             encounterQueryServicesMock.Verify(e => e.GetEncountersByTeam(teamName), Times.AtMostOnce);
             var value = result as ActionResult<List<EncounterModelOut>>;
             var requestResult = value.Result as BadRequestObjectResult;
@@ -508,7 +508,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var result = controller.Put(teamId, team1);
+            var result = controller.ModifyTeam(teamId, team1);
             teamServicesMock.Verify(t => t.UpdateTeam(team1.Map()), Times.AtMostOnce);
             var resultRequest = result as OkResult;
 
@@ -541,7 +541,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            var result = controller.Put(teamId, team1);
+            var result = controller.ModifyTeam(teamId, team1);
             teamServicesMock.Verify(t => t.UpdateTeam(It.IsAny<TeamDTO>()), Times.AtMostOnce);
             var resultRequest = result as UnauthorizedResult;
 
@@ -574,7 +574,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext
             };
 
-            var result = controller.Put(teamId, team1);
+            var result = controller.ModifyTeam(teamId, team1);
             teamServicesMock.Verify(t => t.UpdateTeam(It.IsAny<TeamDTO>()), Times.AtMostOnce);
             var resultRequest = result as BadRequestObjectResult;
 

@@ -75,7 +75,7 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, encounterServicesMock.Object, new LoggerStub(), encounterQueryServices.Object, fixtureGeneratorServices.Object, teamServices.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.Get(new DateTime(), new DateTime()) as ActionResult<List<EncounterModelOut>>;
+            var obtainedResult = controller.GetAllEncounters(new DateTime(), new DateTime()) as ActionResult<List<EncounterModelOut>>;
             encounterServicesMock.Verify(e => e.GetAllEncounters(), Times.AtMostOnce());
 
 
@@ -101,7 +101,7 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, encounterServicesMock.Object, new LoggerStub(),encounterQueryServices.Object, fixtureGeneratorServices.Object, teamServices.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.Get(new DateTime(), new DateTime()) as ActionResult<List<EncounterModelOut>>;
+            var obtainedResult = controller.GetAllEncounters(new DateTime(), new DateTime()) as ActionResult<List<EncounterModelOut>>;
             encounterServicesMock.Verify(e => e.GetAllEncounters(), Times.AtMostOnce());
             var result = obtainedResult.Result as BadRequestObjectResult;
 
@@ -134,7 +134,7 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, encounterServicesMock.Object, new LoggerStub(),encounterQueryServices.Object, fixtureGeneratorServices.Object, teamServices.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.Create(new EncounterModelIn()
+            var obtainedResult = controller.CreateEncounter(new EncounterModelIn()
             {
                 TeamIds =  enc.TeamIds,
                 DateTime = enc.DateTime,
@@ -172,7 +172,7 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, encounterServicesMock.Object, new LoggerStub(),encounterQueryServices.Object, fixtureGeneratorServices.Object, teamServices.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.Create(new EncounterModelIn()
+            var obtainedResult = controller.CreateEncounter(new EncounterModelIn()
             {
                 TeamIds = enc.TeamIds,
                 DateTime = enc.DateTime,
@@ -207,7 +207,7 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, encounterServicesMock.Object, new LoggerStub(),encounterQueryServices.Object, fixtureGeneratorServices.Object, teamServices.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.Create(new EncounterModelIn()
+            var obtainedResult = controller.CreateEncounter(new EncounterModelIn()
             {
                 TeamIds =  enc.TeamIds,
                 DateTime = enc.DateTime,
@@ -245,7 +245,7 @@ namespace EirinDuran.WebApiTest
             var controller = new EncountersController(loginServices, encounterServicesMock.Object, new LoggerStub(), encounterQueryServices.Object, fixtureGeneratorServices.Object, teamServices.Object) { ControllerContext = controllerContext, };
             controller.ModelState.AddModelError("", "");
 
-            var obtainedResult = controller.Create(new EncounterModelIn()) as BadRequestObjectResult;
+            var obtainedResult = controller.CreateEncounter(new EncounterModelIn()) as BadRequestObjectResult;
             encounterServicesMock.Verify(e => e.CreateEncounter(enc), Times.AtMostOnce());
 
             Assert.IsNotNull(obtainedResult);
@@ -275,7 +275,7 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, encounterServices.Object, new LoggerStub(),encounterQueryServices.Object, fixtureGeneratorServices.Object, teamServices.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.AddComment(4 + "", "This is a test comment in a mock!") as OkResult;
+            var obtainedResult = controller.AddEncounterComment(4 + "", "This is a test comment in a mock!") as OkResult;
             encounterServices.Verify(m => m.GetAllEncounters(), Times.AtMostOnce());
 
             Assert.IsNotNull(obtainedResult);
@@ -305,7 +305,7 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, encounterServices.Object, new LoggerStub(), encounterQueryServices.Object, fixtureGeneratorServices.Object, teamServices.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.AddComment(4 + "", "This is a test comment in a mock!") as BadRequestObjectResult;
+            var obtainedResult = controller.AddEncounterComment(4 + "", "This is a test comment in a mock!") as BadRequestObjectResult;
             encounterServices.Verify(m => m.AddComment(4 + "", "This is a test comment in a mock!"), Times.AtMostOnce());
 
             Assert.IsNotNull(obtainedResult);
@@ -328,7 +328,7 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, encounterServicesMock.Object, new LoggerStub(), encounterQueryServices.Object, fixtureGeneratorServices.Object, teamServices.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.Delete("1") as OkResult;
+            var obtainedResult = controller.DeleteEncounter("1") as OkResult;
             encounterServicesMock.Verify(e => e.DeleteEncounter("1"), Times.AtMostOnce());
 
             Assert.IsNotNull(obtainedResult);
@@ -351,7 +351,7 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, encounterServicesMock.Object, new LoggerStub(), encounterQueryServices.Object, fixtureGeneratorServices.Object, teamServices.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.Delete("1") as UnauthorizedResult;
+            var obtainedResult = controller.DeleteEncounter("1") as UnauthorizedResult;
             encounterServicesMock.Verify(e => e.DeleteEncounter("1"), Times.AtMostOnce());
 
             Assert.IsNotNull(obtainedResult);
@@ -374,7 +374,7 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, encounterServicesMock.Object, new LoggerStub(), encounterQueryServices.Object, fixtureGeneratorServices.Object, teamServices.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.Delete("1") as BadRequestObjectResult;
+            var obtainedResult = controller.DeleteEncounter("1") as BadRequestObjectResult;
             encounterServicesMock.Verify(e => e.DeleteEncounter("1"), Times.AtMostOnce());
 
             Assert.IsNotNull(obtainedResult);

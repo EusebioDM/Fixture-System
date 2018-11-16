@@ -16,22 +16,24 @@ namespace EirinDuran.WebApi.Controllers
     {
         private readonly ILoginServices loginServices;
         private readonly ISportServices sportServices;
+        private readonly ITeamServices teamServices;
         private readonly IEncounterSimpleServices encounterSimpleServices;
         private readonly IEncounterQueryServices encounterQueryServices;
         private readonly IPositionsServices positionsServices;
 
-        public SportsController(ILoginServices loginServices, ISportServices sportServices, IEncounterSimpleServices encounterSimpleServices, IEncounterQueryServices encounterQueryServices, IPositionsServices positionsServices)
+        public SportsController(ILoginServices loginServices, ISportServices sportServices, IEncounterSimpleServices encounterSimpleServices, IEncounterQueryServices encounterQueryServices, IPositionsServices positionsServices, ITeamServices teamServices)
         {
             this.loginServices = loginServices;
             this.sportServices = sportServices;
             this.encounterSimpleServices = encounterSimpleServices;
             this.encounterQueryServices = encounterQueryServices;
             this.positionsServices = positionsServices;
+            this.teamServices = teamServices;
         }
 
         [HttpGet]
         [Authorize(Roles = "Administrator, Follower")]
-        public ActionResult<List<SportModelOut>> GetAll()
+        public ActionResult<List<SportModelOut>> GetAllSports()
         {
             try
             {
@@ -46,7 +48,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet("{sportId}", Name = "GetSport")]
         [Authorize(Roles = "Administrator")]
-        public ActionResult<SportModelOut> GetById(string sportId)
+        public ActionResult<SportModelOut> GetSportById(string sportId)
         {
             try
             {
@@ -60,7 +62,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet("{sportId}/results", Name = "GetSportTable")]
         [Authorize]
-        public ActionResult<Dictionary<string, int>> GetPositionsTable(string sportId)
+        public ActionResult<Dictionary<string, int>> GetSportPositionsTable(string sportId)
         {
             try
             {
@@ -75,7 +77,7 @@ namespace EirinDuran.WebApi.Controllers
         [HttpGet]
         [Route("{sportId}/encounters")]
         [Authorize]
-        public ActionResult<List<EncounterModelOut>> GetEncounters(string sportId)
+        public ActionResult<List<EncounterModelOut>> GetEncountersBySport(string sportId)
         {
             try
             {
@@ -86,10 +88,28 @@ namespace EirinDuran.WebApi.Controllers
                 return BadRequest(e.Message);
             }
         }
+        
+        [HttpGet]
+        [Route("{sportId}/teams")]
+        [Authorize]
+        public ActionResult<List<TeamModelOut>> GetTeams(string sportId)
+        {
+            try
+            {
+                return teamServices.GetAllTeams()
+                    .Where(t => t.SportName == sportId)
+                    .Select(dto => new TeamModelOut(dto))
+                    .ToList();
+            }
+            catch (ServicesException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         [HttpPost]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Create(SportDTO sport)
+        public IActionResult CreateSport(SportDTO sport)
         {
             try
             {
@@ -114,7 +134,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpDelete("{sportName}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Delete(string sportName)
+        public IActionResult DeleteSport(string sportName)
         {
             
             try

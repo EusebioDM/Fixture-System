@@ -19,6 +19,11 @@ namespace EirinDuran.Domain
             return name.pString;
         }
 
+        public override string ToString()
+        {
+            return pString;
+        }
+
         public static implicit operator Name(string pString)
         {
             return new Name(pString);
