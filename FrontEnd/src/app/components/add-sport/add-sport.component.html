@@ -19,6 +19,10 @@
       </mat-error>
     </mat-form-field>
 
+    <mat-error *ngIf="error">
+      {{error}}
+    </mat-error>
+
     <mat-dialog-actions align="end">
       <button mat-button color="warn" mat-dialog-close>Cancelar</button>
       <button mat-button color="primary" cdkFocusInitial [disabled]="addSportForm.invalid" (click)="submit()">Agregar</button>
