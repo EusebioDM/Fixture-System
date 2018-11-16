@@ -36,12 +36,20 @@ namespace EirinDuran.WebApi
             InjectRepositories(services);
             InjectServices(services);
             InjectInfrastructure(services);
-            
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-        
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                builder =>
+                {
+                    builder.AllowAnyOrigin();
+                });
+            });
+
             SetupAuthentication(services);
         }
-        
+
         private static void InjectInfrastructure(IServiceCollection services)
         {
             services.AddScoped<IAssemblyLoader, AssemblyLoader.AssemblyLoader>();
@@ -71,7 +79,7 @@ namespace EirinDuran.WebApi
             services.AddScoped<IRepository<Log>, LogRepository>();
             services.AddScoped<IExtendedEncounterRepository, ExtendedEncounterRepository>();
         }
-        
+
         private void SetupAuthentication(IServiceCollection services)
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

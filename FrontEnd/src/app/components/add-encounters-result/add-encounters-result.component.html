@@ -1,23 +1,30 @@
 <form [formGroup]="addEncounterResultsForm">
-    <div class="form-container">
-  
-      <mat-dialog-actions align="end">
-        <button mat-button color="warn" mat-dialog-close>Cancelar</button>
-        <button mat-button color="primary" cdkFocusInitial [disabled]="addEncounterResultsForm.invalid" (click)="submit()">Agregar</button>
-      </mat-dialog-actions>
-    </div>
-  </form>
-  
-  <br>
-  
-  <mat-error *ngIf="error">
-    {{error}}
-  </mat-error>
-  
-  <div class="card">
-    <div class="card-body">
-      <h5 class="card-title">Form status: {{addEncounterResultsForm.status}}</h5>
-      <h6 class="card-subtitle mb-2 text-muted">Form Value</h6>
-      <pre>{{addEncounterResultsForm.value | json}}</pre>
-    </div>
+  <div class="form-container">
+    <!--<div class="resultSelector">-->
+    <mat-form-field *ngFor="let team of teams">
+      <mat-select (selectionChange)="getTeamResult($event.value, team)" placeholder="Posición {{team}}" required>
+        <mat-option [id]="team.name" *ngFor="let position of positions" value="{{position}}"> {{position}} </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <!--</div>-->
+
+
+    <mat-dialog-actions align="end">
+      <button mat-button color="warn" mat-dialog-close>Cancelar</button>
+      <button mat-button color="primary" cdkFocusInitial [disabled]="addEncounterResultsForm.invalid" (click)="submit()">Agregar</button>
+    </mat-dialog-actions>
   </div>
+</form>
+
+<br>
+
+<mat-error *ngIf="error">
+  {{error}}
+</mat-error>
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Form status: {{addEncounterResultsForm.status}}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">Form Value</h6>
+    <pre>{{addEncounterResultsForm.value | json}}</pre>
+  </div>
+</div>
