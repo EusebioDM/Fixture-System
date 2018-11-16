@@ -17,6 +17,7 @@ using EirinDuran.IServices.Infrastructure_Interfaces;
 using EirinDuran.IServices.Services_Interfaces;
 using EirinDuran.Logger;
 using EirinDuran.WebApi.Controllers;
+using EirinDuran.WebApi.Middlewares;
 
 namespace EirinDuran.WebApi
 {
@@ -104,6 +105,7 @@ namespace EirinDuran.WebApi
             }
             app.UseAuthentication();
             app.UseMvc();
+            app.UseMiddleware<LogginMiddleware>();
         }
     }
 }
