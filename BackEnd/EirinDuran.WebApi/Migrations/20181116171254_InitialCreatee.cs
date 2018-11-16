@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EirinDuran.WebApi.Migrations
 {
-    public partial class migrations : Migration
+    public partial class InitialCreatee : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -160,7 +160,7 @@ namespace EirinDuran.WebApi.Migrations
                         column: x => x.EncounterEntityId,
                         principalTable: "Encounters",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_TeamResult_Teams_TeamName_TeamSportName",
                         columns: x => new { x.TeamName, x.TeamSportName },
@@ -174,12 +174,14 @@ namespace EirinDuran.WebApi.Migrations
                 columns: table => new
                 {
                     TeamName = table.Column<string>(nullable: false),
-                    SportName = table.Column<string>(nullable: true),
+                    SportName = table.Column<string>(nullable: false),
+                    TeamName1 = table.Column<string>(nullable: true),
+                    TeamSportName = table.Column<string>(nullable: true),
                     UserName = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TeamUsers", x => new { x.TeamName, x.UserName });
+                    table.PrimaryKey("PK_TeamUsers", x => new { x.TeamName, x.SportName, x.UserName });
                     table.ForeignKey(
                         name: "FK_TeamUsers_Users_UserName",
                         column: x => x.UserName,
@@ -187,8 +189,8 @@ namespace EirinDuran.WebApi.Migrations
                         principalColumn: "UserName",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TeamUsers_Teams_TeamName_SportName",
-                        columns: x => new { x.TeamName, x.SportName },
+                        name: "FK_TeamUsers_Teams_TeamName1_TeamSportName",
+                        columns: x => new { x.TeamName1, x.TeamSportName },
                         principalTable: "Teams",
                         principalColumns: new[] { "Name", "SportName" },
                         onDelete: ReferentialAction.Cascade);
@@ -240,11 +242,9 @@ namespace EirinDuran.WebApi.Migrations
                 column: "UserName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TeamUsers_TeamName_SportName",
+                name: "IX_TeamUsers_TeamName1_TeamSportName",
                 table: "TeamUsers",
-                columns: new[] { "TeamName", "SportName" },
-                unique: true,
-                filter: "[SportName] IS NOT NULL");
+                columns: new[] { "TeamName1", "TeamSportName" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -148,17 +148,19 @@ namespace EirinDuran.WebApi.Migrations
                 {
                     b.Property<string>("TeamName");
 
-                    b.Property<string>("UserName");
-
                     b.Property<string>("SportName");
 
-                    b.HasKey("TeamName", "UserName");
+                    b.Property<string>("UserName");
+
+                    b.Property<string>("TeamName1");
+
+                    b.Property<string>("TeamSportName");
+
+                    b.HasKey("TeamName", "SportName", "UserName");
 
                     b.HasIndex("UserName");
 
-                    b.HasIndex("TeamName", "SportName")
-                        .IsUnique()
-                        .HasFilter("[SportName] IS NOT NULL");
+                    b.HasIndex("TeamName1", "TeamSportName");
 
                     b.ToTable("TeamUsers");
                 });
@@ -228,7 +230,8 @@ namespace EirinDuran.WebApi.Migrations
                 {
                     b.HasOne("EirinDuran.DataAccess.Entities.EncounterEntity")
                         .WithMany("Results")
-                        .HasForeignKey("EncounterEntityId");
+                        .HasForeignKey("EncounterEntityId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("EirinDuran.DataAccess.Entities.TeamEntity", "Team")
                         .WithMany()
@@ -243,8 +246,8 @@ namespace EirinDuran.WebApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("EirinDuran.DataAccess.Entities.TeamEntity", "Team")
-                        .WithOne()
-                        .HasForeignKey("EirinDuran.DataAccess.Entities.TeamUser", "TeamName", "SportName")
+                        .WithMany()
+                        .HasForeignKey("TeamName1", "TeamSportName")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
