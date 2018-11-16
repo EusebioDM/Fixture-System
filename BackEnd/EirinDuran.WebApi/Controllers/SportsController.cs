@@ -33,7 +33,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Administrator, Follower")]
-        public ActionResult<List<SportModelOut>> GetAll()
+        public ActionResult<List<SportModelOut>> GetAllSports()
         {
             try
             {
@@ -48,7 +48,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet("{sportId}", Name = "GetSport")]
         [Authorize(Roles = "Administrator")]
-        public ActionResult<SportModelOut> GetById(string sportId)
+        public ActionResult<SportModelOut> GetSportById(string sportId)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet("{sportId}/results", Name = "GetSportTable")]
         [Authorize]
-        public ActionResult<Dictionary<string, int>> GetPositionsTable(string sportId)
+        public ActionResult<Dictionary<string, int>> GetSportPositionsTable(string sportId)
         {
             try
             {
@@ -77,7 +77,7 @@ namespace EirinDuran.WebApi.Controllers
         [HttpGet]
         [Route("{sportId}/encounters")]
         [Authorize]
-        public ActionResult<List<EncounterModelOut>> GetEncounters(string sportId)
+        public ActionResult<List<EncounterModelOut>> GetEncountersBySport(string sportId)
         {
             try
             {
@@ -109,7 +109,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Create(SportDTO sport)
+        public IActionResult CreateSport(SportDTO sport)
         {
             try
             {
@@ -134,7 +134,7 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpDelete("{sportName}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Delete(string sportName)
+        public IActionResult DeleteSport(string sportName)
         {
             
             try
