@@ -29,7 +29,7 @@ export class EncountersComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['sport', 'teams', 'date', 'actionResults', 'actionModify', 'actionDelete'];
+  displayedColumns: string[] = ['sport', 'teams', 'date', 'actionResults', 'actionDelete'];
   dataSource;
   searchKey: string;
   sports: Array<Sport>;
@@ -126,20 +126,6 @@ export class EncountersComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     const dialogRef = this.dialog.open(AddEncountersResultComponent, dialogConfig);
-    dialogRef.componentInstance.encounter = encounter;
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.ngOnInit();
-      }
-    });
-  }
-
-  onModify(encounter: Encounter) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    const dialogRef = this.dialog.open(ModifyEncounterComponent, dialogConfig);
     dialogRef.componentInstance.encounter = encounter;
 
     dialogRef.afterClosed().subscribe(result => {

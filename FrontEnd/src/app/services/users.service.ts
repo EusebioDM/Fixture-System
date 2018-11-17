@@ -4,6 +4,7 @@ import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable, throwError, of } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 import { Team } from '../classes/team';
+import { Encounter } from '../classes/encounter';
 
 @Injectable({
   providedIn: 'root'
@@ -89,6 +90,18 @@ export class UsersService {
     return this.httpService.get(this.usersUrl + '/followers', requestOptions)
       .pipe(
         map((response: Response) => <Array<string>>response.json()),
+        tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
+        catchError(this.handleError)
+      );
+  }
+
+  getFollowedTeamEncounters(): Observable<Array<Encounter>> {
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+    return this.httpService.get(this.usersUrl + '/encounters', requestOptions)
+      .pipe(
+        map((response: Response) => <Array<Encounter>>response.json()),
         tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
         catchError(this.handleError)
       );
