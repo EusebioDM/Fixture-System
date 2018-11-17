@@ -5,6 +5,7 @@ import { Encounter } from 'src/app/classes/encounter';
 import { EncountersService } from 'src/app/services/encounters.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommentIn } from '../../classes/comment-in';
+import { InstantErrorStateMatcher } from 'src/app/shared/instant-error-state-matcher';
 
 @Component({
   selector: 'app-comments',
@@ -21,7 +22,9 @@ export class CommentsComponent implements OnInit {
   ) { }
 
   addCommentForm: FormGroup;
+  matcher = new InstantErrorStateMatcher();
   isAdmin: boolean;
+  error: string;
   userFollowedTeamsEncounters: Array<Encounter>;
   comments: Array<Comment>;
 
@@ -51,6 +54,7 @@ export class CommentsComponent implements OnInit {
         Validators.required
       ]
     });
+    this.addCommentForm.clearValidators();
   }
 
   get encounter() {
@@ -66,7 +70,10 @@ export class CommentsComponent implements OnInit {
     const m = comment.message;
 
     this.encountersService.addCommentToEncounter(comment.encounter, new CommentIn(m)).subscribe(
-      () => { this.ngOnInit(); }
+      (() => {
+        this.ngOnInit();
+      }),
+      (error) => this.error = error.Message
     );
   }
 }
