@@ -161,12 +161,15 @@ namespace EirinDuran.WebApi.Controllers
         [HttpGet]
         [Route("followers")]
         [Authorize]
-        public ActionResult<List<string>> GetFollowedTeams()
+        public ActionResult<List<TeamModelOut>> GetFollowedTeams()
         {
             try
             {
                 CreateSession();
-                return loginServices.LoggedUser.FollowedTeamsNames;
+                return userServices
+                    .GetFollowedTeams()
+                    .Select(dto => new TeamModelOut(dto))
+                    .ToList();
             }
             catch (ServicesException e)
             {
@@ -186,11 +189,13 @@ namespace EirinDuran.WebApi.Controllers
                 IEnumerable<TeamDTO> followedTeams = userServices.GetFollowedTeams();
                 foreach (TeamDTO team in followedTeams)
                 {
-                    IEnumerable<EncounterModelOut> teamEncounters = encounterQueryServices.GetEncountersByTeam(team.Name + "_" + team.SportName).Select(dto => new EncounterModelOut(dto));
+                    IEnumerable<EncounterModelOut> teamEncounters = encounterQueryServices
+                        .GetEncountersByTeam(team.Name + "_" + team.SportName)
+                        .Select(dto => new EncounterModelOut(dto));
                     encounters.AddRange(teamEncounters);
                 }
 
-                return encounters;
+                return encounters.ToHashSet().ToList();
             }
             catch (ServicesException e)
             {

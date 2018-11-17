@@ -18,14 +18,14 @@ namespace EirinDuran.WebApi.Controllers
     {
         private readonly ILoginServices loginServices;
         private readonly ITeamServices teamServices;
-        private readonly IEncounterSimpleServices _encounterSimpleServices;
+        private readonly IEncounterSimpleServices encounterSimpleServices;
         private readonly IEncounterQueryServices encounterQueryServices;
 
         public TeamsController(ILoginServices loginServices, ITeamServices teamServices, IEncounterSimpleServices encounterSimpleServices, IEncounterQueryServices encounterQueryServices)
         {
             this.loginServices = loginServices;
             this.teamServices = teamServices;
-            this._encounterSimpleServices = encounterSimpleServices;
+            this.encounterSimpleServices = encounterSimpleServices;
             this.encounterQueryServices = encounterQueryServices;
         }
 
