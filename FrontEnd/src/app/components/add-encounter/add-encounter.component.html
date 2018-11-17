@@ -11,7 +11,7 @@
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select name="sport" placeholder="Deporte" formControlName="sportName" required (selectionChange)="getTeamsData($event)">
+      <mat-select name="sport" placeholder="Deporte" formControlName="sportName" required (selectionChange)="getTeamsData($event.value)">
         <mat-option *ngFor="let sp of sports" [value]="sp.name">
           {{sp.name}}
         </mat-option>

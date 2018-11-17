@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Pipe, PipeTransform } from '@angular/core';
 import { MatSort, MatPaginator, MatTableDataSource } from '@angular/material';
 import { Team } from '../../classes/team';
 import { TeamsService } from '../../services/teams.service';
@@ -20,7 +20,9 @@ export class FollowTeamsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   displayedColumns: string[] = ['teamName', 'sportName', 'actionFollow'];
+  displayedColumnsTeamsFollowed: string[] = ['teamName', 'actionUnFollow'];
   dataSource;
+  dataSourceFollowedTeams;
   searchKey: string;
   temas: Array<Team>;
   teamsFollowed: Array<string>;
@@ -30,13 +32,14 @@ export class FollowTeamsComponent implements OnInit {
   }
 
   private getData() {
+
     this.teamsService.getTeams().subscribe(
       ((data: Array<Team>) => this.result(data)),
       ((error: any) => console.log(error))
     );
 
     this.usersSerivice.getUserFollowedTeams().subscribe(
-      ((data: Array<string>) => this.resultAux(data)),
+      ((data: Array<string>) => this.resultFollowedTeams(data)),
       ((error: any) => console.log(error))
     );
   }
@@ -52,9 +55,15 @@ export class FollowTeamsComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  private resultAux(data: Array<string>) {
-    debugger;
+  private resultFollowedTeams(data: Array<string>) {
     this.teamsFollowed = data;
+    this.loadTableDataSourceFollowedTeams();
+  }
+
+  private loadTableDataSourceFollowedTeams() {
+    this.dataSourceFollowedTeams = new MatTableDataSource<string>(this.teamsFollowed);
+    this.dataSourceFollowedTeams.sort = this.sort;
+    this.dataSourceFollowedTeams.paginator = this.paginator;
   }
 
   onSearchClear() {
@@ -65,6 +74,22 @@ export class FollowTeamsComponent implements OnInit {
   applyFilter() {
     this.dataSource.filter = this.searchKey.trim().toLowerCase();
   }
+
+  /*
+  public isFollowed(team: Team): boolean {
+    const teamId = team.name + '_' + team.sportName;
+
+    if (this.teamsFollowed) {
+      this.teamsFollowed.forEach(t => {
+        if (t === teamId) {
+          return true;
+        }
+      });
+    }
+
+    return false;
+  }
+  */
 
   onFollow(team: Team) {
     this.teamsService.addFollowedTeamToLoggedUser(team.name + '_' + team.sportName).subscribe();

@@ -4,13 +4,14 @@ import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable, throwError } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 import { Encounter } from '../classes/encounter';
+import { Team } from '../classes/team';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SportsService {
 
-  private sportsUrl = 'api/sports';
+  private sportsUrl = 'api/sports/';
 
   constructor(private httpService: Http) { }
 
@@ -32,7 +33,7 @@ export class SportsService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.sportsUrl + '/' + id, requestOptions)
+    return this.httpService.get(this.sportsUrl + id, requestOptions)
       .pipe(
         map((response: Response) => <Sport>response.json()),
         tap(data => console.log('Obtained sport: ' + JSON.stringify(data))),
@@ -55,7 +56,20 @@ export class SportsService {
     const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
-    return this.httpService.delete(this.sportsUrl + '/' + id, requestOptions);
+    return this.httpService.delete(this.sportsUrl + id, requestOptions);
+  }
+
+  getTeamsBySport(sportId: string): Observable<Array<Team>> {
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+
+    return this.httpService.get(this.sportsUrl + sportId + '/teams', requestOptions)
+      .pipe(
+        map((response: Response) => <Array<Team>>response.json()),
+        tap(data => console.log('Obtained sport: ' + JSON.stringify(data))),
+        catchError(this.handleError)
+      );
   }
 
   getEncountersBySport(sportId: string): Observable<Array<Encounter>> {

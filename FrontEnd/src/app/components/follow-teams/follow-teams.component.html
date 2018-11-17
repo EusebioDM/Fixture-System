@@ -1,5 +1,6 @@
 <app-follower-nav></app-follower-nav>
 
+<h1>Seguir</h1>
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource">
 
@@ -15,9 +16,12 @@
 
     <ng-container matColumnDef="actionFollow">
       <th mat-header-cell *matHeaderCellDef> Seguir </th>
-      <td mat-cell *matCellDef="let aTeam"> <button mat-button (click)="onFollow(aTeam)">
-          <mat-icon color="primary" class="icon">sentiment_very_satisfied</mat-icon>
-        </button> </td>
+      <td mat-cell *matCellDef="let aTeam">
+
+        <button mat-raised-button color="primary" (click)="onFollow(aTeam)">
+          Seguir
+        </button>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="loading">
@@ -37,6 +41,46 @@
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+<h1>Siguiendo</h1>
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSourceFollowedTeams">
+
+    <ng-container matColumnDef="teamName">
+      <th mat-header-cell *matHeaderCellDef> Nombre del Equipo </th>
+      <td mat-cell *matCellDef="let aTeam"> {{aTeam}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actionUnFollow">
+      <th mat-header-cell *matHeaderCellDef> Dejar de Seguir </th>
+      <td mat-cell *matCellDef="let aTeam">
+        <button mat-raised-button color="primary">
+          Dejar de Seguir
+        </button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="loading">
+      <mat-footer-cell *matFooterCellDef colspan="6">
+        Cargando datos...
+      </mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="noData">
+      <mat-footer-cell *matFooterCellDef colspan="6">
+        No hay datos.
+      </mat-footer-cell>
+    </ng-container>
+
+    <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':dataSource!=null}"></mat-footer-row>
+    <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!(dataSource!=null && dataSource.data.length==0)}"></mat-footer-row>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsTeamsFollowed"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnsTeamsFollowed;"></tr>
   </table>
 
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

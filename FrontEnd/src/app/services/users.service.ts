@@ -86,7 +86,6 @@ export class UsersService {
     const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
-    debugger;
     return this.httpService.get(this.usersUrl + '/followers', requestOptions)
       .pipe(
         map((response: Response) => <Array<string>>response.json()),

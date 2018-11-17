@@ -42,12 +42,21 @@ export class AddEncounterComponent implements OnInit {
   }
 
   getTeamsData(sportName: string) {
+    debugger;
+    this.sportsService.getTeamsBySport(sportName).subscribe(
+      ((data: Array<Team>) => {
+        this.teams = data;
+      }),
+      ((error: any) => console.log(error))
+    );
+/*
     this.teamsService.getTeams().subscribe(
       ((data: Array<Team>) => {
         this.teams = data;
       }),
       ((error: any) => console.log(error))
     );
+    */
   }
 
   createAddEncounterForm() {
