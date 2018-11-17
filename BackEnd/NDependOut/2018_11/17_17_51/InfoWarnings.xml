@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<InfoWarnings>
+  <Info>Begin full analysis with NDepend v2018.2.1</Info>
+  <Info>Concurrent mode</Info>
+  <Info>.NET Assemblies loaded from {C:\Users\Usuario\Documents\Obligatorio-Eirin-Duran\BackEnd\EirinDuran.WebApi\bin\debug\netcoreapp2.1} 
+   EirinDuran.WebApi.dll   v1.0.0.0
+   EirinDuran.DataAccess.dll   v1.0.0.0
+   EirinDuran.Domain.dll   v1.0.0.0
+   EirinDuran.Services.dll   v1.0.0.0
+   EirinDuran.IDataAccess.dll   v1.0.0.0
+   EirinDuran.IServices.dll   v1.0.0.0
+   EirinDuran.GenericEntityRepository.dll   v1.0.0.0
+   EirinDuran.AssemblyLoader.dll   v1.0.0.0
+   EirinDuran.Logger.dll   v1.0.0.0</Info>
+  <Info>.NET Assemblies loaded from {C:\Users\Usuario\Documents\Obligatorio-Eirin-Duran\BackEnd\EirinDuran.DomainTest\bin\debug\netcoreapp2.1} 
+   EirinDuran.DomainTest.dll   v1.0.0.0
+   EirinDuran.FixtureGenerators.AllOnce.dll   v1.0.0.0
+   EirinDuran.FixtureGenerators.RoundRobin.dll   v1.0.0.0</Info>
+  <Info>.NET Assembly loaded from {C:\Users\Usuario\Documents\Obligatorio-Eirin-Duran\BackEnd\EirinDuran.DataAccessTest\bin\debug\netcoreapp2.1} 
+   EirinDuran.DataAccessTest.dll   v1.0.0.0</Info>
+  <Info>.NET Assembly loaded from {C:\Users\Usuario\Documents\Obligatorio-Eirin-Duran\BackEnd\EirinDuran.WebApiTest\bin\debug\netcoreapp2.1} 
+   EirinDuran.WebApiTest.dll   v1.0.0.0</Info>
+  <Info>.NET Assembly loaded from {C:\Users\Usuario\Documents\Obligatorio-Eirin-Duran\BackEnd\EirinDuran.ServicesTest\bin\debug\netcoreapp2.1} 
+   EirinDuran.ServicesTest.dll   v1.0.0.0</Info>
+  <Info>.NET Assembly loaded from {C:\Users\Usuario\Documents\Obligatorio-Eirin-Duran\BackEnd\DefaultPositionTableGenerator\bin\debug\netstandard2.0} 
+   DefaultPositionTableGenerator.dll   v1.0.0.0</Info>
+  <Info>.NET Assemblies loaded from {C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.1.5} 
+   System.Runtime.dll   v4.2.1.0
+   System.Diagnostics.Debug.dll   v4.1.1.0
+   System.Diagnostics.Tools.dll   v4.1.1.0
+   System.ComponentModel.Annotations.dll   v4.2.1.0
+   System.Collections.dll   v4.1.1.0
+   System.Linq.Expressions.dll   v4.2.1.0
+   System.Security.Claims.dll   v4.1.1.0
+   System.IO.FileSystem.dll   v4.1.1.0
+   System.Linq.dll   v4.2.1.0
+   System.ComponentModel.dll   v4.0.3.0
+   System.Security.Principal.dll   v4.1.1.0
+   netstandard.dll   v2.0.0.0
+   System.Resources.ResourceManager.dll   v4.1.1.0
+   System.Runtime.Extensions.dll   v4.2.1.0
+   Microsoft.CSharp.dll   v4.0.4.0
+   mscorlib.dll   v4.0.0.0</Info>
+  <Info>.NET Assemblies loaded from {C:\Program Files\dotnet\sdk\NuGetFallbackFolder}  [ 0 , 19 ]
+   .\Microsoft.AspNetCore.Mvc.Core\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Core.dll   v2.1.1.0
+   .\Microsoft.AspNetCore.Razor.Runtime\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Razor.Runtime.dll   v2.1.1.0
+   .\Microsoft.Extensions.Configuration.Abstractions\2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.Abstractions.dll   v2.1.1.0
+   .\Microsoft.AspNetCore.Hosting.Abstractions\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Hosting.Abstractions.dll   v2.1.1.0
+   .\Microsoft.Extensions.DependencyInjection.Abstractions\2.1.1\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll   v2.1.1.0
+   .\Microsoft.AspNetCore.Http.Abstractions\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Http.Abstractions.dll   v2.1.1.0
+   .\Microsoft.AspNetCore.Authentication.JwtBearer\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll   v2.1.1.0
+   .\Microsoft.AspNetCore.Cors\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Cors.dll   v2.1.1.0
+   .\Microsoft.AspNetCore.Mvc.Abstractions\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Abstractions.dll   v2.1.1.0
+   .\Microsoft.AspNetCore.Mvc.ViewFeatures\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.ViewFeatures.dll   v2.1.1.0
+   .\Microsoft.AspNetCore.Authorization\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Authorization.dll   v2.1.1.0
+   .\Microsoft.Extensions.Configuration\2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.dll   v2.1.1.0
+   .\Microsoft.Extensions.Configuration.FileExtensions\2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.FileExtensions.dll   v2.1.1.0
+   .\Microsoft.Extensions.Configuration.Json\2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.Json.dll   v2.1.1.0
+   .\Microsoft.AspNetCore.Hosting\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Hosting.dll   v2.1.1.0
+   .\Microsoft.AspNetCore\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.dll   v2.1.1.0
+   .\Microsoft.AspNetCore.Mvc\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.dll   v2.1.1.0
+   .\Microsoft.AspNetCore.Authentication\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Authentication.dll   v2.1.1.0
+   .\Microsoft.AspNetCore.Diagnostics\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Diagnostics.dll   v2.1.1.0
+   .\Microsoft.AspNetCore.HttpsPolicy\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.HttpsPolicy.dll   v2.1.1.0</Info>
+  <Info>.NET Assemblies loaded from {C:\Program Files\dotnet\sdk\NuGetFallbackFolder}  [ 20 , 23 ]
+   .\Microsoft.AspNetCore.Http\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Http.dll   v2.1.1.0
+   .\Microsoft.AspNetCore.Http.Features\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Http.Features.dll   v2.1.1.0
+   .\Microsoft.Extensions.Primitives\2.1.1\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll   v2.1.1.0
+   .\System.Data.SqlClient\4.5.1\lib\netstandard2.0\System.Data.SqlClient.dll   v4.4.0.0</Info>
+  <Info>.NET Assemblies loaded from {C:\Users\Usuario\.nuget\packages} 
+   .\Microsoft.EntityFrameworkCore\2.1.4\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll   v2.1.4.0
+   .\Microsoft.EntityFrameworkCore.SqlServer\2.1.3\lib\netstandard2.0\Microsoft.EntityFrameworkCore.SqlServer.dll   v2.1.3.0
+   .\Microsoft.EntityFrameworkCore.Relational\2.1.3\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Relational.dll   v2.1.3.0
+   .\Microsoft.IdentityModel.Tokens\5.2.4\lib\netstandard1.4\Microsoft.IdentityModel.Tokens.dll   v5.2.4.0
+   .\System.IdentityModel.Tokens.Jwt\5.2.4\lib\netstandard1.4\System.IdentityModel.Tokens.Jwt.dll   v5.2.4.0
+   .\Microsoft.EntityFrameworkCore.Proxies\2.1.3\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Proxies.dll   v2.1.3.0
+   .\CoreCompat.System.Drawing\1.0.0-beta006\lib\netstandard1.3\CoreCompat.System.Drawing.dll   v1.0.0.0
+   .\Castle.Core\4.3.1\lib\netstandard1.5\Castle.Core.dll   v4.0.0.0
+   .\MSTest.TestFramework\1.1.17\lib\netstandard1.0\Microsoft.VisualStudio.TestPlatform.TestFramework.dll   v14.0.0.0
+   .\Microsoft.EntityFrameworkCore.InMemory\2.1.3\lib\netstandard2.0\Microsoft.EntityFrameworkCore.InMemory.dll   v2.1.3.0
+   .\Moq\4.10.0\lib\netstandard1.3\Moq.dll   v4.10.0.0</Info>
+  <Warning>Assembly {Microsoft.VisualStudio.TestPlatform.ObjectModel} is referenced by {EirinDuran.DomainTest}, {EirinDuran.DataAccessTest}, {EirinDuran.WebApiTest} and {EirinDuran.ServicesTest} but is not found.</Warning>
+  <Info>134 source files parsed ; all source files found ; all source files in-sync with PDB</Info>
+  <Info>0 code rule has been extracted from code.</Info>
+  <Info>No dependency cycle detected in assemblies referencement graph.</Info>
+  <Info>Do merge code generated by compiler into application code.</Info>
+  <Info>Analyse dependencies of your application.</Info>
+  <Info>No SuppressMessageAttribute found in the analyzed code base. Since NDepend v2018.2 SuppressMessageAttribute can be used to suppress NDepend issues. Don't forget to set in your projects the compilation symbol CODE_ANALYSIS to use this attribute to suppress NDepend issues.</Info>
+  <Info>Log trend metrics values.</Info>
+  <Info>Execute queries and rules.</Info>
+  <Error>2 quality gates fail.
+  - 'Critical Rules Violated' value 5 rules greater than fail threshold 0 rules
+  - 'Debt Rating per Namespace' value 1 namespaces greater than fail threshold 0 namespaces</Error>
+  <Info>NDepend analysis done. Duration: 01:20</Info>
+  <Info>Building the report (standard).</Info>
+</InfoWarnings>
