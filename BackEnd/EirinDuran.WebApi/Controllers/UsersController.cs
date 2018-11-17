@@ -186,11 +186,13 @@ namespace EirinDuran.WebApi.Controllers
                 IEnumerable<TeamDTO> followedTeams = userServices.GetFollowedTeams();
                 foreach (TeamDTO team in followedTeams)
                 {
-                    IEnumerable<EncounterModelOut> teamEncounters = encounterQueryServices.GetEncountersByTeam(team.Name + "_" + team.SportName).Select(dto => new EncounterModelOut(dto));
+                    IEnumerable<EncounterModelOut> teamEncounters = encounterQueryServices
+                        .GetEncountersByTeam(team.Name + "_" + team.SportName)
+                        .Select(dto => new EncounterModelOut(dto));
                     encounters.AddRange(teamEncounters);
                 }
 
-                return encounters;
+                return encounters.ToHashSet().ToList();
             }
             catch (ServicesException e)
             {
