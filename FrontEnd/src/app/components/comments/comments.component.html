@@ -20,10 +20,10 @@
   </mat-card>
 </div>
 
-<form class="comment-container"  [formGroup]="addCommentForm">
+<form class="comment-container" [formGroup]="addCommentForm">
   <mat-select name="encounter" placeholder="Encuentro" formControlName="encounter" required>
     <mat-option *ngFor="let encounter of userFollowedTeamsEncounters" [value]="encounter.id">
-      {{encounter.id}}
+      {{encounter | encounterLegibleName}}
     </mat-option>
   </mat-select>
 

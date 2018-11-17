@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { UsersService } from 'src/app/services/users.service';
 import { LoginService } from 'src/app/services/login/login.service';
 import { Encounter } from 'src/app/classes/encounter';
@@ -68,5 +68,29 @@ export class CommentsComponent implements OnInit {
     this.encountersService.addCommentToEncounter(comment.encounter, new CommentIn(m)).subscribe(
       () => { this.ngOnInit(); }
     );
+  }
+}
+
+@Pipe({ name: 'encounterLegibleName' })
+export class EncounterLegibleNamePipe implements PipeTransform {
+  transform(encounter: Encounter): string {
+    const encounterTeams = encounter.teamIds;
+    const teamsCount = encounterTeams.length;
+
+    let i = 1;
+    let singleStringTeams = '';
+    encounterTeams.forEach(teamId => {
+      const teamName = teamId.split('_');
+
+      if (i === teamsCount) {
+        singleStringTeams += teamName[0];
+      } else {
+        singleStringTeams += teamName[0] + ' vs ';
+      }
+
+      i++;
+    });
+
+    return singleStringTeams + ' (' + encounter.sportName + ')';
   }
 }
