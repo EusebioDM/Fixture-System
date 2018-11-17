@@ -15,7 +15,7 @@ namespace EirinDuran.WebApi.Models
         
         public ICollection<string> TeamIds { get; set; }
         
-        public Dictionary<string, int> Results { get; set; } = new Dictionary<string, int>();
+        public List<TeamResult> Results { get; set; } = new List<TeamResult>();
      
         public string SportName { get; set; }
 
@@ -45,12 +45,24 @@ namespace EirinDuran.WebApi.Models
             DateTime = encounter.DateTime;
             TeamIds = encounter.TeamIds;
             SportName = encounter.SportName;
-            encounter.Results.ToList().ForEach(p => Results.Add(p.Key.Name, p.Value));
+            encounter.Results.ToList().ForEach(p => Results.Add(new TeamResult()
+            {
+                Result = p.Value,
+                TeamName = p.Key.Name,
+                SportName = p.Key.SportName
+            }));
            
             CommentariesUrl = "/api/encounters/" + Id + "/commentaries";
             AddCommentariesUrl = "/api/encounters/" + Id + "/commentaries";
             GetAvailableFixturesGeneratorsUrl = "/api/encounters/fixture";
             SetAvailableFixturesGeneratorsUrl = "/api/encounters/fixture";
         }
+    }
+
+    public class TeamResult
+    {
+        public string TeamName { get; set; }
+        public string SportName { get; set; }
+        public int Result { get; set; }
     }
 }
