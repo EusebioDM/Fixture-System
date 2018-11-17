@@ -180,7 +180,7 @@ namespace EirinDuran.WebApi.Controllers
             CreateSession();
             try
             {
-                return encounterQueryServices.GetAllCommentsToOneEncounter(encounterId).ToList();
+                return encounterQueryServices.GetAllCommentsToOneEncounter(encounterId).OrderByDescending(c => c.TimeStamp).ToList();
             }
             catch (ServicesException e)
             {

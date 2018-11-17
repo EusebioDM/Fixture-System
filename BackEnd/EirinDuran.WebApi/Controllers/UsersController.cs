@@ -214,10 +214,11 @@ namespace EirinDuran.WebApi.Controllers
                 UserDTO user = userServices.GetUser(loginServices.LoggedUser.UserName);
                 IEnumerable<EncounterDTO> encounters = encounterQueryServices.GetAllEncountersWithFollowedTeams();
                 List<CommentDTO> comments = new List<CommentDTO>();
-                foreach (var encounter in encounters)
+                foreach (EncounterDTO encounter in encounters)
                 {
                     comments.AddRange(encounterQueryServices.GetAllCommentsToOneEncounter(encounter.Id.ToString()));
                 }
+                comments.Sort((dto, commentDto) => dto.TimeStamp.CompareTo(commentDto.TimeStamp) * -1);
                 return comments;
             }
             catch (ServicesException e)
