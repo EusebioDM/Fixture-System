@@ -24,40 +24,43 @@ export class FollowTeamsComponent implements OnInit {
   dataSource;
   dataSourceFollowedTeams;
   searchKey: string;
-  temas: Array<Team>;
+  teams: Array<Team>;
   teamsFollowed: Array<Team>;
+  teamsUnfollowed: Array<Team>;
 
   ngOnInit() {
     this.getData();
   }
 
   private getData() {
+    this.getAllTeams();
+  }
 
+  private getAllTeams() {
     this.teamsService.getTeams().subscribe(
-      ((data: Array<Team>) => this.result(data)),
-      ((error: any) => console.log(error))
-    );
-
-    this.usersSerivice.getUserFollowedTeams().subscribe(
-      ((data: Array<Team>) => this.resultFollowedTeams(data)),
+      ((data: Array<Team>) => {
+        this.teams = data;
+        this.getUserFollowedTeams();
+      }),
       ((error: any) => console.log(error))
     );
   }
 
-  private result(data: Array<Team>): void {
-    this.temas = data;
-    this.loadTableDataSource();
+  private getUserFollowedTeams() {
+    this.usersSerivice.getUserFollowedTeams().subscribe(
+      ((data: Array<Team>) => {
+        this.teamsFollowed = data;
+        this.loadTableDataSourceFollowedTeams();
+        this.getUnfollowedTeams();
+      }),
+      ((error: any) => console.log(error))
+    );
   }
 
   private loadTableDataSource() {
-    this.dataSource = new MatTableDataSource<Team>(this.temas);
+    this.dataSource = new MatTableDataSource<Team>(this.teamsUnfollowed);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-  }
-
-  private resultFollowedTeams(data: Array<Team>) {
-    this.teamsFollowed = data;
-    this.loadTableDataSourceFollowedTeams();
   }
 
   private loadTableDataSourceFollowedTeams() {
@@ -75,23 +78,14 @@ export class FollowTeamsComponent implements OnInit {
     this.dataSource.filter = this.searchKey.trim().toLowerCase();
   }
 
-  /*
-  public isFollowed(team: Team): boolean {
-    const teamId = team.name + '_' + team.sportName;
-
-    if (this.teamsFollowed) {
-      this.teamsFollowed.forEach(t => {
-        if (t === teamId) {
-          return true;
-        }
-      });
-    }
-
-    return false;
+  getUnfollowedTeams() {
+    this.teamsUnfollowed = this.teams.filter(i1 => !this.teamsFollowed.some(i2 => i1.name === i2.name && i1.sportName === i2.sportName));
+    this.loadTableDataSource();
   }
-  */
 
   onFollow(team: Team) {
-    this.teamsService.addFollowedTeamToLoggedUser(team.name + '_' + team.sportName).subscribe();
+    this.teamsService.addFollowedTeamToLoggedUser(team.name + '_' + team.sportName).subscribe(
+      () => { this.ngOnInit(); }
+    );
   }
 }

@@ -1,9 +1,8 @@
 <app-follower-nav></app-follower-nav>
 
-<h1>Seguir</h1>
+<h3>Seguir</h3>
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource">
-
     <ng-container matColumnDef="teamName">
       <th mat-header-cell *matHeaderCellDef> Nombre del Equipo </th>
       <td mat-cell *matCellDef="let aTeam"> {{aTeam.name}} </td>
@@ -46,7 +45,7 @@
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
 
-<h1>Siguiendo</h1>
+<h3>Siguiendo</h3>
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSourceFollowedTeams">
     <ng-container matColumnDef="teamName">
