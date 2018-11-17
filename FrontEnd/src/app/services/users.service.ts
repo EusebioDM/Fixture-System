@@ -83,13 +83,13 @@ export class UsersService {
       );
   }
 
-  getUserFollowedTeams(): Observable<Array<string>> {
+  getUserFollowedTeams(): Observable<Array<Team>> {
     const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
     return this.httpService.get(this.usersUrl + '/followers', requestOptions)
       .pipe(
-        map((response: Response) => <Array<string>>response.json()),
+        map((response: Response) => <Array<Team>>response.json()),
         tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
         catchError(this.handleError)
       );

@@ -49,13 +49,17 @@
 <h1>Siguiendo</h1>
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSourceFollowedTeams">
-
     <ng-container matColumnDef="teamName">
       <th mat-header-cell *matHeaderCellDef> Nombre del Equipo </th>
-      <td mat-cell *matCellDef="let aTeam"> {{aTeam}} </td>
+      <td mat-cell *matCellDef="let aTeam"> {{aTeam.name}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="actionUnFollow">
+    <ng-container matColumnDef="sportName">
+      <th mat-header-cell *matHeaderCellDef> Deporte </th>
+      <td mat-cell *matCellDef="let aTeam"> {{aTeam.sportName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actionUnfollow">
       <th mat-header-cell *matHeaderCellDef> Dejar de Seguir </th>
       <td mat-cell *matCellDef="let aTeam">
         <button mat-raised-button color="primary">

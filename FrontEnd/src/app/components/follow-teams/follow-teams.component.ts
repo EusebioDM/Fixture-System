@@ -20,12 +20,12 @@ export class FollowTeamsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   displayedColumns: string[] = ['teamName', 'sportName', 'actionFollow'];
-  displayedColumnsTeamsFollowed: string[] = ['teamName', 'actionUnFollow'];
+  displayedColumnsTeamsFollowed: string[] = ['teamName', 'sportName', 'actionUnfollow'];
   dataSource;
   dataSourceFollowedTeams;
   searchKey: string;
   temas: Array<Team>;
-  teamsFollowed: Array<string>;
+  teamsFollowed: Array<Team>;
 
   ngOnInit() {
     this.getData();
@@ -39,7 +39,7 @@ export class FollowTeamsComponent implements OnInit {
     );
 
     this.usersSerivice.getUserFollowedTeams().subscribe(
-      ((data: Array<string>) => this.resultFollowedTeams(data)),
+      ((data: Array<Team>) => this.resultFollowedTeams(data)),
       ((error: any) => console.log(error))
     );
   }
@@ -55,13 +55,13 @@ export class FollowTeamsComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  private resultFollowedTeams(data: Array<string>) {
+  private resultFollowedTeams(data: Array<Team>) {
     this.teamsFollowed = data;
     this.loadTableDataSourceFollowedTeams();
   }
 
   private loadTableDataSourceFollowedTeams() {
-    this.dataSourceFollowedTeams = new MatTableDataSource<string>(this.teamsFollowed);
+    this.dataSourceFollowedTeams = new MatTableDataSource<Team>(this.teamsFollowed);
     this.dataSourceFollowedTeams.sort = this.sort;
     this.dataSourceFollowedTeams.paginator = this.paginator;
   }
