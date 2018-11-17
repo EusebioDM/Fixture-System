@@ -15,6 +15,8 @@ namespace EirinDuran.IServices.Services_Interfaces
 
         void DeleteTeam(string teamId);
 
-        void AddFollowedTeam(string sportId_teamName);
+        void AddFollowedTeam(string teamId);
+        
+        void DeleteFollowedTeam(string teamId);
     }
 }

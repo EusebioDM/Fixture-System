@@ -572,7 +572,7 @@ namespace EirinDuran.WebApiTest
                 ControllerContext = controllerContext,
             };
 
-            List<string> result = controller.GetFollowedTeams().Value;
+            List<string> result = controller.GetFollowedTeams().Value.Select(t => t.Name).ToList();
             Assert.AreEqual("Atletics", result[0]);
             Assert.AreEqual("Yankees", result[1]);
         }
