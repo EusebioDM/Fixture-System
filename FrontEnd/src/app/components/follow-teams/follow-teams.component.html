@@ -61,7 +61,7 @@
     <ng-container matColumnDef="actionUnfollow">
       <th mat-header-cell *matHeaderCellDef> Dejar de Seguir </th>
       <td mat-cell *matCellDef="let aTeam">
-        <button mat-raised-button color="primary">
+        <button mat-raised-button color="primary" (click)="onDeleteFollow(aTeam)">
           Dejar de Seguir
         </button>
       </td>

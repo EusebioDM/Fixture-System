@@ -88,4 +88,10 @@ export class FollowTeamsComponent implements OnInit {
       () => { this.ngOnInit(); }
     );
   }
+
+  onDeleteFollow(team: Team) {
+    this.teamsService.deleteFollowedTeamToLoggedUser(team.name + '_' + team.sportName).subscribe(
+      () => { this.ngOnInit(); }
+    );
+  }
 }

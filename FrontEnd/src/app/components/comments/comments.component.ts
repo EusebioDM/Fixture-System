@@ -24,19 +24,21 @@ export class CommentsComponent implements OnInit {
   addCommentForm: FormGroup;
   matcher = new InstantErrorStateMatcher();
   isAdmin: boolean;
+  isLoading: boolean;
   error: string;
   userFollowedTeamsEncounters: Array<Encounter>;
   comments: Array<Comment>;
 
   ngOnInit() {
     this.isAdmin = (this.loginService.getLoggedUserRole() === 'Administrator');
+    this.isLoading = true;
     this.getData();
     this.createAddCommentForm();
   }
 
   private getData() {
     this.usersService.getUserComments().subscribe(
-      ((data: Array<Comment>) => { this.comments = data; }),
+      ((data: Array<Comment>) => { this.comments = data; this.isLoading = false; }),
       ((error: any) => console.log(error))
     );
     this.usersService.getFollowedTeamEncounters().subscribe(
