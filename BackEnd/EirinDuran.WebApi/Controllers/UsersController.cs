@@ -161,12 +161,15 @@ namespace EirinDuran.WebApi.Controllers
         [HttpGet]
         [Route("followers")]
         [Authorize]
-        public ActionResult<List<string>> GetFollowedTeams()
+        public ActionResult<List<TeamModelOut>> GetFollowedTeams()
         {
             try
             {
                 CreateSession();
-                return loginServices.LoggedUser.FollowedTeamsNames;
+                return userServices
+                    .GetFollowedTeams()
+                    .Select(dto => new TeamModelOut(dto))
+                    .ToList();
             }
             catch (ServicesException e)
             {
