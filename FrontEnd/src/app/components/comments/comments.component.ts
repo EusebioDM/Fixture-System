@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { UsersService } from 'src/app/services/users.service';
 import { LoginService } from 'src/app/services/login/login.service';
 import { Encounter } from 'src/app/classes/encounter';
+import { EncountersService } from 'src/app/services/encounters.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommentIn } from '../../classes/comment-in';
 
 @Component({
   selector: 'app-comments',
@@ -12,9 +15,12 @@ export class CommentsComponent implements OnInit {
 
   constructor(
     private loginService: LoginService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private encountersService: EncountersService,
+    private formBuilder: FormBuilder
   ) { }
 
+  addCommentForm: FormGroup;
   isAdmin: boolean;
   userFollowedTeamsEncounters: Array<Encounter>;
   comments: Array<Comment>;
@@ -22,6 +28,7 @@ export class CommentsComponent implements OnInit {
   ngOnInit() {
     this.isAdmin = (this.loginService.getLoggedUserRole() === 'Administrator');
     this.getData();
+    this.createAddCommentForm();
   }
 
   private getData() {
@@ -32,6 +39,34 @@ export class CommentsComponent implements OnInit {
     this.usersService.getFollowedTeamEncounters().subscribe(
       ((data: Array<Encounter>) => { this.userFollowedTeamsEncounters = data; }),
       ((error: any) => console.log(error))
+    );
+  }
+
+  createAddCommentForm() {
+    this.addCommentForm = this.formBuilder.group({
+      encounter: ['',
+        Validators.required
+      ],
+      message: ['',
+        Validators.required
+      ]
+    });
+  }
+
+  get encounter() {
+    return this.addCommentForm.get('encounter');
+  }
+
+  get message() {
+    return this.addCommentForm.get('message');
+  }
+
+  onComment() {
+    const comment = this.addCommentForm.value;
+    const m = comment.message;
+
+    this.encountersService.addCommentToEncounter(comment.encounter, new CommentIn(m)).subscribe(
+      () => { this.ngOnInit(); }
     );
   }
 }

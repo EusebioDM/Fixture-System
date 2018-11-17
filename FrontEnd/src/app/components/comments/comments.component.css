@@ -1,3 +1,20 @@
-.comment-card {
-    max-width: 400px;
+.comment-container{
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    margin-top: 20px;
+    width: 400px;
   }
+
+  .comment-card{
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    margin-top: 10px;
+    width: 400px;
+  }
+  
