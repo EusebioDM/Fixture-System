@@ -179,6 +179,22 @@ namespace EirinDuran.WebApi.Controllers
                 return BadRequest(e.Message);
             }
         }
+        
+        [HttpDelete("{teamId}/follower")]
+        [Authorize(Roles = "Administrator, Follower")]
+        public IActionResult DeleteFollowedTeamToLogedUser(string teamId)
+        {
+            try
+            {
+                CreateSession();
+                teamServices.DeleteFollowedTeam(teamId);
+                return Ok();
+            }
+            catch (ServicesException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         private void CreateSession()
         {
