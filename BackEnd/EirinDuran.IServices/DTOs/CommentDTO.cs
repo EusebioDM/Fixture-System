@@ -11,5 +11,7 @@ namespace EirinDuran.IServices.DTOs
         public DateTime TimeStamp { get; set; }
 
         public string Message { get; set; }
+        
+        public string EncounterId { get; set; }
     }
 }

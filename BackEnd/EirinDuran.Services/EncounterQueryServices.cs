@@ -84,7 +84,11 @@ namespace EirinDuran.Services
         {
             try
             {
-                return encounterRepository.Get(encounterId).Comments.Select(c => commentMapper.Map(c));
+                
+                List<CommentDTO> comments = encounterRepository.Get(encounterId).Comments.Select(c => commentMapper.Map(c)).ToList();
+                comments.ForEach(c => c.EncounterId = encounterId);
+
+                return comments;
             }
             catch (DataAccessException e)
             {
