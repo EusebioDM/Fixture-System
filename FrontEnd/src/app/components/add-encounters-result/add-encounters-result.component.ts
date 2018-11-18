@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Encounter } from '../../classes/encounter';
 import { FormControl } from '@angular/forms';
 import { TeamResult } from 'src/app/classes/team-result';
-import { Team } from 'src/app/classes/team';
+import { EncountersService } from 'src/app/services/encounters.service';
 
 @Component({
   selector: 'app-add-encounters-result',
@@ -11,7 +11,7 @@ import { Team } from 'src/app/classes/team';
 })
 export class AddEncountersResultComponent implements OnInit {
 
-  constructor() { }
+  constructor(private encountersService: EncountersService) { }
 
   encounter: Encounter;
   teams: Array<string>;
@@ -34,8 +34,7 @@ export class AddEncountersResultComponent implements OnInit {
   }
 
   getTeamResult(result: string, teamId: string) {
-    debugger;
     this.encounter.results.push(new TeamResult(teamId, result));
-    // hacer el update
+    this.encountersService.updateEncounter(this.encounter);
   }
 }
