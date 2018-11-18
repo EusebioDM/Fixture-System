@@ -15,7 +15,7 @@ export class LogsService {
 
   constructor(private httpService: Http) { }
 
-  getUsers(): Observable<Array<Log>> {
+  getLogs(): Observable<Array<Log>> {
     const myHeaders = new Headers({ Authorization: `Bearer ${this.token}` });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
@@ -28,6 +28,18 @@ export class LogsService {
       );
   }
 
+  getLogsFromToDate(dateFrom: string, dateTo: string): Observable<Array<Log>> {
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+
+    return this.httpService.get(this.logsUrl + '?start=' + dateFrom + '&end=' + dateTo, requestOptions)
+      .pipe(
+        map((response: Response) => <Array<Log>>response.json()),
+        tap(data => console.log('Obtained encounter: ' + JSON.stringify(data))),
+        catchError(this.handleError)
+      );
+  }
 
   private handleError(error: Response) {
     console.error(error);

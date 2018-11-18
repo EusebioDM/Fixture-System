@@ -22,13 +22,34 @@ export class LogsComponent implements OnInit {
   }
 
   private getData() {
-    this.logsService.getUsers().subscribe(
+    this.logsService.getLogs().subscribe(
       ((data: Array<Log>) => {
         this.logs = data;
         this.dataSource = new MatTableDataSource<Log>(this.logs);
       }),
       ((error: any) => console.log(error))
     );
+  }
+
+  onFilterByDate() {
+
+    if (this.start && this.end) {
+      const startMouth = this.start.getMonth() + 1;
+      const endMouth = this.end.getMonth() + 1;
+
+      const dateTo = this.start.getFullYear() + '-' + startMouth + '-' + this.start.getDate();
+      const dateFor = this.end.getFullYear() + '-' + endMouth + '-' + this.end.getDate();
+
+      this.logsService.getLogsFromToDate(dateTo, dateFor).subscribe(
+        ((data: Array<Log>) => {
+          this.logs = data;
+          this.dataSource = new MatTableDataSource<Log>(this.logs);
+        }),
+        ((error: any) => console.log(error))
+      );
+    } else {
+      this.getData();
+    }
   }
 
 }

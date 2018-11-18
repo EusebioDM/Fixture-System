@@ -1,21 +1,18 @@
 <app-admin-nav></app-admin-nav>
 
 <mat-form-field>
-  <input matInput [matDatepicker]="dateFor" placeholder="Fecha desde...">
+  <input matInput [matDatepicker]="dateFor" placeholder="Fecha desde..." [(ngModel)]="start">
   <mat-datepicker-toggle matSuffix [for]="dateFor"></mat-datepicker-toggle>
   <mat-datepicker #dateFor></mat-datepicker>
 </mat-form-field>
 
 <mat-form-field>
-  <input matInput [matDatepicker]="dateTo" placeholder="Fecha hasta...">
+  <input matInput [matDatepicker]="dateTo" placeholder="Fecha hasta..." [(ngModel)]="end">
   <mat-datepicker-toggle matSuffix [for]="dateTo"></mat-datepicker-toggle>
   <mat-datepicker #dateTo></mat-datepicker>
 </mat-form-field>
-<button mat-button color="primary">Buscar</button>
+<button mat-raised-button color="primary" (click)="onFilterByDate()">Buscar</button>
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-  <!--- Note that these columns can be defined in any order.
-        The actual rendered columns are set as a property on the row definition" -->
 
   <ng-container matColumnDef="dateTime">
     <th mat-header-cell *matHeaderCellDef> DateTime </th>

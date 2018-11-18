@@ -169,16 +169,13 @@ export class EncountersComponent implements OnInit {
 
   onFilterByDate() {
 
-    const startMouth = this.startDate.getMonth() + 1;
-    const endMouth = this.endDate.getMonth() + 1;
-    console.log('El mes es ' + startMouth);
-
-    const dateTo = this.startDate.getFullYear() + '-' + startMouth + '-' + this.startDate.getDate();
-    const dateFor = this.endDate.getFullYear() + '-' + endMouth + '-' + this.endDate.getDate();
-
-    console.log('Las fechas son ' + dateTo + ' hasta ' + dateFor);
-
     if (this.startDate && this.endDate) {
+      const startMouth = this.startDate.getMonth() + 1;
+      const endMouth = this.endDate.getMonth() + 1;
+
+      const dateTo = this.startDate.getFullYear() + '-' + startMouth + '-' + this.startDate.getDate();
+      const dateFor = this.endDate.getFullYear() + '-' + endMouth + '-' + this.endDate.getDate();
+
       this.encountersService.getEnconutersFromToDate(dateTo, dateFor).subscribe(
         ((data: Array<Encounter>) => {
           this.encounters = data;
