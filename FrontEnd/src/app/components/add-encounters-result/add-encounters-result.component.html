@@ -7,19 +7,18 @@
       </mat-select>
     </mat-form-field>
 
+    <mat-error *ngIf="error">
+      {{error}}
+    </mat-error>
+
     <mat-dialog-actions align="end">
       <button mat-button color="warn" mat-dialog-close>Cancelar</button>
-      <button mat-button color="primary" cdkFocusInitial [disabled]="addEncounterResultsForm.invalid" (click)="submit()">Agregar</button>
+      <button mat-button color="primary" cdkFocusInitial [disabled]="addEncounterResultsForm.invalid" (click)="onSubmit()">Agregar</button>
     </mat-dialog-actions>
-    
+
   </div>
 </form>
 
-<br>
-
-<mat-error *ngIf="error">
-  {{error}}
-</mat-error>
 <div class="card">
   <div class="card-body">
     <h5 class="card-title">Form status: {{addEncounterResultsForm.status}}</h5>

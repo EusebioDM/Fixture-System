@@ -3,6 +3,8 @@ import { Encounter } from '../../classes/encounter';
 import { FormControl } from '@angular/forms';
 import { TeamResult } from 'src/app/classes/team-result';
 import { EncountersService } from 'src/app/services/encounters.service';
+import { EncountersComponent } from '../encounters/encounters.component';
+import { MatDialogRef } from '@angular/material';
 
 @Component({
   selector: 'app-add-encounters-result',
@@ -11,8 +13,12 @@ import { EncountersService } from 'src/app/services/encounters.service';
 })
 export class AddEncountersResultComponent implements OnInit {
 
-  constructor(private encountersService: EncountersService) { }
+  constructor(
+    public dialogRef: MatDialogRef<EncountersComponent>,
+    private encountersService: EncountersService
+    ) { }
 
+  error: string;
   encounter: Encounter;
   teams: Array<string>;
   positions: Array<string>;
@@ -35,6 +41,14 @@ export class AddEncountersResultComponent implements OnInit {
 
   getTeamResult(result: string, teamId: string) {
     this.encounter.results.push(new TeamResult(teamId, result));
-    this.encountersService.updateEncounter(this.encounter);
+  }
+
+  onSubmit() {
+    this.encountersService.updateEncounter(this.encounter).subscribe(
+      (() => {
+        this.dialogRef.close(true);
+      }),
+      (error) => this.error = error
+    );
   }
 }

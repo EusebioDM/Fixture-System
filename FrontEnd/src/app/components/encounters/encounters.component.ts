@@ -144,7 +144,7 @@ export class EncountersComponent implements OnInit {
     dialogConfig.autoFocus = true;
     const dialogRef = this.dialog.open(YesNoDialogComponent, dialogConfig);
     dialogRef.componentInstance.title = 'Borrar encuentro...';
-    dialogRef.componentInstance.message = '¿Está seguro que quiere borrar al encuentro ' + encounterId + '?';
+    dialogRef.componentInstance.message = '¿Está seguro que quiere borrar el encuentro?';
 
     dialogRef.afterClosed().subscribe(
       ((result) => {
