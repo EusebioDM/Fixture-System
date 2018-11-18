@@ -19,16 +19,18 @@ namespace EirinDuran.Services
         private readonly ILoginServices loginServices;
         private readonly IRepository<Encounter> encounterRepository;
         private readonly IRepository<User> userRepo;
+        private readonly IRepository<Comment> commentRepo;
         private readonly PermissionValidator adminValidator;
         private readonly EncounterMapper mapper;
 
-        public EncounterSimpleServices(ILoginServices loginServices, IRepository<Encounter> encounterRepo, IRepository<Sport> sportRepo, IRepository<Team> teamRepo, IRepository<User> userRepo)
+        public EncounterSimpleServices(ILoginServices loginServices, IRepository<Encounter> encounterRepo, IRepository<Sport> sportRepo, IRepository<Team> teamRepo, IRepository<User> userRepo, IRepository<Comment> commentRepo)
         {
             this.loginServices = loginServices;
             encounterRepository = encounterRepo;
             this.userRepo = userRepo;
+            this.commentRepo = commentRepo;
             adminValidator = new PermissionValidator(Role.Administrator, loginServices);
-            mapper = new EncounterMapper(sportRepo, teamRepo);
+            mapper = new EncounterMapper(sportRepo, teamRepo, commentRepo);
         }
 
         public EncounterDTO CreateEncounter(EncounterDTO encounterDTO)

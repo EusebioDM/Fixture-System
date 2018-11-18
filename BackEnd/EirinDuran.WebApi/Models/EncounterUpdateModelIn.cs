@@ -13,7 +13,7 @@ namespace EirinDuran.WebApi.Models
         
         public DateTime DateTime { get; set; }
         
-        public Dictionary<string, int> Results { get; set; } = new Dictionary<string, int>();
+        public List<TeamResult> Results { get; set; } = new List<TeamResult>();
 
 
         public void UpdateServicesDTO(EncounterDTO servicesDTO, ITeamServices teamServices)
@@ -26,10 +26,10 @@ namespace EirinDuran.WebApi.Models
         {
             if (!Results.Any()) return;
             Dictionary<TeamDTO, int> results = new Dictionary<TeamDTO, int>();
-            foreach (KeyValuePair<string, int> pair in Results)
+            foreach (TeamResult result in Results)
             {
-                TeamDTO team = teamServices.GetTeam(pair.Key + "_" + servicesDTO.SportName);
-                results.Add(team, pair.Value);
+                TeamDTO team = teamServices.GetTeam(result.TeamId);
+                results.Add(team, result.Result);
             }
 
             servicesDTO.Results = results;

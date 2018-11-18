@@ -34,9 +34,9 @@ namespace EirinDuran.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            InjectInfrastructure(services);
             InjectRepositories(services);
             InjectServices(services);
-            InjectInfrastructure(services);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddCors(options =>
@@ -79,6 +79,7 @@ namespace EirinDuran.WebApi
             services.AddScoped<IRepository<Team>, TeamRepository>();
             services.AddScoped<IRepository<Encounter>, EncounterRepository>();
             services.AddScoped<IRepository<Log>, LogRepository>();
+            services.AddScoped<IRepository<Comment>, CommentRepository>();
             services.AddScoped<IExtendedEncounterRepository, ExtendedEncounterRepository>();
         }
 

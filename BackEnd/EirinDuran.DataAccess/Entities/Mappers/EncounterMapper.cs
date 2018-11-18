@@ -39,7 +39,7 @@ namespace EirinDuran.DataAccess.Entities.Mappers
         public Encounter Map(EncounterEntity entity)
         {
             IEnumerable<Team> teams = entity.Teams.Select(t => t.Team.ToModel());
-            ICollection<Comment> comments = entity.Comments.Select(t => t.ToModel()).ToList();
+            ICollection<Comment> comments = entity.Comments.ToList().Select(t => t.ToModel()).ToList();
             Sport sport = sportMapper.Map(entity.Sport);
             Dictionary<Team, int> results = new Dictionary<Team, int>();
             entity.Results.ToList().ForEach(p => results.Add(p.Team.ToModel(), p.Position));

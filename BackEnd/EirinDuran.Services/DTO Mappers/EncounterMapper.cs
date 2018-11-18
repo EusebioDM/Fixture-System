@@ -16,10 +16,11 @@ namespace EirinDuran.Services.DTO_Mappers
         private IRepository<Comment> commentRepo;
         private TeamMapper teamMapper;
 
-        public EncounterMapper(IRepository<Sport> sportRepo, IRepository<Team> teamRepo)
+        public EncounterMapper(IRepository<Sport> sportRepo, IRepository<Team> teamRepo, IRepository<Comment> commentRepo)
         {
             this.sportRepo = sportRepo;
             this.teamRepo = teamRepo;
+            this.commentRepo = commentRepo;
             teamMapper = new TeamMapper(sportRepo);
         }
 

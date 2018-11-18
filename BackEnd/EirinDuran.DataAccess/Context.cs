@@ -18,6 +18,7 @@ namespace EirinDuran.DataAccess
         public DbSet<SportEntity> Sports { get; set; }
         public DbSet<EncounterEntity> Encounters { get; set; }
         public DbSet<TeamUser> TeamUsers { get; set; }
+        public DbSet<CommentEntity> Comments { get; set; }
         public DbSet<Log> Logs { get; set; }
 
         public Context(DbContextOptions<Context> options) : base(options)

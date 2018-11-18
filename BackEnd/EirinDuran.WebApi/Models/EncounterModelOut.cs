@@ -48,8 +48,7 @@ namespace EirinDuran.WebApi.Models
             encounter.Results.ToList().ForEach(p => Results.Add(new TeamResult()
             {
                 Result = p.Value,
-                TeamName = p.Key.Name,
-                SportName = p.Key.SportName
+                TeamId = p.Key.Name + "_" + p.Key.SportName
             }));
            
             CommentariesUrl = "/api/encounters/" + Id + "/commentaries";
@@ -61,8 +60,7 @@ namespace EirinDuran.WebApi.Models
 
     public class TeamResult
     {
-        public string TeamName { get; set; }
-        public string SportName { get; set; }
+        public string TeamId { get; set; }
         public int Result { get; set; }
     }
 }
