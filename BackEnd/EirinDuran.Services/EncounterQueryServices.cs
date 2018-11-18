@@ -18,17 +18,19 @@ namespace EirinDuran.Services
         private readonly IRepository<Sport> sportRepo;
         private readonly IRepository<Team> teamRepo;
         private readonly IRepository<User> userRepo;
+        private readonly IRepository<Comment> commentRepo;
         private readonly EncounterMapper encounterMapper;
         private readonly CommentMapper commentMapper;
 
-        public EncounterQueryServices(ILoginServices loginServices, IExtendedEncounterRepository encounterRepository, IRepository<Sport> sportRepo, IRepository<Team> teamRepo, IRepository<User> userRepo)
+        public EncounterQueryServices(ILoginServices loginServices, IExtendedEncounterRepository encounterRepository, IRepository<Sport> sportRepo, IRepository<Team> teamRepo, IRepository<User> userRepo, IRepository<Comment> commentRepo)
         {
             this.loginServices = loginServices;
             this.encounterRepository = encounterRepository;
             this.sportRepo = sportRepo;
             this.teamRepo = teamRepo;
             this.userRepo = userRepo;
-            encounterMapper = new EncounterMapper(sportRepo, teamRepo);
+            this.commentRepo = commentRepo;
+            encounterMapper = new EncounterMapper(sportRepo, teamRepo, commentRepo);
             commentMapper = new CommentMapper(userRepo);
         }
 

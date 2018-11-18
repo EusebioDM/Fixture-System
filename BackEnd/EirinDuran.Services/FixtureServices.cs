@@ -23,15 +23,17 @@ namespace EirinDuran.Services
         private readonly IRepository<Encounter> encounterRepository;
         private readonly IRepository<Team> teamRepo;
         private readonly IAssemblyLoader assemblyLoader;
+        private readonly IRepository<Comment> commentRepo;
         private readonly IRepository<Sport> sportRepo;
 
-        public FixtureServices(ILoginServices loginServices,IRepository<Encounter> encounterRepository, IRepository<Sport> sportRepo,IRepository<Team> teamRepo, IAssemblyLoader assemblyLoader)
+        public FixtureServices(ILoginServices loginServices,IRepository<Encounter> encounterRepository, IRepository<Sport> sportRepo,IRepository<Team> teamRepo, IAssemblyLoader assemblyLoader, IRepository<Comment> commentRepo)
         {
             this.adminValidator = new PermissionValidator(Role.Administrator, loginServices);
-            mapper = new EncounterMapper(sportRepo,teamRepo);
+            mapper = new EncounterMapper(sportRepo,teamRepo, commentRepo);
             this.encounterRepository = encounterRepository;
             this.teamRepo = teamRepo;
             this.assemblyLoader = assemblyLoader;
+            this.commentRepo = commentRepo;
             SetupAssemblyLoader();
             this.sportRepo = sportRepo;
         }
