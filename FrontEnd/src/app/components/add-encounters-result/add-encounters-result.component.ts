@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Encounter } from '../../classes/encounter';
-import { FormControl } from '@angular/forms';
 import { TeamResult } from 'src/app/classes/team-result';
 import { EncountersService } from 'src/app/services/encounters.service';
 import { EncountersComponent } from '../encounters/encounters.component';
@@ -23,11 +22,9 @@ export class AddEncountersResultComponent implements OnInit {
   teams: Array<string>;
   positions: Array<string>;
   positionsResults: Array<string>;
-  addEncounterResultsForm;
 
   ngOnInit() {
     this.teams = this.encounter.teamIds;
-    this.addEncounterResultsForm = new FormControl();
     this.loadPositions();
   }
 

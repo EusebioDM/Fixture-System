@@ -1,4 +1,4 @@
-<form [formGroup]="addEncounterResultsForm">
+<form>
   <div class="form-container">
 
     <mat-form-field *ngFor="let team of teams">
@@ -13,16 +13,8 @@
 
     <mat-dialog-actions align="end">
       <button mat-button color="warn" mat-dialog-close>Cancelar</button>
-      <button mat-button color="primary" cdkFocusInitial [disabled]="addEncounterResultsForm.invalid" (click)="onSubmit()">Agregar</button>
+      <button mat-button color="primary" cdkFocusInitial (click)="onSubmit()">Agregar</button>
     </mat-dialog-actions>
 
   </div>
 </form>
-
-<div class="card">
-  <div class="card-body">
-    <h5 class="card-title">Form status: {{addEncounterResultsForm.status}}</h5>
-    <h6 class="card-subtitle mb-2 text-muted">Form Value</h6>
-    <pre>{{addEncounterResultsForm.value | json}}</pre>
-  </div>
-</div>

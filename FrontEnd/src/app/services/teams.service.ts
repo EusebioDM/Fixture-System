@@ -103,6 +103,6 @@ export class TeamsService {
 
   private handleError(error: Response) {
     console.error(error);
-    return throwError(error.json().error || 'Server error');
+    return throwError(error.json().Name || 'Server error');
   }
 }

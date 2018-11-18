@@ -1,111 +1,97 @@
 <app-admin-nav></app-admin-nav>
+<div class="search-div">
+  <button mat-raised-button (click)="onInsert()">
+    <mat-icon>add</mat-icon>Agregar
+  </button>
 
-<mat-tab-group>
-  <mat-tab label="Todos los Encuentros">
+  <button mat-raised-button (click)="onGenerateFixture()">
+    <mat-icon>settings_backup_restore</mat-icon>Generar Fixture
+  </button>
 
-    <div class="search-div">
-      <button mat-raised-button (click)="onInsert()">
-        <mat-icon>add</mat-icon>Agregar
-      </button>
+  <mat-form-field class="search-form-field" floatLabel="never">
+    <input matInput [(ngModel)]="searchKey" placeholder="Buscar..." autocomplete="off" (keyup)="applyFilter()">
+    <button mat-button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchKey" (click)="onSearchClear()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
 
-      <button mat-raised-button (click)="onGenerateFixture()">
-        <mat-icon>settings_backup_restore</mat-icon>Generar Fixture
-      </button>
+  <mat-select name="sportName" placeholder="Deporte" [(ngModel)]="selectedSport" required>
+    <mat-option [value]="">
+      ----
+    </mat-option>
+    <mat-option *ngFor="let aSport of sports" [value]="aSport.name">
+      {{aSport.name}}
+    </mat-option>
+  </mat-select>
+  <button mat-raised-button color="primary" (click)="onFilterBySport()">Buscar</button>
 
-      <mat-form-field class="search-form-field" floatLabel="never">
-        <input matInput [(ngModel)]="searchKey" placeholder="Buscar..." autocomplete="off" (keyup)="applyFilter()">
-        <button mat-button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchKey" (click)="onSearchClear()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-    </div>
+  <div>
+    <mat-form-field>
+      <input matInput [matDatepicker]="dateFor" placeholder="Fecha desde..." [(ngModel)]="startDate">
+      <mat-datepicker-toggle matSuffix [for]="dateFor"></mat-datepicker-toggle>
+      <mat-datepicker #dateFor></mat-datepicker>
+    </mat-form-field>
 
-    <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource">
+    <mat-form-field>
+      <input matInput [matDatepicker]="dateTo" placeholder="Fecha hasta..." [(ngModel)]="endDate">
+      <mat-datepicker-toggle matSuffix [for]="dateTo"></mat-datepicker-toggle>
+      <mat-datepicker #dateTo></mat-datepicker>
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="onFilterByDate()">Buscar</button>
+  </div>
 
-        <ng-container matColumnDef="sport">
-          <th mat-header-cell *matHeaderCellDef> Deporte </th>
-          <td mat-cell *matCellDef="let aEncounter"> {{aEncounter.sportName}} </td>
-        </ng-container>
+</div>
 
-        <ng-container matColumnDef="teams">
-          <th mat-header-cell *matHeaderCellDef> Equipos </th>
-          <td mat-cell *matCellDef="let aEncounter"> {{aEncounter.teamIds | listToSingleString }} </td>
-        </ng-container>
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
 
-        <ng-container matColumnDef="date">
-          <th mat-header-cell *matHeaderCellDef> Fecha </th>
-          <td mat-cell *matCellDef="let aEncounter"> {{aEncounter.dateTime | date: 'dd/MM/yyyy' }} </td>
-        </ng-container>
+    <ng-container matColumnDef="sport">
+      <th mat-header-cell *matHeaderCellDef> Deporte </th>
+      <td mat-cell *matCellDef="let aEncounter"> {{aEncounter.sportName}} </td>
+    </ng-container>
 
-        <ng-container matColumnDef="actionResults">
-          <th mat-header-cell *matHeaderCellDef> Resultados </th>
-          <td mat-cell *matCellDef="let aEncounter"> <button mat-button (click)="onAddResults(aEncounter)">
-              <mat-icon color="primary" class="icon">timeline</mat-icon>
-            </button> </td>
-        </ng-container>
+    <ng-container matColumnDef="teams">
+      <th mat-header-cell *matHeaderCellDef> Equipos </th>
+      <td mat-cell *matCellDef="let aEncounter"> {{aEncounter.teamIds | listToSingleString }} </td>
+    </ng-container>
 
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef> Fecha </th>
+      <td mat-cell *matCellDef="let aEncounter"> {{aEncounter.dateTime | date: 'dd/MM/yyyy' }} </td>
+    </ng-container>
 
-        <ng-container matColumnDef="actionDelete">
-          <th mat-header-cell *matHeaderCellDef> Borrar </th>
-          <td mat-cell *matCellDef="let aEncounter"> <button mat-button (click)="onDelete(aEncounter)">
-              <mat-icon color="warn" class="icon">delete_outline</mat-icon>
-            </button> </td>
-        </ng-container>
+    <ng-container matColumnDef="actionResults">
+      <th mat-header-cell *matHeaderCellDef> Resultados </th>
+      <td mat-cell *matCellDef="let aEncounter"> <button mat-button (click)="onAddResults(aEncounter)">
+          <mat-icon color="primary" class="icon">timeline</mat-icon>
+        </button> </td>
+    </ng-container>
 
-        <ng-container matColumnDef="loading">
-          <mat-footer-cell *matFooterCellDef colspan="6">
-            Cargando datos...
-          </mat-footer-cell>
-        </ng-container>
+    <ng-container matColumnDef="actionDelete">
+      <th mat-header-cell *matHeaderCellDef> Borrar </th>
+      <td mat-cell *matCellDef="let aEncounter"> <button mat-button (click)="onDelete(aEncounter)">
+          <mat-icon color="warn" class="icon">delete_outline</mat-icon>
+        </button> </td>
+    </ng-container>
 
-        <ng-container matColumnDef="noData">
-          <mat-footer-cell *matFooterCellDef colspan="6">
-            No hay datos.
-          </mat-footer-cell>
-        </ng-container>
+    <ng-container matColumnDef="loading">
+      <mat-footer-cell *matFooterCellDef colspan="6">
+        Cargando datos...
+      </mat-footer-cell>
+    </ng-container>
 
-        <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':dataSource!=null}"></mat-footer-row>
-        <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!(dataSource!=null && dataSource.data.length==0)}"></mat-footer-row>
+    <ng-container matColumnDef="noData">
+      <mat-footer-cell *matFooterCellDef colspan="6">
+        No hay datos.
+      </mat-footer-cell>
+    </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
+    <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':dataSource!=null}"></mat-footer-row>
+    <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!(dataSource!=null && dataSource.data.length==0)}"></mat-footer-row>
 
-      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-    </div>
-  </mat-tab>
-  <mat-tab label="Filtrar por Deporte">
-    <mat-select name="sportName" placeholder="Deporte" required>
-      <mat-option *ngFor="let aSport of sports" [value]="aSport.name">
-        {{aSport.name}}
-      </mat-option>
-    </mat-select>
-    <button mat-button color="primary">Buscar</button>
-  </mat-tab>
-  <mat-tab label="Filtrar por Equipo">
-    <mat-select name="sportName" placeholder="Equipo" required>
-      <mat-option *ngFor="let aTeam of teams" [value]="aTeam.name + '_' + aTeam.sportName">
-        {{ aTeam.name }} ({{ aTeam.sportName }})
-      </mat-option>
-    </mat-select>
-    <button mat-button color="primary">Buscar</button>
-  </mat-tab>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 
-  <mat-tab label="Filtrar por Fecha">
-    <div>
-      <mat-form-field>
-        <input matInput [matDatepicker]="dateFor" placeholder="Fecha desde...">
-        <mat-datepicker-toggle matSuffix [for]="dateFor"></mat-datepicker-toggle>
-        <mat-datepicker #dateFor></mat-datepicker>
-      </mat-form-field>
-
-      <mat-form-field>
-        <input matInput [matDatepicker]="dateTo" placeholder="Fecha hasta...">
-        <mat-datepicker-toggle matSuffix [for]="dateTo"></mat-datepicker-toggle>
-        <mat-datepicker #dateTo></mat-datepicker>
-      </mat-form-field>
-      <button mat-button color="primary">Buscar</button>
-    </div>
-  </mat-tab>
-</mat-tab-group>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>

@@ -41,14 +41,14 @@ export class EncountersService {
       );
   }
 
-  getEnconutersFromToDate(dateFrom: string, dateTo: string): Observable<Encounter> {
-    const myHeaders = new Headers();
+  getEnconutersFromToDate(dateFrom: string, dateTo: string): Observable<Array<Encounter>> {
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.encountersUrl + '/?=' + dateFrom + '/?=' + dateTo, requestOptions)
+    return this.httpService.get(this.encountersUrl + '?start=' + dateFrom + '&end=' + dateTo, requestOptions)
       .pipe(
-        map((response: Response) => <Encounter>response.json()),
+        map((response: Response) => <Array<Encounter>>response.json()),
         tap(data => console.log('Obtained encounter: ' + JSON.stringify(data))),
         catchError(this.handleError)
       );

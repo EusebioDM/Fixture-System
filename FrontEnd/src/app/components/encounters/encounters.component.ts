@@ -11,6 +11,7 @@ import { YesNoDialogComponent } from '../yes-no-dialog/yes-no-dialog.component';
 import { ModifyEncounterComponent } from '../modify-encounter/modify-encounter.component';
 import { AddEncountersResultComponent } from '../add-encounters-result/add-encounters-result.component';
 import { GenerateFixtureComponent } from '../generate-fixture/generate-fixture.component';
+import { StringifyOptions } from 'querystring';
 
 @Component({
   selector: 'app-encounters',
@@ -29,6 +30,9 @@ export class EncountersComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  selectedSport: string;
+  startDate: Date;
+  endDate: Date;
   displayedColumns: string[] = ['sport', 'teams', 'date', 'actionResults', 'actionDelete'];
   dataSource;
   searchKey: string;
@@ -72,14 +76,6 @@ export class EncountersComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Encounter>(this.encounters);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-    /*
-    this.dataSource.filterPredicate = (data, filter) => {
-      return this.displayedColumns.some(ele => {
-        return ele !== 'actionResults' && ele !== 'actionModify' && ele !== 'actionDelete'
-          && data[ele].toLowerCase().indexOf(filter) !== -1;
-      });
-    };
-    */
   }
 
   onSearchClear() {
@@ -155,6 +151,44 @@ export class EncountersComponent implements OnInit {
         }
       })
     );
+  }
+
+  onFilterBySport() {
+    if (this.selectedSport) {
+      this.sportsService.getEncountersBySport(this.selectedSport).subscribe(
+        ((data: Array<Encounter>) => {
+          this.encounters = data;
+          this.loadTableDataSource();
+        }),
+        ((error: any) => console.log(error))
+      );
+    } else {
+      this.getEncountersData();
+    }
+  }
+
+  onFilterByDate() {
+
+    const startMouth = this.startDate.getMonth() + 1;
+    const endMouth = this.endDate.getMonth() + 1;
+    console.log('El mes es ' + startMouth);
+
+    const dateTo = this.startDate.getFullYear() + '-' + startMouth + '-' + this.startDate.getDate();
+    const dateFor = this.endDate.getFullYear() + '-' + endMouth + '-' + this.endDate.getDate();
+
+    console.log('Las fechas son ' + dateTo + ' hasta ' + dateFor);
+
+    if (this.startDate && this.endDate) {
+      this.encountersService.getEnconutersFromToDate(dateTo, dateFor).subscribe(
+        ((data: Array<Encounter>) => {
+          this.encounters = data;
+          this.loadTableDataSource();
+        }),
+        ((error: any) => console.log(error))
+      );
+    } else {
+      this.getEncountersData();
+    }
   }
 }
 

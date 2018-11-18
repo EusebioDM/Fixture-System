@@ -15,9 +15,7 @@ import { InstantErrorStateMatcher } from 'src/app/shared/instant-error-state-mat
 })
 export class AddTeamComponent implements OnInit {
 
-  // name: string;
-  // sportName: string;
-
+  error: string;
   logo: string;
   selectedFile;
   sports: Array<Sport>;
@@ -86,7 +84,8 @@ export class AddTeamComponent implements OnInit {
     this.teamsService.addTeam(team).subscribe(
       ((result: Team) => {
         this.dialogRef.close(team);
-      })
+      }),
+      (error) => this.error = error
     );
   }
 }
