@@ -38,7 +38,7 @@ import { ModifyEncounterComponent } from './components/modify-encounter/modify-e
 import { AddEncountersResultComponent } from './components/add-encounters-result/add-encounters-result.component';
 import { GenerateFixtureComponent } from './components/generate-fixture/generate-fixture.component';
 import { FollowTeamsComponent } from './components/follow-teams/follow-teams.component';
-import { CommentsComponent, EncounterLegibleNamePipe } from './components/comments/comments.component';
+import { CommentsComponent, EncounterLegibleNamePipe, EncounterLegibleNameAsync } from './components/comments/comments.component';
 
 
 
@@ -163,6 +163,7 @@ const appRoutes: Routes = [
     ModifyTeamComponent,
     UserTypePipe,
     EncounterLegibleNamePipe,
+    EncounterLegibleNameAsync,
     SportPlayersPipe,
     ListToSingleString,
     LogsComponent,

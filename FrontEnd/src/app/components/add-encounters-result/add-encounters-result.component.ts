@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Encounter } from '../../classes/encounter';
 import { FormControl } from '@angular/forms';
+import { TeamResult } from 'src/app/classes/team-result';
+import { Team } from 'src/app/classes/team';
 
 @Component({
   selector: 'app-add-encounters-result',
@@ -31,9 +33,9 @@ export class AddEncountersResultComponent implements OnInit {
     }
   }
 
-  getTeamResult(result: any, teamId: string) {
+  getTeamResult(result: string, teamId: string) {
     debugger;
-    // this.encounter.results.push({teamId, result});
-    console.log('Resultado: ' + result + ' para el equipo ' + teamId);
+    this.encounter.results.push(new TeamResult(teamId, result));
+    // hacer el update
   }
 }

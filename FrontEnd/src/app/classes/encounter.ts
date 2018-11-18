@@ -1,11 +1,13 @@
+import { TeamResult } from './team-result';
+
 export class Encounter {
     id: string;
     dateTime: string;
     teamIds: Array<string>;
     sportName: string;
-    results: { key: string; value: string; };
+    results: Array<TeamResult>;
 
-    constructor(id: string, dateTime: string, teamIds: Array<string>, sportName: string, results: { key: string; value: string; }) {
+    constructor(id: string, dateTime: string, teamIds: Array<string>, sportName: string, results: Array<TeamResult>) {
         this.id = id;
         this.dateTime = dateTime;
         this.teamIds = teamIds;

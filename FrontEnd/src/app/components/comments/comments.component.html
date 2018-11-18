@@ -13,7 +13,7 @@
 <div *ngFor="let comment of comments" class="comment-container">
   <mat-card class="comment-card">
     <mat-card-header>
-      <mat-card-title>{{comment.userName}}</mat-card-title>
+      <mat-card-title>{{comment.userName}} - {{comment.encounterId | encounterLegibleNameAsync}}</mat-card-title>
       <mat-card-subtitle>{{comment.timeStamp | date: 'medium' }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>

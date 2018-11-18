@@ -29,7 +29,7 @@ export class EncountersService {
   }
 
   getEnconutersById(id: string): Observable<Encounter> {
-    const myHeaders = new Headers();
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
