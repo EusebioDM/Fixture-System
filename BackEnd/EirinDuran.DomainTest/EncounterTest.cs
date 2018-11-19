@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using EirinDuran.Domain;
 
 namespace EirinDuran.DomainTest
 {
@@ -35,7 +36,7 @@ namespace EirinDuran.DomainTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidNumberOfTeamsException))]
+        [ExpectedException(typeof(DomainException))]
         public void HigherNumberOfTeamsTest()
         {
             teams.Add(new Team("Godoy Cruz Antonio Tomba", null));
@@ -43,7 +44,7 @@ namespace EirinDuran.DomainTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidNumberOfTeamsException))]
+        [ExpectedException(typeof(DomainException))]
         public void LowerNumberOfTeamsTest()
         {
             teams.Remove(river);

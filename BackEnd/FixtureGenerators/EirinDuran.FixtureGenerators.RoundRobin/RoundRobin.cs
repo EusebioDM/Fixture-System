@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EirinDuran.Domain;
 using EirinDuran.Domain.Fixture;
 
 namespace EirinDuran.FixtureGenerators.RoundRobin
@@ -19,7 +20,7 @@ namespace EirinDuran.FixtureGenerators.RoundRobin
 
             if (areRepeatedTeams)
             {
-                throw new ThereAreRepeatedTeamsException();
+                throw new DomainException(teams, "there are repeated teams");
             }
 
             GenerateRoundRobinFixture(encounters, teamList, start);

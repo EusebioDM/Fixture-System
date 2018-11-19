@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace EirinDuran.Domain
 {
@@ -8,9 +9,11 @@ namespace EirinDuran.Domain
 
         public Mail(string pString)
         {
-            StringValidator validator = new StringValidator();
-            validator.ValidateNotNullOrEmptyString(pString);
-            validator.ValidateMailFormat(pString);
+            Regex validMailFormat = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+            if (!validMailFormat.IsMatch(pString))
+            {
+                throw new DomainException(pString, "is not a valid mail");
+            }
             this.pString = pString;
         }
 

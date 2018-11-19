@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 
 namespace EirinDuran.Domain
 {
@@ -8,9 +9,17 @@ namespace EirinDuran.Domain
 
         public Name(string pString)
         {
-            StringValidator validator = new StringValidator();
-            validator.ValidateNotNullOrEmptyString(pString);
-            validator.ValidateOnlyLettersString(pString);
+            if (string.IsNullOrWhiteSpace(pString))
+            {
+                throw new DomainException( pString, "string was null or empty");
+            }
+            
+            Regex stringLettersOnly = new Regex(@"^[a-zA-ñZäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙ ]+$");
+            if (!stringLettersOnly.IsMatch(pString))
+            {
+                throw new DomainException(pString, "string had non letter characters");
+            }
+            
             this.pString = pString;
         }
 

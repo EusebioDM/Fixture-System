@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EirinDuran.Domain;
 using EirinDuran.Domain.Fixture;
 
 namespace EirinDuran.FixtureGenerators.AllOnce
@@ -19,12 +20,12 @@ namespace EirinDuran.FixtureGenerators.AllOnce
 
             if (areRepeatedTeams)
             {
-                throw new ThereAreRepeatedTeamsException();
+                throw new DomainException(teams, "there are repeated teams");
             }
 
             if (teamList.Count % 2 != 0)
             {
-                throw new InvalidNumberOfTeamsException();
+                throw new DomainException(teams, "there are an invalid number teams");
             }
 
             GenerateAllOnceFixture(encounters, teamList, start);

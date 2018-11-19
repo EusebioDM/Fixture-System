@@ -4,13 +4,11 @@ namespace EirinDuran.Domain.Fixture
 {
     public class Sport
     {
-        private StringValidator validator;
         public Name Name { get; private set; }
         public  EncounterPlayerCount EncounterPlayerCount { get; private set; }
 
         public Sport(string name, EncounterPlayerCount encounterPlayerCount = EncounterPlayerCount.TwoPlayers)
         {
-            validator = new StringValidator();
             Name = name;
             EncounterPlayerCount = encounterPlayerCount;
         }

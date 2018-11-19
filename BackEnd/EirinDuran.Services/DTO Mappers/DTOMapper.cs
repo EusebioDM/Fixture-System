@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using EirinDuran.Domain;
+using EirinDuran.IServices.Exceptions;
 
 namespace EirinDuran.Services.DTO_Mappers
 {
@@ -14,9 +16,13 @@ namespace EirinDuran.Services.DTO_Mappers
             {
                 return TryToMapModel(dto);
             }
-            catch (Exception ex ) when (ex is Domain.DomainException  || ex is ArgumentNullException || ex is IDataAccess.DataAccessException)
+            catch(DomainException ex)
             {
-                throw new IServices.Exceptions.ServicesException($"DTO had invalid data", ex);
+                throw new ServicesException(ex.Message, ex);
+            }
+            catch (Exception ex ) when (ex is ArgumentNullException || ex is IDataAccess.DataAccessException)
+            {
+                throw new IServices.Exceptions.ServicesException(ex.Message, ex);
             }
         }
 

@@ -10,8 +10,10 @@ namespace EirinDuran.Domain
 
         public NonEmptyString(string pString)
         {
-            StringValidator validator = new StringValidator();
-            validator.ValidateNotNullOrEmptyString(pString);
+            if (string.IsNullOrWhiteSpace(pString))
+            {
+                throw new DomainException(pString, "string was null or empty");
+            }
             this.pString = pString;
         }
 

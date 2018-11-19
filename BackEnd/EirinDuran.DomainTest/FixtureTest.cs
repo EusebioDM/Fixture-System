@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EirinDuran.Domain;
 using EirinDuran.FixtureGenerators.AllOnce;
 using EirinDuran.FixtureGenerators.RoundRobin;
 
@@ -86,7 +87,7 @@ namespace EirinDuran.DomainTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ThereAreRepeatedTeamsException))]
+        [ExpectedException(typeof(DomainException))]
         public void SampleAutoRoundRobinFixtureWithTheSameTeamTest()
         {
             List<Team> teams = new List<Team>() { felix, liverpool, river, cerro, penhiarol, torque, cerro };
@@ -99,7 +100,7 @@ namespace EirinDuran.DomainTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidNumberOfTeamsException))]
+        [ExpectedException(typeof(DomainException))]
         public void SampleAutoAllOnceFixtureImparNumberOfTeamsTest()
         {
             List<Team> teams = new List<Team>() { felix, liverpool, river };
