@@ -15,7 +15,7 @@ export class AddEncountersResultComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<EncountersComponent>,
     private encountersService: EncountersService
-    ) { }
+  ) { }
 
   hasResults = '';
   results: Array<TeamResult>;
@@ -45,9 +45,17 @@ export class AddEncountersResultComponent implements OnInit {
   }
 
   private showResults() {
-    this.results.forEach(result => {
-      this.hasResults += 'Equipo: ' + result.teamId + ' Resultado: ' + result.result + ' - ';
-    });
+    if (this.results.length === 2) {
+      this.results.forEach(result => {
+        if (result.result == '1') {
+          this.hasResults += 'Equipo ganador: ' + result.teamId;
+        }
+      });
+    } else {
+      this.results.forEach(result => {
+        this.hasResults += 'Equipo: ' + result.teamId + ' Resultado: ' + result.result + ' - ';
+      });
+    }
   }
 
   onSubmit() {
