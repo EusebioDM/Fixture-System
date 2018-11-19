@@ -68,6 +68,7 @@ export class CalendarComponent implements OnInit {
     event: CalendarEvent;
   };
 
+  /*
   actions: CalendarEventAction[] = [
     {
       label: '<i class="fa fa-fw fa-pencil"></i>',
@@ -83,6 +84,7 @@ export class CalendarComponent implements OnInit {
       }
     }
   ];
+  */
 
   refresh: Subject<any> = new Subject();
 
@@ -127,7 +129,7 @@ export class CalendarComponent implements OnInit {
     }*/
   ];
 
-  activeDayIsOpen = true;
+  activeDayIsOpen = false;
 
   selectedSport: string;
   sports: Array<Sport>;
@@ -147,6 +149,7 @@ export class CalendarComponent implements OnInit {
     }
   }
 
+  /*
   eventTimesChanged({
     event,
     newStart,
@@ -157,11 +160,14 @@ export class CalendarComponent implements OnInit {
     this.handleEvent('Dropped or resized', event);
     this.refresh.next();
   }
+  */
 
+  /*
   handleEvent(action: string, event: CalendarEvent): void {
     this.modalData = { event, action };
     this.modal.open(this.modalContent, { size: 'lg' });
   }
+  */
 
   addEvent(): void {
     this.events.push({
@@ -205,20 +211,43 @@ export class CalendarComponent implements OnInit {
   }
 
   private loadCalendar() {
+    this.events = [];
     this.encounters.forEach(encounter => {
       this.events.push({
-      start: subDays(startOfDay(encounter.dateTime), 1),
-      end: addDays(new Date(), 1),
-      title: encounter.sportName,
-      color: colors.red,
-      actions: this.actions,
-      allDay: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
+        start: subDays(startOfDay(encounter.dateTime), 0),
+        end: addDays(encounter.dateTime, 0),
+        title: this.getInformation(encounter),
+        color: colors.red,
+        // actions: this.actions,
+        allDay: true,
+        // resizable: {
+        //  beforeStart: true,
+        //  afterEnd: true
+        // },
+        // draggable: true
       });
     });
+    this.refresh.next();
+  }
+
+  private getInformation(encounter: Encounter): string {
+    const teamsInEncounter = encounter.teamIds;
+    let i = 1;
+    let singleStringTeams = '';
+    teamsInEncounter.forEach(teamId => {
+      const teamName = teamId.split('_');
+
+      if (i === teamsInEncounter.length) {
+        singleStringTeams += teamName[0];
+      } else {
+        singleStringTeams += teamName[0] + ' vs ';
+      }
+
+      i++;
+    });
+
+    return '<br> <strong>Deporte:</strong> ' + encounter.sportName
+      + '<br> <strong>Equipos:</strong> ' + singleStringTeams 
+      + '<br> <strong>Fecha:</strong> ' + encounter.dateTime;
   }
 }
