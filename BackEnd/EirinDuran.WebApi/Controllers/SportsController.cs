@@ -62,11 +62,13 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpGet("{sportId}/results", Name = "GetSportTable")]
         [Authorize]
-        public ActionResult<Dictionary<string, int>> GetSportPositionsTable(string sportId)
+        public ActionResult<List<TeamPosition>> GetSportPositionsTable(string sportId)
         {
             try
             {
-                return positionsServices.GetPositionsTable(new SportDTO() {Name = sportId});
+                return positionsServices.GetPositionsTable(sportId)
+                    .Select((pair, i) => new TeamPosition(pair.Key, pair.Value))
+                    .ToList();
             }
             catch (ServicesException e)
             {

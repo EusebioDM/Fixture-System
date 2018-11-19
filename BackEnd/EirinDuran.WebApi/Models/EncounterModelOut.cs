@@ -57,10 +57,4 @@ namespace EirinDuran.WebApi.Models
             SetAvailableFixturesGeneratorsUrl = "/api/encounters/fixture";
         }
     }
-
-    public class TeamResult
-    {
-        public string TeamId { get; set; }
-        public int Result { get; set; }
-    }
 }

@@ -25,11 +25,11 @@ namespace EirinDuran.Services
             SetupAssemblyLoader();
         }
 
-        public Dictionary<string, int> GetPositionsTable(SportDTO sportDto)
+        public IReadOnlyDictionary<string, int> GetPositionsTable(string sport)
         {
             try
             {
-                return TryToGetPositionsTable(sportDto);
+                return TryToGetPositionsTable(sport);
             }
             catch (InvalidOperationException)
             {
@@ -37,10 +37,10 @@ namespace EirinDuran.Services
             }
         }
 
-        private Dictionary<string, int> TryToGetPositionsTable(SportDTO sportDto)
+        private IReadOnlyDictionary<string, int> TryToGetPositionsTable(string sport)
         {
             IPositionTableGenerator generator = assemblyLoader.GetImplementations<IPositionTableGenerator>().First();
-            IEnumerable<Encounter> encounters = encounterRepo.GetBySport(sportDto.Name);
+            IEnumerable<Encounter> encounters = encounterRepo.GetBySport(sport);
             return generator.GetPositionTable(encounters);
         }
 
