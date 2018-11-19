@@ -1,4 +1,10 @@
 <app-follower-nav></app-follower-nav>
-<p>
-  calendar works!
-</p>
+
+<div>
+  <mat-form-field>
+    <mat-select name="sport" placeholder="Deporte" required>
+      <mat-option *ngFor="let aSport of sports" [value]="aSport.name"> {{aSport.name}} </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-raised-button color="primary" (click)="onSelectSport()">Buscar</button>
+</div>
