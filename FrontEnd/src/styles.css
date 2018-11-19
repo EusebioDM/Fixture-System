@@ -1,15 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
-html, body { 
-  height: 100%; 
+
+html, body {
+  height: 100%;
 }
 
-body { 
+body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif; 
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-.hide{
-    display: none;
+.hide {
+  display: none;
 }
 
 /*.toolbar{
@@ -22,48 +23,60 @@ body {
 }*/
 
 .nav-icon {
-    padding: 0 14px;
-  }
-  
+  padding: 0 14px;
+}
+
 .nav-spacer {
-    flex: 1 1 auto;
-  }
+  flex: 1 1 auto;
+}
 
-  table {
-    margin: 0 auto;
-    margin-top: 10px;
-    width: 90%;
-    size: 90%;
-    align-content: center;
- }
+table {
+  margin: 0 auto;
+  margin-top: 10px;
+  width: 90%;
+  size: 90%;
+  align-content: center;
+}
 
- .search-div {
-    margin: 0px auto;
-    margin-left: 5%;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    align-content: center;
- }
+.search-div {
+  margin: 0px auto;
+  margin-left: 5%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  align-content: center;
+}
 
- .search-form-field {
-     margin-left: 10px;
- }
+.search-form-field {
+  margin-left: 10px;
+}
 
- .mat-elevation-z8 {
-    margin: 0 auto;
-    margin-top: 10px;
-    width: 90%;
-    size: 90%;
-    align-content: center;
- }
+.select-div {
+  margin: 0px auto;
+  margin-left: 5%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  align-content: center;
+}
 
- .form-container {
-    min-width: 300px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-  
+.select-div button {
+  margin-left: 10px;
+}
+
+.mat-elevation-z8 {
+  margin: 0 auto;
+  margin-top: 10px;
+  width: 90%;
+  size: 90%;
+  align-content: center;
+}
+
+.form-container {
+  min-width: 300px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .form-container mat-form-field {
   width: 300px;
   margin-bottom: 20px;

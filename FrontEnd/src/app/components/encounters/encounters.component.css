@@ -33,3 +33,11 @@ mat-tab-group mat-form-field {
     margin-top: 10px;
     align-content: center;
 }
+
+.filterButton {
+    margin-left: 10px;
+}
+
+.datePicket {
+    margin-right: 10px;
+}

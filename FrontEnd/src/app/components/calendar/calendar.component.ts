@@ -63,12 +63,12 @@ export class CalendarComponent implements OnInit {
 
   viewDate: Date = new Date();
 
+  /*
   modalData: {
     action: string;
     event: CalendarEvent;
   };
 
-  /*
   actions: CalendarEventAction[] = [
     {
       label: '<i class="fa fa-fw fa-pencil"></i>',

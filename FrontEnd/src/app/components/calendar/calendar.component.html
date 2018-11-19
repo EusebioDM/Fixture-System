@@ -1,8 +1,7 @@
 <app-follower-nav></app-follower-nav>
-
-<div>
+<div class="select-div">
   <mat-form-field>
-    <mat-select [(ngModel)]="selectedSport" placeholder="Posición {{team}}" required>
+    <mat-select [(ngModel)]="selectedSport" placeholder="Deporte" required>
       <mat-option *ngFor="let aSport of sports" value="{{aSport.name}}"> {{aSport.name}} </mat-option>
     </mat-select>
   </mat-form-field>
@@ -10,6 +9,7 @@
 </div>
 
 <div class="calendarContainer">
+  <!--
   <ng-template #modalContent let-close="close">
     <div class="modal-header">
       <h5 class="modal-title">Event action occurred</h5>
@@ -30,7 +30,7 @@
     <div class="modal-footer">
       <button type="button" class="btn btn-outline-secondary" (click)="close()">OK</button>
     </div>
-  </ng-template>
+  </ng-template>-->
 
   <div class="row text-center">
     <div class="col-md-4">
@@ -67,8 +67,7 @@
   <br>
   <div [ngSwitch]="view">
     <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
-      [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)" (eventClicked)="handleEvent('Clicked', $event.event)"
-      (eventTimesChanged)="eventTimesChanged($event)">
+      [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)">
     </mwl-calendar-month-view>
     <!--<mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
       (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">

@@ -17,6 +17,8 @@ export class AddEncountersResultComponent implements OnInit {
     private encountersService: EncountersService
     ) { }
 
+  hasResults = '';
+  results: Array<TeamResult>;
   error: string;
   encounter: Encounter;
   teams: Array<string>;
@@ -25,6 +27,8 @@ export class AddEncountersResultComponent implements OnInit {
 
   ngOnInit() {
     this.teams = this.encounter.teamIds;
+    this.results = this.encounter.results;
+    this.showResults();
     this.loadPositions();
   }
 
@@ -38,6 +42,12 @@ export class AddEncountersResultComponent implements OnInit {
 
   getTeamResult(result: string, teamId: string) {
     this.encounter.results.push(new TeamResult(teamId, result));
+  }
+
+  private showResults() {
+    this.results.forEach(result => {
+      this.hasResults += 'Equipo: ' + result.teamId + ' Resultado: ' + result.result + ' - ';
+    });
   }
 
   onSubmit() {

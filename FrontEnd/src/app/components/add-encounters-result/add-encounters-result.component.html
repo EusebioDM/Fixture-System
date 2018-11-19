@@ -11,6 +11,10 @@
       {{error}}
     </mat-error>
 
+    <div *ngIf="hasResults">
+      {{hasResults}}
+    </div>
+
     <mat-dialog-actions align="end">
       <button mat-button color="warn" mat-dialog-close>Cancelar</button>
       <button mat-button color="primary" cdkFocusInitial (click)="onSubmit()">Agregar</button>
