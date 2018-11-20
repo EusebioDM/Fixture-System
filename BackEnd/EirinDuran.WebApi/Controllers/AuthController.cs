@@ -10,6 +10,7 @@ using EirinDuran.IServices.Infrastructure_Interfaces;
 using EirinDuran.IServices.Services_Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 
 namespace EirinDuran.WebApi.Controllers
 {

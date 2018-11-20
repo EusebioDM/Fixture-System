@@ -5,13 +5,14 @@ import { Observable, throwError } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 import { Fixture } from '../classes/fixture';
 import { CommentIn } from '../classes/comment-in';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EncountersService {
 
-  private encountersUrl = 'api/encounters/';
+  private ENCOUNTERS_URL = environment.WEB_API_URL + '/api/encounters/';
 
   constructor(private httpService: Http) { }
 
@@ -20,7 +21,7 @@ export class EncountersService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.encountersUrl, requestOptions)
+    return this.httpService.get(this.ENCOUNTERS_URL, requestOptions)
       .pipe(
         map((response: Response) => <Array<Encounter>>response.json()),
         tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
@@ -33,7 +34,7 @@ export class EncountersService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.encountersUrl + id, requestOptions)
+    return this.httpService.get(this.ENCOUNTERS_URL + id, requestOptions)
       .pipe(
         map((response: Response) => <Encounter>response.json()),
         tap(data => console.log('Obtained encounter: ' + JSON.stringify(data))),
@@ -46,7 +47,7 @@ export class EncountersService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.encountersUrl + '?start=' + dateFrom + '&end=' + dateTo, requestOptions)
+    return this.httpService.get(this.ENCOUNTERS_URL + '?start=' + dateFrom + '&end=' + dateTo, requestOptions)
       .pipe(
         map((response: Response) => <Array<Encounter>>response.json()),
         tap(data => console.log('Obtained encounter: ' + JSON.stringify(data))),
@@ -59,7 +60,7 @@ export class EncountersService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.post(this.encountersUrl, encounter, requestOptions).pipe(
+    return this.httpService.post(this.ENCOUNTERS_URL, encounter, requestOptions).pipe(
       tap((e: Encounter) => console.log(`added encounter`)),
       catchError(this.handleError)
     );
@@ -69,7 +70,7 @@ export class EncountersService {
     const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
-    return this.httpService.put(this.encountersUrl + encounter.id, encounter, requestOptions).pipe(
+    return this.httpService.put(this.ENCOUNTERS_URL + encounter.id, encounter, requestOptions).pipe(
       tap(_ => console.log(`updated user id=${encounter.id}`)),
       catchError(this.handleError)
     );
@@ -80,7 +81,7 @@ export class EncountersService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.delete(this.encountersUrl + id, requestOptions);
+    return this.httpService.delete(this.ENCOUNTERS_URL + id, requestOptions);
   }
 
   GetAvailableFixtureGenerators(): Observable<Array<string>> {
@@ -88,7 +89,7 @@ export class EncountersService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.encountersUrl + 'fixture', requestOptions)
+    return this.httpService.get(this.ENCOUNTERS_URL + 'fixture', requestOptions)
       .pipe(
         map((response: Response) => <Array<string>>response.json()),
         tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
@@ -101,7 +102,7 @@ export class EncountersService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.post(this.encountersUrl + 'fixture', fixture, requestOptions).pipe(
+    return this.httpService.post(this.ENCOUNTERS_URL + 'fixture', fixture, requestOptions).pipe(
       tap((f: Fixture) => console.log(`generated fixture`)),
       catchError(this.handleError)
     );
@@ -112,7 +113,7 @@ export class EncountersService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.encountersUrl + id + '/commentaries', requestOptions)
+    return this.httpService.get(this.ENCOUNTERS_URL + id + '/commentaries', requestOptions)
       .pipe(
         map((response: Response) => <Array<Comment>>response.json()),
         tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
@@ -125,7 +126,7 @@ export class EncountersService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.post(this.encountersUrl + encounterId + '/commentaries', message, requestOptions).pipe(
+    return this.httpService.post(this.ENCOUNTERS_URL + encounterId + '/commentaries', message, requestOptions).pipe(
       tap((s: string) => console.log(`added comment`)),
       catchError(this.handleError)
     );

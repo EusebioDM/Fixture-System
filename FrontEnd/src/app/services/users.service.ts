@@ -5,14 +5,14 @@ import { Observable, throwError, of } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 import { Team } from '../classes/team';
 import { Encounter } from '../classes/encounter';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
 
-  users: Array<User>;
-  private usersUrl = 'api/users';
+  private USERS_URL = environment.WEB_API_URL + '/api/users';
 
   constructor(private httpService: Http) { }
 
@@ -21,7 +21,7 @@ export class UsersService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.usersUrl, requestOptions)
+    return this.httpService.get(this.USERS_URL, requestOptions)
       .pipe(
         map((response: Response) => <Array<User>>response.json()),
         tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
@@ -34,7 +34,7 @@ export class UsersService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.usersUrl + '/' + id, requestOptions)
+    return this.httpService.get(this.USERS_URL + '/' + id, requestOptions)
       .pipe(
         map((response: Response) => <User>response.json()),
         tap(data => console.log('Obtained user: ' + JSON.stringify(data))),
@@ -47,7 +47,7 @@ export class UsersService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.post(this.usersUrl, user, requestOptions).pipe(
+    return this.httpService.post(this.USERS_URL, user, requestOptions).pipe(
       tap((u: User) => console.log(`added user w/ id=${u.userName}`)),
       catchError(this.handleError)
     );
@@ -57,7 +57,7 @@ export class UsersService {
     const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
-    return this.httpService.put(this.usersUrl + '/' + user.userName, user, requestOptions).pipe(
+    return this.httpService.put(this.USERS_URL + '/' + user.userName, user, requestOptions).pipe(
       tap(_ => console.log(`updated user id=${user.userName}`)),
       catchError(this.handleError)
     );
@@ -67,7 +67,7 @@ export class UsersService {
     const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
-    return this.httpService.delete(this.usersUrl + '/' + id, requestOptions);
+    return this.httpService.delete(this.USERS_URL + '/' + id, requestOptions);
   }
 
   getUserComments(): Observable<Array<Comment>> {
@@ -75,7 +75,7 @@ export class UsersService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.usersUrl + '/commentaries', requestOptions)
+    return this.httpService.get(this.USERS_URL + '/commentaries', requestOptions)
       .pipe(
         map((response: Response) => <Array<Comment>>response.json()),
         tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
@@ -87,7 +87,7 @@ export class UsersService {
     const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
-    return this.httpService.get(this.usersUrl + '/followers', requestOptions)
+    return this.httpService.get(this.USERS_URL + '/followers', requestOptions)
       .pipe(
         map((response: Response) => <Array<Team>>response.json()),
         tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
@@ -99,7 +99,7 @@ export class UsersService {
     const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
-    return this.httpService.get(this.usersUrl + '/encounters', requestOptions)
+    return this.httpService.get(this.USERS_URL + '/encounters', requestOptions)
       .pipe(
         map((response: Response) => <Array<Encounter>>response.json()),
         tap(data => console.log('Obtained data: ' + JSON.stringify(data))),

@@ -3,15 +3,19 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class LoginService {
+
+  private LOGIN_URL = environment.WEB_API_URL + '/api/auth';
+
   constructor(
     private http: HttpClient,
     private router: Router) { }
 
   login(username: string, password: string): Observable<boolean> {
-    return this.http.post<{ token: string }>('/api/auth', { username: username, password: password })
+    return this.http.post<{ token: string }>(this.LOGIN_URL, { username: username, password: password })
       .pipe(
         map(result => {
           localStorage.setItem('access_token', result.token);

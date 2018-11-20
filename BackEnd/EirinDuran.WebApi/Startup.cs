@@ -45,6 +45,8 @@ namespace EirinDuran.WebApi
                 builder =>
                 {
                     builder.AllowAnyOrigin();
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
                 });
             });
 
@@ -106,6 +108,7 @@ namespace EirinDuran.WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors("AllowAllOrigins");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

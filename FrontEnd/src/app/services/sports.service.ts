@@ -6,13 +6,14 @@ import { map, tap, catchError } from 'rxjs/operators';
 import { Encounter } from '../classes/encounter';
 import { Team } from '../classes/team';
 import { TeamPosition } from '../classes/team-position';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SportsService {
 
-  private sportsUrl = 'api/sports/';
+  private SPORTS_URL = environment.WEB_API_URL + '/api/sports/';
 
   constructor(private httpService: Http) { }
 
@@ -21,7 +22,7 @@ export class SportsService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.sportsUrl, requestOptions)
+    return this.httpService.get(this.SPORTS_URL, requestOptions)
       .pipe(
         map((response: Response) => <Array<Sport>>response.json()),
         tap(data => console.log('Obtained data: ' + JSON.stringify(data))),
@@ -34,7 +35,7 @@ export class SportsService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.sportsUrl + id, requestOptions)
+    return this.httpService.get(this.SPORTS_URL + id, requestOptions)
       .pipe(
         map((response: Response) => <Sport>response.json()),
         tap(data => console.log('Obtained sport: ' + JSON.stringify(data))),
@@ -47,7 +48,7 @@ export class SportsService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.post(this.sportsUrl, sport, requestOptions).pipe(
+    return this.httpService.post(this.SPORTS_URL, sport, requestOptions).pipe(
       tap((s: Sport) => console.log(`added sport w/ id=${s.name}`)),
       catchError(this.handleError)
     );
@@ -57,7 +58,7 @@ export class SportsService {
     const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
-    return this.httpService.delete(this.sportsUrl + id, requestOptions);
+    return this.httpService.delete(this.SPORTS_URL + id, requestOptions);
   }
 
   getTeamsBySport(sportId: string): Observable<Array<Team>> {
@@ -65,7 +66,7 @@ export class SportsService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.sportsUrl + sportId + '/teams', requestOptions)
+    return this.httpService.get(this.SPORTS_URL + sportId + '/teams', requestOptions)
       .pipe(
         map((response: Response) => <Array<Team>>response.json()),
         tap(data => console.log('Obtained sport: ' + JSON.stringify(data))),
@@ -78,7 +79,7 @@ export class SportsService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.sportsUrl + sportId + '/encounters', requestOptions)
+    return this.httpService.get(this.SPORTS_URL + sportId + '/encounters', requestOptions)
       .pipe(
         map((response: Response) => <Array<Encounter>>response.json()),
         tap(data => console.log('Obtained sport: ' + JSON.stringify(data))),
@@ -91,7 +92,7 @@ export class SportsService {
     myHeaders.append('Accept', 'application/json');
     const requestOptions = new RequestOptions({ headers: myHeaders });
 
-    return this.httpService.get(this.sportsUrl + sportId + '/results', requestOptions)
+    return this.httpService.get(this.SPORTS_URL + sportId + '/results', requestOptions)
       .pipe(
         map((response: Response) => <Array<TeamPosition>>response.json()),
         tap(data => console.log('Obtained sport: ' + JSON.stringify(data))),
