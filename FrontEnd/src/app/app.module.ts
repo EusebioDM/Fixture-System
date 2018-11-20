@@ -38,7 +38,14 @@ import { ModifyEncounterComponent } from './components/modify-encounter/modify-e
 import { AddEncountersResultComponent } from './components/add-encounters-result/add-encounters-result.component';
 import { GenerateFixtureComponent } from './components/generate-fixture/generate-fixture.component';
 import { FollowTeamsComponent } from './components/follow-teams/follow-teams.component';
-import { CommentsComponent } from './components/comments/comments.component';
+import { CommentsComponent, EncounterLegibleNamePipe, EncounterLegibleNameAsync } from './components/comments/comments.component';
+
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { CommonModule } from '@angular/common';
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { TeamPositionComponent } from './components/team-position/team-position.component';
 
 
 
@@ -97,7 +104,7 @@ const appRoutes: Routes = [
     component: CalendarComponent,
     canActivate: [RoleGuardService],
     data: {
-      expectedRole: 'Follower'
+      expectedRole: ['Follower', 'Administrator']
     }
   },
   {
@@ -105,7 +112,15 @@ const appRoutes: Routes = [
     component: FavoritesComponent,
     canActivate: [RoleGuardService],
     data: {
-      expectedRole: 'Follower'
+      expectedRole: ['Follower', 'Administrator']
+    }
+  },
+  {
+    path: 'positions',
+    component: TeamPositionComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      expectedRole: ['Follower', 'Administrator']
     }
   },
   {
@@ -162,6 +177,8 @@ const appRoutes: Routes = [
     YesNoDialogComponent,
     ModifyTeamComponent,
     UserTypePipe,
+    EncounterLegibleNamePipe,
+    EncounterLegibleNameAsync,
     SportPlayersPipe,
     ListToSingleString,
     LogsComponent,
@@ -170,7 +187,8 @@ const appRoutes: Routes = [
     AddEncountersResultComponent,
     GenerateFixtureComponent,
     FollowTeamsComponent,
-    CommentsComponent
+    CommentsComponent,
+    TeamPositionComponent
   ],
   entryComponents: [
     AddUserComponent,
@@ -185,6 +203,14 @@ const appRoutes: Routes = [
     GenerateFixtureComponent
   ],
   imports: [
+    CommonModule,
+    NgbModalModule,
+    FlatpickrModule.forRoot(),
+    BrowserAnimationsModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    }),
     MaterialModule,
     ReactiveFormsModule,
     BrowserModule,

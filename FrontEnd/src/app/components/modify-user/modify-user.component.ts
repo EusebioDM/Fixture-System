@@ -25,7 +25,7 @@ export class ModifyUserComponent implements OnInit {
   mail: string;
   password: string;
   passwordRepeated: string;
-  role: string;
+  isAdmin: boolean;
 
   user: User;
 
@@ -40,7 +40,8 @@ export class ModifyUserComponent implements OnInit {
 
   public submit() {
 
-    const user = new User(this.username, this.name, this.surname, this.password, this.mail, this.role);
+
+    const user = new User(this.username, this.name, this.surname, this.password, this.mail, this.isAdmin);
     user.userName = this.data.userName;
     this.usersService.updateUser(user).subscribe();
   }

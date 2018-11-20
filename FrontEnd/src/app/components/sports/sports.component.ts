@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Inject, PipeTransform, Pipe } from '@angular/core';
 import { SportsService } from 'src/app/services/sports.service';
 import { Sport } from 'src/app/classes/sport';
-import { MatTableDataSource, MatPaginator, MatDialogConfig, MatDialog, MatSort, MAT_DIALOG_DATA } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatDialogConfig, MatDialog, MatSort } from '@angular/material';
 import { AddSportComponent } from '../add-sport/add-sport.component';
 import { YesNoDialogComponent } from '../yes-no-dialog/yes-no-dialog.component';
 

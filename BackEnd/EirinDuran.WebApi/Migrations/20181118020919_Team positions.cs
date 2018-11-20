@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EirinDuran.WebApi.Migrations
 {
-    public partial class InitialCreatee : Migration
+    public partial class Teampositions : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -88,7 +88,7 @@ namespace EirinDuran.WebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CommentEntity",
+                name: "Comments",
                 columns: table => new
                 {
                     UserName = table.Column<string>(nullable: true),
@@ -99,15 +99,15 @@ namespace EirinDuran.WebApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CommentEntity", x => x.Id);
+                    table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CommentEntity_Encounters_EncounterEntityId",
+                        name: "FK_Comments_Encounters_EncounterEntityId",
                         column: x => x.EncounterEntityId,
                         principalTable: "Encounters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CommentEntity_Users_UserName",
+                        name: "FK_Comments_Users_UserName",
                         column: x => x.UserName,
                         principalTable: "Users",
                         principalColumn: "UserName",
@@ -197,13 +197,13 @@ namespace EirinDuran.WebApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CommentEntity_EncounterEntityId",
-                table: "CommentEntity",
+                name: "IX_Comments_EncounterEntityId",
+                table: "Comments",
                 column: "EncounterEntityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CommentEntity_UserName",
-                table: "CommentEntity",
+                name: "IX_Comments_UserName",
+                table: "Comments",
                 column: "UserName");
 
             migrationBuilder.CreateIndex(
@@ -250,7 +250,7 @@ namespace EirinDuran.WebApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CommentEntity");
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "EncounterTeam");

@@ -22,14 +22,6 @@ export class AddUserComponent implements OnInit {
     private usersService: UsersService
   ) { }
 
-  /*
-  public noWhitespaceValidator(control: AbstractControl): ValidationErrors | null {
-    const isWhitespace = (control.value || '').trim().length === 0;
-    const isValid = !isWhitespace;
-    return isValid ? null : { 'whitespace': true };
-  }
-*/
-
   get userName() {
     return this.addUserForm.get('userName');
   }
@@ -72,10 +64,7 @@ export class AddUserComponent implements OnInit {
   createAddUserForm() {
     this.addUserForm = this.formBuilder.group({
       userName: ['',
-        // null,
         Validators.required,
-        // this.noWhitespaceValidator,
-        uniqueUsernameValidator(this.usersService) // async
       ],
       name: ['',
         Validators.required

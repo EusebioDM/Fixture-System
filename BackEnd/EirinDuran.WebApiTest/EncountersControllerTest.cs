@@ -275,7 +275,8 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, encounterServices.Object, new LoggerStub(),encounterQueryServices.Object, fixtureGeneratorServices.Object, teamServices.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.AddEncounterComment(4 + "", "This is a test comment in a mock!") as OkResult;
+            var comment = new CommentModelIn() { Message = "This is a test comment in a mock!" };
+            var obtainedResult = controller.AddEncounterComment(4 + "", comment) as OkResult;
             encounterServices.Verify(m => m.GetAllEncounters(), Times.AtMostOnce());
 
             Assert.IsNotNull(obtainedResult);
@@ -305,7 +306,8 @@ namespace EirinDuran.WebApiTest
 
             var controller = new EncountersController(loginServices, encounterServices.Object, new LoggerStub(), encounterQueryServices.Object, fixtureGeneratorServices.Object, teamServices.Object) { ControllerContext = controllerContext, };
 
-            var obtainedResult = controller.AddEncounterComment(4 + "", "This is a test comment in a mock!") as BadRequestObjectResult;
+            var comment = new CommentModelIn() { Message = "This is a test comment in a mock!" };
+            var obtainedResult = controller.AddEncounterComment(4 + "", comment) as BadRequestObjectResult;
             encounterServices.Verify(m => m.AddComment(4 + "", "This is a test comment in a mock!"), Times.AtMostOnce());
 
             Assert.IsNotNull(obtainedResult);

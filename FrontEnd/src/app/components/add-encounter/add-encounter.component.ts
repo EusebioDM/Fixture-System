@@ -42,7 +42,7 @@ export class AddEncounterComponent implements OnInit {
   }
 
   getTeamsData(sportName: string) {
-    this.teamsService.getTeams().subscribe(
+    this.sportsService.getTeamsBySport(sportName).subscribe(
       ((data: Array<Team>) => {
         this.teams = data;
       }),

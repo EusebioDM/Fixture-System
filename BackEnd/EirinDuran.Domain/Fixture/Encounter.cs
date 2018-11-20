@@ -85,7 +85,7 @@ namespace EirinDuran.Domain.Fixture
         {
             if (Sport.EncounterPlayerCount == EncounterPlayerCount.TwoPlayers && teams.Count() != 2)
             {
-                throw new DomainException(teams.ToString(), "its a two player encounter and Teams dint have 2 teams.");
+                throw new DomainException(teams.ToString(), "its a two player encounter and Teams didnt have 2 teams.");
             }
         }
 

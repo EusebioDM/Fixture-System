@@ -1,0 +1,21 @@
+.calendarContainer {
+    margin: 0 auto;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    width: 90%;
+    size: 90%;
+    align-content: center;
+}
+
+.cal-month-view .cal-event-title {
+    cursor: none;
+}
+
+.cal-month-view .cal-event-title:hover {
+    text-decoration: none;
+}
+
+.data {
+    cursor: none;
+    text-decoration: none;
+}

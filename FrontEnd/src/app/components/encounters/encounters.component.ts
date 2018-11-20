@@ -11,6 +11,7 @@ import { YesNoDialogComponent } from '../yes-no-dialog/yes-no-dialog.component';
 import { ModifyEncounterComponent } from '../modify-encounter/modify-encounter.component';
 import { AddEncountersResultComponent } from '../add-encounters-result/add-encounters-result.component';
 import { GenerateFixtureComponent } from '../generate-fixture/generate-fixture.component';
+import { StringifyOptions } from 'querystring';
 
 @Component({
   selector: 'app-encounters',
@@ -29,7 +30,10 @@ export class EncountersComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['sport', 'teams', 'date', 'actionResults', 'actionModify', 'actionDelete'];
+  selectedSport: string;
+  startDate: Date;
+  endDate: Date;
+  displayedColumns: string[] = ['sport', 'teams', 'date', 'actionResults', 'actionDelete'];
   dataSource;
   searchKey: string;
   sports: Array<Sport>;
@@ -72,14 +76,6 @@ export class EncountersComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Encounter>(this.encounters);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-    /*
-    this.dataSource.filterPredicate = (data, filter) => {
-      return this.displayedColumns.some(ele => {
-        return ele !== 'actionResults' && ele !== 'actionModify' && ele !== 'actionDelete'
-          && data[ele].toLowerCase().indexOf(filter) !== -1;
-      });
-    };
-    */
   }
 
   onSearchClear() {
@@ -135,20 +131,6 @@ export class EncountersComponent implements OnInit {
     });
   }
 
-  onModify(encounter: Encounter) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    const dialogRef = this.dialog.open(ModifyEncounterComponent, dialogConfig);
-    dialogRef.componentInstance.encounter = encounter;
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.ngOnInit();
-      }
-    });
-  }
-
   onDelete(encounter: Encounter) {
 
     const encounterId = encounter.id;
@@ -158,7 +140,7 @@ export class EncountersComponent implements OnInit {
     dialogConfig.autoFocus = true;
     const dialogRef = this.dialog.open(YesNoDialogComponent, dialogConfig);
     dialogRef.componentInstance.title = 'Borrar encuentro...';
-    dialogRef.componentInstance.message = '¿Está seguro que quiere borrar al encuentro ' + encounterId + '?';
+    dialogRef.componentInstance.message = '¿Está seguro que quiere borrar el encuentro?';
 
     dialogRef.afterClosed().subscribe(
       ((result) => {
@@ -169,6 +151,41 @@ export class EncountersComponent implements OnInit {
         }
       })
     );
+  }
+
+  onFilterBySport() {
+    if (this.selectedSport) {
+      this.sportsService.getEncountersBySport(this.selectedSport).subscribe(
+        ((data: Array<Encounter>) => {
+          this.encounters = data;
+          this.loadTableDataSource();
+        }),
+        ((error: any) => console.log(error))
+      );
+    } else {
+      this.getEncountersData();
+    }
+  }
+
+  onFilterByDate() {
+
+    if (this.startDate && this.endDate) {
+      const startMouth = this.startDate.getMonth() + 1;
+      const endMouth = this.endDate.getMonth() + 1;
+
+      const dateTo = this.startDate.getFullYear() + '-' + startMouth + '-' + this.startDate.getDate();
+      const dateFor = this.endDate.getFullYear() + '-' + endMouth + '-' + this.endDate.getDate();
+
+      this.encountersService.getEnconutersFromToDate(dateTo, dateFor).subscribe(
+        ((data: Array<Encounter>) => {
+          this.encounters = data;
+          this.loadTableDataSource();
+        }),
+        ((error: any) => console.log(error))
+      );
+    } else {
+      this.getEncountersData();
+    }
   }
 }
 

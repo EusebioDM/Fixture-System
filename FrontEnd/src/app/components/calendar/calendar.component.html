@@ -1,4 +1,43 @@
-<app-follower-nav></app-follower-nav>
-<p>
-  calendar works!
-</p>
+<div *ngIf="isAdmin">
+  <app-admin-nav></app-admin-nav>
+</div>
+
+<div *ngIf="!isAdmin">
+  <app-follower-nav></app-follower-nav>
+</div>
+
+<div class="select-div">
+  <mat-form-field>
+    <mat-select [(ngModel)]="selectedSport" placeholder="Deporte">
+      <mat-option *ngFor="let aSport of sports" value="{{aSport.name}}"> {{aSport.name}} </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-raised-button color="primary" (click)="onSelectSport()">Buscar</button>
+</div>
+
+<div class="calendarContainer">
+  <div class="row text-center">
+    <div class="col-md-4">
+      <div class="btn-group">
+        <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
+          Previous
+        </div>
+        <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
+          Today
+        </div>
+        <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
+          Next
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+    </div>
+  </div>
+  <br>
+  <div [ngSwitch]="view">
+    <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+      [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)">
+    </mwl-calendar-month-view>
+  </div>
+</div>

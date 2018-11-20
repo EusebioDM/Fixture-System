@@ -196,13 +196,13 @@ namespace EirinDuran.WebApi.Controllers
 
         [HttpPost]
         [Route("{encounterId}/commentaries")]
-        [Authorize(Roles = "Administrator")]
-        public IActionResult AddEncounterComment(string encounterId, [FromBody] string menssage)
+        [Authorize(Roles = "Administrator, Follower")]
+        public IActionResult AddEncounterComment(string encounterId, [FromBody] CommentModelIn menssage)
         {
             try
             {
                 CreateSession();
-                encounterSimpleServices.AddComment(encounterId, menssage);
+                encounterSimpleServices.AddComment(encounterId, menssage.Message);
                 return Ok();
             }
             catch (ServicesException e)

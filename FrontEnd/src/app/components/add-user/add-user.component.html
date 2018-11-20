@@ -3,7 +3,7 @@
         <mat-form-field>
             <input matInput name="userName" placeholder="Nombre de Usuario" formControlName="userName" required
                 [errorStateMatcher]="matcher">
-            <mat-error *ngIf="userName.invalid && (userName.dirty || userName.touched)">
+            <mat-error *ngIf="userName.errors?.required">
                 El nombre de usuario no está disponible
             </mat-error>
         </mat-form-field>
@@ -63,21 +63,13 @@
         </mat-form-field>
     </div>
 
+    <mat-error *ngIf="error">
+        {{error}}
+    </mat-error>
+
     <mat-dialog-actions align="end">
         <button mat-button color="warn" mat-dialog-close>Cancelar</button>
         <button mat-button color="primary" cdkFocusInitial [disabled]="addUserForm.invalid" (click)="submit()">Agregar</button>
     </mat-dialog-actions>
 </form>
 <br>
-
-<mat-error *ngIf="error">
-    {{error}}
-</mat-error>
-
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">Form status: {{addUserForm.status}}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">Form Value</h6>
-        <pre>{{addUserForm.value | json}}</pre>
-    </div>
-</div>

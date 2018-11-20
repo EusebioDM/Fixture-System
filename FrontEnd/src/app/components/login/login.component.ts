@@ -25,7 +25,7 @@ export class LoginComponent {
           if (this.loginService.getLoggedUserRole() === 'Administrator') {
             this.router.navigate(['users']);
           } else {
-            this.router.navigate(['favorites']);
+            this.router.navigate(['calendar']);
           }
         },
         err => this.error = 'Usuario y/o contraseña invalido/s'

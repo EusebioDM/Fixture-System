@@ -11,7 +11,7 @@
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select name="sport" placeholder="Deporte" formControlName="sportName" required (selectionChange)="getTeamsData($event)">
+      <mat-select name="sport" placeholder="Deporte" formControlName="sportName" required (selectionChange)="getTeamsData($event.value)">
         <mat-option *ngFor="let sp of sports" [value]="sp.name">
           {{sp.name}}
         </mat-option>
@@ -33,22 +33,13 @@
       </mat-select>
     </mat-form-field>
   </div>
+  
+  <mat-error *ngIf="error">
+    {{error}}
+  </mat-error>
 
   <mat-dialog-actions align="end">
     <button mat-button color="warn" mat-dialog-close>Cancelar</button>
     <button mat-button color="primary" cdkFocusInitial [disabled]="addEncounterForm.invalid" (click)="submit()">Agregar</button>
   </mat-dialog-actions>
 </form>
-<br>
-
-<mat-error *ngIf="error">
-  {{error}}
-</mat-error>
-
-<div class="card">
-  <div class="card-body">
-    <h5 class="card-title">Form status: {{addEncounterForm.status}}</h5>
-    <h6 class="card-subtitle mb-2 text-muted">Form Value</h6>
-    <pre>{{addEncounterForm.value | json}}</pre>
-  </div>
-</div>
