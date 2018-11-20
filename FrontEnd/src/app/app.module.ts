@@ -45,6 +45,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CommonModule } from '@angular/common';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { TeamPositionComponent } from './components/team-position/team-position.component';
 
 
 
@@ -115,6 +116,14 @@ const appRoutes: Routes = [
     }
   },
   {
+    path: 'positions',
+    component: TeamPositionComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      expectedRole: ['Follower', 'Administrator']
+    }
+  },
+  {
     path: 'followTeams',
     component: FollowTeamsComponent,
     canActivate: [RoleGuardService],
@@ -178,7 +187,8 @@ const appRoutes: Routes = [
     AddEncountersResultComponent,
     GenerateFixtureComponent,
     FollowTeamsComponent,
-    CommentsComponent
+    CommentsComponent,
+    TeamPositionComponent
   ],
   entryComponents: [
     AddUserComponent,

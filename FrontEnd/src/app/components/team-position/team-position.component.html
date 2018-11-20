@@ -1,0 +1,51 @@
+<app-follower-nav></app-follower-nav>
+<div class="select-div">
+  <mat-form-field>
+    <mat-select [(ngModel)]="selectedSport" placeholder="Deporte">
+      <mat-option *ngFor="let aSport of sports" value="{{aSport.name}}"> {{aSport.name}} </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-raised-button color="primary" (click)="onSelectSport()">Buscar</button>
+
+  <mat-form-field class="search-form-field" floatLabel="never">
+    <input matInput [(ngModel)]="searchKey" placeholder="Buscar..." autocomplete="off" (keyup)="applyFilter()">
+    <button mat-button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchKey" (click)="onSearchClear()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
+
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+
+    <ng-container matColumnDef="team">
+      <th mat-header-cell *matHeaderCellDef> Nombre del Equipo </th>
+      <td mat-cell *matCellDef="let aTeamPosition"> {{aTeamPosition.teamId}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef> Posición </th>
+      <td mat-cell *matCellDef="let aTeamPosition"> {{aTeamPosition.position}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="loading">
+      <mat-footer-cell *matFooterCellDef colspan="6">
+        Seleccione un deporte...
+      </mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="noData">
+      <mat-footer-cell *matFooterCellDef colspan="6">
+        No hay datos.
+      </mat-footer-cell>
+    </ng-container>
+
+    <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':dataSource!=null}"></mat-footer-row>
+    <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!(dataSource!=null && dataSource.data.length==0)}"></mat-footer-row>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>

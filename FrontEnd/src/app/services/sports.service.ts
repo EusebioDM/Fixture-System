@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 import { Encounter } from '../classes/encounter';
 import { Team } from '../classes/team';
+import { TeamPosition } from '../classes/team-position';
 
 @Injectable({
   providedIn: 'root'
@@ -80,6 +81,19 @@ export class SportsService {
     return this.httpService.get(this.sportsUrl + sportId + '/encounters', requestOptions)
       .pipe(
         map((response: Response) => <Array<Encounter>>response.json()),
+        tap(data => console.log('Obtained sport: ' + JSON.stringify(data))),
+        catchError(this.handleError)
+      );
+  }
+
+  getTeamPositionsBySport(sportId: string): Observable<Array<TeamPosition>> {
+    const myHeaders = new Headers({ Authorization: 'Bearer ' + localStorage.getItem('access_token') });
+    myHeaders.append('Accept', 'application/json');
+    const requestOptions = new RequestOptions({ headers: myHeaders });
+
+    return this.httpService.get(this.sportsUrl + sportId + '/results', requestOptions)
+      .pipe(
+        map((response: Response) => <Array<TeamPosition>>response.json()),
         tap(data => console.log('Obtained sport: ' + JSON.stringify(data))),
         catchError(this.handleError)
       );
