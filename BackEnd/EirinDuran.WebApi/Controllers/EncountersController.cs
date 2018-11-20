@@ -120,6 +120,10 @@ namespace EirinDuran.WebApi.Controllers
                 encounterModel.Id = Guid.Parse(id);
                 return TryToPut(id, encounterModel);
             }
+            catch (ServicesException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch(InsufficientPermissionException)
             {
                 return Unauthorized();
@@ -138,6 +142,8 @@ namespace EirinDuran.WebApi.Controllers
             {
                 return BadRequest(e.Message);
             }
+            
+            
         }
 
         private EncounterDTO GetUpdatedEncounter(EncounterUpdateModelIn encounterModel)

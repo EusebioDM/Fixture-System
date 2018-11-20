@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using EirinDuran.IServices.DTOs;
+using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.Services_Interfaces;
 
 namespace EirinDuran.WebApi.Models
@@ -18,8 +19,15 @@ namespace EirinDuran.WebApi.Models
 
         public void UpdateServicesDTO(EncounterDTO servicesDTO, ITeamServices teamServices)
         {
-            UpdateDateTimeIfNecessary(servicesDTO);
-            UpdateResultsIfNecessary(servicesDTO, teamServices);
+            try
+            {
+                UpdateDateTimeIfNecessary(servicesDTO);
+                UpdateResultsIfNecessary(servicesDTO, teamServices);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new ServicesException("There are teams repeated in the results");
+            }
         }
 
         private void UpdateResultsIfNecessary(EncounterDTO servicesDTO, ITeamServices teamServices)

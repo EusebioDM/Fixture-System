@@ -6,14 +6,14 @@ namespace EirinDuran.Domain
     {
              
         public DomainException(object data, string reason, Exception exception = null) 
-            : base($"{data} is invalid because {reason}.")
+            : base($"Data is invalid because {reason}.")
         {
             
         }
 
         
         public DomainException(object data, Exception exception = null) 
-            : base($"{data} is invalid.")
+            : base($"Data is invalid.")
         {
             
         }

@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Castle.Core.Internal;
+using EirinDuran.Domain;
 using EirinDuran.IServices.Services_Interfaces;
 
 namespace EirinDuran.Services
@@ -35,18 +36,21 @@ namespace EirinDuran.Services
 
         public EncounterDTO CreateEncounter(EncounterDTO encounterDTO)
         {
-            adminValidator.ValidatePermissions();
-            Encounter encounter = mapper.Map(encounterDTO);
-            ValidateNonOverlappingOfDates(encounter);
-
             try
             {
+                adminValidator.ValidatePermissions();
+                Encounter encounter = mapper.Map(encounterDTO);
+                ValidateNonOverlappingOfDates(encounter);
                 encounterRepository.Add(encounter);
                 return mapper.Map(encounter);
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException("Failure to create encounter.", e);
+                throw new ServicesException(e.Message, e);
+            }
+            catch (DomainException e)
+            {
+                throw new ServicesException(e.Message, e);
             }
         }
 
@@ -63,7 +67,11 @@ namespace EirinDuran.Services
                 }
                 catch (DataAccessException e)
                 {
-                    throw new ServicesException("Failure to create encounter.", e);
+                    throw new ServicesException(e.Message, e);
+                }
+                catch (DomainException e)
+                {
+                    throw new ServicesException(e.Message, e);
                 }
             }
         }
@@ -120,7 +128,11 @@ namespace EirinDuran.Services
             }
             catch (DataAccessException e)
             {
-                throw new ServicesException($"Failure to get all encounters.", e);
+                throw new ServicesException(e.Message, e);
+            }
+            catch (DomainException e)
+            {
+                throw new ServicesException(e.Message, e);
             }
         }
 
@@ -141,15 +153,19 @@ namespace EirinDuran.Services
         {
             adminValidator.ValidatePermissions();
 
-            Encounter encounter = mapper.Map(encounterModel);
-            ValidateNonOverlappingOfDates(encounter);
             try
             {
+                Encounter encounter = mapper.Map(encounterModel);
+                ValidateNonOverlappingOfDates(encounter);
                 encounterRepository.Update(encounter);
             }
             catch (DataAccessException e)
             {
                 throw new ServicesException($"Failure to update encounter id = {encounterModel.Id}", e);
+            }
+            catch (DomainException e)
+            {
+                throw new ServicesException(e.Message, e);
             }
         }
 

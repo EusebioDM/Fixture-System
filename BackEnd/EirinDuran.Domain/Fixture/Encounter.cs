@@ -19,10 +19,10 @@ namespace EirinDuran.Domain.Fixture
         public IEnumerable<Comment> Comments => comments;
         public Dictionary<Team, int> Results => new Dictionary<Team, int>(results);
         public Sport Sport { get; private set; }
-        private ICollection<Team> teams;
         private DateTime dateTime;
-        private ICollection<Comment> comments;
-        private Dictionary<Team, int> results;
+        private readonly ICollection<Team> teams;
+        private readonly ICollection<Comment> comments;
+        private readonly Dictionary<Team, int> results;
 
         public Encounter(Sport sport, IEnumerable<Team> teams, DateTime dateTime)
         {
@@ -37,9 +37,43 @@ namespace EirinDuran.Domain.Fixture
 
         public Encounter(Guid id, Sport sport, IEnumerable<Team> teams, DateTime dateTime, ICollection<Comment> comments, Dictionary<Team, int> results) : this(sport, teams, dateTime)
         {
+            ValidateResults(results);
             Id = id == Guid.Empty ? Guid.NewGuid() : id;
             this.comments = comments;
             this.results = results;
+        }
+
+        private void ValidateResults(Dictionary<Team, int> dictionary)
+        {
+            if (Sport.EncounterPlayerCount == EncounterPlayerCount.TwoPlayers)
+            {
+                ValidateTwoPlayerEncounter(dictionary);
+            }
+            else
+            {
+                ValidateMoreThanTwoPlayerEncounter(dictionary);
+            }
+        }
+
+        private void ValidateTwoPlayerEncounter(Dictionary<Team, int> dictionary)
+        {
+            if (dictionary.Count != 0 && dictionary.Count != 2)
+                throw new DomainException(dictionary, "there isnt a result for every team");
+            if (dictionary.Keys.Any(team => !Teams.Contains(team)))
+                throw new DomainException(dictionary, "a team in results not part of the encounter");
+            if (dictionary.Values.Any(i => i < 1 || i > 2))
+                throw new DomainException(dictionary, "result is not first or second");
+        }
+
+        private void ValidateMoreThanTwoPlayerEncounter(Dictionary<Team, int> dictionary)
+        {
+            if (dictionary.Count != 0 && dictionary.Count != teams.Count)
+                throw new DomainException(dictionary, "there isnt a result for every team");
+            if (dictionary.Keys.Any(team => !Teams.Contains(team)))
+                throw new DomainException(dictionary, "a team in results not part of the encounter");
+            if (dictionary.Values.Any(result => dictionary.Values.Count(r => r == result) != 1))
+                throw new DomainException(dictionary, "repeated results");
+            
         }
 
         public void AddComment(User.User user, string message)
