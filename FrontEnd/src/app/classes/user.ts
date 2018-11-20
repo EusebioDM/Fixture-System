@@ -4,14 +4,14 @@ export class User {
     surname: string;
     password: string;
     mail: string;
-    role: string;
+    isAdmin: boolean;
 
-    constructor(userName: string, name: string, surname: string, password: string, mail: string, role: string) {
+    constructor(userName: string, name: string, surname: string, password: string, mail: string, isAdmin: boolean) {
         this.userName = userName;
         this.name = name;
         this.surname = surname;
         this.password = password;
         this.mail = mail;
-        this.role = role;
+        this.isAdmin = isAdmin;
     }
 }

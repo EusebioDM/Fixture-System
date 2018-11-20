@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using EirinDuran.IServices.Services_Interfaces;
+using Microsoft.AspNetCore.Cors;
 
 namespace EirinDuran.WebApi.Controllers
 {
@@ -101,6 +102,7 @@ namespace EirinDuran.WebApi.Controllers
         }
 
         [HttpPut("{userId}")]
+        [EnableCors("AllowAllOrigins")]
         [Authorize(Roles = "Administrator")]
         public IActionResult ModifyUser(string userId, [FromBody] UserUpdateModelIn userModel)
         {
