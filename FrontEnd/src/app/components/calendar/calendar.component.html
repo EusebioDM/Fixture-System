@@ -1,7 +1,7 @@
 <app-follower-nav></app-follower-nav>
 <div class="select-div">
   <mat-form-field>
-    <mat-select [(ngModel)]="selectedSport" placeholder="Deporte" required>
+    <mat-select [(ngModel)]="selectedSport" placeholder="Deporte">
       <mat-option *ngFor="let aSport of sports" value="{{aSport.name}}"> {{aSport.name}} </mat-option>
     </mat-select>
   </mat-form-field>

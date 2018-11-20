@@ -1,11 +1,21 @@
 <form>
   <div class="form-container">
 
-    <mat-form-field *ngFor="let team of teams">
-      <mat-select (selectionChange)="getTeamResult($event.value, team)" placeholder="Posición {{team}}" required>
-        <mat-option [id]="team.name" *ngFor="let position of positions" value="{{position}}"> {{position}} </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div *ngIf="!isRadio">
+      <mat-form-field *ngFor="let team of teams">
+        <mat-select [id]="team" (selectionChange)="getTeamResult($event.value, team)" placeholder="Posición {{team}}" required>
+          <mat-option *ngFor="let position of positions" value="{{position}}"> {{position}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div *ngIf="isRadio">
+      <h4>Seleccione el Ganador</h4>
+      <mat-radio-group >
+        <mat-radio-button class="radioButton" *ngFor="let team of teams" value="{{team}}" (click)="getTeamResult($event, team)">{{team}}</mat-radio-button>
+      </mat-radio-group>
+    </div>
 
     <mat-error *ngIf="error">
       {{error}}
