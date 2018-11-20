@@ -28,12 +28,13 @@ export class AddEncountersResultComponent implements OnInit {
   ngOnInit() {
     this.hasResults = '';
     this.teams = this.encounter.teamIds;
-    this.checkIfIsRadio();
+    // this.checkIfIsRadio();
     this.results = this.encounter.results;
     this.showResults();
     this.loadPositions();
   }
 
+  /*
   private checkIfIsRadio() {
     if (this.teams.length === 2) {
       this.isRadio = true;
@@ -41,6 +42,7 @@ export class AddEncountersResultComponent implements OnInit {
       this.isRadio = false;
     }
   }
+  */
 
   loadPositions() {
     this.positions = new Array<string>();
@@ -51,19 +53,19 @@ export class AddEncountersResultComponent implements OnInit {
 
   getTeamResult(result: string, teamId: string) {
     const isit = this.encounter.results.findIndex(i => i.teamId === teamId);
-    if (this.isRadio) {
+    /*if (this.isRadio) {
       const looser = this.encounter.results.find(i => i.teamId !== teamId);
       this.cleanResultsArray();
       this.encounter.results.push(new TeamResult(teamId, '1'));
       this.encounter.results.push(new TeamResult(looser.teamId, '2'));
-    } else {
+    } else {*/
       if (isit === -1) {
         this.encounter.results.push(new TeamResult(teamId, result));
       } else {
         this.encounter.results.splice(isit, 1);
         this.encounter.results.push(new TeamResult(teamId, result));
       }
-    }
+    // }
   }
 
   private cleanResultsArray() {
@@ -72,22 +74,23 @@ export class AddEncountersResultComponent implements OnInit {
   }
 
   private showResults() {
-    if (this.results.length === 2) {
+   /* if (this.results.length === 2) {
       this.hasResults = '';
       this.results.forEach(result => {
         if (result.result == '1') {
           this.hasResults += 'Equipo ganador: ' + result.teamId;
         }
       });
-    } else {
+    } else { */
       this.hasResults = '';
       this.results.forEach(result => {
         this.hasResults += 'Equipo: ' + result.teamId + ' Resultado: ' + result.result + ' - ';
       });
-    }
+   // }
   }
 
   onSubmit() {
+    debugger
     this.encountersService.updateEncounter(this.encounter).subscribe(
       (() => {
         this.dialogRef.close(true);

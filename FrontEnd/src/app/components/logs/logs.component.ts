@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Log } from '../../classes/log';
 import { LogsService } from '../../services/logs.service';
 import { MatTableDataSource, MatPaginator, MatDialog, MatSort, MatDialogConfig } from '@angular/material';
@@ -17,6 +17,9 @@ export class LogsComponent implements OnInit {
 
   constructor(private logsService: LogsService) { }
 
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   ngOnInit() {
     this.getData();
   }
@@ -25,10 +28,16 @@ export class LogsComponent implements OnInit {
     this.logsService.getLogs().subscribe(
       ((data: Array<Log>) => {
         this.logs = data;
-        this.dataSource = new MatTableDataSource<Log>(this.logs);
+        this.loadTableDataSource();
       }),
       ((error: any) => console.log(error))
     );
+  }
+
+  private loadTableDataSource() {
+    this.dataSource = new MatTableDataSource<Log>(this.logs);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
   }
 
   onFilterByDate() {
@@ -43,7 +52,7 @@ export class LogsComponent implements OnInit {
       this.logsService.getLogsFromToDate(dateTo, dateFor).subscribe(
         ((data: Array<Log>) => {
           this.logs = data;
-          this.dataSource = new MatTableDataSource<Log>(this.logs);
+          this.loadTableDataSource();
         }),
         ((error: any) => console.log(error))
       );

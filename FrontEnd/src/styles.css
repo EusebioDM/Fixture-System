@@ -81,3 +81,7 @@ table {
   width: 300px;
   margin-bottom: 20px;
 }
+
+.mat-elevation-z8 {
+  margin-bottom: 20px;
+}

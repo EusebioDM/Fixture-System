@@ -30,13 +30,13 @@
   </div>
 
   <div>
-    <mat-form-field class="datePicket">
+    <mat-form-field class="datePicker">
       <input matInput [matDatepicker]="dateFor" placeholder="Fecha desde..." [(ngModel)]="startDate">
       <mat-datepicker-toggle matSuffix [for]="dateFor"></mat-datepicker-toggle>
       <mat-datepicker #dateFor></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field class="datePicket">
+    <mat-form-field class="datePicker">
       <input matInput [matDatepicker]="dateTo" placeholder="Fecha hasta..." [(ngModel)]="endDate">
       <mat-datepicker-toggle matSuffix [for]="dateTo"></mat-datepicker-toggle>
       <mat-datepicker #dateTo></mat-datepicker>
