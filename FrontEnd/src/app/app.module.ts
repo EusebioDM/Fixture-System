@@ -104,7 +104,7 @@ const appRoutes: Routes = [
     component: CalendarComponent,
     canActivate: [RoleGuardService],
     data: {
-      expectedRole: 'Follower'
+      expectedRole: ['Follower', 'Administrator']
     }
   },
   {
@@ -112,7 +112,7 @@ const appRoutes: Routes = [
     component: FavoritesComponent,
     canActivate: [RoleGuardService],
     data: {
-      expectedRole: 'Follower'
+      expectedRole: ['Follower', 'Administrator']
     }
   },
   {

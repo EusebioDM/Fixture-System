@@ -3,6 +3,7 @@ import { MatSort, MatPaginator, MatTableDataSource } from '@angular/material';
 import { Team } from '../../classes/team';
 import { TeamsService } from '../../services/teams.service';
 import { UsersService } from 'src/app/services/users.service';
+import { LoginService } from 'src/app/services/login/login.service';
 
 @Component({
   selector: 'app-follow-teams',
@@ -12,6 +13,7 @@ import { UsersService } from 'src/app/services/users.service';
 export class FollowTeamsComponent implements OnInit {
 
   constructor(
+    private loginService: LoginService,
     private usersSerivice: UsersService,
     private teamsService: TeamsService
   ) { }
@@ -19,6 +21,7 @@ export class FollowTeamsComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  isAdmin: boolean;
   displayedColumns: string[] = ['teamName', 'sportName', 'actionFollow'];
   displayedColumnsTeamsFollowed: string[] = ['teamName', 'sportName', 'actionUnfollow'];
   dataSource;
@@ -29,6 +32,7 @@ export class FollowTeamsComponent implements OnInit {
   teamsUnfollowed: Array<Team>;
 
   ngOnInit() {
+    this.isAdmin = (this.loginService.getLoggedUserRole() === 'Administrator');
     this.getData();
   }
 

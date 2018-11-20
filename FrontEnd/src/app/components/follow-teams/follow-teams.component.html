@@ -1,4 +1,10 @@
-<app-follower-nav></app-follower-nav>
+<div *ngIf="isAdmin">
+  <app-admin-nav></app-admin-nav>
+</div>
+
+<div *ngIf="!isAdmin">
+  <app-follower-nav></app-follower-nav>
+</div>
 
 <h3>Seguir</h3>
 <div class="mat-elevation-z8">

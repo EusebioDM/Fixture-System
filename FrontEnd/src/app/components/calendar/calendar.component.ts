@@ -25,6 +25,7 @@ import {
   CalendarView
 } from 'angular-calendar';
 import { Encounter } from 'src/app/classes/encounter';
+import { LoginService } from 'src/app/services/login/login.service';
 
 const colors: any = {
   red: {
@@ -50,6 +51,7 @@ const colors: any = {
 export class CalendarComponent implements OnInit {
 
   constructor(
+    private loginService: LoginService,
     private sportsService: SportsService,
     private modal: NgbModal
   ) { }
@@ -57,10 +59,9 @@ export class CalendarComponent implements OnInit {
   @ViewChild('modalContent')
   modalContent: TemplateRef<any>;
 
+  isAdmin: boolean;
   view: CalendarView = CalendarView.Month;
-
   CalendarView = CalendarView;
-
   viewDate: Date = new Date();
 
   /*
@@ -185,6 +186,7 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isAdmin = (this.loginService.getLoggedUserRole() === 'Administrator');
     this.getSportData();
   }
 
@@ -247,7 +249,7 @@ export class CalendarComponent implements OnInit {
     });
 
     return '<br> <strong>Deporte:</strong> ' + encounter.sportName
-      + '<br> <strong>Equipos:</strong> ' + singleStringTeams 
+      + '<br> <strong>Equipos:</strong> ' + singleStringTeams
       + '<br> <strong>Fecha:</strong> ' + encounter.dateTime;
   }
 }

@@ -3,6 +3,7 @@ import { Sport } from 'src/app/classes/sport';
 import { SportsService } from 'src/app/services/sports.service';
 import { MatSort, MatPaginator, MatTableDataSource } from '@angular/material';
 import { TeamPosition } from 'src/app/classes/team-position';
+import { LoginService } from 'src/app/services/login/login.service';
 
 @Component({
   selector: 'app-team-position',
@@ -11,11 +12,15 @@ import { TeamPosition } from 'src/app/classes/team-position';
 })
 export class TeamPositionComponent implements OnInit {
 
-  constructor(private sportsService: SportsService) { }
+  constructor(
+    private loginService: LoginService,
+    private sportsService: SportsService
+    ) { }
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  isAdmin: boolean;
   displayedColumns: string[] = ['team', 'position'];
   dataSource;
   searchKey: string;
@@ -24,6 +29,7 @@ export class TeamPositionComponent implements OnInit {
   teamPosition: Array<TeamPosition>;
 
   ngOnInit() {
+    this.isAdmin = (this.loginService.getLoggedUserRole() === 'Administrator');
     this.getSportData();
   }
 
