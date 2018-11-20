@@ -46,7 +46,7 @@ namespace EirinDuran.WebApi.Controllers
 
         private ActionResult<List<LogDTO>> TryToGetAllLogs(DateTime start, DateTime end)
         {
-            return logger.GetLogs(start, end).ToList();
+            return logger.GetLogs(start, end).OrderByDescending(dto => dto.DateTime).ToList();
         }
 
         private void CreateSession()

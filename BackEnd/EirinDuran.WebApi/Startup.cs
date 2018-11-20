@@ -17,7 +17,7 @@ using EirinDuran.IServices.Infrastructure_Interfaces;
 using EirinDuran.IServices.Services_Interfaces;
 using EirinDuran.Logger;
 using EirinDuran.WebApi.Controllers;
-using EirinDuran.WebApi.Middlewares;
+using EirinDuran.WebApi.Filters;
 
 namespace EirinDuran.WebApi
 {

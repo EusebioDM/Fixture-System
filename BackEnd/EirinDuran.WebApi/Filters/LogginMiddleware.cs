@@ -1,15 +1,12 @@
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EirinDuran.IServices.Infrastructure_Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace EirinDuran.WebApi.Middlewares
+namespace EirinDuran.WebApi.Filters
 {
     public class LogginMiddleware : IAsyncAuthorizationFilter
     {   
