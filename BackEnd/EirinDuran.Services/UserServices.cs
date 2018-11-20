@@ -90,7 +90,7 @@ namespace EirinDuran.Services
             adminValidator.ValidatePermissions();
             User fromDB = userRepository.Get(userDTO.UserName);
             userDTO.Password = fromDB.Password;
-            userDTO.FollowedTeamsNames = fromDB.FollowedTeams.Select(t => t.Name + "_" + t.Sport).ToList();
+            userDTO.FollowedTeamsNames = fromDB.FollowedTeams.Select(t => t.Name + "_" + t.Sport.Name).ToList();
             User user = userMapper.Map(userDTO);
             try
             {
