@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Sport } from '../../classes/sport';
 import { SportsService } from '../../services/sports.service';
-import { Fixture } from '../../classes/fixture';
 import { EncountersService } from '../../services/encounters.service';
 import { EncountersComponent } from '../encounters/encounters.component';
 import { MatDialogRef } from '@angular/material';

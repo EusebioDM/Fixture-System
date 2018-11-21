@@ -2,9 +2,7 @@ import { Component, OnInit, Inject, Optional, Input } from '@angular/core';
 import { TeamsService } from 'src/app/services/teams.service';
 import { Team } from 'src/app/classes/team';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TeamsComponent } from '../teams/teams.component';
-import { InstantErrorStateMatcher } from 'src/app/shared/instant-error-state-matcher';
 
 @Component({
   selector: 'app-modify-team',
@@ -15,7 +13,6 @@ export class ModifyTeamComponent implements OnInit {
 
   constructor(
     private teamsServices: TeamsService,
-    private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<TeamsComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: Team
   ) { }
@@ -56,7 +53,7 @@ export class ModifyTeamComponent implements OnInit {
   submit() {
     const team = new Team(this.name, this.sportName, this.logo);
     this.teamsServices.updateTeam(team).subscribe(
-      ((result: Team) => {
+      (() => {
         this.dialogRef.close(team);
       })
     );

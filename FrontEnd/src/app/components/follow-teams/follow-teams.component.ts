@@ -18,9 +18,6 @@ export class FollowTeamsComponent implements OnInit {
     private teamsService: TeamsService
   ) { }
 
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
   isAdmin: boolean;
   displayedColumns: string[] = ['teamName', 'sportName', 'actionFollow'];
   displayedColumnsTeamsFollowed: string[] = ['teamName', 'sportName', 'actionUnfollow'];
@@ -63,14 +60,10 @@ export class FollowTeamsComponent implements OnInit {
 
   private loadTableDataSource() {
     this.dataSource = new MatTableDataSource<Team>(this.teamsUnfollowed);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
   }
 
   private loadTableDataSourceFollowedTeams() {
     this.dataSourceFollowedTeams = new MatTableDataSource<Team>(this.teamsFollowed);
-    this.dataSourceFollowedTeams.sort = this.sort;
-    this.dataSourceFollowedTeams.paginator = this.paginator;
   }
 
   onSearchClear() {
@@ -89,13 +82,13 @@ export class FollowTeamsComponent implements OnInit {
 
   onFollow(team: Team) {
     this.teamsService.addFollowedTeamToLoggedUser(team.name + '_' + team.sportName).subscribe(
-      () => { this.ngOnInit(); }
+      () => { this.getData(); }
     );
   }
 
   onDeleteFollow(team: Team) {
     this.teamsService.deleteFollowedTeamToLoggedUser(team.name + '_' + team.sportName).subscribe(
-      () => { this.ngOnInit(); }
+      () => { this.getData(); }
     );
   }
 }

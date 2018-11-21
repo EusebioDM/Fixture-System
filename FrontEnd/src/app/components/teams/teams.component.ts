@@ -27,6 +27,10 @@ export class TeamsComponent implements OnInit {
   teams: Array<Team>;
 
   ngOnInit() {
+    this.getTeams();
+  }
+
+  private getTeams() {
     this.teamsService.getTeams().subscribe(
       ((data: Array<Team>) => this.result(data)),
       ((error: any) => console.log(error))
@@ -67,9 +71,7 @@ export class TeamsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       ((team: Team) => {
         if (team) {
-          // this.teams.push(team);
-          // this.loadTableDataSource();
-          this.ngOnInit();
+          this.getTeams();
         }
       })
     );
@@ -88,7 +90,7 @@ export class TeamsComponent implements OnInit {
       ((result) => {
         if (result) {
           this.teamsService.deleteTeam(teamName + '_' + sportId).subscribe(
-            () => { this.ngOnInit(); }
+            () => { this.getTeams(); }
           );
         }
       })
@@ -103,9 +105,8 @@ export class TeamsComponent implements OnInit {
       });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
       if (result) {
-        this.ngOnInit();
+        this.getTeams();
       }
     });
   }

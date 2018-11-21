@@ -60,5 +60,4 @@ export class LogsComponent implements OnInit {
       this.getData();
     }
   }
-
 }

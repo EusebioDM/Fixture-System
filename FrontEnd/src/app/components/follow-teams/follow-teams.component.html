@@ -47,8 +47,6 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
 
 <h3>Siguiendo</h3>
@@ -91,6 +89,4 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumnsTeamsFollowed"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumnsTeamsFollowed;"></tr>
   </table>
-
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>

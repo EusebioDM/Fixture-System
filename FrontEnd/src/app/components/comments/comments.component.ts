@@ -122,28 +122,28 @@ export class EncounterLegibleNameAsync implements PipeTransform {
         ((data: Encounter) => this.transformResultToLegibleData(data)),
         ((error: any) => console.log(error))
       );
-  }
+    }
 
     return this.cachedData;
   }
 
-transformResultToLegibleData(encounter: Encounter): void {
-  const encounterTeams = encounter.teamIds;
-  const teamsCount = encounterTeams.length;
+  transformResultToLegibleData(encounter: Encounter): void {
+    const encounterTeams = encounter.teamIds;
+    const teamsCount = encounterTeams.length;
 
-  let i = 1;
-  let singleStringTeams = '';
-  encounterTeams.forEach(teamId => {
-    const teamName = teamId.split('_');
+    let i = 1;
+    let singleStringTeams = '';
+    encounterTeams.forEach(teamId => {
+      const teamName = teamId.split('_');
 
-    if (i === teamsCount) {
-      singleStringTeams += teamName[0];
-    } else {
-      singleStringTeams += teamName[0] + ' vs ';
-    }
+      if (i === teamsCount) {
+        singleStringTeams += teamName[0];
+      } else {
+        singleStringTeams += teamName[0] + ' vs ';
+      }
 
-    i++;
-  });
-  this.cachedData = singleStringTeams + ' (' + encounter.sportName + ')';
-}
+      i++;
+    });
+    this.cachedData = singleStringTeams + ' (' + encounter.sportName + ')';
+  }
 }

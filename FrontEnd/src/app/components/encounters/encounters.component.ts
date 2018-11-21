@@ -8,10 +8,8 @@ import { TeamsService } from 'src/app/services/teams.service';
 import { Team } from 'src/app/classes/team';
 import { AddEncounterComponent } from '../add-encounter/add-encounter.component';
 import { YesNoDialogComponent } from '../yes-no-dialog/yes-no-dialog.component';
-import { ModifyEncounterComponent } from '../modify-encounter/modify-encounter.component';
 import { AddEncountersResultComponent } from '../add-encounters-result/add-encounters-result.component';
 import { GenerateFixtureComponent } from '../generate-fixture/generate-fixture.component';
-import { StringifyOptions } from 'querystring';
 
 @Component({
   selector: 'app-encounters',

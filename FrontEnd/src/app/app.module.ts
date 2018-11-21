@@ -31,7 +31,6 @@ import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.c
 import { ModifyTeamComponent } from './components/modify-team/modify-team.component';
 import { LogsComponent } from './components/logs/logs.component';
 import { AddEncounterComponent } from './components/add-encounter/add-encounter.component';
-import { ModifyEncounterComponent } from './components/modify-encounter/modify-encounter.component';
 import { AddEncountersResultComponent } from './components/add-encounters-result/add-encounters-result.component';
 import { GenerateFixtureComponent } from './components/generate-fixture/generate-fixture.component';
 import { FollowTeamsComponent } from './components/follow-teams/follow-teams.component';
@@ -51,7 +50,6 @@ const appRoutes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
-    // canActivate: [LoginRedirectService]
   },
   {
     path: 'users',
@@ -175,7 +173,6 @@ const appRoutes: Routes = [
     ListToSingleString,
     LogsComponent,
     AddEncounterComponent,
-    ModifyEncounterComponent,
     AddEncountersResultComponent,
     GenerateFixtureComponent,
     FollowTeamsComponent,
@@ -190,7 +187,6 @@ const appRoutes: Routes = [
     ModifyTeamComponent,
     YesNoDialogComponent,
     AddEncounterComponent,
-    ModifyEncounterComponent,
     AddEncountersResultComponent,
     GenerateFixtureComponent
   ],
