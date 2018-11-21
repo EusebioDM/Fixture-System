@@ -12,6 +12,7 @@ using EirinDuran.IServices.Exceptions;
 using EirinDuran.IServices.Infrastructure_Interfaces;
 using EirinDuran.IServices.Services_Interfaces;
 using EirinDuran.Services.DTO_Mappers;
+using EncounterPlayerCount = EirinDuran.Domain.Fixture.EncounterPlayerCount;
 
 namespace EirinDuran.Services
 {
@@ -41,12 +42,20 @@ namespace EirinDuran.Services
         public IEnumerable<EncounterDTO> CreateFixture(string fixtureGeneratorName, string sportName, DateTime startDate)
         {
             adminValidator.ValidatePermissions();
+            ValidateSportIsTwoPlayerSport(sportName);
             Domain.Fixture.IFixtureGenerator generatorServices = GetFixtureGenerator(fixtureGeneratorName, sportName);
             IEnumerable<Team> teamsInSport = teamRepo.GetAll().Where(t => t.Sport.Name == sportName);
             ICollection<Encounter> encounters = generatorServices.GenerateFixture(teamsInSport, startDate);
             ValidateFixture(encounters);
             SaveEncounters(encounters);
             return encounters.Select(e => mapper.Map(e));
+        }
+
+        private void ValidateSportIsTwoPlayerSport(string sportName)
+        {
+            Sport sport = GetSport(sportName);
+            if(sport.EncounterPlayerCount != EncounterPlayerCount.TwoPlayers)
+                throw new ServicesException("Fixture generators are only for two player sports");
         }
 
         private void ValidateFixture(ICollection<Encounter> encounters)

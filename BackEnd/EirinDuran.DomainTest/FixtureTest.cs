@@ -100,7 +100,6 @@ namespace EirinDuran.DomainTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(DomainException))]
         public void SampleAutoAllOnceFixtureImparNumberOfTeamsTest()
         {
             List<Team> teams = new List<Team>() { felix, liverpool, river };

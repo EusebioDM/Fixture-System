@@ -19,6 +19,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <ProjectReference Include="..\EirinDuran.IServices\EirinDuran.IServices.csproj" />
   </ItemGroup>
 
   <ItemGroup>

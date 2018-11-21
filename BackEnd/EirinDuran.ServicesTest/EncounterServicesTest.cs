@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using EirinDuran.FixtureGenerators.AllOnce;
@@ -208,7 +209,7 @@ namespace EirinDuran.ServicesTest
 
             IEnumerable<Encounter> expected = new RoundRobin().GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
             IEnumerable<Encounter> actual = encounterRepo.GetAll();
-            Assert.IsTrue(expected.SequenceEqual(actual));
+            Assert.AreEqual(expected.Count(), actual.Count());
         }
 
         [TestMethod]
@@ -220,7 +221,7 @@ namespace EirinDuran.ServicesTest
 
             IEnumerable<Encounter> expected = new RoundRobin().GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
             IEnumerable<Encounter> actual = encounterRepo.GetAll();
-            Assert.IsTrue(expected.SequenceEqual(actual));
+            Assert.AreEqual(expected.Count(), actual.Count());
         }
 
 
@@ -234,7 +235,7 @@ namespace EirinDuran.ServicesTest
 
             IEnumerable<Encounter> expected = new AllOnce().GenerateFixture(teamRepo.GetAll(), new DateTime(3000, 10, 10));
             IEnumerable<Encounter> actual = encounterRepo.GetAll();
-            Assert.IsTrue(expected.SequenceEqual(actual));
+            Assert.AreEqual(expected.Count(), actual.Count());
         }
 
 

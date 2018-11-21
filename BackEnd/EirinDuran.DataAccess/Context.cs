@@ -19,7 +19,7 @@ namespace EirinDuran.DataAccess
         public DbSet<EncounterEntity> Encounters { get; set; }
         public DbSet<TeamUser> TeamUsers { get; set; }
         public DbSet<CommentEntity> Comments { get; set; }
-        public DbSet<Log> Logs { get; set; }
+        public DbSet<LogEntity> Logs { get; set; }
 
         public Context(DbContextOptions<Context> options) : base(options)
         {
@@ -30,7 +30,7 @@ namespace EirinDuran.DataAccess
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Log>().HasKey(l => l.Id);
+            builder.Entity<LogEntity>().HasKey(l => l.Id);
             builder.Entity<UserEntity>().HasKey(u => u.UserName);
             builder.Entity<TeamEntity>().HasKey(t => new {t.Name, t.SportName});
             builder.Entity<SportEntity>().HasKey(s => s.SportName);

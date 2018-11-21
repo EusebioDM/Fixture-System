@@ -25,7 +25,7 @@ namespace EirinDuran.FixtureGenerators.AllOnce
 
             if (teamList.Count % 2 != 0)
             {
-                throw new DomainException(teams, "there are an invalid number teams");
+                teamList.RemoveAt(teamList.Count - 1);
             }
 
             GenerateAllOnceFixture(encounters, teamList, start);

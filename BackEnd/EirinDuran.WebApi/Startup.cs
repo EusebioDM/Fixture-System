@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using EirinDuran.DataAccess.Entities;
+using EirinDuran.IServices.DTOs;
 using EirinDuran.IServices.Infrastructure_Interfaces;
 using EirinDuran.IServices.Services_Interfaces;
 using EirinDuran.Logger;
@@ -79,7 +80,7 @@ namespace EirinDuran.WebApi
             services.AddScoped<IRepository<Sport>, SportRepository>();
             services.AddScoped<IRepository<Team>, TeamRepository>();
             services.AddScoped<IRepository<Encounter>, EncounterRepository>();
-            services.AddScoped<IRepository<Log>, LogRepository>();
+            services.AddScoped<IRepository<LogDTO>, LogRepository>();
             services.AddScoped<IRepository<Comment>, CommentRepository>();
             services.AddScoped<IExtendedEncounterRepository, ExtendedEncounterRepository>();
         }

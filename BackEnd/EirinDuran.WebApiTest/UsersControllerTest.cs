@@ -9,6 +9,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Castle.DynamicProxy.Generators;
 using EirinDuran.IServices.Services_Interfaces;
 
 namespace EirinDuran.WebApiTest
@@ -184,10 +185,10 @@ namespace EirinDuran.WebApiTest
 
             mockUserService.Verify(m => m.GetUser(expectedUser.UserName), Times.AtMostOnce());
             var obtainedResult = controller.GetUserById(expectedUser.UserName);
-            var result = obtainedResult.Result as BadRequestObjectResult;
+            var result = obtainedResult.Result as NotFoundObjectResult;
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(400, result.StatusCode);
+            Assert.AreEqual(404, result.StatusCode);
         }
 
         [TestMethod]
@@ -558,7 +559,7 @@ namespace EirinDuran.WebApiTest
         public void GetLogedUserFollowedTeamsOkUsersController()
         {
             var userServicesMock = new Mock<IUserServices>();
-
+            userServicesMock.Setup(services => services.GetFollowedTeams()).Returns(() => new List<TeamDTO>() {new TeamDTO() {Name = "Atletics"}, new TeamDTO() {Name = "Yankees"}});
             ILoginServices loginServices = new LoginServicesMock(pablo);
 
             var httpContext = new DefaultHttpContext();
