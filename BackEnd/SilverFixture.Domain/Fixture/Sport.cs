@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EirinDuran.Domain.Fixture
+namespace SilverFixture.Domain.Fixture
 {
     public class Sport
     {

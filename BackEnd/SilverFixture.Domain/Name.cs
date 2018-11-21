@@ -1,7 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace EirinDuran.Domain
+namespace SilverFixture.Domain
 {
     public struct Name : IEquatable<Name>, IEquatable<string>
     {

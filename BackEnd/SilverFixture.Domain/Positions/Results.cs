@@ -1,6 +1,6 @@
-using EirinDuran.Domain.Fixture;
+using SilverFixture.Domain.Fixture;
 
-namespace EirinDuran.Domain.Positions
+namespace SilverFixture.Domain.Positions
 {
     public class Results
     {

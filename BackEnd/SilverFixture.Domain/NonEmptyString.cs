@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
-namespace EirinDuran.Domain
+namespace SilverFixture.Domain
 {
     public struct NonEmptyString : IEquatable<NonEmptyString>, IEquatable<string>
     {

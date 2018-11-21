@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 
-namespace EirinDuran.Domain.Fixture
+namespace SilverFixture.Domain.Fixture
 {
     public class Team
     {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using PositionsTable = System.Collections.Generic.Dictionary<string, int>;
 
-namespace EirinDuran.Domain.Fixture
+namespace SilverFixture.Domain.Fixture
 {
     public interface IPositionTableGenerator
     {

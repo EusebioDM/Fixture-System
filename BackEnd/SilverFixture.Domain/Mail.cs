@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace EirinDuran.Domain
+namespace SilverFixture.Domain
 {
     public struct Mail
     {

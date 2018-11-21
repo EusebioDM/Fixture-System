@@ -1,4 +1,4 @@
-namespace EirinDuran.Domain.User 
+namespace SilverFixture.Domain.User 
 {
     
     public enum Role 

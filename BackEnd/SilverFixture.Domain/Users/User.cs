@@ -1,8 +1,8 @@
-﻿using EirinDuran.Domain.Fixture;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using SilverFixture.Domain.Fixture;
 
-namespace EirinDuran.Domain.User
+namespace SilverFixture.Domain.User
 {
     public class User
     {

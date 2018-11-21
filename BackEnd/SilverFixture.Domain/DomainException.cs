@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EirinDuran.Domain
+namespace SilverFixture.Domain
 {
     public class DomainException : Exception
     {

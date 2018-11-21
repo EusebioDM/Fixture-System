@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace EirinDuran.Domain.Fixture
+namespace SilverFixture.Domain.Fixture
 {
     public class InvalidTeamException : Exception
     {

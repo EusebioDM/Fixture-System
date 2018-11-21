@@ -4,7 +4,7 @@ using System.Linq;
 using EirinDuran.Domain;
 using EirinDuran.Domain.Fixture;
 
-namespace EirinDuran.FixtureGenerators.RoundRobin
+namespace SilverFixture.FixtureGenerators.RoundRobin
 {
     public class RoundRobin : IFixtureGenerator
     {

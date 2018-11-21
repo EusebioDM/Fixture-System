@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using EirinDuran.Domain.Fixture;
+using SilverFixture.Domain.Fixture;
 
-namespace EirinDuran.Domain.Positions
+namespace SilverFixture.Domain.Positions
 {
     public interface IPositionGenerator
     {

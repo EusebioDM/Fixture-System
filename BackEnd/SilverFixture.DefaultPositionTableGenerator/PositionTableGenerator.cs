@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using EirinDuran.Domain.Fixture;
 
-namespace DefaultPositionTableGenerator
+namespace SilverFixture.DefaultPositionTableGenerator
 {
     public class PositionTableGenerator : IPositionTableGenerator
     {

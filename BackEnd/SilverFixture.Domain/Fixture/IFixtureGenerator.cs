@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EirinDuran.Domain.Fixture
+namespace SilverFixture.Domain.Fixture
 {
     public interface IFixtureGenerator
     {

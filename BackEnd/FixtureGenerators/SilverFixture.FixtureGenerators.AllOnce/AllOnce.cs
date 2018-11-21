@@ -4,7 +4,7 @@ using System.Linq;
 using EirinDuran.Domain;
 using EirinDuran.Domain.Fixture;
 
-namespace EirinDuran.FixtureGenerators.AllOnce
+namespace SilverFixture.FixtureGenerators.AllOnce
 {
     public class AllOnce : IFixtureGenerator
     {
