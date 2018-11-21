@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using EirinDuran.DataAccess.Entities;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.GenericEntityRepository;
-using EirinDuran.IDataAccess;
+using SilverFixture.IDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 

@@ -2,7 +2,7 @@ using EirinDuran.Domain;
 using EirinDuran.Domain.User;
 using EirinDuran.DataAccess;
 using EirinDuran.DataAccess.Entities.Mappers;
-using EirinDuran.IDataAccess;
+using SilverFixture.IDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using System;

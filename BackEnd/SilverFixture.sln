@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.DataAccess", "Ei
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.Domain", "EirinDuran.Domain\EirinDuran.Domain.csproj", "{22339D2C-816B-4CF8-9586-D0E1BCD9D79A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.Services", "EirinDuran.Services\EirinDuran.Services.csproj", "{36546A25-358E-4526-83FB-E2A7FF1BC6AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SilverFixture.Services", "SilverFixture.Services\SilverFixture.Services.csproj", "{36546A25-358E-4526-83FB-E2A7FF1BC6AE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.DomainTest", "EirinDuran.DomainTest\EirinDuran.DomainTest.csproj", "{C2B84AAE-122D-41F4-A9CC-4201C73738F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.IDataAccess", "EirinDuran.IDataAccess\EirinDuran.IDataAccess.csproj", "{1E6716DF-12A8-47DC-A70F-BA067BAC98B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SilverFixture.IDataAccess", "SilverFixture.IDataAccess\SilverFixture.IDataAccess.csproj", "{1E6716DF-12A8-47DC-A70F-BA067BAC98B9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.DataAccessTest", "EirinDuran.DataAccessTest\EirinDuran.DataAccessTest.csproj", "{61BF650C-C376-47D9-893B-B4F150359CC1}"
 EndProject
@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.WebApiTest", "Ei
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.ServicesTest", "EirinDuran.ServicesTest\EirinDuran.ServicesTest.csproj", "{684BDC7E-9CDC-4192-9FCB-D2C54A76ED49}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.IServices", "EirinDuran.IServices\EirinDuran.IServices.csproj", "{F935DC72-8986-40FB-A762-910484D2424B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SilverFixture.IServices", "SilverFixture.IServices\SilverFixture.IServices.csproj", "{F935DC72-8986-40FB-A762-910484D2424B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EirinDuran.GenericEntityRepository", "EirinDuran.GenericEntityRepository\EirinDuran.GenericEntityRepository.csproj", "{FA16D123-88C7-4DFB-95EA-25D9FA4AFE9B}"
 EndProject

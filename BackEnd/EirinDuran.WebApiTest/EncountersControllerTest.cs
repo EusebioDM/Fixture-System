@@ -1,5 +1,5 @@
-using EirinDuran.IServices.DTOs;
-using EirinDuran.IServices.Exceptions;
+using SilverFixture.IServices.DTOs;
+using SilverFixture.IServices.Exceptions;
 using EirinDuran.WebApi.Controllers;
 using EirinDuran.WebApi.Models;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +9,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EirinDuran.IServices.Services_Interfaces;
+using SilverFixture.IServices.Services_Interfaces;
 
 namespace EirinDuran.WebApiTest
 {

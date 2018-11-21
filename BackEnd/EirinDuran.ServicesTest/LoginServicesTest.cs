@@ -1,16 +1,16 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using EirinDuran.Services;
+using SilverFixture.Services;
 using EirinDuran.DataAccess;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore;
 using System;
 using EirinDuran.DataAccessTest;
 using EirinDuran.Domain.User;
-using EirinDuran.IDataAccess;
+using SilverFixture.IDataAccess;
 using EirinDuran.Domain.Fixture;
-using EirinDuran.IServices.Exceptions;
-using EirinDuran.IServices.Infrastructure_Interfaces;
-using EirinDuran.IServices.Services_Interfaces;
+using SilverFixture.IServices.Exceptions;
+using SilverFixture.IServices.Infrastructure_Interfaces;
+using SilverFixture.IServices.Services_Interfaces;
 
 namespace EirinDuran.ServicesTest
 {
@@ -51,7 +51,7 @@ namespace EirinDuran.ServicesTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(IServices.Exceptions.InvalidaDataException))]
+        [ExpectedException(typeof(SilverFixture.IServices.Exceptions.InvalidaDataException))]
         public void TryToLoginUserWithIncorrectPassword()
         {
             LoginServices login = new LoginServices(userRepo, teamRepo);

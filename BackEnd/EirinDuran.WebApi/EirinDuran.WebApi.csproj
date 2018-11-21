@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -26,16 +26,16 @@
     <ProjectReference Include="..\EirinDuran.AssemblyLoader\EirinDuran.AssemblyLoader.csproj" />
     <ProjectReference Include="..\EirinDuran.DataAccess\EirinDuran.DataAccess.csproj" />
     <ProjectReference Include="..\EirinDuran.Logger\EirinDuran.Logger.csproj" />
-    <ProjectReference Include="..\EirinDuran.Services\EirinDuran.Services.csproj" />
+    <ProjectReference Include="..\SilverFixture.Services\SilverFixture.Services.csproj" />
   </ItemGroup>
 
-  <Target Name="AddTestFixtureGenerators" AfterTargets="Build" >
+  <Target Name="AddTestFixtureGenerators" AfterTargets="Build">
     <MakeDir Directories="$(OutputPath)\FixtureGenerators" ContinueOnError="true" />
     <Copy SourceFiles="$(ProjectDir)\..\FixtureGenerators\EirinDuran.FixtureGenerators.AllOnce\bin\Debug\netstandard2.0\EirinDuran.FixtureGenerators.AllOnce.dll" DestinationFolder="$(OutputPath)\FixtureGenerators" ContinueOnError="false" />
     <Copy SourceFiles="$(ProjectDir)\..\FixtureGenerators\EirinDuran.FixtureGenerators.RoundRobin\bin\Debug\netstandard2.0\EirinDuran.FixtureGenerators.RoundRobin.dll" DestinationFolder="$(OutputPath)\FixtureGenerators" ContinueOnError="false" />
   </Target>
 
-  <Target Name="AddTestFixtureGeneratorsP" AfterTargets="MSDeployPublish" >
+  <Target Name="AddTestFixtureGeneratorsP" AfterTargets="MSDeployPublish">
     <MakeDir Directories="$(OutputPath)\FixtureGenerators" ContinueOnError="true" />
     <Copy SourceFiles="$(ProjectDir)\..\FixtureGenerators\EirinDuran.FixtureGenerators.AllOnce\bin\Debug\netstandard2.0\EirinDuran.FixtureGenerators.AllOnce.dll" DestinationFolder="$(OutputPath)\FixtureGenerators" ContinueOnError="false" />
     <Copy SourceFiles="$(ProjectDir)\..\FixtureGenerators\EirinDuran.FixtureGenerators.RoundRobin\bin\Debug\netstandard2.0\EirinDuran.FixtureGenerators.RoundRobin.dll" DestinationFolder="$(OutputPath)\FixtureGenerators" ContinueOnError="false" />

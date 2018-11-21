@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -17,8 +17,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EirinDuran.Domain\EirinDuran.Domain.csproj" />
-    <ProjectReference Include="..\EirinDuran.Services\EirinDuran.Services.csproj" />
     <ProjectReference Include="..\EirinDuran.WebApi\EirinDuran.WebApi.csproj" />
+    <ProjectReference Include="..\SilverFixture.Services\SilverFixture.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

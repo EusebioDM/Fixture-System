@@ -1,7 +1,7 @@
 ﻿using EirinDuran.DataAccess;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
-using EirinDuran.IDataAccess;
+using SilverFixture.IDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

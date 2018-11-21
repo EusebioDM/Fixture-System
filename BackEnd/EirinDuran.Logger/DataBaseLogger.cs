@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using EirinDuran.IDataAccess;
-using EirinDuran.IServices.DTOs;
-using EirinDuran.IServices.Infrastructure_Interfaces;
+using SilverFixture.IDataAccess;
+using SilverFixture.IServices.DTOs;
+using SilverFixture.IServices.Infrastructure_Interfaces;
 
 namespace EirinDuran.Logger
 {

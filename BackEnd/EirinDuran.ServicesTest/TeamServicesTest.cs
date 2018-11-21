@@ -1,16 +1,16 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using EirinDuran.Services;
+using SilverFixture.Services;
 using EirinDuran.DataAccess;
 using Microsoft.EntityFrameworkCore.Design;
 using EirinDuran.DataAccessTest;
-using EirinDuran.IDataAccess;
+using SilverFixture.IDataAccess;
 using EirinDuran.Domain.Fixture;
 using System.Collections.Generic;
 using System.Linq;
-using EirinDuran.IServices.Exceptions;
-using EirinDuran.IServices.DTOs;
+using SilverFixture.IServices.Exceptions;
+using SilverFixture.IServices.DTOs;
 using EirinDuran.Domain.User;
-using EirinDuran.IServices.Services_Interfaces;
+using SilverFixture.IServices.Services_Interfaces;
 
 namespace EirinDuran.ServicesTest
 {

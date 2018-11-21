@@ -4,9 +4,9 @@ using Moq;
 using EirinDuran.WebApi.Controllers;
 using EirinDuran.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
-using EirinDuran.IServices.DTOs;
+using SilverFixture.IServices.DTOs;
 using System;
-using EirinDuran.IServices.Services_Interfaces;
+using SilverFixture.IServices.Services_Interfaces;
 
 namespace EirinDuran.WebApiTest
 {

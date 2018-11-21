@@ -1,5 +1,5 @@
-﻿using EirinDuran.IServices.DTOs;
-using EirinDuran.IServices.Services_Interfaces;
+﻿using SilverFixture.IServices.DTOs;
+using SilverFixture.IServices.Services_Interfaces;
 
 namespace EirinDuran.WebApiTest
 {

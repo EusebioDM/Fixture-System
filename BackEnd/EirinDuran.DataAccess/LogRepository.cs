@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using EirinDuran.DataAccess.Entities;
 using EirinDuran.GenericEntityRepository;
-using EirinDuran.IDataAccess;
-using EirinDuran.IServices.DTOs;
+using SilverFixture.IDataAccess;
+using SilverFixture.IServices.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 

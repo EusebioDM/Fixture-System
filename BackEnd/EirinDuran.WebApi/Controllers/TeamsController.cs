@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using EirinDuran.IServices.DTOs;
+using SilverFixture.IServices.DTOs;
 using System.Security.Claims;
-using EirinDuran.IServices.Exceptions;
+using SilverFixture.IServices.Exceptions;
 using System;
 using System.Xml;
-using EirinDuran.IServices.Services_Interfaces;
+using SilverFixture.IServices.Services_Interfaces;
 using EirinDuran.WebApi.Models;
 
 namespace EirinDuran.WebApi.Controllers

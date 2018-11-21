@@ -2,11 +2,11 @@ using EirinDuran.DataAccess;
 using EirinDuran.DataAccessTest;
 using EirinDuran.Domain.Fixture;
 using EirinDuran.Domain.User;
-using EirinDuran.IDataAccess;
-using EirinDuran.IServices.DTOs;
-using EirinDuran.IServices.Exceptions;
-using EirinDuran.Services;
-using EirinDuran.Services.DTO_Mappers;
+using SilverFixture.IDataAccess;
+using SilverFixture.IServices.DTOs;
+using SilverFixture.IServices.Exceptions;
+using SilverFixture.Services;
+using SilverFixture.Services.DTO_Mappers;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -16,8 +16,8 @@ using System.IO;
 using System.Linq;
 using EirinDuran.FixtureGenerators.AllOnce;
 using EirinDuran.FixtureGenerators.RoundRobin;
-using EirinDuran.IServices.Infrastructure_Interfaces;
-using EirinDuran.IServices.Services_Interfaces;
+using SilverFixture.IServices.Infrastructure_Interfaces;
+using SilverFixture.IServices.Services_Interfaces;
 
 namespace EirinDuran.ServicesTest
 {
@@ -56,7 +56,7 @@ namespace EirinDuran.ServicesTest
             teamRepo = new TeamRepository(GetContextFactory());
             encounterRepo = new ExtendedEncounterRepository(GetContextFactory());
             commentRepo = new CommentRepository(GetContextFactory());
-            mapper = new Services.DTO_Mappers.EncounterMapper(sportRepo, teamRepo, commentRepo);
+            mapper = new SilverFixture.Services.DTO_Mappers.EncounterMapper(sportRepo, teamRepo, commentRepo);
             teamMapper = new TeamMapper(sportRepo);
             userRepo.Add(new User(Role.Administrator, "sSanchez", "Santiago", "Sanchez", "user", "sanchez@outlook.com"));
             userRepo.Add(new User(Role.Follower, "martinFowler", "Martin", "Fowler", "user", "fowler@fowler.com"));
@@ -319,7 +319,7 @@ namespace EirinDuran.ServicesTest
             IEnumerable<Team> teams = new List<Team> { felix, river };
             DateTime date = new DateTime(3018, 10, 12);
             IFixtureGenerator fixture = new RoundRobin();
-            Services.DTO_Mappers.EncounterMapper mapper = new Services.DTO_Mappers.EncounterMapper(sportRepo, teamRepo, commentRepo);
+            SilverFixture.Services.DTO_Mappers.EncounterMapper mapper = new SilverFixture.Services.DTO_Mappers.EncounterMapper(sportRepo, teamRepo, commentRepo);
             IEnumerable<Encounter> encounters = fixture.GenerateFixture(teams, date);
             encounterSimpleServices.CreateEncounter(encounters.Select(e => mapper.Map(e)));
 

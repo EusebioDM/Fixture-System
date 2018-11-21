@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using EirinDuran.IServices.DTOs;
-using EirinDuran.IServices.Exceptions;
-using EirinDuran.IServices.Services_Interfaces;
+using SilverFixture.IServices.DTOs;
+using SilverFixture.IServices.Exceptions;
+using SilverFixture.IServices.Services_Interfaces;
 
 namespace EirinDuran.WebApi.Models
 {

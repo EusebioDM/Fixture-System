@@ -1,7 +1,7 @@
 
 using EirinDuran.Domain.User;
-using EirinDuran.IServices.Infrastructure_Interfaces;
-using EirinDuran.IServices.Services_Interfaces;
+using SilverFixture.IServices.Infrastructure_Interfaces;
+using SilverFixture.IServices.Services_Interfaces;
 
 namespace EirinDuran.WebApiTest
 {

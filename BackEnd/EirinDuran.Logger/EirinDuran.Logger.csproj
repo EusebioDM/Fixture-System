@@ -1,12 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\EirinDuran.IDataAccess\EirinDuran.IDataAccess.csproj" />
-      <ProjectReference Include="..\EirinDuran.IServices\EirinDuran.IServices.csproj" />
+      <ProjectReference Include="..\SilverFixture.IDataAccess\SilverFixture.IDataAccess.csproj" />
+      <ProjectReference Include="..\SilverFixture.IServices\SilverFixture.IServices.csproj" />
     </ItemGroup>
 
 </Project>

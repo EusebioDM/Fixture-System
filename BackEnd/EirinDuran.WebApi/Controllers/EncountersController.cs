@@ -1,5 +1,5 @@
-using EirinDuran.IServices.DTOs;
-using EirinDuran.IServices.Exceptions;
+using SilverFixture.IServices.DTOs;
+using SilverFixture.IServices.Exceptions;
 using EirinDuran.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using EirinDuran.Domain.Fixture;
-using EirinDuran.IServices.Infrastructure_Interfaces;
-using EirinDuran.IServices.Services_Interfaces;
+using SilverFixture.IServices.Infrastructure_Interfaces;
+using SilverFixture.IServices.Services_Interfaces;
 
 namespace EirinDuran.WebApi.Controllers
 {

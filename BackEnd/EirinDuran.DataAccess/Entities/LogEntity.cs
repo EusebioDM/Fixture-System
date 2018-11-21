@@ -1,6 +1,6 @@
 using System;
 using EirinDuran.GenericEntityRepository;
-using EirinDuran.IServices.DTOs;
+using SilverFixture.IServices.DTOs;
 
 namespace EirinDuran.DataAccess.Entities
 {

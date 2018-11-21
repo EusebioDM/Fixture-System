@@ -1,12 +1,12 @@
-using EirinDuran.IServices.DTOs;
-using EirinDuran.IServices.Exceptions;
+using SilverFixture.IServices.DTOs;
+using SilverFixture.IServices.Exceptions;
 using EirinDuran.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using EirinDuran.IServices.Services_Interfaces;
+using SilverFixture.IServices.Services_Interfaces;
 using Microsoft.AspNetCore.Cors;
 
 namespace EirinDuran.WebApi.Controllers

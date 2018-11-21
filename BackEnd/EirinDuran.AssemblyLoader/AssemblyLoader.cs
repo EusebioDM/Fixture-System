@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using EirinDuran.IServices.Infrastructure_Interfaces;
+using SilverFixture.IServices.Infrastructure_Interfaces;
 
 namespace EirinDuran.AssemblyLoader
 {

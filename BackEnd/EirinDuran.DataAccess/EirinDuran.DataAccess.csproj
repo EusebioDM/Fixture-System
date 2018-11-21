@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -13,13 +13,13 @@
   <ItemGroup>
     <ProjectReference Include="..\EirinDuran.Domain\EirinDuran.Domain.csproj" />
     <ProjectReference Include="..\EirinDuran.GenericEntityRepository\EirinDuran.GenericEntityRepository.csproj" />
-    <ProjectReference Include="..\EirinDuran.IDataAccess\EirinDuran.IDataAccess.csproj" />
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <ProjectReference Include="..\EirinDuran.IServices\EirinDuran.IServices.csproj" />
+    <ProjectReference Include="..\SilverFixture.IDataAccess\SilverFixture.IDataAccess.csproj" />
+    <ProjectReference Include="..\SilverFixture.IServices\SilverFixture.IServices.csproj" />
   </ItemGroup>
 
   <ItemGroup>

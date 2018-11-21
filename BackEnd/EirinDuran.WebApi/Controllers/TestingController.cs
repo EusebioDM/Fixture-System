@@ -1,13 +1,13 @@
 ﻿using EirinDuran.DataAccess;
 using EirinDuran.DataAccess.Entities;
-using EirinDuran.IServices.DTOs;
+using SilverFixture.IServices.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EirinDuran.IServices.Services_Interfaces;
+using SilverFixture.IServices.Services_Interfaces;
 
 namespace EirinDuran.WebApi.Controllers
 {

@@ -1,4 +1,4 @@
-using EirinDuran.IServices.DTOs;
+using SilverFixture.IServices.DTOs;
 using System;
 using System.ComponentModel.DataAnnotations;
 
