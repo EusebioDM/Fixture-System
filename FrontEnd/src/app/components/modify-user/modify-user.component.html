@@ -26,6 +26,10 @@
         </mat-form-field>
     </div>
 
+    <mat-error *ngIf="error">
+        {{error}}
+    </mat-error>
+
     <mat-dialog-actions align="end">
         <button mat-button color="warn" mat-dialog-close>Cancelar</button>
         <button mat-button color="primary" [mat-dialog-close]="true" cdkFocusInitial (click)="submit()">Actualizar</button>

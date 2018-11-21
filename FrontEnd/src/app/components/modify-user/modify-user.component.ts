@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, Optional } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Inject } from '@angular/core';
 import { User } from '../../classes/user';
-import { from } from 'rxjs';
 import { UsersService } from 'src/app/services/users.service';
+import { UsersListComponent } from '../users/users.component';
 
 @Component({
   selector: 'app-modify-user',
@@ -13,12 +13,14 @@ import { UsersService } from 'src/app/services/users.service';
 export class ModifyUserComponent implements OnInit {
 
   constructor(
+    @Optional() public dialogRef: MatDialogRef<UsersListComponent>,
     private usersService: UsersService,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: User
   ) { }
 
   @Input() userId: string;
 
+  error: string;
   username: string;
   name: string;
   surname: string;
@@ -39,10 +41,13 @@ export class ModifyUserComponent implements OnInit {
   }
 
   public submit() {
-
-
     const user = new User(this.username, this.name, this.surname, this.password, this.mail, this.isAdmin);
     user.userName = this.data.userName;
-    this.usersService.updateUser(user).subscribe();
+    this.usersService.updateUser(user).subscribe(
+      (() => {
+        this.dialogRef.close(user);
+      }),
+      (error) => this.error = error
+    );
   }
 }
