@@ -3,7 +3,6 @@ import { UsersService } from '../../services/users.service';
 import { User } from '../../classes/user';
 import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
 import { compareValidator } from 'src/app/shared/compare-validator.directive';
-import { uniqueUsernameValidator } from 'src/app/shared/unique-username-validator.directive';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { UsersListComponent } from '../users/users.component';
 import { InstantErrorStateMatcher } from 'src/app/shared/instant-error-state-matcher';
