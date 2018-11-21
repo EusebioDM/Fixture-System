@@ -1,11 +1,17 @@
 <div class="login-form">
-    <form  (ngSubmit)="submit()">
+    <form (ngSubmit)="submit()">
+        <h1 class="text-center">SilverFixture</h1>
         <h2 class="text-center">Iniciar Sesión</h2>
-        <div class="form-group">
-            <input class="form-control" name="username" placeholder="Nombre de Usuario" required="required" type="text" [(ngModel)]="username">
+        <div class="input-group input-group-lg">
+            <span class="input-group-addon" id="sizing-addon1"><i class="glyphicon glyphicon-user"></i></span>
+            <input type="email" class="form-control" name="correo" placeholder="Nombre de Usuario" id="Correo"
+                aria-describedby="sizing-addon1" required [(ngModel)]="username">
         </div>
-        <div class="form-group">
-            <input class="form-control" name="password" type="password" placeholder="Contraseña" required="required" type="password" [(ngModel)]="password">
+        <br>
+        <div class="input-group input-group-lg">
+            <span class="input-group-addon" id="sizing-addon1"><i class="glyphicon glyphicon-lock"></i></span>
+            <input type="password" name="contra" class="form-control" placeholder="******" aria-describedby="sizing-addon1"
+                required [(ngModel)]="password">
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
@@ -14,5 +20,6 @@
         <div class="alert alert-danger" role="alert" *ngIf="error">
             {{error}}
         </div>
+
     </form>
 </div>
