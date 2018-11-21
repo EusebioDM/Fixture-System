@@ -1,4 +1,4 @@
-using EirinDuran.Domain.User;
+using SilverFixture.Domain.User;
 using SilverFixture.IServices;
 using SilverFixture.IServices.Exceptions;
 using SilverFixture.IServices.Services_Interfaces;

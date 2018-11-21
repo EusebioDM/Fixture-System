@@ -1,11 +1,11 @@
 ﻿using System;
-using EirinDuran.Domain.Fixture;
+using SilverFixture.Domain.Fixture;
 using SilverFixture.IDataAccess;
 using SilverFixture.IServices.DTOs;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-[assembly: InternalsVisibleTo("EirinDuran.ServicesTest")]
+[assembly: InternalsVisibleTo("SilverFixture.ServicesTest")]
 
 namespace SilverFixture.Services.DTO_Mappers
 {

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EirinDuran.Domain;
-using EirinDuran.Domain.Fixture;
+using SilverFixture.Domain;
+using SilverFixture.Domain.Fixture;
 
 namespace SilverFixture.FixtureGenerators.RoundRobin
 {

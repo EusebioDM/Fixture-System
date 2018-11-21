@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using EirinDuran.Domain;
+using SilverFixture.Domain;
 using SilverFixture.IServices.Exceptions;
 
 namespace SilverFixture.Services.DTO_Mappers

@@ -1,5 +1,5 @@
-using EirinDuran.Domain.Fixture;
-using EirinDuran.Domain.User;
+using SilverFixture.Domain.Fixture;
+using SilverFixture.Domain.User;
 using SilverFixture.IDataAccess;
 using SilverFixture.IServices.DTOs;
 using SilverFixture.IServices.Exceptions;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using EirinDuran.Domain;
+using SilverFixture.Domain;
 using SilverFixture.IServices.Services_Interfaces;
 using SilverFixture.Services.DTO_Mappers;
 

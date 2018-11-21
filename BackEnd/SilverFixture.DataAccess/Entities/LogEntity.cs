@@ -1,5 +1,5 @@
 using System;
-using EirinDuran.GenericEntityRepository;
+using SilverFixture.GenericEntityRepository;
 using SilverFixture.IServices.DTOs;
 
 namespace SilverFixture.DataAccess.Entities

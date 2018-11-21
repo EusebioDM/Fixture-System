@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\EirinDuran.Domain\EirinDuran.Domain.csproj" />
+    <ProjectReference Include="..\SilverFixture.Domain\SilverFixture.Domain.csproj" />
     <ProjectReference Include="..\SilverFixture.IDataAccess\SilverFixture.IDataAccess.csproj" />
     <ProjectReference Include="..\SilverFixture.IServices\SilverFixture.IServices.csproj" />
   </ItemGroup>

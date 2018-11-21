@@ -3,7 +3,7 @@ using SilverFixture.Domain.User;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using EirinDuran.GenericEntityRepository;
+using SilverFixture.GenericEntityRepository;
 using SilverFixture.DataAccess.Entities.Mappers;
 
 namespace SilverFixture.DataAccess.Entities

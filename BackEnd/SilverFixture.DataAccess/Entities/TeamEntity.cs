@@ -1,6 +1,6 @@
 ﻿using SilverFixture.Domain.Fixture;
 using System.Collections.Generic;
-using EirinDuran.GenericEntityRepository;
+using SilverFixture.GenericEntityRepository;
 using SilverFixture.DataAccess.Entities.Mappers;
 
 namespace SilverFixture.DataAccess.Entities

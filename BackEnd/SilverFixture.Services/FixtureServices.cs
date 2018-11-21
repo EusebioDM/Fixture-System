@@ -4,15 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Castle.Core.Internal;
-using EirinDuran.Domain.Fixture;
-using EirinDuran.Domain.User;
+using SilverFixture.Domain.Fixture;
+using SilverFixture.Domain.User;
 using SilverFixture.IDataAccess;
 using SilverFixture.IServices.DTOs;
 using SilverFixture.IServices.Exceptions;
 using SilverFixture.IServices.Infrastructure_Interfaces;
 using SilverFixture.IServices.Services_Interfaces;
 using SilverFixture.Services.DTO_Mappers;
-using EncounterPlayerCount = EirinDuran.Domain.Fixture.EncounterPlayerCount;
+using EncounterPlayerCount = SilverFixture.Domain.Fixture.EncounterPlayerCount;
 
 namespace SilverFixture.Services
 {

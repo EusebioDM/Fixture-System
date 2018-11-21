@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using EirinDuran.Domain.Fixture;
+using SilverFixture.Domain.Fixture;
 
 namespace SilverFixture.DefaultPositionTableGenerator
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using EirinDuran.Domain.Fixture;
+using SilverFixture.Domain.Fixture;
 using SilverFixture.IDataAccess;
 using SilverFixture.IServices.DTOs;
 using SilverFixture.IServices.Exceptions;

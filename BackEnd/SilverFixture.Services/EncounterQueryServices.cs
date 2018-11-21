@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EirinDuran.Domain.Fixture;
-using EirinDuran.Domain.User;
+using SilverFixture.Domain.Fixture;
+using SilverFixture.Domain.User;
 using SilverFixture.IDataAccess;
 using SilverFixture.IServices.DTOs;
 using SilverFixture.IServices.Exceptions;

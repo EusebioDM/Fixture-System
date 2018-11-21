@@ -1,4 +1,4 @@
-﻿using EirinDuran.Domain.Fixture;
+﻿using SilverFixture.Domain.Fixture;
 using SilverFixture.IDataAccess;
 using SilverFixture.IServices;
 using SilverFixture.IServices.DTOs;
@@ -24,7 +24,7 @@ namespace SilverFixture.Services.DTO_Mappers
 
         protected override Sport TryToMapModel(SportDTO sportDTO)
         {
-            return new Sport(name: sportDTO.Name, encounterPlayerCount: (EirinDuran.Domain.Fixture.EncounterPlayerCount)sportDTO.EncounterPlayerCount);
+            return new Sport(name: sportDTO.Name, encounterPlayerCount: (Domain.Fixture.EncounterPlayerCount)sportDTO.EncounterPlayerCount);
         }
     }
 }

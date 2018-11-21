@@ -11,13 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EirinDuran.GenericEntityRepository\EirinDuran.GenericEntityRepository.csproj" />
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <ProjectReference Include="..\SilverFixture.Domain\SilverFixture.Domain.csproj" />
+    <ProjectReference Include="..\SilverFixture.GenericEntityRepository\SilverFixture.GenericEntityRepository.csproj" />
     <ProjectReference Include="..\SilverFixture.IDataAccess\SilverFixture.IDataAccess.csproj" />
     <ProjectReference Include="..\SilverFixture.IServices\SilverFixture.IServices.csproj" />
   </ItemGroup>

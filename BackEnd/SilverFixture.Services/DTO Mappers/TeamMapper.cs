@@ -1,4 +1,4 @@
-﻿using EirinDuran.Domain.Fixture;
+﻿using SilverFixture.Domain.Fixture;
 using SilverFixture.IDataAccess;
 using SilverFixture.IServices;
 using SilverFixture.IServices.DTOs;
