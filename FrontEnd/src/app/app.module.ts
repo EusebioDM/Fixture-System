@@ -23,11 +23,8 @@ import { FollowerNavComponent } from './components/follower-nav/follower-nav.com
 import { FavoritesComponent } from './components/favorites/favorites.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { CompareValidatorDirective } from './shared/compare-validator.directive';
-import { UniqueUsernameValidatorDirective } from './shared/unique-username-validator.directive';
 import { MaterialModule } from './material/material.module';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { WelcomeNavComponent } from './components/welcome-nav/welcome-nav.component';
 import { AddSportComponent } from './components/add-sport/add-sport.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.component';
@@ -39,15 +36,12 @@ import { AddEncountersResultComponent } from './components/add-encounters-result
 import { GenerateFixtureComponent } from './components/generate-fixture/generate-fixture.component';
 import { FollowTeamsComponent } from './components/follow-teams/follow-teams.component';
 import { CommentsComponent, EncounterLegibleNamePipe, EncounterLegibleNameAsync } from './components/comments/comments.component';
-
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CommonModule } from '@angular/common';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { TeamPositionComponent } from './components/team-position/team-position.component';
-
-
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -170,8 +164,6 @@ const appRoutes: Routes = [
     FavoritesComponent,
     CalendarComponent,
     CompareValidatorDirective,
-    UniqueUsernameValidatorDirective,
-    WelcomeNavComponent,
     AddSportComponent,
     NotFoundComponent,
     YesNoDialogComponent,
