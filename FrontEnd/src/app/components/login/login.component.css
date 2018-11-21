@@ -1,14 +1,13 @@
 .login-form form{
-   border: 40px;
-   position:absolute;
-   top: 50%;
+   position: absolute;
    left: 50%;
+   top: 50%;
+   -webkit-transform: translate(-50%, -50%);
+   transform: translate(-50%, -50%);
    width:30em;
    height:18em;
-   margin-top: -9em; 
-   margin-left: -15em;
 }
 
 .btn-block{
-   margin-top: 10px;
+   margin-top: 20px;
 }
