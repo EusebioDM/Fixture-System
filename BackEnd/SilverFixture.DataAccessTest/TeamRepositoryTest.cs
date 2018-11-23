@@ -76,17 +76,6 @@ namespace SilverFixture.DataAccessTest
             }
 
             [TestMethod]
-            public void UpdateTeamTest()
-            {
-                Team boca = GetBocaTeam();
-                boca.Logo = GetRiverTeam().Logo;
-                repo.Update(boca);
-
-                Team fromRepo = repo.Get(boca.Name + "_" + "Football");
-                Assert.IsFalse(ImagesAreTheSame(Image.FromFile(bocaImagePath), fromRepo.Logo));
-            }
-
-            [TestMethod]
             public void UpdateNonExistantTeamTest()
             {
                 Team godoyCruz = new Team("Godoy Cruz", football, Image.FromFile(tombaImagePath));
